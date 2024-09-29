@@ -1,20 +1,33 @@
-import psycopg2
-from psycopg2 import sql
-import os
-import uuid
+
 from dotenv import load_dotenv
-
+import os
 load_dotenv()
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_DATABASE = os.getenv("DB_DATABASE")
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+import mysql.connector
 
-uid = str(uuid.uuid4())
+# Create a connection to the MySQL database
+connection = mysql.connector.connect(
+    host=DB_HOST,      # e.g., "localhost" if the database is on your machine
+    user=DB_USER,  # MySQL username
+    password=DB_PASSWORD,  # MySQL password
+    database=DB_DATABASE  # Name of the database you want to access
+)
 
-conn = psycopg2.connect(DATABASE_URL)
-cur = conn.cursor()
+# Create a cursor object to execute queries
+cursor = connection.cursor()
 
-columns = [
-    sql.SQL("SELECT * FROM CashApp_Data")
-]
+# Execute a simple query
+cursor.execute("SELECT * FROM CashApp_Data")
 
-print(columns)
+# Fetch and print the results
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+# Close the cursor and the connection
+cursor.close()
+connection.close()
