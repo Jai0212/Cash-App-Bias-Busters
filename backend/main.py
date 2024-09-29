@@ -1,33 +1,53 @@
-
 from dotenv import load_dotenv
 import os
+import flask
+from flask import jsonify
+from flask_cors import CORS
+import mysql.connector
+
+# Load environment variables
 load_dotenv()
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_DATABASE = os.getenv("DB_DATABASE")
 
-import mysql.connector
+# Initialize the Flask app
+app = flask.Flask(__name__)
+CORS(app)  # This will enable CORS for all routes
 
-# Create a connection to the MySQL database
-connection = mysql.connector.connect(
-    host=DB_HOST,      # e.g., "localhost" if the database is on your machine
-    user=DB_USER,  # MySQL username
-    password=DB_PASSWORD,  # MySQL password
-    database=DB_DATABASE  # Name of the database you want to access
-)
+# Create a route to fetch data
+@app.route('/get-data', methods=['GET'])
+def get_data():
+    # connection = mysql.connector.connect(
+    #     host=DB_HOST,
+    #     user=DB_USER,
+    #     password=DB_PASSWORD,
+    #     database=DB_DATABASE
+    # )
 
-# Create a cursor object to execute queries
-cursor = connection.cursor()
+    # cursor = connection.cursor()
 
-# Execute a simple query
-cursor.execute("SELECT * FROM CashApp_Data")
+    # cursor.execute("SELECT * FROM CashApp_Data")
 
-# Fetch and print the results
-rows = cursor.fetchall()
-for row in rows:
-    print(row)
+    # rows = cursor.fetchall()
 
-# Close the cursor and the connection
-cursor.close()
-connection.close()
+    # cursor.close()
+    # connection.close()
+
+    data = []
+    rows = [["1", "2", "3"]]
+    for row in rows:
+        # Assuming your table has columns (id, name, amount), adjust as needed
+        data.append({
+            "id": row[0],
+            "name": row[1],
+            "amount": row[2]
+        })
+
+    # Return the data as a JSON response
+    return jsonify(data)
+
+# Run the app
+if __name__ == '__main__':
+    app.run(debug=True)
