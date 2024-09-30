@@ -12,7 +12,6 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_DATABASE = os.getenv("DB_DATABASE")
 DB_CERTIFICATE = os.getenv("DB_CERTIFICATE")
 DB_PORT = os.getenv("DB_PORT")
-DB_SSL = os.getenv("DB_SSL")
 
 with tempfile.NamedTemporaryFile(delete=False) as temp_cert:
     temp_cert.write(DB_CERTIFICATE.encode())
@@ -26,7 +25,7 @@ connection = mysql.connector.connect(
     database=DB_DATABASE,
     port=DB_PORT,
     ssl_verify_cert=True,
-    ssl_ca=DB_SSL
+    ssl_ca=temp_cert_path
 )
 
 cursor = connection.cursor()
