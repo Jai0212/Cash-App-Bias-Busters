@@ -158,6 +158,7 @@ def fetch_data(cursor):
         print("Data fetched from cashapp_data:")
         for row in results:
             print(row)
+        return results
     else:
         print("No data found.")
 
