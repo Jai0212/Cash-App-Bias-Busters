@@ -1,5 +1,14 @@
 # Cash-App-Bias-Busters
 
-To run backend, run the file `backend/main.py`  
+## Backend:
+```
+pip install -r requirements.txt
+cd backend
+```
+Run the file `demo.py`
 
-To run frontend, type `npm run dev` in frontend console
+## Frontend
+```
+cd frontend
+npm run dev
+```
