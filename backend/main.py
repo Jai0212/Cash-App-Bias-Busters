@@ -77,19 +77,21 @@ def main():
         if connection:
             cursor = connection.cursor()
 
-            create_table(cursor)
+            # Only to be used when we want to create a tabel
+            # create_table(cursor)
+
 
             # Specify the actual data you want to insert
-            actual_data = [
-                ("John Doe",),
-                ("Jane Smith",),
-                ("Alice Johnson",),
-                ("Bob Brown",),
-                # Add more names as needed
-            ]
-
-            insert_data(cursor, actual_data)
-            connection.commit()  # Commit the insertion
+            # actual_data = [
+            #     ("John Doe",),
+            #     ("Jane Smith",),
+            #     ("Alice Johnson",),
+            #     ("Bob Brown",),
+            #     # Add more names as needed
+            # ]
+            #
+            # insert_data(cursor, actual_data)
+            # connection.commit()  # Commit the insertion
 
             fetch_data(cursor)
 
