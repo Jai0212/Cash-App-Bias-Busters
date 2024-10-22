@@ -3,13 +3,15 @@ import axios from 'axios';
 import './App.css';
 
 const App = () => {
+    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    // const BACKEND_URL = 'http://127.0.0.1:5000'; // Adjust port if needed
     const [data, setData] = useState([]);
     const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:5000/get-data'); // Adjust port if needed
+                const response = await axios.get(`${VITE_BACKEND_URL}/get-data`); // Adjust port if needed
                 setData(response.data);
             } catch (err) {
                 setError('Error fetching data');
