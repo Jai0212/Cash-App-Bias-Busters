@@ -3,9 +3,9 @@ import axios from 'axios';
 import './App.css';
 
 const App = () => {
-    // const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     // const BACKEND_URL = 'http://127.0.0.1:5000'; // Adjust port if needed
-    const VITE_BACKEND_URL = 'https://bias-busters-cash-app-backend.vercel.app';
+    // const VITE_BACKEND_URL = 'https://bias-busters-cash-app-backend.vercel.app';
     const [data, setData] = useState([]);
     const [error, setError] = useState('');
 
