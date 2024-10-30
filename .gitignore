@@ -14,8 +14,8 @@ frontend/lerna-debug.log*
 
 # Dependency directories
 frontend/node_modules
-frontend/dist
-frontend/dist-ssr
+# frontend/dist
+# frontend/dist-ssr
 frontend/*.local
 
 # Editor directories and files
