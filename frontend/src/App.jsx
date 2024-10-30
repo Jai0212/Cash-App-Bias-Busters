@@ -1,14 +1,16 @@
 // src/App.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./App.css";
 import ChartComponent from "./ChartComponent";
+import ControlButtons from "./ControlButtons";
 
 const App = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
-  const [timeframe, setTimeframe] = useState("1 Day"); // Initialize timeframe state
+  const [timeframe, setTimeframe] = useState("1 Day");
+  const chartRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,10 +27,14 @@ const App = () => {
 
   const handleTimeframeChange = (newTimeframe) => {
     setTimeframe(newTimeframe);
-    // Update the data based on the new timeframe here if needed
   };
 
-  // Sample data for different timeframes
+  const handleDownload = () => {
+    if (chartRef.current) {
+      chartRef.current.downloadChart();
+    }
+  };
+
   const dataForChart = {
     "1 Day": {
       labels: ["Hour 1", "Hour 2", "Hour 3", "Hour 4", "Hour 5", "Hour 6"],
@@ -83,7 +89,7 @@ const App = () => {
         },
         {
           label: "Random Data 2",
-          data: [115, 215, 315, 415, 515, 615, 150, 815, 915, 1015, 1115, 1215],
+          data: [115, 215, 315, 415, 515, 615, 715, 815, 915, 1015, 1115, 1215],
           borderColor: "rgba(255, 99, 132, 1)",
         },
       ],
@@ -101,10 +107,13 @@ const App = () => {
       </ul>
       <div>
         <button onClick={() => handleTimeframeChange("1 Day")}>1 Day</button>
-        <button onClick={() => handleTimeframeChange("1 Month")}>1 Week</button>
+        <button onClick={() => handleTimeframeChange("1 Month")}>
+          1 Month
+        </button>
         <button onClick={() => handleTimeframeChange("1 Year")}>1 Year</button>
       </div>
-      <ChartComponent data={dataForChart[timeframe]} />
+      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
+      <ControlButtons onDownload={handleDownload} />
     </div>
   );
 };

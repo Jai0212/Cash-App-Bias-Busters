@@ -1,20 +1,23 @@
 // src/ChartComponent.jsx
-import React, { useEffect, useRef } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import Chart from "chart.js/auto";
 
-const ChartComponent = ({ data }) => {
+const ChartComponent = forwardRef(({ data }, ref) => {
   const chartRef = useRef(null);
   const myChartRef = useRef(null);
 
   useEffect(() => {
     const ctx = chartRef.current.getContext("2d");
 
-    // Destroy the previous chart instance if it exists
     if (myChartRef.current) {
       myChartRef.current.destroy();
     }
 
-    // Create a new chart instance
     myChartRef.current = new Chart(ctx, {
       type: "line",
       data: {
@@ -34,7 +37,6 @@ const ChartComponent = ({ data }) => {
       },
     });
 
-    // Cleanup function to destroy the chart when the component unmounts
     return () => {
       if (myChartRef.current) {
         myChartRef.current.destroy();
@@ -42,7 +44,16 @@ const ChartComponent = ({ data }) => {
     };
   }, [data]);
 
+  useImperativeHandle(ref, () => ({
+    downloadChart() {
+      const link = document.createElement("a");
+      link.href = chartRef.current.toDataURL("image/png");
+      link.download = "chart.png";
+      link.click();
+    },
+  }));
+
   return <canvas ref={chartRef} />;
-};
+});
 
 export default ChartComponent;
