@@ -4,7 +4,7 @@ import swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const User_signup = () => {
+const UserSignup = () => {
     const navigate = useNavigate();
     const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -156,4 +156,4 @@ const User_signup = () => {
     );
 };
 
-export default User_signup;
+export default UserSignup;
