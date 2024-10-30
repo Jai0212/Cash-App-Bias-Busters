@@ -1,12 +1,13 @@
 from typing import Any
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+from sklearn import tree
 
-def file_reader(csv: str) -> None:
+def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.DataFrame): # type: ignore
 
-    df = pd.read_csv("csv")
-    inputs = df. drop('Is_Action_Biased', axis= 'columns')
-    target = df['Is_Action_Biased']
+    df = pd.read_csv('database/output.csv')
+    inputs = df. drop('is_biased', axis='columns')
+    target = df['is_biased']
     return df, inputs, target
 
 
@@ -18,14 +19,18 @@ def labels_encoder() -> Any:
 
     _, inputs, _ = file_reader()
 
-    inputs["Gender_N"] = le_gender.fit_transform(inputs['Gender'])
-    inputs["Age_N"] = le_age.fit_transform(inputs['Age'])
-    inputs["Race_N"] = le_race.fit_transform(inputs['Race'])
-    inputs["State_N"] = le_state.fit_transform(inputs['State'])
+    inputs["gender_N"] = le_gender.fit_transform(inputs['gender'])
+    inputs["age_N"] = le_age.fit_transform(inputs['age'])
+    inputs["race_N"] = le_race.fit_transform(inputs['race'])
+    inputs["state_N"] = le_state.fit_transform(inputs['state'])
 
-
-    inputs_n = inputs.drop(['Gender', 'Age', 'Race', 'State'], axis='columns')
+    inputs_n = inputs.drop(['gender', 'age', 'race', 'state', 'id', 'timestamp'], axis='columns')
     return inputs_n
 
-    inputs_n = inputs.drop(['Gender', 'Age', 'Race', 'State'], axis='columns')
-    return inputs_n
+def model() -> float:
+    model = tree.DecisionTreeClassifier()
+    _, _, target = file_reader()
+    model.fit(labels_encoder(), target)
+    return model.score(labels_encoder(), target)
+
+print(model())
