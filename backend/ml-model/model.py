@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 def file_reader(csv: str) -> None:
-    
+
     df = pd.read_csv("csv")
     inputs = df. drop('Is_Action_Biased', axis= 'columns')
     target = df['Is_Action_Biased']
@@ -11,10 +11,10 @@ def file_reader(csv: str) -> None:
 
 
 def labels_encoder() -> Any:
-le_gender = LabelEncoder()
-le_age = LabelEncoder()
-le_race = LabelEncoder()
-le_state = LabelEncoder()
+    le_gender = LabelEncoder()
+    le_age = LabelEncoder()
+    le_race = LabelEncoder()
+    le_state = LabelEncoder()
 
     _, inputs, _ = file_reader()
 
@@ -26,6 +26,6 @@ le_state = LabelEncoder()
 
     inputs_n = inputs.drop(['Gender', 'Age', 'Race', 'State'], axis='columns')
     return inputs_n
-    
+
     inputs_n = inputs.drop(['Gender', 'Age', 'Race', 'State'], axis='columns')
     return inputs_n
