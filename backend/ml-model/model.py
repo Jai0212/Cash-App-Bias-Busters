@@ -70,6 +70,9 @@ def model() -> float:
     # Get predictions
     y_pred = best_clf.predict(X_test)
 
+    # Specify multiple sensitive features
+    sensitive_features = X_test[['race_N']]  # Add your sensitive features here
+
     # Create a MetricFrame to evaluate fairness
     metric_frame = MetricFrame(
         metrics={
@@ -79,7 +82,7 @@ def model() -> float:
         },
         y_true=y_test,
         y_pred=y_pred,
-        sensitive_features=X_test['state_N']  # Update sensitive feature with user choices
+        sensitive_features=sensitive_features  # Pass the DataFrame with multiple sensitive features
     )
 
     # Print metrics for each group
