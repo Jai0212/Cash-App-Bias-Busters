@@ -18,8 +18,7 @@ const UserSignup = () => {
         console.log("Form submitted with data:", data);
 
         try {
-
-            const response = await fetch(`${VITE_BACKEND_URL}/api/signup`, {
+            const response = await fetch(`${VITE_BACKEND_URL}/form`, { // Changed endpoint to /form
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

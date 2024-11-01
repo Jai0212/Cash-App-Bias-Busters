@@ -1,30 +1,34 @@
 // src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// Importing Pages
 import UserSignup from './pages/User_signup.jsx';
-import Login from './pages/Login.jsx';
+import UserLogin from './pages/Login.jsx';
 import Dashboard from './dashboard.jsx';
 
+// Importing Layouts
+import PublicLayout from './Layout/PublicLayout.jsx';
+import UserLayout from './Layout/UserLayout.jsx';
+
 const App = () => {
-    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL; 
+    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     return (
-        <Router>
+        <BrowserRouter>
             <Routes>
-                {/* Main Route for Login */}
-                <Route path="/" element={<Login />} />
+                {/* Public Routes (Login and Signup) */}
+                <Route path="/" element={<PublicLayout />}>
+                    <Route path="signup" element={<UserSignup />} />
+                    <Route path="login" element={<UserLogin />} />
+                </Route>
 
-                {/* Signup Route */}
-                <Route path="/signup" element={<UserSignup />} />
-
-                {/* Dashboard Route */}
-                <Route
-                    path="/dashboard"
-                    element={<Dashboard VITE_BACKEND_URL={VITE_BACKEND_URL} />} 
-                />
+                {/* User Routes (Dashboard) */}
+                <Route path="/dashboard" element={<UserLayout />}>
+                    <Route path="" element={<Dashboard VITE_BACKEND_URL={VITE_BACKEND_URL} />} />
+                </Route>
             </Routes>
-        </Router>
+        </BrowserRouter>
     );
 };
 
