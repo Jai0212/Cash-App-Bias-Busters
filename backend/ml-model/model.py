@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 
 
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series): # type: ignore
-    df = pd.read_csv('database/output.csv')
+    df = pd.read_csv('../../database/output.csv')
     inputs = df.drop('is_biased', axis='columns')
     target = df['is_biased']
     return df, inputs, target
