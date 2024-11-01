@@ -48,6 +48,10 @@ p {
   font-size: 1.1rem;
 }
 
+button {
+  
+}
+
 @media (max-width: 600px) {
   li {
       max-width: 90%;
