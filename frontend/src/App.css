@@ -49,8 +49,8 @@ p {
 }
 
 button {
-  background-color: #333;
-  color: white;
+  background-color: #00452b;
+  color: #00d084;
   padding: 10px 20px;
   border: none;
   border-radius: 10px;
@@ -68,7 +68,7 @@ button {
 }
 
 button:hover {
-  background-color: #00d084;
+  background-color: #00452b;
 }
 
 button.active {
