@@ -4,6 +4,9 @@ body {
   background-color: #e9ecef;
   color: #343a40;
   padding: 20px;
+  background-color: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
 }
 
 h1 {
