@@ -48,7 +48,11 @@ def model() -> float:
     _, _, target = file_reader()
 
     # Split the data into training and test sets
+<<<<<<< HEAD
     X_train, X_test, y_train, y_test = train_test_split(inputs, target, test_size=0.2, random_state=None)
+=======
+    X_train, X_test, y_train, y_test = train_test_split(inputs, target, test_size=0.6, random_state=100)
+>>>>>>> 550560bf8a56d5290f441154bec76174bcb21a74
 
     # Initialize and train the model
     clf = tree.DecisionTreeClassifier()
