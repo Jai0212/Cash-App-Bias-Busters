@@ -1,14 +1,17 @@
 from typing import Any
 import pandas as pd
+import pickle
 from sklearn.preprocessing import LabelEncoder
 from sklearn import tree
 from sklearn.model_selection import train_test_split
+
 
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series): # type: ignore
     df = pd.read_csv('database/output.csv')
     inputs = df.drop('is_biased', axis='columns')
     target = df['is_biased']
     return df, inputs, target
+
 
 def labels_encoder() -> pd.DataFrame:
     le_gender = LabelEncoder()
@@ -26,17 +29,23 @@ def labels_encoder() -> pd.DataFrame:
     inputs_n = inputs.drop(['gender', 'age', 'race', 'state', 'id', 'timestamp'], axis='columns')
     return inputs_n
 
+
 def model() -> float:
     inputs = labels_encoder()
     _, _, target = file_reader()
-    
+
     # Split the data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(inputs, target, test_size=0.5, random_state=42)
-    
+
     # Initialize and train the model
     clf = tree.DecisionTreeClassifier()
     clf.fit(X_train, y_train)
-    
+
+    score = clf.score(X_test, y_test)
+
+    with open("model_with_score.pkl", "wb") as f:
+        pickle.dump({'model': clf, 'score': score}, f)
+
     # Return the model score on the test set
     return clf.score(X_test, y_test)
 
