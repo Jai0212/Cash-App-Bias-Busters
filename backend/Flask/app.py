@@ -5,7 +5,6 @@ import mysql.connector
 from mysql.connector import Error
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 DB_CONFIG = {
@@ -20,8 +19,8 @@ DB_CONFIG = {
 app = Flask(__name__)
 CORS(app)
 
+
 def connect_to_database():
-    """Establish a connection to the MySQL database."""
     try:
         connection = mysql.connector.connect(**DB_CONFIG)
         if connection.is_connected():
@@ -30,8 +29,8 @@ def connect_to_database():
         print(f"Error connecting to the database: {e}")
         return None
 
+
 def create_users_table():
-    """Create the users table if it doesn't exist."""
     connection = connect_to_database()
     if connection:
         cursor = connection.cursor()
@@ -44,15 +43,14 @@ def create_users_table():
                 password VARCHAR(255) NOT NULL
             )
         """)
-        connection.commit()  # Commit the creation of the table
+        connection.commit()
         cursor.close()
         connection.close()
 
+
 @app.route('/api/signup', methods=['POST'])
 def signup():
-
     data = request.get_json()
-
     required_fields = ['firstname', 'lastname', 'email', 'password', 'confirmPassword']
     for field in required_fields:
         if field not in data:
@@ -60,6 +58,8 @@ def signup():
 
     if data['password'] != data['confirmPassword']:
         return jsonify({'error': 'Passwords do not match'}), 400
+
+    password = data['password']
 
     connection = connect_to_database()
     if connection:
@@ -72,39 +72,66 @@ def signup():
         cursor.execute("""
             INSERT INTO users (firstname, lastname, email, password) 
             VALUES (%s, %s, %s, %s)
-        """, (data['firstname'], data['lastname'], data['email'], data['password']))
-        connection.commit()  # Commit the insertion
+        """, (data['firstname'], data['lastname'], data['email'], password))
+        connection.commit()
         cursor.close()
         connection.close()
 
     return jsonify({'message': 'User registered successfully!'}), 201
 
-@app.route('/api/get-userdata', methods=['GET'])
-def get_userdata():
-    """Fetch user data from the database and return as JSON."""
-    try:
-        connection = connect_to_database()
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    connection = connect_to_database()
+    if connection:
         cursor = connection.cursor()
-        cursor.execute("SELECT firstname, lastname, email FROM users")
-        data = cursor.fetchall()
+        cursor.execute("SELECT id, password FROM users WHERE email = %s", (email,))
+        user = cursor.fetchone()
+        cursor.close()
+        connection.close()
 
-        # Prepare the response data
-        response_data = [{'firstname': row[0], 'lastname': row[1], 'email': row[2]} for row in data]
-        return jsonify(response_data), 200
+        if user and user[1] == password:
+            return jsonify({'message': 'Login successful!'}), 200
+        else:
+            return jsonify({'error': 'Invalid email or password'}), 401
 
-    except Error as e:
-        return jsonify({'error': str(e)}), 500
+    return jsonify({'error': 'Database connection error'}), 500
 
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'connection' in locals():
-            connection.close()
+
+@app.route('/api/get-all-users', methods=['GET'])
+def get_all_users():
+    connection = connect_to_database()
+    if connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT id, firstname, lastname, email, password FROM users")
+        users = cursor.fetchall()
+        cursor.close()
+        connection.close()
+
+        user_data = [
+            {
+                'id': user[0],
+                'firstname': user[1],
+                'lastname': user[2],
+                'email': user[3],
+                'password': user[4]
+            }
+            for user in users
+        ]
+        return jsonify(user_data), 200
+
+    return jsonify({'error': 'Database connection error'}), 500
+
 
 @app.route('/')
 def home():
     return "Welcome to the Backend!"
 
+
 if __name__ == "__main__":
-    create_users_table()  # Create the table at startup
+    create_users_table()
     app.run(debug=True, host='127.0.0.1', port=5000)
