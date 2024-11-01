@@ -35,59 +35,46 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
 
   const dataForChart = {
     "1 Day": {
-      labels: ["Hour 1", "Hour 2", "Hour 3", "Hour 4", "Hour 5", "Hour 6"],
+      labels: ["Hour 1", "Hour 2", "Hour 3"],
       datasets: [
         {
           label: "Random Data 1",
-          data: [10, 20, 30, 40, 50, 60],
+          data: [10, 20, 30],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
           label: "Random Data 2",
-          data: [15, 25, 35, 45, 55, 65],
+          data: [15, 25, 35],
           borderColor: "rgba(255, 99, 132, 1)",
         },
       ],
     },
     "1 Month": {
-      labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+      labels: ["Week 1", "Week 2", "Week 3"],
       datasets: [
         {
           label: "Random Data 1",
-          data: [100, 200, 300, 400],
+          data: [100, 200, 300],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
           label: "Random Data 2",
-          data: [150, 250, 350, 450],
+          data: [150, 250, 350],
           borderColor: "rgba(255, 99, 132, 1)",
         },
       ],
     },
     "1 Year": {
-      labels: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      labels: ["Jan", "Feb", "Mar"],
       datasets: [
         {
           label: "Random Data 1",
-          data: [110, 210, 310, 410, 510, 610, 710, 810, 910, 1010, 1110, 1210],
+          data: [110, 210, 310],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
           label: "Random Data 2",
-          data: [115, 215, 315, 415, 515, 615, 715, 815, 915, 1015, 1115, 1215],
+          data: [115, 215, 315],
           borderColor: "rgba(255, 99, 132, 1)",
         },
       ],
