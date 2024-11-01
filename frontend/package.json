@@ -14,14 +14,7 @@
     "@hookform/error-message": "^2.0.1",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
-<<<<<<< HEAD
     "chart.js": "^4.4.6",
-=======
-<<<<<<< HEAD
-    "chart.js": "^4.4.6",
-=======
->>>>>>> f2d18a33abcbf232e2e2d803430ff2f938764021
->>>>>>> ab25d9111bd345144a4dd7159caad1c6e55941c8
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
