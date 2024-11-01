@@ -1,0 +1,16 @@
+Customer_ID,Gender,Age,Race,Zip_Code,State,Action_Type,Transaction_Amount_USD,Account_Balance,is_biased,Action_Status,Timestamp,Time_Of_Day,Device_Used,Login_Method,Number_Of_Logins_Last_30_Days,Number_Of_Failed_Logins_Last_30_Days,Investment_Type,Investment_Amount_USD,Transfer_Bank_Type,Number_Of_Transactions_Last_30_Days,Avg_Transaction_Amount_USD_Last_30_Days,Age_Group,Month
+8b55a94b-7ea1-4d3e-9bff-ea2c6db560e5,Other,23,Other,04155,WA,login,0.0,36333.16,0,unblocked,2024-09-13 05:11:46.330704,05:11:46.330704,Android,biometric,30,2,,,,23,249.0,18-30,9
+7b5f3ed0-c59f-42f7-ad47-219cd8c719e8,Non-binary,54,Black,21704,KY,transfer_in,2013.72,31331.94,0,unblocked,2024-07-28 06:12:11.128149,06:12:11.128149,Web,password,21,7,,,checking,36,65.3,50-65,7
+da0cdf2e-3fcc-40aa-86da-6f305b45a047,Male,18,Hispanic,33497,WI,online_purchase,5099.2,33221.07,0,unblocked,2024-09-24 22:10:43.118892,22:10:43.118892,Android,two_factor,12,5,,,,47,217.62,,9
+a930f64b-3530-4b35-afef-fd4c41f1db2d,Non-binary,30,Mixed,81147,PA,bill_payment,17340.17,8284.74,0,blocked,2024-09-06 06:03:51.115582,06:03:51.115582,Android,two_factor,3,9,,,,14,329.12,18-30,9
+1d9af141-d1e2-45e4-b7d5-15a62590e90b,Female,51,Black,00805,WI,investment,14585.19,43464.78,1,blocked,2024-10-07 22:30:22.870496,22:30:22.870496,Android,password,45,0,cryptocurrency,4783.05,,66,431.28,50-65,10
+fc3caf53-41cd-46b3-be2a-65e6458d7920,Female,28,Mixed,19743,NY,logout,0.0,46861.28,0,blocked,2024-09-10 00:45:42.933522,00:45:42.933522,iOS,two_factor,9,0,,,,80,304.61,18-30,9
+2a1ecb7b-2928-47ec-8476-1a6029c377b2,Male,37,Other,00668,KY,login,0.0,3439.56,0,blocked,2024-08-13 12:26:24.778136,12:26:24.778136,iOS,two_factor,13,5,,,,44,492.36,30-50,8
+ee5d3494-a950-44e9-8d25-7e3664825905,Other,19,Black,37220,AZ,investment,9315.06,27735.27,0,unblocked,2024-07-28 03:19:41.861488,03:19:41.861488,Android,biometric,1,7,cryptocurrency,5265.02,,82,148.08,18-30,7
+647f39a2-1cbc-4051-943d-8847b078d274,Female,41,Hispanic,60742,CO,transfer_out,139.63,15132.63,0,unblocked,2024-08-10 08:26:13.802467,08:26:13.802467,Web,biometric,24,8,,,savings,21,70.58,30-50,8
+bfb30ba7-9983-49c2-8a1c-555cfeb2c2d4,Other,58,White,79554,KS,atm_withdrawal,4113.78,48794.63,0,blocked,2024-09-23 13:13:56.440570,13:13:56.440570,Web,two_factor,13,5,,,,100,462.01,50-65,9
+57fa64ef-8637-43b7-a749-be99e74a3b55,Non-binary,34,Mixed,55678,IL,atm_withdrawal,3730.55,45105.87,0,unblocked,2024-07-11 05:46:21.770913,05:46:21.770913,Web,password,47,4,,,,3,446.78,30-50,7
+630c49cd-3b0f-4103-bcd7-a6eb4c8d5e9f,Non-binary,32,Other,00803,KY,p2p_transfer,5785.23,9691.66,0,blocked,2024-07-15 18:18:00.875788,18:18:00.875788,iOS,two_factor,43,3,,,savings,52,239.75,30-50,7
+ef0ba61e-29c0-49fe-8482-e0972ac26860,Other,48,Mixed,34685,WA,transfer_out,14657.28,38941.03,0,unblocked,2024-08-31 00:01:03.412642,00:01:03.412642,Android,two_factor,5,9,,,checking,86,142.27,30-50,8
+1f74261f-ed5b-43a5-a2ad-47a5360ca60a,Female,46,Hispanic,02840,TN,investment,6772.13,8073.22,0,blocked,2024-08-12 12:09:41.412274,12:09:41.412274,Web,two_factor,36,8,cryptocurrency,7292.77,,52,403.01,30-50,8
+ada2fff2-8b52-4678-8c05-a017143a7f3c,Female,36,White,02860,OK,p2p_transfer,11197.6,44523.67,0,unblocked,2024-09-29 12:31:47.745727,12:31:47.745727,iOS,biometric,41,1,,,savings,31,51.79,30-50,9
