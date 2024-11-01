@@ -1,11 +1,11 @@
-// src/App.jsx
 import React, { useEffect, useState, useRef } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"; // Import necessary components for routing
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 import ChartComponent from "./ChartComponent";
 import ControlButtons from "./ControlButtons";
-import UserSignup from './pages/User_signup.jsx'; // Import your Signup component
+import UserSignup from './pages/User_signup.jsx';
+import Login from './pages/Login.jsx';
 
 const App = () => {
     const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -70,18 +70,8 @@ const App = () => {
         },
         "1 Year": {
             labels: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
             ],
             datasets: [
                 {
@@ -100,39 +90,36 @@ const App = () => {
 
     return (
         <Router>
-            <div>
-                {/* Navigation Links */}
-                <nav>
-                    <Link to="/">Home</Link>
-                    <Link to="/signup">Sign Up</Link>
-                </nav>
+            <Routes>
+                {/* Main Route for Login */}
+                <Route path="/" element={<Login />} />
 
-                {/* Define the routes */}
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
+                {/* Signup Route */}
+                <Route path="/signup" element={<UserSignup />} />
+
+                {/* Dashboard Route */}
+                <Route
+                    path="/dashboard"
+                    element={
+                        <div>
+                            <h1>Data from Database</h1>
+                            {error && <p>{error}</p>}
+                            <ul>
+                                {data.map((item, index) => (
+                                    <li key={index}>{item.name}</li>
+                                ))}
+                            </ul>
                             <div>
-                                <h1>Data from Database</h1>
-                                {error && <p>{error}</p>}
-                                <ul>
-                                    {data.map((item, index) => (
-                                        <li key={index}>{item.name}</li>
-                                    ))}
-                                </ul>
-                                <div>
-                                    <button onClick={() => handleTimeframeChange("1 Day")}>1 Day</button>
-                                    <button onClick={() => handleTimeframeChange("1 Month")}>1 Month</button>
-                                    <button onClick={() => handleTimeframeChange("1 Year")}>1 Year</button>
-                                </div>
-                                <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
-                                <ControlButtons onDownload={handleDownload} />
+                                <button onClick={() => handleTimeframeChange("1 Day")}>1 Day</button>
+                                <button onClick={() => handleTimeframeChange("1 Month")}>1 Month</button>
+                                <button onClick={() => handleTimeframeChange("1 Year")}>1 Year</button>
                             </div>
-                        }
-                    />
-                    <Route path="/signup" element={<UserSignup />} />
-                </Routes>
-            </div>
+                            <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
+                            <ControlButtons onDownload={handleDownload} />
+                        </div>
+                    }
+                />
+            </Routes>
         </Router>
     );
 };
