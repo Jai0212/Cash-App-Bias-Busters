@@ -66,3 +66,12 @@ button {
       font-size: 2rem;
   }
 }
+
+button:hover {
+  background-color: #00d084;
+}
+
+button.active {
+  background-color: #00d084;
+}
+
