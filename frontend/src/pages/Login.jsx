@@ -15,7 +15,7 @@ const UserLogin = () => {
     function handleForm(data) {
         console.log(data);
 
-        const url = "http://localhost:12345/login"; 
+        const url = "http://localhost:11345/login";
 
         fetch(url, {
             method: "POST",
@@ -40,7 +40,7 @@ const UserLogin = () => {
                         title: res.message,
                         timer: 1500
                     }).then(() => {
-                        navigate('/dashboard'); // Redirect to user dashboard
+                        navigate('/dashboard');
                     });
                 }
             })
@@ -48,6 +48,11 @@ const UserLogin = () => {
                 console.log(e);
             });
     }
+    
+    function Forgot_password(){
+        navigate('/forgot_password');
+    }
+    
 
     return (
         <>
@@ -60,28 +65,31 @@ const UserLogin = () => {
                 <form onSubmit={handleSubmit(handleForm)} id={'form'}>
                     <div className="mb-3">
                         <label htmlFor="email">Email</label>
-                        <input {...register('email', { required: 'This field is required' })} type="email"
-                               className={"form-control"} />
+                        <input {...register('email', {required: 'This field is required'})} type="email"
+                               className={"form-control"}/>
                         <ErrorMessage
                             errors={errors}
                             name="email"
-                            render={({ message }) => <p className={"text-danger"}>{message}</p>}
+                            render={({message}) => <p className={"text-danger"}>{message}</p>}
                         />
                     </div>
 
                     <div className="mb-3">
                         <label htmlFor="password">Password</label>
-                        <input {...register('password', { required: 'This field is required' })} type="password"
-                               className={"form-control"} />
+                        <input {...register('password', {required: 'This field is required'})} type="password"
+                               className={"form-control"}/>
                         <ErrorMessage
                             errors={errors}
                             name="password"
-                            render={({ message }) => <p className={"text-danger"}>{message}</p>}
+                            render={({message}) => <p className={"text-danger"}>{message}</p>}
                         />
                     </div>
 
                     <button className={"btn btn-primary"}>Login</button>
                 </form>
+                <button className={"btn btn-primary"} onClick={Forgot_password} style={{marginTop: '10px'}}>Forgot
+                    Password
+                </button>
             </div>
         </>
     );

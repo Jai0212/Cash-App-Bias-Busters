@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UserSignup = () => {
     const navigate = useNavigate();
-    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const {
         register,
@@ -14,49 +13,50 @@ const UserSignup = () => {
         formState: { errors },
     } = useForm();
 
-    async function handleForm(data) {
-        console.log("Form submitted with data:", data);
+    function handleForm(data) {
+        console.log(data);
+        const { password, confirmPassword } = data;
 
-        try {
-            const response = await fetch(`${VITE_BACKEND_URL}/form`, { // Changed endpoint to /form
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log('Success:', result);
-
-                swal.fire({
-                    icon: "success",
-                    title: "Form submitted successfully!",
-                    timer: 1500,
-                }).then(() => {
-                    // Reset form
-                    document.getElementById('form').reset();
-                    navigate('/');
-                });
-            } else {
-                const error = await response.json();
-                console.error('Error:', error);
-                swal.fire({
-                    icon: "error",
-                    title: "Error submitting form",
-                    text: error.message || "Something went wrong!",
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
+        if (password !== confirmPassword) {
             swal.fire({
                 icon: "error",
-                title: "Network Error",
-                text: "Unable to reach the server.",
+                title: "Passwords do not match",
             });
+            return;
         }
+
+        const url = "http://localhost:11345/form";
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data),
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error === true) {
+                    swal.fire({
+                        icon: "error",
+                        title: res.message,
+                    });
+                } else {
+                    document.getElementById('form').reset()
+                    swal.fire({
+                        icon: "success",
+                        title: res.message,
+                        timer: 1500
+                    }).then(()=>{
+                        navigate('/login')
+                    })
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
     }
+
 
     return (
         <>
