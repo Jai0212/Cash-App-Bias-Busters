@@ -263,6 +263,16 @@ indexController.reset_password = (req, res) => {
     })
 }
 
+indexController.get_email = (req, res) => {
+    const email = req['jwtUserInfo']['email'];
+    console.log(email)
+    if (email) {
+        return res.json({ email });
+    } else {
+        return res.status(404).json({ message: "Email not found" });
+    }
+};
+
 // function deleteAllUsers() {
 //     const deleteSql = `DELETE FROM users`;
 //
