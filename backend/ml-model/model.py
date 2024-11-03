@@ -9,12 +9,14 @@ from sklearn import tree
 from sklearn.model_selection import train_test_split, GridSearchCV
 from fairlearn.metrics import MetricFrame
 
+single_column_check = False
+
 
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
     df = pd.read_csv('../../database/output.csv')
 
     # Check if the DataFrame has only one column
-    if df.shape[1] == 1:
+    if df.shape[1] == 4:
         single_column_check = True
 
     # Check if 'age' column exists
@@ -90,7 +92,10 @@ def model() -> dict:
     y_pred = best_clf.predict(X_test)
 
     # Specify multiple sensitive features
-    sensitive_features = X_test[['race_N', 'age_N']]  # Add your sensitive features here
+    if single_column_check:
+        sensitive_features = X_test[[feature1]]  # Add your sensitive features here
+    else:
+        sensitive_features = X_test[['race_N', 'age_N']]  # Add your sensitive features here
 
     # Create a MetricFrame to evaluate fairness
     metric_frame = MetricFrame(
