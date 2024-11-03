@@ -12,7 +12,6 @@ const UserLogin = () => {
         formState: { errors },
     } = useForm();
 
-<<<<<<< HEAD
     async function handleForm(data) {
         console.log("Login form submitted with data:", data);
  
@@ -23,7 +22,12 @@ const UserLogin = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data)
-=======
+            });
+        } catch (error) {
+            console.error("Error during login:", error);
+        }
+    }
+
     function handleForm(data) {
         console.log(data);
 
@@ -58,7 +62,6 @@ const UserLogin = () => {
             })
             .catch((e) => {
                 console.log(e);
->>>>>>> cbf0c3262e0f2299b4d9cd1ab204593c24ee0c6c
             });
     }
     

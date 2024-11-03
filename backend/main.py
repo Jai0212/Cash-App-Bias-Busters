@@ -60,6 +60,9 @@ def see_all_tables() -> None:
             for table in tables:
                 print(table[0])
 
+            cursor.close()
+            connection.close()
+
     except Error as e:
         print(f"Error: {e}")
 
@@ -72,6 +75,9 @@ def delete_table(table_name: str) -> None:
         cursor = connection.cursor()
         cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
         print("Table deleted successfully.")
+
+        cursor.close()
+        connection.close()
 
 
 def create_table(cursor: mysql.connector.cursor.MySQLCursor, table_name: str) -> None:
@@ -333,6 +339,183 @@ def update_comparison_csv(
     filtered_df.to_csv(DATABASE_OUTPUT_PATH, index=False)
 
 
+def update_db_for_user(
+    curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
+) -> None:
+    """Update the database for the specified user with the selected demographics and choices."""
+
+    connection = mysql.connector.connect(**DB_CONFIG)
+    if connection.is_connected():
+        cursor = connection.cursor()
+
+    try:
+        if not time:
+            time = "year"
+
+        # Prepare the SQL query and parameters
+        set_clauses = []
+        parameters = []
+
+        # Check if we have at least one demographic to update
+        if len(demographics) > 0:
+            # Update demographic_one and its choices
+            demographic_one = demographics[0]
+            set_clauses.append("demographic_1 = %s")
+            parameters.append(demographic_one)
+
+            for i in range(4):
+                choice_key = f"choice_{i + 1}_demographic_1"
+                if len(choices.get(demographic_one, [])) > i:
+                    set_clauses.append(f"{choice_key} = %s")
+                    parameters.append(choices[demographic_one][i])
+                else:
+                    set_clauses.append(f"{choice_key} = %s")
+                    parameters.append(None)  # Set to NULL if not available
+
+        if len(demographics) > 1:
+            # Update demographic_two and its choices
+            demographic_two = demographics[1]
+            set_clauses.append("demographic_2 = %s")
+            parameters.append(demographic_two)
+
+            for i in range(4):
+                choice_key = f"choice_{i + 1}_demographic_2"
+                if len(choices.get(demographic_two, [])) > i:
+                    set_clauses.append(f"{choice_key} = %s")
+                    parameters.append(choices[demographic_two][i])
+                else:
+                    set_clauses.append(f"{choice_key} = %s")
+                    parameters.append(None)  # Set to NULL if not available
+
+        # Add the time variable
+        set_clauses.append("time = %s")
+        parameters.append(time)
+
+        # Complete the WHERE clause
+        where_clause = "email = %s"
+        parameters.append(curr_user)
+
+        # Construct the final SQL query
+        sql_query = f"""
+        UPDATE users
+        SET {', '.join(set_clauses)}
+        WHERE {where_clause}
+        """
+
+        # Execute the update query
+        cursor.execute(sql_query, tuple(parameters))
+        connection.commit()
+        print("User data updated successfully.")
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+
+def get_last_login_data(
+    curr_user: str,
+) -> Optional[Tuple[List[str], Dict[str, List[str]]]]:
+    """Retrieve the last login demographics and choices for the specified user."""
+
+    connection = mysql.connector.connect(**DB_CONFIG)
+    demographics = []
+    choices = {}
+
+    if connection.is_connected():
+        cursor = connection.cursor()
+
+    try:
+        # Prepare the SQL query to fetch the demographics and choices
+        cursor.execute(
+            """
+            SELECT demographic_1, choice_1_demographic_1, choice_2_demographic_1,
+                   choice_3_demographic_1, choice_4_demographic_1,
+                   demographic_2, choice_1_demographic_2, choice_2_demographic_2,
+                   choice_3_demographic_2, choice_4_demographic_2
+            FROM users
+            WHERE email = %s
+        """,
+            (curr_user,),
+        )
+
+        result = cursor.fetchone()
+
+        if result:
+            # Unpack the result
+            demographic_one = result[0]
+            demographic_two = result[5]
+
+            # Add demographics to the list, handling None values
+            if demographic_one is not None:
+                demographics.append(demographic_one)
+                choices[demographic_one] = [
+                    result[1] if result[1] is not None else None,
+                    result[2] if result[2] is not None else None,
+                    result[3] if result[3] is not None else None,
+                    result[4] if result[4] is not None else None,
+                ]
+
+            if demographic_two is not None:
+                demographics.append(demographic_two)
+                choices[demographic_two] = [
+                    result[6] if result[6] is not None else None,
+                    result[7] if result[7] is not None else None,
+                    result[8] if result[8] is not None else None,
+                    result[9] if result[9] is not None else None,
+                ]
+
+            return demographics, choices
+        else:
+            print("No data found for the specified user.")
+            return None
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+
+def add_extra_columns() -> None:
+    """Add extra columns to the table."""
+
+    connection = mysql.connector.connect(**DB_CONFIG)
+    if connection.is_connected():
+        cursor = connection.cursor()
+
+    try:
+        cursor.execute(
+            """
+            ALTER TABLE users 
+            ADD (
+                demographic_1 VARCHAR(255) DEFAULT NULL,
+                choice_1_demographic_1 VARCHAR(255) DEFAULT NULL,
+                choice_2_demographic_1 VARCHAR(255) DEFAULT NULL,
+                choice_3_demographic_1 VARCHAR(255) DEFAULT NULL,
+                choice_4_demographic_1 VARCHAR(255) DEFAULT NULL,
+                
+                demographic_2 VARCHAR(255) DEFAULT NULL,
+                choice_1_demographic_2 VARCHAR(255) DEFAULT NULL,
+                choice_2_demographic_2 VARCHAR(255) DEFAULT NULL,
+                choice_3_demographic_2 VARCHAR(255) DEFAULT NULL,
+                choice_4_demographic_2 VARCHAR(255) DEFAULT NULL,
+
+                time VARCHAR(255) DEFAULT 'year'
+            )
+            """
+        )
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+
 # def top_common_states(csv_file_path, column_name, top_n=5):
 #     """Read the CSV file and return the top N most common values in the specified column."""
 #     # Read the CSV file into a DataFrame
@@ -354,6 +537,12 @@ def update_comparison_csv(
 #     print(f"Inserted {len(data)} records successfully.")
 
 if __name__ == "__main__":
+    # add_extra_columns()
+    # update_db_for_user("jj@gmail.com", ["race", "state"], {"race": ["Black", "White"], "state": ["Hispanic", "Black", "Other"]}, "month")
+    # fetch_data("users")
+    # print(get_last_login_data("jj@gmail.com")[0])
+    # print(get_last_login_data("jj@gmail.com")[1])
+
     # see_all_tables()
     # import_csv_to_db("database/test.csv", "test_table")
     # fetch_data("test_table")

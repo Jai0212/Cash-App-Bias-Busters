@@ -10,6 +10,7 @@ from main import (
     get_headers,
     update_comparison_csv,
     get_values_under_header,
+    update_db_for_user,
 )
 
 load_dotenv()
@@ -78,11 +79,23 @@ def comparisons():
     time = data.get("time", None)
 
     if demographics and choices and curr_user:
-        update_comparison_csv(curr_user, demographics, choices, time)
-        # TODO akshatt and armagan function
-        return "Comparisons route"  # data to be displayed as graph
-    else:
-        return jsonify({"error": "Missing required data."}), 400
+        if (
+            len(demographics) == 1
+            and demographics[0] in choices
+            and len(choices[demographics[0]]) >= 1
+        ) or (
+            len(demographics) == 2
+            and demographics[0] in choices
+            and demographics[1] in choices
+            and len(choices[demographics[0]]) >= 1
+            and len(choices[demographics[1]]) >= 1
+        ):
+            update_comparison_csv(curr_user, demographics, choices, time)
+            update_db_for_user(curr_user, demographics, choices, time)
+            # TODO akshatt and armagan function
+            return "Comparisons route"  # data to be displayed as graph
+
+    return jsonify({"error": "Missing required data."}), 400
 
 
 @app.route("/api/upload-data", methods=["POST"])
