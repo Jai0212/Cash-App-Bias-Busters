@@ -14,57 +14,55 @@ single_column_check = False
 
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
     df = pd.read_csv('../../database/output.csv')
+    df_cleaned = df.drop(["timestamp", "id"], axis=1, errors='ignore')
 
     # Check if the DataFrame has only one column
-    if df.shape[1] == 4:
-        single_column_check = True
+    if df_cleaned.shape[1] == 2:
+        single_column_check = True  # You can do something based on this flag if needed
 
     # Check if 'age' column exists
-    if 'age' in df.columns:
+    if 'age' in df_cleaned.columns:
         bins = range(18, 90, 9)
 
-        # Create labels for each bin CHANGED THIS
+        # Create labels for each bin
         labels = [f"{i}-{i + 8}" for i in bins[:-1]]
 
         # Use cut to create a new column with age groups
-        df['age_groups'] = pd.cut(df['age'], bins=bins, labels=labels, right=False)
+        df_cleaned['age_groups'] = pd.cut(df_cleaned['age'], bins=bins, labels=labels, right=False)
     else:
-        df['age_groups'] = None  # or you can choose to drop the age_groups column later if you want
+        df_cleaned['age_groups'] = None  # Or handle it differently if desired
 
-    df_dropped = df.drop('age', axis=1, errors='ignore')  # This will ignore the error if 'age' does not exist
+    df_dropped = df_cleaned.drop('age', axis=1, errors='ignore')  # Ignore error if 'age' does not exist
 
     inputs = df_dropped.drop('is_biased', axis='columns', errors='ignore')  # Ignore error if 'is_biased' does not exist
     target = df_dropped.get('is_biased', pd.Series())  # Get 'is_biased' or an empty Series if it does not exist
 
-    return df_dropped, inputs, target
-
+    return df_cleaned, inputs, target
 
 def labels_encoder():
-    le_gender = LabelEncoder()
-    le_age = LabelEncoder()
-    le_race = LabelEncoder()
-    le_state = LabelEncoder()
+    le_dict = {}
+    categorical_columns = ['gender', 'age_groups', 'race', 'state']  # Define your categorical columns
 
-    _, inputs, _ = file_reader()
+    df, inputs, _ = file_reader()
 
-    inputs["gender_N"] = le_gender.fit_transform(inputs['gender'])
-    inputs["age_N"] = le_age.fit_transform(inputs['age_groups'])
-    inputs["race_N"] = le_race.fit_transform(inputs['race'])
-    inputs["state_N"] = le_state.fit_transform(inputs['state'])
+    # Create LabelEncoders for each categorical column
+    for col in categorical_columns:
+        if col in inputs.columns:  # Check if the column exists in inputs
+            le = LabelEncoder()
+            inputs[f"{col}_N"] = le.fit_transform(inputs[col])  # Encode the column
+            le_dict[col] = le  # Store the label encoder in a dictionary
 
-    # Get mapping from numeric codes back to labels
-    age_mapping = dict(zip(le_age.transform(le_age.classes_), le_age.classes_))
-    race_mapping = dict(zip(le_race.transform(le_race.classes_), le_race.classes_))
-    gender_mapping = dict(zip(le_gender.transform(le_gender.classes_), le_gender.classes_))
-    state_mapping = dict(zip(le_state.transform(le_state.classes_), le_state.classes_))
+    # Get mappings from numeric codes back to labels
+    mappings = {col: dict(zip(le.transform(le.classes_), le.classes_)) for col, le in le_dict.items()}
 
-    inputs_n = inputs.drop(['gender', 'age_groups', 'race', 'state', 'id', 'timestamp'], axis='columns')
-    return inputs_n, age_mapping, race_mapping, gender_mapping, state_mapping
+    # Keep the specified columns: 'id', 'timestamp', 'is_biased'
+    inputs_n = inputs.drop(columns=categorical_columns, errors='ignore')
+    return inputs_n, mappings
 
 
 def model() -> dict:
-    inputs, age_m, race_m, gender_m, state_m = labels_encoder()
-    _, _, target = file_reader()
+    inputs, mappings = labels_encoder()  # Get encoded inputs and mappings
+    _, _, target = file_reader()          # Get the target variable
 
     # Split the data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(inputs, target, test_size=0.2, random_state=48)
@@ -90,12 +88,14 @@ def model() -> dict:
 
     # Get predictions
     y_pred = best_clf.predict(X_test)
+    feature1 = inputs.columns[0]
 
     # Specify multiple sensitive features
-    if single_column_check:
+    if 'single_column_check' in globals() and single_column_check:  # Ensure single_column_check is defined
         sensitive_features = X_test[[feature1]]  # Add your sensitive features here
     else:
-        sensitive_features = X_test[['race_N', 'age_N']]  # Add your sensitive features here
+        feature2 = inputs.columns[1]
+        sensitive_features = X_test[[feature1, feature2]]  # Add your sensitive features here
 
     # Create a MetricFrame to evaluate fairness
     metric_frame = MetricFrame(
@@ -119,18 +119,23 @@ def model() -> dict:
     with open("model_with_score.pkl", "wb") as f:
         pickle.dump({'model': best_clf, 'score': score}, f)
 
-    # Create dictionary with mapped keys
-    bias_dictionary = {}
-    for (race_code, age_code), metrics in metric_frame.by_group.iterrows():
-        race_label = race_m.get(race_code, "Unknown Race")
-        age_label = age_m.get(age_code, "Unknown Age")
-        key = (str(race_label), str(age_label))  # Ensuring keys are strings for sorting
+        # Create dictionary with mapped keys
+        bias_dictionary = {}
+        for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
 
-        bias_dictionary[key] = [
-            round(metrics['accuracy'], 3),
-            round(metrics['false_positive_rate'], 3),
-            round(metrics['false_negative_rate'], 3)
-        ]
+            f1_label = mappings[feature1.removesuffix("_N")].get(feature1_code, "Unknown Feature")
+            if 'single_column_check' in globals() and single_column_check:
+                key = (str(f1_label))
+            else:
+                feature2 = inputs.columns[1]
+                f2_label = mappings[feature2.removesuffix("_N")].get(feature2_code, "Unknown Feature")
+                key = (str(f1_label), str(f2_label))
+
+            bias_dictionary[key] = [
+                round(metrics['accuracy'], 3),
+                round(metrics['false_positive_rate'], 3),
+                round(metrics['false_negative_rate'], 3)
+            ]
 
     # Cleaned dictionary without NaN values
     cleaned_bias_dictionary = {k: v for k, v in bias_dictionary.items() if not any(math.isnan(x) for x in v)}
