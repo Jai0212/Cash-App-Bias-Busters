@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import './Login.css'
 
 const UserLogin = () => {
 const navigate = useNavigate();
