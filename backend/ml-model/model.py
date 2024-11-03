@@ -1,3 +1,5 @@
+from typing import Any, Dict, Tuple
+
 import pandas as pd
 import numpy as np
 import pickle
@@ -5,6 +7,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn import tree
 from sklearn.model_selection import train_test_split, GridSearchCV
 from fairlearn.metrics import MetricFrame
+
 
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
     df = pd.read_csv('../../database/output.csv')
@@ -41,7 +44,7 @@ def labels_encoder() -> pd.DataFrame:
     return inputs_n
 
 
-def model() -> float:
+def model() -> dict[tuple[Any, Any], tuple[Any, Any, Any]]:
     inputs = labels_encoder()
     _, _, target = file_reader()
 
@@ -71,7 +74,7 @@ def model() -> float:
     y_pred = best_clf.predict(X_test)
 
     # Specify multiple sensitive features
-    sensitive_features = X_test[['race_N']]  # Add your sensitive features here
+    sensitive_features = X_test[['race_N', 'age_N']]  # Add your sensitive features here
 
     # Create a MetricFrame to evaluate fairness
     metric_frame = MetricFrame(
@@ -95,8 +98,17 @@ def model() -> float:
     with open("model_with_score.pkl", "wb") as f:
         pickle.dump({'model': best_clf, 'score': score}, f)
 
-    # Return the model score on the test set
-    return score
+
+    bias_dictionary = {}
+    for race in metric_frame.by_group.index.get_level_values('race_N').unique():
+        for age in metric_frame.by_group.loc[race].index:
+            bias_dictionary[X_test["race_N"], X_test["age_N"]] = (
+                metric_frame.by_group.loc[(race, age), "accuracy"],
+                metric_frame.by_group.loc[(race, age), "false_positive_rate"],
+                metric_frame.by_group.loc[(race, age), "false_negative_rate"])
+
+    return bias_dictionary
+
 
 # Execute the model function and print the score
 print(model())
