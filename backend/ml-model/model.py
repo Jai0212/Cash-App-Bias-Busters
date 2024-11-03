@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Tuple
 import math
-
+import os
 import pandas as pd
 import numpy as np
 import pickle
@@ -10,10 +10,12 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from fairlearn.metrics import MetricFrame
 
 single_column_check = False
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
-    df = pd.read_csv('../../database/output.csv')
+    csv_file_path = os.path.join(current_dir, '../../database/output.csv')
+    df = pd.read_csv(csv_file_path)
     df_cleaned = df.drop(["timestamp", "id"], axis=1, errors='ignore')
 
     # Check if the DataFrame has only one column
@@ -34,8 +36,8 @@ def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
 
     df_dropped = df_cleaned.drop('age', axis=1, errors='ignore')  # Ignore error if 'age' does not exist
 
-    inputs = df_dropped.drop('is_biased', axis='columns', errors='ignore')  # Ignore error if 'is_biased' does not exist
-    target = df_dropped.get('is_biased', pd.Series())  # Get 'is_biased' or an empty Series if it does not exist
+    inputs = df_dropped.drop('action_status', axis='columns', errors='ignore')  # Ignore error if 'is_biased' does not exist
+    target = df_dropped.get('action_status', pd.Series())  # Get 'is_biased' or an empty Series if it does not exist
 
     return df_cleaned, inputs, target
 
@@ -65,7 +67,7 @@ def model() -> dict:
     _, _, target = file_reader()          # Get the target variable
 
     # Split the data into training and test sets
-    X_train, X_test, y_train, y_test = train_test_split(inputs, target, test_size=0.2, random_state=48)
+    X_train, X_test, y_train, y_test = train_test_split(inputs, target, test_size=0.2, random_state=10)
 
     # Define the model
     clf = tree.DecisionTreeClassifier()
