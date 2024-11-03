@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, List, Tuple
 
 import pandas as pd
 import numpy as np
@@ -12,7 +12,7 @@ from fairlearn.metrics import MetricFrame
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
     df = pd.read_csv('../../database/output.csv')
 
-    bins = range(18, 61, 10)
+    bins = range(18, 80, 10)
 
     # Create labels for each bin
     labels = [f"{i}-{i + 4}" for i in bins[:-1]]
@@ -44,7 +44,7 @@ def labels_encoder() -> pd.DataFrame:
     return inputs_n
 
 
-def model() -> dict[tuple[Any, Any], tuple[Any, Any, Any]]:
+def model() -> dict:
     inputs = labels_encoder()
     _, _, target = file_reader()
 
@@ -108,13 +108,16 @@ def model() -> dict[tuple[Any, Any], tuple[Any, Any, Any]]:
         key = (race, age)
 
         # Define the value you want to store in the dictionary for this key
-        value = metric_frame.by_group.loc[key, "accuracy"]
 
         # Assign the value to the dictionary
-        bias_dictionary[key] = value
+        bias_dictionary[key] = [round(metric_frame.by_group.loc[key, "accuracy"], 3),
+                                round(metric_frame.by_group.loc[key, "false_positive_rate"], 3),
+                                round(metric_frame.by_group.loc[key, "false_negative_rate"], 3)]
 
-    print(bias_dictionary)
-    return bias_dictionary
+    cleaned_bias_dictionary = {k: v for k, v in sorted(bias_dictionary.items()) if not (isinstance(v, float)
+                                                                                        and math.isnan(v))}
+
+    return cleaned_bias_dictionary
 
 
 # Execute the model function and print the score
