@@ -2,11 +2,9 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UserLogin = () => {
     const navigate = useNavigate();
-    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const {
         register,
@@ -14,6 +12,7 @@ const UserLogin = () => {
         formState: { errors },
     } = useForm();
 
+<<<<<<< HEAD
     async function handleForm(data) {
         console.log("Login form submitted with data:", data);
  
@@ -24,38 +23,49 @@ const UserLogin = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data)
-            });
+=======
+    function handleForm(data) {
+        console.log(data);
 
-            if (response.ok) {
-                const result = await response.json();
-                console.log('Login successful:', result);
+        const url = "http://localhost:11345/login";
 
-                swal.fire({
-                    icon: "success",
-                    title: "Logged in successfully!",
-                    timer: 1500,
-                }).then(() => {
-                    document.getElementById('loginForm').reset();
-                    navigate('/dashboard');
-                });
-            } else {
-                const error = await response.json();
-                console.error('Error:', error);
-                swal.fire({
-                    icon: "error",
-                    title: "Login failed",
-                    text: error.message || "Invalid credentials!",
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            swal.fire({
-                icon: "error",
-                title: "Network Error",
-                text: "Unable to reach the server.",
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data),
+        })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res.data);
+                if (res.error === true) {
+                    swal.fire({
+                        icon: "error",
+                        title: res.message,
+                    });
+                } else {
+                    document.getElementById('form').reset();
+                    localStorage.setItem('token', res.data);
+                    swal.fire({
+                        icon: "success",
+                        title: res.message,
+                        timer: 1500
+                    }).then(() => {
+                        navigate('/dashboard');
+                    });
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+>>>>>>> cbf0c3262e0f2299b4d9cd1ab204593c24ee0c6c
             });
-        }
     }
+    
+    function Forgot_password(){
+        navigate('/forgot_password');
+    }
+    
 
     return (
         <>
@@ -65,57 +75,37 @@ const UserLogin = () => {
 
             <hr />
             <div className="alert alert-primary">
-                <form onSubmit={handleSubmit(handleForm)} id="loginForm">
-                    <div className="row">
-                        <div className="col-md-6 mb-3">
-                            <label htmlFor="email">Email</label>
-                            <input
-                                {...register('email', { required: 'Email is required' })}
-                                type="email"
-                                className="form-control"
-                                id="email"
-                            />
-                            <ErrorMessage
-                                errors={errors}
-                                name="email"
-                                render={({ message }) => <p className="text-danger">{message}</p>}
-                            />
-                        </div>
+                <form onSubmit={handleSubmit(handleForm)} id={'form'}>
+                    <div className="mb-3">
+                        <label htmlFor="email">Email</label>
+                        <input {...register('email', {required: 'This field is required'})} type="email"
+                               className={"form-control"}/>
+                        <ErrorMessage
+                            errors={errors}
+                            name="email"
+                            render={({message}) => <p className={"text-danger"}>{message}</p>}
+                        />
                     </div>
 
-                    <div className="row">
-                        <div className="col-md-6 mb-3">
-                            <label htmlFor="password">Password</label>
-                            <input
-                                {...register('password', { required: 'Password is required' })}
-                                type="password"
-                                className="form-control"
-                                id="password"
-                            />
-                            <ErrorMessage
-                                errors={errors}
-                                name="password"
-                                render={({ message }) => <p className="text-danger">{message}</p>}
-                            />
-                        </div>
+                    <div className="mb-3">
+                        <label htmlFor="password">Password</label>
+                        <input {...register('password', {required: 'This field is required'})} type="password"
+                               className={"form-control"}/>
+                        <ErrorMessage
+                            errors={errors}
+                            name="password"
+                            render={({message}) => <p className={"text-danger"}>{message}</p>}
+                        />
                     </div>
 
-                    <button type="submit" className="btn btn-primary">Login</button>
-
-                    {/* Sign Up Button */}
-                    <div className="mt-3">
-                        <button
-                            type="button"
-                            className="btn btn-secondary"
-                            onClick={() => navigate('/signup')}
-                        >
-                            Sign Up
-                        </button>
-                    </div>
+                    <button className={"btn btn-primary"}>Login</button>
                 </form>
+                <button className={"btn btn-primary"} onClick={Forgot_password} style={{marginTop: '10px'}}>Forgot
+                    Password
+                </button>
             </div>
         </>
     );
-};
+}
 
 export default UserLogin;
