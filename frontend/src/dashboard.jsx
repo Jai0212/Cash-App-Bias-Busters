@@ -1,14 +1,19 @@
+// src/Dashboard.jsx
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import ChartComponent from "./ChartComponent";
 import ControlButtons from "./ControlButtons";
-import swal from "sweetalert2"; // Make sure to import SweetAlert2
 
 const Dashboard = ({ VITE_BACKEND_URL }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [timeframe, setTimeframe] = useState("1 Day");
-  const [demographics, setDemographics] = useState([]);
+  const [demographics, setDemographics] = useState([
+    "Gender",
+    "Race",
+    "Age",
+    "Income",
+  ]); // Placeholder list
   const [selectedDemographic, setSelectedDemographic] = useState("");
   const [demographicValues, setDemographicValues] = useState([]);
   const [selectedValues, setSelectedValues] = useState({
@@ -17,7 +22,6 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
     value3: "",
     value4: "",
   });
-  const [headers, setHeaders] = useState([]); // State to hold headers
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -30,69 +34,7 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
         console.error(err);
       }
     };
-
-    const fetchEmailAndDemographics = async () => {
-      const url = "http://localhost:11395/api/get-email"; // Your email fetching URL
-      const token = localStorage.getItem('token'); // Token from local storage
-
-      try {
-        const emailResponse = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token,
-          },
-        });
-
-        const emailData = await emailResponse.json();
-        console.log(emailData);
-
-        if (emailData.error) {
-          swal.fire({
-            icon: "error",
-            title: emailData.message,
-          });
-        } else {
-          const email = emailData.email;
-
-          const demographicsResponse = await axios.get("http://127.0.0.1:5000/api/headers", {
-            params: { email },
-          });
-          setDemographics(demographicsResponse.data);
-        }
-      } catch (err) {
-        console.error("Error fetching email or demographics:", err);
-        setError("Error fetching demographics");
-      }
-    };
-
-    const fetchHeaders = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:5000/api/headers", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ curr_user: currUser }),
-        });
-
-        // Check for an error in the response
-        if (response.data.error) {
-          setError(response.data.error);
-          setHeaders([]); // Clear headers on error
-        } else {
-          setHeaders(response.data); // Assuming the response is an array of headers
-          setError('');
-        }
-      } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-        setError('An error occurred while fetching headers.');
-      }
-    };
-
     fetchData();
-    fetchEmailAndDemographics();
-    fetchHeaders(); // Call fetchHeaders here
   }, [VITE_BACKEND_URL]);
 
   const handleTimeframeChange = (newTimeframe) => {
@@ -108,29 +50,33 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
   const handleDemographicChange = (event) => {
     const demographic = event.target.value;
     setSelectedDemographic(demographic);
-    setDemographicValues(["Value1", "Value2", "Value3", "Value4"]); // Placeholder values
+    // Placeholder values, these should come from the backend based on selected demographic
+    setDemographicValues(["Value1", "Value2", "Value3", "Value4"]);
   };
 
   const handleGenerate = () => {
+    // Make API call with selected demographic and values
+    console.log("Generate called with:", selectedDemographic, selectedValues);
+    // Placeholder for actual API call
     axios
-        .post(`${VITE_BACKEND_URL}/generate`, {
-          demographic: selectedDemographic,
-          values: selectedValues,
-        })
-        .then((response) => {
-          console.log("Data generated:", response.data);
-        })
-        .catch((err) => {
-          console.error("Error generating data:", err);
-        });
+      .post(`${VITE_BACKEND_URL}/generate`, {
+        demographic: selectedDemographic,
+        values: selectedValues,
+      })
+      .then((response) => {
+        console.log("Data generated:", response.data);
+      })
+      .catch((err) => {
+        console.error("Error generating data:", err);
+      });
   };
 
   const handleValueChange = (event) => {
     const { name, value } = event.target;
-    setSelectedValues((prevValues) => ({
-      ...prevValues,
+    setSelectedValues({
+      ...selectedValues,
       [name]: value,
-    }));
+    });
   };
 
   const dataForChart = {
@@ -182,54 +128,158 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
   };
 
   return (
+    <div>
+      <h1>Data from Database</h1>
+      {error && <p>{error}</p>}
+      <ul>
+        {data.map((item, index) => (
+          <li key={index}>{item.name}</li>
+        ))}
+      </ul>
       <div>
-        <h1>Data from Database</h1>
-        {error && <p>{error}</p>}
-        <ul>
-          {data.map((item, index) => (
-              <li key={index}>{item.name}</li>
-          ))}
-        </ul>
-        <div>
-          <button onClick={() => handleTimeframeChange("1 Day")}>1 Day</button>
-          <button onClick={() => handleTimeframeChange("1 Month")}>1 Month</button>
-          <button onClick={() => handleTimeframeChange("1 Year")}>1 Year</button>
-        </div>
-        <div>
-          <h2>Select Demographic</h2>
-          <select onChange={handleDemographicChange} value={selectedDemographic}>
-            <option value="">Select</option>
-            {demographics.map((demo, index) => (
-                <option key={index} value={demo}>
-                  {demo}
-                </option>
-            ))}
-          </select>
-          {selectedDemographic && (
-              <div>
-                <h3>Select Values</h3>
-                {["value1", "value2", "value3", "value4"].map((valueKey) => (
-                    <select
-                        key={valueKey}
-                        name={valueKey}
-                        onChange={handleValueChange}
-                        value={selectedValues[valueKey]}
-                    >
-                      <option value="">Select</option>
-                      {demographicValues.map((val, index) => (
-                          <option key={index} value={val}>
-                            {val}
-                          </option>
-                      ))}
-                    </select>
-                ))}
-              </div>
-          )}
-          <button onClick={handleGenerate}>Generate</button>
-        </div>
-        <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
-        <ControlButtons onDownload={handleDownload} />
+        <button onClick={() => handleTimeframeChange("1 Day")}>1 Day</button>
+        <button onClick={() => handleTimeframeChange("1 Month")}>
+          1 Month
+        </button>
+        <button onClick={() => handleTimeframeChange("1 Year")}>1 Year</button>
       </div>
+      <div>
+        <h2>Select Demographic</h2>
+        <select onChange={handleDemographicChange} value={selectedDemographic}>
+          <option value="">Select</option>
+          {demographics.map((demo, index) => (
+            <option key={index} value={demo}>
+              {demo}
+            </option>
+          ))}
+        </select>
+        {selectedDemographic && (
+          <div>
+            <h3>Select Values</h3>
+            <select
+              name="value1"
+              onChange={handleValueChange}
+              value={selectedValues.value1}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value2"
+              onChange={handleValueChange}
+              value={selectedValues.value2}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value3"
+              onChange={handleValueChange}
+              value={selectedValues.value3}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value4"
+              onChange={handleValueChange}
+              value={selectedValues.value4}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+        <button onClick={handleGenerate}>Generate</button>
+      </div>
+      {/* Second Demographic Selection */}
+      <div>
+        <h2>Select Demographic 2</h2>
+        <select
+          onChange={handleDemographicChange2}
+          value={selectedDemographic2}
+        >
+          <option value="">Select</option>
+          {demographics.map((demo, index) => (
+            <option key={index} value={demo}>
+              {demo}
+            </option>
+          ))}
+        </select>
+        {selectedDemographic2 && (
+          <div>
+            <h3>Select Values</h3>
+            <select
+              name="value1"
+              onChange={handleValueChange}
+              value={selectedValues.value1}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value2"
+              onChange={handleValueChange}
+              value={selectedValues.value2}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value3"
+              onChange={handleValueChange}
+              value={selectedValues.value3}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value4"
+              onChange={handleValueChange}
+              value={selectedValues.value4}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+      {/* End Second Demographic Selection */}
+      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
+      <ControlButtons onDownload={handleDownload} />
+    </div>
   );
 };
 
