@@ -15,7 +15,7 @@ const ChangePassword = () => {
     function handleForm(constant) {
         console.log(constant);
 
-        const url = "http://localhost:11345/change_password";
+        const url = "http://localhost:11395/change_password";
 
         fetch(url, {
             method: "POST",
