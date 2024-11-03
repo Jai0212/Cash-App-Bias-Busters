@@ -208,6 +208,75 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
         )}
         <button onClick={handleGenerate}>Generate</button>
       </div>
+      {/* Second Demographic Selection */}
+      <div>
+        <h2>Select Demographic 2</h2>
+        <select
+          onChange={handleDemographicChange2}
+          value={selectedDemographic2}
+        >
+          <option value="">Select</option>
+          {demographics.map((demo, index) => (
+            <option key={index} value={demo}>
+              {demo}
+            </option>
+          ))}
+        </select>
+        {selectedDemographic2 && (
+          <div>
+            <h3>Select Values</h3>
+            <select
+              name="value1"
+              onChange={handleValueChange}
+              value={selectedValues.value1}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value2"
+              onChange={handleValueChange}
+              value={selectedValues.value2}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value3"
+              onChange={handleValueChange}
+              value={selectedValues.value3}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value4"
+              onChange={handleValueChange}
+              value={selectedValues.value4}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+      {/* End Second Demographic Selection */}
       <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
       <ControlButtons onDownload={handleDownload} />
     </div>
