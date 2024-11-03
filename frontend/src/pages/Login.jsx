@@ -12,22 +12,25 @@ const UserLogin = () => {
         formState: { errors },
     } = useForm();
 
-<<<<<<< HEAD
-    async function handleForm(data) {
-        console.log("Login form submitted with data:", data);
- 
-        try {
-            const response = await fetch(`${VITE_BACKEND_URL}/api/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-=======
+    // async function handleForm(data) {
+    //     console.log("Login form submitted with data:", data);
+    //     try {
+    //         const response = await fetch(`${VITE_BACKEND_URL}/api/login`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(data)
+    //         });
+    //     } catch (error) {
+    //         console.error("Error during login:", error);
+    //     }
+    // }
+
     function handleForm(data) {
         console.log(data);
 
-        const url = "http://localhost:11345/login";
+        const url = "http://localhost:11395/login";
 
         fetch(url, {
             method: "POST",
@@ -58,14 +61,11 @@ const UserLogin = () => {
             })
             .catch((e) => {
                 console.log(e);
->>>>>>> cbf0c3262e0f2299b4d9cd1ab204593c24ee0c6c
             });
     }
-    
     function Forgot_password(){
         navigate('/forgot_password');
     }
-    
 
     return (
         <>

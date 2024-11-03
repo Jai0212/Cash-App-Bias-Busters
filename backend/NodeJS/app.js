@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const indexController = require('./controllers/indexController');
 
 const app = express();
-const port = 11345;
+const port = 11395;
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
@@ -42,6 +42,8 @@ app.post("/change_password", userAuthorization, indexController.change_password)
 app.post("/forgot_password", indexController.forgot_password)
 app.post("/verifyOTP", indexController.verifyOTP)
 app.post("/reset_password/:email", indexController.reset_password)
+app.get("/api/get-email", userAuthorization, indexController.get_email);
+
 
 // Start the server
 app.listen(port, (error) => {
