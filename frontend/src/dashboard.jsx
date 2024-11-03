@@ -15,6 +15,9 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
     "Income",
   ]); // Placeholder list
   const [selectedDemographic, setSelectedDemographic] = useState("");
+
+  const [selectedDemographic2, setSelectedDemographic2] = useState("");
+
   const [demographicValues, setDemographicValues] = useState([]);
   const [selectedValues, setSelectedValues] = useState({
     value1: "",
@@ -50,6 +53,13 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
   const handleDemographicChange = (event) => {
     const demographic = event.target.value;
     setSelectedDemographic(demographic);
+    // Placeholder values, these should come from the backend based on selected demographic
+    setDemographicValues(["Value1", "Value2", "Value3", "Value4"]);
+  };
+
+  const handleDemographicChange2 = (event) => {
+    const demographic = event.target.value;
+    setSelectedDemographic2(demographic);
     // Placeholder values, these should come from the backend based on selected demographic
     setDemographicValues(["Value1", "Value2", "Value3", "Value4"]);
   };
@@ -208,7 +218,6 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
         )}
         <button onClick={handleGenerate}>Generate</button>
       </div>
-      {/* Second Demographic Selection */}
       <div>
         <h2>Select Demographic 2</h2>
         <select
@@ -276,7 +285,7 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
           </div>
         )}
       </div>
-      {/* End Second Demographic Selection */}
+
       <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
       <ControlButtons onDownload={handleDownload} />
     </div>
