@@ -8,23 +8,29 @@
     color: #FFFFFF;
   }
   
-  .header {
-    font-size: 24px;
-    font-weight: bold;
-    color: #00D632;
-    margin-bottom: 20px;
-  }
-  
   .form-container {
     width: 90%;
     max-width: 400px;
-    background-color: #1E1E1E;
-    padding: 20px;
+    background-color: #00D632; 
+    padding: 30px; 
     border-radius: 8px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; 
+  }
+  
+  .header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFFFFF; 
+    margin: 0;
+    text-align: center;
   }
   
   .input-container {
+    width: 100%; 
     margin-bottom: 15px;
   }
   
@@ -35,14 +41,15 @@
     display: block;
   }
   
-  .input {
+  
+.input {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid #333333;
-    background-color: #333333;
-    color: #FFFFFF;
-  }
+    border: 1px solid #FFFFFF; 
+    background-color: #333333; 
+    color: #FFFFFF; 
+}
   
   .error {
     color: #FF5252;
@@ -52,8 +59,8 @@
   .button {
     width: 100%;
     padding: 12px;
-    background-color: #00D632;
-    color: #121212;
+    background-color: #FFFFFF; 
+    color: #00D632; 
     border: none;
     border-radius: 5px;
     font-weight: bold;
@@ -63,7 +70,7 @@
   .forgot-button {
     margin-top: 10px;
     background-color: transparent;
-    color: #00D632;
+    color: #FFFFFF; 
     border: none;
     cursor: pointer;
   }
