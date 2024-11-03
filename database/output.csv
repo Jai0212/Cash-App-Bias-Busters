@@ -1,3 +1,4 @@
+id,gender,age,race,state,timestamp,is_biased
 1,Male,19,White,PA,2024-10-03 11:35:04.030530,0
 2,Male,55,Mixed,WA,2024-10-28 13:15:13.030601,0
 3,Female,50,Other,WA,2024-08-21 09:25:31.030623,1
