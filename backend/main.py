@@ -5,6 +5,11 @@ from dotenv import load_dotenv
 import tempfile
 import pandas as pd
 import csv
+from datetime import datetime, timedelta
+from typing import Optional, List, Dict, Tuple
+from werkzeug.datastructures import FileStorage
+
+DATABASE_OUTPUT_PATH = "database/output.csv"
 
 # Load environment variables
 load_dotenv()
@@ -20,15 +25,17 @@ DB_CONFIG = {
 }
 
 
-def create_temp_cert(cert_content):
+def create_temp_cert(cert_content: str) -> str:
     """Create a temporary SSL certificate."""
+
     with tempfile.NamedTemporaryFile(delete=False) as temp_cert:
         temp_cert.write(cert_content.encode())
         return temp_cert.name
 
 
-def connect_to_database():
+def connect_to_database() -> Optional[mysql.connector.connection.MySQLConnection]:
     """Establish a connection to the MySQL database."""
+
     try:
         print("Connecting to the database...")
         connection = mysql.connector.connect(**DB_CONFIG)
@@ -40,8 +47,9 @@ def connect_to_database():
         return None
 
 
-def see_all_tables():
+def see_all_tables() -> None:
     """See all tables in the database."""
+
     try:
         connection = mysql.connector.connect(**DB_CONFIG)
         if connection.is_connected():
@@ -56,8 +64,9 @@ def see_all_tables():
         print(f"Error: {e}")
 
 
-def delete_table(table_name):
+def delete_table(table_name: str) -> None:
     """Delete the table_name"""
+
     connection = mysql.connector.connect(**DB_CONFIG)
     if connection.is_connected():
         cursor = connection.cursor()
@@ -65,8 +74,9 @@ def delete_table(table_name):
         print("Table deleted successfully.")
 
 
-def create_table(cursor, table_name):
+def create_table(cursor: mysql.connector.cursor.MySQLCursor, table_name: str) -> None:
     """Create the cashapp_data table if it doesn't exist."""
+
     cursor.execute(
         f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
@@ -76,69 +86,64 @@ def create_table(cursor, table_name):
             race VARCHAR(255),
             state VARCHAR(255),
             timestamp VARCHAR(255),
-            is_biased INT
+            action_status INT
         )
     """
     )
     print("Table created successfully.")
 
 
-def import_csv_to_db(csv_file_path, table_name):
+def import_csv_to_db(csv_file: FileStorage, table_name: str) -> bool:
     """Read the CSV file and import relevant data into the database."""
-    # Define the required columns
-    required_columns = ["gender", "age", "race", "state", "timestamp", "is_biased"]
 
-    # Read the CSV file
-    df = pd.read_csv(csv_file_path)
+    required_columns = ["gender", "age", "race", "state", "timestamp", "action_status"]
+    critical_columns = ["timestamp", "action_status"]
 
-    # Normalize column names to lowercase
+    df = pd.read_csv(csv_file)
+
     df.columns = df.columns.str.lower()
 
-    # Filter for the required columns
-    filtered_df = df[[col for col in required_columns if col in df.columns]]
+    if not all(col in df.columns for col in critical_columns):
+        print("Critical columns missing. Operation aborted.")
+        return False
 
-    # Establish database connection
+    available_columns = [col for col in required_columns if col in df.columns]
+    filtered_df = df[available_columns]
+
     try:
         connection = mysql.connector.connect(**DB_CONFIG)
         if connection.is_connected():
             cursor = connection.cursor()
             create_table(cursor, table_name)
 
-            # Insert data into the table
             for _, row in filtered_df.iterrows():
+                # Prepare values for only the columns present in the CSV
+                values = tuple(row[col] for col in available_columns)
+                columns_str = ", ".join(available_columns)
+                placeholders = ", ".join(["%s"] * len(available_columns))
+
                 cursor.execute(
-                    f"""
-                    INSERT INTO {table_name} (gender, age, race, state, timestamp, is_biased) 
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                """,
-                    (
-                        row["gender"],
-                        row["age"],
-                        row["race"],
-                        row["state"],
-                        row["timestamp"],
-                        row["is_biased"],
-                    ),
+                    f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})",
+                    values,
                 )
 
-            connection.commit()  # Commit the transaction
+            connection.commit()
             print("Data imported successfully.")
+
+            return True
+
+        return False
 
     except Error as e:
         print(f"Error: {e}")
+        return False
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
 
 
-# def insert_data(cursor, data):
-#     """Insert records into the cashapp_data table."""
-#     cursor.executemany("INSERT INTO cashapp_data (name) VALUES (%s)", data)
-#     print(f"Inserted {len(data)} records successfully.")
-
-
-def fetch_data(table_name):
+def fetch_data(table_name: str) -> Tuple[List[str], Tuple[str, ...]]:
     """Fetch and display all records from the specified table, including headers."""
 
     try:
@@ -172,18 +177,18 @@ def fetch_data(table_name):
             connection.close()
 
 
-def save_data_to_csv(table_name):
+def save_data_to_csv(table_name: str) -> None:
     """Save data from the specified table to a CSV file, including headers."""
 
     # Call to delete existing data in the CSV file
-    delete_csv_data("database/output.csv")  # Pass the file path to the delete function
+    delete_csv_data(DATABASE_OUTPUT_PATH)  # Pass the file path to the delete function
 
     connection = connect_to_database()
     if connection:
         cursor = connection.cursor()
         headers, data = fetch_data(table_name)  # Fetch headers and data
 
-        csv_file_path = "database/output.csv"
+        csv_file_path = DATABASE_OUTPUT_PATH
 
         # Open the CSV file for writing
         with open(csv_file_path, mode="w", newline="") as file:
@@ -199,8 +204,36 @@ def save_data_to_csv(table_name):
         connection.close()  # Close the database connection
 
 
-def delete_csv_data(csv_file_path="database/output.csv"):
+def get_data_for_time(table_name: str, time: str) -> None:
+    """Get the data for the specified time period."""
+
+    delete_csv_data()
+    save_data_to_csv(table_name)
+
+    df = pd.read_csv(DATABASE_OUTPUT_PATH)
+
+    # Convert the 'Timestamp' column to datetime format
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
+
+    if time == "day":
+        days = 1
+    elif time == "week":
+        days = 7
+    elif time == "month":
+        days = 30
+    else:
+        days = 365
+
+    cutoff_date = datetime.now() - timedelta(days=days)
+
+    filtered_df = df[df["timestamp"] >= cutoff_date]
+
+    filtered_df.to_csv(DATABASE_OUTPUT_PATH, index=False)
+
+
+def delete_csv_data(csv_file_path: str = DATABASE_OUTPUT_PATH) -> None:
     """Delete all data from the specified CSV file."""
+
     try:
         with open(csv_file_path, mode="w", newline="") as file:
             # Optionally, you can write the header again if needed
@@ -212,56 +245,120 @@ def delete_csv_data(csv_file_path="database/output.csv"):
         print(f"Error deleting data from {csv_file_path}: {e}")
 
 
-def main():
-    """Main function to run the database operations."""
-    temp_cert_path = None
-    try:
+def get_headers(table_name: str) -> List[str]:
+    """Get the headers of the table."""
 
-        connection = connect_to_database()
-        if connection:
-            cursor = connection.cursor()
+    connection = connect_to_database()
+    if connection:
+        cursor = connection.cursor()
+        cursor.execute(f"SELECT * FROM {table_name}")
 
-            # Only to be used when we want to create a tabel
-            # create_table(cursor)
+        critical_columns = ["timestamp", "action_status"]
+        headers = [
+            desc[0] for desc in cursor.description if desc[0] not in critical_columns
+        ]
 
-            # Specify the actual data you want to insert
-            # actual_data = [
-            #     ("John Doe",),
-            #     ("Jane Smith",),
-            #     ("Alice Johnson",),
-            #     ("Bob Brown",),
-            #     # Add more names as needed
-            # ]
-            #
-            # insert_data(cursor, actual_data)
-            # connection.commit()  # Commit the insertion
+        print(headers)
 
-            # fetch_data()
+        if len(headers) < 2:
+            print("Less than 2 demographics in dataset.")
+            return []
+        else:
+            return headers
 
-    except Error as e:
-        print(f"Error: {e}")
 
-    finally:
-        # Close cursor and connection
-        if "cursor" in locals():
-            cursor.close()
-        if "connection" in locals():
-            connection.close()
-        if temp_cert_path:
-            os.remove(temp_cert_path)
-        print("Connection closed.")
+def get_values_under_header(table_name: str, header: str) -> List[str]:
+    """Get the unique values under the specified header."""
 
+    df = pd.read_csv(DATABASE_OUTPUT_PATH)
+
+    delete_csv_data()
+    save_data_to_csv(table_name)
+
+    if header not in get_headers(table_name):
+        print(f"Header '{header}' does not exist in the dataset.")
+        return []
+
+    unique_values = df[header].unique()
+
+    print(unique_values.tolist())
+
+    if header == "age":
+        result = set()
+        for i in unique_values.tolist():
+            if i < 10:
+                result.add("0-10")
+            elif i < 20:
+                result.add("10-20")
+            elif i < 30:
+                result.add("20-30")
+            elif i < 40:
+                result.add("30-40")
+            elif i < 50:
+                result.add("40-50")
+            else:
+                result.add("50-60")
+
+        print(list(result))
+        return list(result)
+
+    return unique_values.tolist()
+
+
+def update_comparison_csv(
+    curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
+) -> None:
+    """Update the comparison CSV file with the user's selections."""
+
+    delete_csv_data()
+
+    if time:
+        get_data_for_time(curr_user, time)
+    else:
+        save_data_to_csv(curr_user)
+
+    df = pd.read_csv(DATABASE_OUTPUT_PATH)
+
+    valid_columns = [col for col in demographics if col in df.columns]
+    filtered_df = df[valid_columns]
+
+    if demographics:
+        filtered_df = df[df[demographics[0]].isin(choices.get(demographics[0], []))]
+
+        if len(demographics) > 1:
+            filtered_df = filtered_df[
+                filtered_df[demographics[1]].isin(choices.get(demographics[1], []))
+            ]
+
+    filtered_df.to_csv(DATABASE_OUTPUT_PATH, index=False)
+
+
+# def top_common_states(csv_file_path, column_name, top_n=5):
+#     """Read the CSV file and return the top N most common values in the specified column."""
+#     # Read the CSV file into a DataFrame
+#     df = pd.read_csv(csv_file_path)
+
+#     # Check if the specified column exists in the DataFrame
+#     if column_name not in df.columns:
+#         raise ValueError(f"Column '{column_name}' does not exist in the CSV file.")
+
+#     # Count the occurrences of each value in the specified column
+#     common_values = df[column_name].value_counts().head(top_n)
+
+#     return common_values
+
+
+# def insert_data(cursor, data):
+#     """Insert records into the cashapp_data table."""
+#     cursor.executemany("INSERT INTO cashapp_data (name) VALUES (%s)", data)
+#     print(f"Inserted {len(data)} records successfully.")
 
 if __name__ == "__main__":
+    # see_all_tables()
+    # import_csv_to_db("database/test.csv", "test_table")
+    # fetch_data("test_table")
+    # save_data_to_csv("test_table")
+    # get_headers("test_table")
+    # get_values_under_header("test_table", "state")
+    # update_comparison_csv("test_table", ["state", "race"], {"state": ["WI", "NY", "AZ"], "race": ["Hispanic", "Black"]}, "year")
     pass
-    #     see_all_tables(cursor)
-
-    # import_csv_to_db("database/test.csv", "test_table_2")
-
-    # connection = connect_to_database()
-    # if connection:
-    #     cursor = connection.cursor()
-    #     print(fetch_data(cursor, "test_table_2"))
-
-    # save_data_to_csv("test_table_2")
-    # delete_csv_data('database/output.csv')
