@@ -8,6 +8,20 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [timeframe, setTimeframe] = useState("1 Day");
+  const [demographics, setDemographics] = useState([
+    "Gender",
+    "Race",
+    "Age",
+    "Income",
+  ]); // Placeholder list
+  const [selectedDemographic, setSelectedDemographic] = useState("");
+  const [demographicValues, setDemographicValues] = useState([]);
+  const [selectedValues, setSelectedValues] = useState({
+    value1: "",
+    value2: "",
+    value3: "",
+    value4: "",
+  });
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -31,6 +45,38 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
     if (chartRef.current) {
       chartRef.current.downloadChart();
     }
+  };
+
+  const handleDemographicChange = (event) => {
+    const demographic = event.target.value;
+    setSelectedDemographic(demographic);
+    // Placeholder values, these should come from the backend based on selected demographic
+    setDemographicValues(["Value1", "Value2", "Value3", "Value4"]);
+  };
+
+  const handleGenerate = () => {
+    // Make API call with selected demographic and values
+    console.log("Generate called with:", selectedDemographic, selectedValues);
+    // Placeholder for actual API call
+    axios
+      .post(`${VITE_BACKEND_URL}/generate`, {
+        demographic: selectedDemographic,
+        values: selectedValues,
+      })
+      .then((response) => {
+        console.log("Data generated:", response.data);
+      })
+      .catch((err) => {
+        console.error("Error generating data:", err);
+      });
+  };
+
+  const handleValueChange = (event) => {
+    const { name, value } = event.target;
+    setSelectedValues({
+      ...selectedValues,
+      [name]: value,
+    });
   };
 
   const dataForChart = {
@@ -96,6 +142,71 @@ const Dashboard = ({ VITE_BACKEND_URL }) => {
           1 Month
         </button>
         <button onClick={() => handleTimeframeChange("1 Year")}>1 Year</button>
+      </div>
+      <div>
+        <h2>Select Demographic</h2>
+        <select onChange={handleDemographicChange} value={selectedDemographic}>
+          <option value="">Select</option>
+          {demographics.map((demo, index) => (
+            <option key={index} value={demo}>
+              {demo}
+            </option>
+          ))}
+        </select>
+        {selectedDemographic && (
+          <div>
+            <h3>Select Values</h3>
+            <select
+              name="value1"
+              onChange={handleValueChange}
+              value={selectedValues.value1}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value2"
+              onChange={handleValueChange}
+              value={selectedValues.value2}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value3"
+              onChange={handleValueChange}
+              value={selectedValues.value3}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            <select
+              name="value4"
+              onChange={handleValueChange}
+              value={selectedValues.value4}
+            >
+              <option value="">Select</option>
+              {demographicValues.map((val, index) => (
+                <option key={index} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+        <button onClick={handleGenerate}>Generate</button>
       </div>
       <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
       <ControlButtons onDownload={handleDownload} />
