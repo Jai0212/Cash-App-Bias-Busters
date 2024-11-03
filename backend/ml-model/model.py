@@ -1,4 +1,5 @@
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, List, Tuple
+import math
 
 import pandas as pd
 import numpy as np
@@ -8,45 +9,60 @@ from sklearn import tree
 from sklearn.model_selection import train_test_split, GridSearchCV
 from fairlearn.metrics import MetricFrame
 
+single_column_check = False
+
 
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
     df = pd.read_csv('../../database/output.csv')
+    df_cleaned = df.drop(["timestamp", "id"], axis=1, errors='ignore')
 
-    bins = range(18, 61, 10)
+    # Check if the DataFrame has only one column
+    if df_cleaned.shape[1] == 2:
+        single_column_check = True  # You can do something based on this flag if needed
 
-    # Create labels for each bin
-    labels = [f"{i}-{i + 4}" for i in bins[:-1]]
+    # Check if 'age' column exists
+    if 'age' in df_cleaned.columns:
+        bins = range(18, 90, 9)
 
-    # Use cut to create a new column with age groups
-    df['age_groups'] = pd.cut(df['age'], bins=bins, labels=labels, right=False)
-    df_dropped = df.drop('age', axis=1)
+        # Create labels for each bin
+        labels = [f"{i}-{i + 8}" for i in bins[:-1]]
 
-    inputs = df_dropped.drop('is_biased', axis='columns')
-    target = df_dropped['is_biased']
+        # Use cut to create a new column with age groups
+        df_cleaned['age_groups'] = pd.cut(df_cleaned['age'], bins=bins, labels=labels, right=False)
+    else:
+        df_cleaned['age_groups'] = None  # Or handle it differently if desired
 
-    return df_dropped, inputs, target
+    df_dropped = df_cleaned.drop('age', axis=1, errors='ignore')  # Ignore error if 'age' does not exist
+
+    inputs = df_dropped.drop('is_biased', axis='columns', errors='ignore')  # Ignore error if 'is_biased' does not exist
+    target = df_dropped.get('is_biased', pd.Series())  # Get 'is_biased' or an empty Series if it does not exist
+
+    return df_cleaned, inputs, target
+
+def labels_encoder():
+    le_dict = {}
+    categorical_columns = ['gender', 'age_groups', 'race', 'state']  # Define your categorical columns
+
+    df, inputs, _ = file_reader()
+
+    # Create LabelEncoders for each categorical column
+    for col in categorical_columns:
+        if col in inputs.columns:  # Check if the column exists in inputs
+            le = LabelEncoder()
+            inputs[f"{col}_N"] = le.fit_transform(inputs[col])  # Encode the column
+            le_dict[col] = le  # Store the label encoder in a dictionary
+
+    # Get mappings from numeric codes back to labels
+    mappings = {col: dict(zip(le.transform(le.classes_), le.classes_)) for col, le in le_dict.items()}
+
+    # Keep the specified columns: 'id', 'timestamp', 'is_biased'
+    inputs_n = inputs.drop(columns=categorical_columns, errors='ignore')
+    return inputs_n, mappings
 
 
-def labels_encoder() -> pd.DataFrame:
-    le_gender = LabelEncoder()
-    le_age = LabelEncoder()
-    le_race = LabelEncoder()
-    le_state = LabelEncoder()
-
-    _, inputs, _ = file_reader()
-
-    inputs["gender_N"] = le_gender.fit_transform(inputs['gender'])
-    inputs["age_N"] = le_age.fit_transform(inputs['age_groups'])
-    inputs["race_N"] = le_race.fit_transform(inputs['race'])
-    inputs["state_N"] = le_state.fit_transform(inputs['state'])
-
-    inputs_n = inputs.drop(['gender', 'age_groups', 'race', 'state', 'id', 'timestamp'], axis='columns')
-    return inputs_n
-
-
-def model() -> dict[tuple[Any, Any], tuple[Any, Any, Any]]:
-    inputs = labels_encoder()
-    _, _, target = file_reader()
+def model() -> dict:
+    inputs, mappings = labels_encoder()  # Get encoded inputs and mappings
+    _, _, target = file_reader()          # Get the target variable
 
     # Split the data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(inputs, target, test_size=0.2, random_state=48)
@@ -72,9 +88,14 @@ def model() -> dict[tuple[Any, Any], tuple[Any, Any, Any]]:
 
     # Get predictions
     y_pred = best_clf.predict(X_test)
+    feature1 = inputs.columns[0]
 
     # Specify multiple sensitive features
-    sensitive_features = X_test[['race_N', 'age_N']]  # Add your sensitive features here
+    if 'single_column_check' in globals() and single_column_check:  # Ensure single_column_check is defined
+        sensitive_features = X_test[[feature1]]  # Add your sensitive features here
+    else:
+        feature2 = inputs.columns[1]
+        sensitive_features = X_test[[feature1, feature2]]  # Add your sensitive features here
 
     # Create a MetricFrame to evaluate fairness
     metric_frame = MetricFrame(
@@ -98,24 +119,31 @@ def model() -> dict[tuple[Any, Any], tuple[Any, Any, Any]]:
     with open("model_with_score.pkl", "wb") as f:
         pickle.dump({'model': best_clf, 'score': score}, f)
 
-    bias_dictionary = {}
-    for _, row in X_test.iterrows():
-        # Extract the specific values for race_N and age_N
-        race = row["race_N"]
-        age = row["age_N"]
+        # Create dictionary with mapped keys
+        bias_dictionary = {}
+        for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
 
-        # Define the dictionary key as a tuple
-        key = (race, age)
+            f1_label = mappings[feature1.removesuffix("_N")].get(feature1_code, "Unknown Feature")
+            if 'single_column_check' in globals() and single_column_check:
+                key = (str(f1_label))
+            else:
+                feature2 = inputs.columns[1]
+                f2_label = mappings[feature2.removesuffix("_N")].get(feature2_code, "Unknown Feature")
+                key = (str(f1_label), str(f2_label))
 
-        # Define the value you want to store in the dictionary for this key
-        value = metric_frame.by_group.loc[key, "accuracy"]
+            bias_dictionary[key] = [
+                round(metrics['accuracy'], 3),
+                round(metrics['false_positive_rate'], 3),
+                round(metrics['false_negative_rate'], 3)
+            ]
 
-        # Assign the value to the dictionary
-        bias_dictionary[key] = value
+    # Cleaned dictionary without NaN values
+    cleaned_bias_dictionary = {k: v for k, v in bias_dictionary.items() if not any(math.isnan(x) for x in v)}
 
-    print(bias_dictionary)
-    return bias_dictionary
+    # Sort dictionary by race_label and then by age_label
+    sorted_bias_dictionary = dict(sorted(cleaned_bias_dictionary.items(), key=lambda item: (item[0][0], item[0][1])))
 
+    return sorted_bias_dictionary
 
 # Execute the model function and print the score
 print(model())
