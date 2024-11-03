@@ -98,15 +98,22 @@ def model() -> dict[tuple[Any, Any], tuple[Any, Any, Any]]:
     with open("model_with_score.pkl", "wb") as f:
         pickle.dump({'model': best_clf, 'score': score}, f)
 
-
     bias_dictionary = {}
-    for race in metric_frame.by_group.index.get_level_values('race_N').unique():
-        for age in metric_frame.by_group.loc[race].index:
-            bias_dictionary[X_test["race_N"], X_test["age_N"]] = (
-                metric_frame.by_group.loc[(race, age), "accuracy"],
-                metric_frame.by_group.loc[(race, age), "false_positive_rate"],
-                metric_frame.by_group.loc[(race, age), "false_negative_rate"])
+    for _, row in X_test.iterrows():
+        # Extract the specific values for race_N and age_N
+        race = row["race_N"]
+        age = row["age_N"]
 
+        # Define the dictionary key as a tuple
+        key = (race, age)
+
+        # Define the value you want to store in the dictionary for this key
+        value = metric_frame.by_group.loc[key, "accuracy"]
+
+        # Assign the value to the dictionary
+        bias_dictionary[key] = value
+
+    print(bias_dictionary)
     return bias_dictionary
 
 
