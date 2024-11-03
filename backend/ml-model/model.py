@@ -1,4 +1,5 @@
 from typing import Any, Dict, List, Tuple
+import math
 
 import pandas as pd
 import numpy as np
@@ -12,22 +13,31 @@ from fairlearn.metrics import MetricFrame
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
     df = pd.read_csv('../../database/output.csv')
 
-    bins = range(18, 80, 10)
+    # Check if the DataFrame has only one column
+    if df.shape[1] == 1:
+        single_column_check = True
 
-    # Create labels for each bin
-    labels = [f"{i}-{i + 4}" for i in bins[:-1]]
+    # Check if 'age' column exists
+    if 'age' in df.columns:
+        bins = range(18, 90, 9)
 
-    # Use cut to create a new column with age groups
-    df['age_groups'] = pd.cut(df['age'], bins=bins, labels=labels, right=False)
-    df_dropped = df.drop('age', axis=1)
+        # Create labels for each bin CHANGED THIS
+        labels = [f"{i}-{i + 8}" for i in bins[:-1]]
 
-    inputs = df_dropped.drop('is_biased', axis='columns')
-    target = df_dropped['is_biased']
+        # Use cut to create a new column with age groups
+        df['age_groups'] = pd.cut(df['age'], bins=bins, labels=labels, right=False)
+    else:
+        df['age_groups'] = None  # or you can choose to drop the age_groups column later if you want
+
+    df_dropped = df.drop('age', axis=1, errors='ignore')  # This will ignore the error if 'age' does not exist
+
+    inputs = df_dropped.drop('is_biased', axis='columns', errors='ignore')  # Ignore error if 'is_biased' does not exist
+    target = df_dropped.get('is_biased', pd.Series())  # Get 'is_biased' or an empty Series if it does not exist
 
     return df_dropped, inputs, target
 
 
-def labels_encoder() -> pd.DataFrame:
+def labels_encoder():
     le_gender = LabelEncoder()
     le_age = LabelEncoder()
     le_race = LabelEncoder()
@@ -40,12 +50,18 @@ def labels_encoder() -> pd.DataFrame:
     inputs["race_N"] = le_race.fit_transform(inputs['race'])
     inputs["state_N"] = le_state.fit_transform(inputs['state'])
 
+    # Get mapping from numeric codes back to labels
+    age_mapping = dict(zip(le_age.transform(le_age.classes_), le_age.classes_))
+    race_mapping = dict(zip(le_race.transform(le_race.classes_), le_race.classes_))
+    gender_mapping = dict(zip(le_gender.transform(le_gender.classes_), le_gender.classes_))
+    state_mapping = dict(zip(le_state.transform(le_state.classes_), le_state.classes_))
+
     inputs_n = inputs.drop(['gender', 'age_groups', 'race', 'state', 'id', 'timestamp'], axis='columns')
-    return inputs_n
+    return inputs_n, age_mapping, race_mapping, gender_mapping, state_mapping
 
 
 def model() -> dict:
-    inputs = labels_encoder()
+    inputs, age_m, race_m, gender_m, state_m = labels_encoder()
     _, _, target = file_reader()
 
     # Split the data into training and test sets
@@ -98,27 +114,26 @@ def model() -> dict:
     with open("model_with_score.pkl", "wb") as f:
         pickle.dump({'model': best_clf, 'score': score}, f)
 
+    # Create dictionary with mapped keys
     bias_dictionary = {}
-    for _, row in X_test.iterrows():
-        # Extract the specific values for race_N and age_N
-        race = row["race_N"]
-        age = row["age_N"]
+    for (race_code, age_code), metrics in metric_frame.by_group.iterrows():
+        race_label = race_m.get(race_code, "Unknown Race")
+        age_label = age_m.get(age_code, "Unknown Age")
+        key = (str(race_label), str(age_label))  # Ensuring keys are strings for sorting
 
-        # Define the dictionary key as a tuple
-        key = (race, age)
+        bias_dictionary[key] = [
+            round(metrics['accuracy'], 3),
+            round(metrics['false_positive_rate'], 3),
+            round(metrics['false_negative_rate'], 3)
+        ]
 
-        # Define the value you want to store in the dictionary for this key
+    # Cleaned dictionary without NaN values
+    cleaned_bias_dictionary = {k: v for k, v in bias_dictionary.items() if not any(math.isnan(x) for x in v)}
 
-        # Assign the value to the dictionary
-        bias_dictionary[key] = [round(metric_frame.by_group.loc[key, "accuracy"], 3),
-                                round(metric_frame.by_group.loc[key, "false_positive_rate"], 3),
-                                round(metric_frame.by_group.loc[key, "false_negative_rate"], 3)]
+    # Sort dictionary by race_label and then by age_label
+    sorted_bias_dictionary = dict(sorted(cleaned_bias_dictionary.items(), key=lambda item: (item[0][0], item[0][1])))
 
-    cleaned_bias_dictionary = {k: v for k, v in sorted(bias_dictionary.items()) if not (isinstance(v, float)
-                                                                                        and math.isnan(v))}
-
-    return cleaned_bias_dictionary
-
+    return sorted_bias_dictionary
 
 # Execute the model function and print the score
 print(model())
