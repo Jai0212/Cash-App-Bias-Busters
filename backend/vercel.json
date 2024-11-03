@@ -1,4 +1,4 @@
 {
-  "builds": [{ "src": "demo.py", "use": "@vercel/python" }],
-  "routes": [{ "src": "/(.*)", "dest": "demo.py" }]
+  "builds": [{ "src": "Flask/app.py", "use": "@vercel/python" }],
+  "routes": [{ "src": "/(.*)", "dest": "app.py" }]
 }
