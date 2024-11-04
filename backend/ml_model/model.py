@@ -14,13 +14,12 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
-    csv_file_path = os.path.join(current_dir, '../../database/output.csv')
-    df = pd.read_csv(csv_file_path)
+    df = pd.read_csv('../../database/output.csv')
     df_cleaned = df.drop(["timestamp", "id"], axis=1, errors='ignore')
 
     # Check if the DataFrame has only one column
     if df_cleaned.shape[1] == 2:
-        single_column_check = True  # You can do something based on this flag if needed
+        single_column_check = True
 
     # Check if 'age' column exists
     if 'age' in df_cleaned.columns:
@@ -32,16 +31,20 @@ def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
         # Use cut to create a new column with age groups
         df_cleaned['age_groups'] = pd.cut(df_cleaned['age'], bins=bins, labels=labels, right=False)
     else:
-        df_cleaned['age_groups'] = None  # Or handle it differently if desired
+        df_cleaned['age_groups'] = None
 
-    df_dropped = df_cleaned.drop('age', axis=1, errors='ignore')  # Ignore error if 'age' does not exist
+    df_dropped = df_cleaned.drop('age', axis=1, errors='ignore')
 
-    inputs = df_dropped.drop('action_status', axis='columns', errors='ignore')  # Ignore error if 'is_biased' does not exist
-    target = df_dropped.get('action_status', pd.Series())  # Get 'is_biased' or an empty Series if it does not exist
+    inputs = df_dropped.drop('is_biased', axis='columns', errors='ignore')  # Ignore error if 'is_biased' does not exist
+    target = df_dropped.get('is_biased', pd.Series())  # Get 'is_biased' or an empty Series if it does not exist
 
     return df_cleaned, inputs, target
 
+
 def labels_encoder():
+    """
+    Creates labels for each parameter and enumerates them for the ML model.
+    """
     le_dict = {}
     categorical_columns = ['gender', 'age_groups', 'race', 'state']  # Define your categorical columns
 
@@ -63,11 +66,14 @@ def labels_encoder():
 
 
 def model() -> dict:
+    """
+    Final model.
+    """
     inputs, mappings = labels_encoder()  # Get encoded inputs and mappings
     _, _, target = file_reader()          # Get the target variable
 
     # Split the data into training and test sets
-    X_train, X_test, y_train, y_test = train_test_split(inputs, target, test_size=0.2, random_state=10)
+    X_train, X_test, y_train, y_test = train_test_split(inputs, target, test_size=0.2, random_state=48)
 
     # Define the model
     clf = tree.DecisionTreeClassifier()
