@@ -147,5 +147,6 @@ def model() -> dict:
 
     return sorted_bias_dictionary
 
+if __name__ == "__main__":
 # Execute the model function and print the score
-print(model())
+    print(model())

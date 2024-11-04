@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const indexController = require('./controllers/indexController');
 
 const app = express();
-const port = 11395;
+const port = 11355;
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));

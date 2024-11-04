@@ -73,7 +73,7 @@ def delete_table(table_name: str) -> None:
     connection = mysql.connector.connect(**DB_CONFIG)
     if connection.is_connected():
         cursor = connection.cursor()
-        cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+        cursor.execute(f"DROP TABLE IF EXISTS `{table_name}`")
         print("Table deleted successfully.")
 
         cursor.close()
@@ -83,9 +83,12 @@ def delete_table(table_name: str) -> None:
 def create_table(cursor: mysql.connector.cursor.MySQLCursor, table_name: str) -> None:
     """Create the cashapp_data table if it doesn't exist."""
 
+    # Sanitize the table name by replacing invalid characters or use backticks
+    sanitized_table_name = f"`{table_name}`"  # Backticks allow special characters
+
     cursor.execute(
         f"""
-        CREATE TABLE IF NOT EXISTS {table_name} (
+        CREATE TABLE IF NOT EXISTS {sanitized_table_name} (
             id INT AUTO_INCREMENT PRIMARY KEY,
             gender VARCHAR(255),
             age INT,
@@ -94,7 +97,7 @@ def create_table(cursor: mysql.connector.cursor.MySQLCursor, table_name: str) ->
             timestamp VARCHAR(255),
             action_status INT
         )
-    """
+        """
     )
     print("Table created successfully.")
 
@@ -129,7 +132,7 @@ def import_csv_to_db(csv_file: FileStorage, table_name: str) -> bool:
                 placeholders = ", ".join(["%s"] * len(available_columns))
 
                 cursor.execute(
-                    f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})",
+                    f"INSERT INTO `{table_name}` ({columns_str}) VALUES ({placeholders})",
                     values,
                 )
 
@@ -157,7 +160,7 @@ def fetch_data(table_name: str) -> Tuple[List[str], Tuple[str, ...]]:
         if connection.is_connected():
             cursor = connection.cursor()
 
-        cursor.execute(f"SELECT * FROM {table_name}")
+        cursor.execute(f"SELECT * FROM `{table_name}`")
         results = cursor.fetchall()
 
         # Fetching the column headers
@@ -257,11 +260,13 @@ def get_headers(table_name: str) -> List[str]:
     connection = connect_to_database()
     if connection:
         cursor = connection.cursor()
-        cursor.execute(f"SELECT * FROM {table_name}")
+        cursor.execute(f"SELECT * FROM `{table_name}`")
 
         critical_columns = ["timestamp", "action_status"]
         headers = [
-            desc[0] for desc in cursor.description if desc[0] not in critical_columns
+            desc[0]
+            for desc in cursor.description
+            if desc[0] not in critical_columns + ["id"]
         ]
 
         print(headers)
@@ -276,10 +281,10 @@ def get_headers(table_name: str) -> List[str]:
 def get_values_under_header(table_name: str, header: str) -> List[str]:
     """Get the unique values under the specified header."""
 
-    df = pd.read_csv(DATABASE_OUTPUT_PATH)
-
     delete_csv_data()
     save_data_to_csv(table_name)
+
+    df = pd.read_csv(DATABASE_OUTPUT_PATH)
 
     if header not in get_headers(table_name):
         print(f"Header '{header}' does not exist in the dataset.")
@@ -324,13 +329,13 @@ def update_comparison_csv(
         save_data_to_csv(curr_user)
 
     df = pd.read_csv(DATABASE_OUTPUT_PATH)
-
+    
     valid_columns = [col for col in demographics if col in df.columns]
     filtered_df = df[valid_columns]
 
     if demographics:
         filtered_df = df[df[demographics[0]].isin(choices.get(demographics[0], []))]
-
+        
         if len(demographics) > 1:
             filtered_df = filtered_df[
                 filtered_df[demographics[1]].isin(choices.get(demographics[1], []))
@@ -414,9 +419,10 @@ def update_db_for_user(
             connection.close()
 
 
+# TODO make api for this by calling all appropriate function
 def get_last_login_data(
     curr_user: str,
-) -> Optional[Tuple[List[str], Dict[str, List[str]]]]:
+) -> Tuple[Optional[List[str]], Optional[Dict[str, List[str]]], Optional[str]]:
     """Retrieve the last login demographics and choices for the specified user."""
 
     connection = mysql.connector.connect(**DB_CONFIG)
@@ -433,7 +439,7 @@ def get_last_login_data(
             SELECT demographic_1, choice_1_demographic_1, choice_2_demographic_1,
                    choice_3_demographic_1, choice_4_demographic_1,
                    demographic_2, choice_1_demographic_2, choice_2_demographic_2,
-                   choice_3_demographic_2, choice_4_demographic_2
+                   choice_3_demographic_2, choice_4_demographic_2, time
             FROM users
             WHERE email = %s
         """,
@@ -446,6 +452,10 @@ def get_last_login_data(
             # Unpack the result
             demographic_one = result[0]
             demographic_two = result[5]
+            time = result[10]
+
+            if not time:
+                time = "year"
 
             # Add demographics to the list, handling None values
             if demographic_one is not None:
@@ -466,14 +476,14 @@ def get_last_login_data(
                     result[9] if result[9] is not None else None,
                 ]
 
-            return demographics, choices
+            return list(set(demographics)), choices, time
         else:
             print("No data found for the specified user.")
-            return None
+            return None, None, None
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
-        return None
+        return None, None, None
     finally:
         if connection.is_connected():
             cursor.close()

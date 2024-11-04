@@ -11,7 +11,9 @@ from main import (
     update_comparison_csv,
     get_values_under_header,
     update_db_for_user,
+    get_last_login_data,
 )
+from ml_model.model import model
 
 load_dotenv()
 
@@ -70,32 +72,78 @@ def values_under_header():
 
 
 # TODO When user log ins, call this and pass in his data stored in user json
-@app.route("/api/comparisons", methods=["POST"])
-def comparisons():
+@app.route("/api/generate", methods=["POST"])
+def generate():
     data = request.get_json()
     demographics = data.get("demographics")
     choices = data.get("choices")
     curr_user = data.get("curr_user")
     time = data.get("time", None)
 
+    print("Generating Data received: ", demographics, choices, time)
+
     if demographics and choices and curr_user:
-        if (
-            len(demographics) == 1
-            and demographics[0] in choices
-            and len(choices[demographics[0]]) >= 1
-        ) or (
-            len(demographics) == 2
-            and demographics[0] in choices
-            and demographics[1] in choices
-            and len(choices[demographics[0]]) >= 1
-            and len(choices[demographics[1]]) >= 1
-        ):
-            update_comparison_csv(curr_user, demographics, choices, time)
-            update_db_for_user(curr_user, demographics, choices, time)
-            # TODO akshatt and armagan function
-            return "Comparisons route"  # data to be displayed as graph
+        if demographics[0] == "":
+            return jsonify({"error": "Missing required data."}), 400
+
+        first_demographic = [
+            element
+            for element in list(set(choices.get(demographics[0], [])))
+            if element != ""
+        ]
+        second_demographic = [
+            element
+            for element in list(set(choices.get(demographics[1], [])))
+            if element != ""
+        ]
+
+        if demographics[0] == "" or len(first_demographic) == 0:
+            return jsonify({"error": "Missing required data."}), 400
+        if demographics[1] == "" or len(second_demographic) == 0:
+            del choices[demographics[1]]
+            demographics.pop()
+
+        demographics = list(set(demographics))
+
+        print("Generating data for: ", demographics, choices, time)
+
+        update_comparison_csv(curr_user, demographics, choices, time)
+        update_db_for_user(curr_user, demographics, choices, time)
+
+        output = model()  # TODO akshatt armagan function call
+        print(output)
+        
+        return jsonify({f"{key[0]}_{key[1]}": value for key, value in output.items()})
 
     return jsonify({"error": "Missing required data."}), 400
+
+
+@app.route("/api/get-prev-data", methods=["POST"])
+def get_prev_data():
+    data = request.get_json()
+    curr_user = data.get("curr_user")
+
+    if curr_user:
+        demographics, choices, time = get_last_login_data(curr_user)
+        if demographics and choices and time:
+            demographics.append("")
+            demographics = demographics[0:2]
+
+            choices[demographics[0]] = choices.get(demographics[0], []) + ["", "", "", ""]
+            choices[demographics[1]] = choices.get(demographics[1], []) + ["", "", "", ""]
+
+            choices[demographics[0]] = choices.get(demographics[0], [])[0:4]
+            choices[demographics[1]] = choices.get(demographics[1], [])[0:4]
+
+            return jsonify(
+                {
+                    "demographics": demographics,
+                    "choices": choices,
+                    "time": time,
+                }
+            )
+    else:
+        return jsonify({"error": "Missing required data."}), 400
 
 
 @app.route("/api/upload-data", methods=["POST"])
@@ -135,9 +183,11 @@ def upload_model():
             user_folder, exist_ok=True
         )  # Create user folder if it doesn't exist
 
+        # Define a fixed filename for the model
+        fixed_filename = "model.pkl"  # or use a dynamic name if you prefer
         file_path = os.path.join(
-            user_folder, file.filename
-        )  # Save model with user's name
+            user_folder, fixed_filename
+        )  # Save model with a fixed name
 
         file.save(file_path)  # Save or overwrite the existing file
 
@@ -149,9 +199,10 @@ def upload_model():
 
 
 def load_model(curr_user: str):
-    model_path = UPLOAD_FOLDER + curr_user
+    model_path = os.path.join(UPLOAD_FOLDER, curr_user, "model.pkl")
 
-    if model_path and os.path.exists(model_path):
+    # Check if the model file exists
+    if os.path.exists(model_path):
         with open(model_path, "rb") as file:
             model = pickle.load(file)
         return model
