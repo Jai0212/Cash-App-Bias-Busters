@@ -322,7 +322,7 @@ def update_comparison_csv(
     """Update the comparison CSV file with the user's selections."""
 
     delete_csv_data()
-
+    print("DEBUG", curr_user, demographics, choices, time)
     if time:
         get_data_for_time(curr_user, time)
     else:
@@ -330,16 +330,14 @@ def update_comparison_csv(
 
     df = pd.read_csv(DATABASE_OUTPUT_PATH)
     
-    valid_columns = [col for col in demographics if col in df.columns]
+    critical_columns = ["id", "timestamp", "action_status"]
+
+    valid_columns = [col for col in demographics + critical_columns if col in df.columns]
     filtered_df = df[valid_columns]
 
-    if demographics:
-        filtered_df = df[df[demographics[0]].isin(choices.get(demographics[0], []))]
-        
-        if len(demographics) > 1:
-            filtered_df = filtered_df[
-                filtered_df[demographics[1]].isin(choices.get(demographics[1], []))
-            ]
+    for dem in demographics:
+        if dem in choices:
+            filtered_df = filtered_df[filtered_df[dem].isin(choices[dem])]
 
     filtered_df.to_csv(DATABASE_OUTPUT_PATH, index=False)
 
@@ -547,6 +545,7 @@ def add_extra_columns() -> None:
 #     print(f"Inserted {len(data)} records successfully.")
 
 if __name__ == "__main__":
+    update_comparison_csv("jj@gmail.com", ['race', 'gender'], {'race': ['Black', 'Other', 'Hispanic', ''], 'gender': ['Non-binary', 'Male', 'Female', '']}, "year")
     # add_extra_columns()
     # update_db_for_user("jj@gmail.com", ["race", "state"], {"race": ["Black", "White"], "state": ["Hispanic", "Black", "Other"]}, "month")
     # fetch_data("users")

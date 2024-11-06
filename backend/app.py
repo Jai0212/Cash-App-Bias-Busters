@@ -112,6 +112,8 @@ def generate():
 
         output = model()  # TODO akshatt armagan function call
         print(output)
+
+        # delete_csv_data()
         
         return jsonify({f"{key[0]}_{key[1]}": value for key, value in output.items()})
 
