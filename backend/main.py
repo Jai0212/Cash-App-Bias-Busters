@@ -8,8 +8,10 @@ import csv
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Tuple
 from werkzeug.datastructures import FileStorage
+from ml_model.model import model
 
-DATABASE_OUTPUT_PATH = "database/output.csv"
+curr_dir = os.path.dirname(__file__)
+DATABASE_OUTPUT_PATH = os.path.join(curr_dir, "../database/output.csv")
 
 # Load environment variables
 load_dotenv()
@@ -329,7 +331,7 @@ def update_comparison_csv(
         save_data_to_csv(curr_user)
 
     df = pd.read_csv(DATABASE_OUTPUT_PATH)
-    
+
     critical_columns = ["id", "timestamp", "action_status"]
 
     valid_columns = [col for col in demographics + critical_columns if col in df.columns]
@@ -545,7 +547,7 @@ def add_extra_columns() -> None:
 #     print(f"Inserted {len(data)} records successfully.")
 
 if __name__ == "__main__":
-    update_comparison_csv("jj@gmail.com", ['race', 'gender'], {'race': ['Black', 'Other', 'Hispanic', ''], 'gender': ['Non-binary', 'Male', 'Female', '']}, "year")
+    # update_comparison_csv("jj@gmail.com", ['race', 'gender'], {'race': ['Black', 'Other', 'Hispanic', ''], 'gender': ['Non-binary', 'Male', 'Female', '']}, "year")
     # add_extra_columns()
     # update_db_for_user("jj@gmail.com", ["race", "state"], {"race": ["Black", "White"], "state": ["Hispanic", "Black", "Other"]}, "month")
     # fetch_data("users")
@@ -556,6 +558,9 @@ if __name__ == "__main__":
     # import_csv_to_db("database/test.csv", "test_table")
     # fetch_data("test_table")
     # save_data_to_csv("test_table")
+    save_data_to_csv("test_table")
+    update_comparison_csv("jj@gmail.com", ['race', 'state'], {'race': ['Black', 'White', 'Hispanic', 'Mixed'], 'state': ['WI', 'PA', 'OK', 'IL']}, "year")
+    print(model())
     # get_headers("test_table")
     # get_values_under_header("test_table", "state")
     # update_comparison_csv("test_table", ["state", "race"], {"state": ["WI", "NY", "AZ"], "race": ["Hispanic", "Black"]}, "year")
