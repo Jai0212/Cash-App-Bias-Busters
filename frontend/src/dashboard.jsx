@@ -4,7 +4,7 @@ import ChartComponent from "./ChartComponent";
 import ControlButtons from "./ControlButtons";
 import { set } from "react-hook-form";
 import "./Dashboard.css"
-// ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
