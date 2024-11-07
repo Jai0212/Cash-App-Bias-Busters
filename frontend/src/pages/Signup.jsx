@@ -3,6 +3,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './Signup.css';
 
 const UserSignup = () => {
     const navigate = useNavigate();
@@ -99,13 +100,13 @@ const UserSignup = () => {
                         </div>
                     </div>
 
-                    <div className="row">
+                    <div className="row row-email">
                         <div className="col-md-6 mb-3">
                             <label htmlFor="email">Email</label>
                             <input
                                 {...register('email', { required: 'This field is required' })}
                                 type="email"
-                                className="form-control"
+                                className="form-control w-100"
                                 id="email"
                             />
                             <ErrorMessage
