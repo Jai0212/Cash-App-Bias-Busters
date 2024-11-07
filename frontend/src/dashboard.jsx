@@ -5,14 +5,16 @@ import ControlButtons from "./ControlButtons";
 import { set } from "react-hook-form";
 import "./Dashboard.css"
 // ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
-
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const [graphData, setGraphData] = useState({});
 
   const [currUser, setCurrUser] = useState(""); // Initialize currUser as an empty string
 
   // const curr_user = "test_table"; // Example user for fetching data
+
+  const bias = 0.7;
 
   const [error, setError] = useState("");
   const [sliderValue, setSliderValue] = useState(0.5);
@@ -210,17 +212,67 @@ const Dashboard = () => {
       })
       .then((response) => {
         console.log("Data generated:", response.data); // TODO Display data on chart
+        setGraphData(response.data)
       })
       .catch((err) => {
         console.error("Error generating data:", err);
       });
   };
 
+  const maxValue = () => {
+    let maxInitialElement = -Infinity;
+
+    for (const key in graphData) {
+      const initialElement = graphData[key][0];
+      if (initialElement > maxInitialElement) {
+        maxInitialElement = initialElement;
+      }
+    }
+    return maxInitialElement;
+  }
+
+
   const handleSliderChange = (event) => {
     setSliderValue(parseFloat(event.target.value));
     console.log("Slider Value:", event.target.value); // For debugging
   };
 
+  // Check if graphData is empty and set all y values to 0 if true
+  const modifiedGraphData = Object.keys(graphData).length === 0 ? {
+    labels: ["Default Label 1", "Default Label 2", "Default Label 3"], // Default labels
+    datasets: [
+      {
+        label: "Default Data",
+        data: [0, 0, 0], // Default y values set to 0
+        borderColor: "rgba(75, 192, 192, 1)",
+      },
+    ],
+  } : graphData;
+
+  useEffect(() => {
+    setGraphData({
+      'Female_18-26': [0.446, 0.0, 0.554],
+      'Female_27-35': [0.577, 0.423, 0.0],
+      'Female_36-44': [0.404, 0.596, 0.0],
+      'Female_45-53': [0.436, 0.564, 0.0],
+      'Female_54-62': [0.55, 0.45, 0.0],
+      'Male_18-26': [0.56, 0.0, 0.44],
+      'Male_27-35': [0.457, 0.0, 0.543],
+      'Male_36-44': [0.403, 0.0, 0.597],
+      'Male_45-53': [0.571, 0.0, 0.429],
+      'Male_54-62': [0.54, 0.0, 0.46],
+      'Non-binary_18-26': [0.55, 0.0, 0.45],
+      'Non-binary_27-35': [0.558, 0.0, 0.442],
+      'Non-binary_36-44': [0.654, 0.0, 0.346],
+      'Non-binary_45-53': [0.359, 0.0, 0.641],
+      'Non-binary_54-62': [0.434, 0.0, 0.566],
+      'Other_18-26': [0.535, 0.465, 0.0],
+      'Other_27-35': [0.36, 0.64, 0.0],
+      'Other_36-44': [0.492, 0.508, 0.0],
+      'Other_45-53': [0.511, 0.489, 0.0],
+      'Other_54-62': [0.494, 0.506, 0.0]
+    });
+  }, []);
 
   const dataForChart = {
     "day": {
@@ -228,12 +280,12 @@ const Dashboard = () => {
       datasets: [
         {
           label: "Random Data 1",
-          data: [10, 20, 30],
+          data: [0.3, 0.4, 0.8],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
           label: "Random Data 2",
-          data: [15, 25, 35],
+          data: [0.6, 0.7, 0.4],
           borderColor: "rgba(255, 99, 132, 1)",
         },
       ],
@@ -243,7 +295,7 @@ const Dashboard = () => {
       datasets: [
         {
           label: "Random Data 1",
-          data: [50, 100, 150],
+          data: [0.3, 0.9, 0.4],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
@@ -258,28 +310,37 @@ const Dashboard = () => {
       datasets: [
         {
           label: "Random Data 1",
-          data: [100, 200, 300],
+          data: [0.8, 0.6, 0.7],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
           label: "Random Data 2",
-          data: [150, 250, 350],
+          data: [0.3, 0.9, 0.4],
           borderColor: "rgba(255, 99, 132, 1)",
         },
       ],
     },
+
     "year": {
-      labels: ["Jan", "Feb", "Mar"],
+      labels: Object.keys(graphData), // Demographic categories as labels
       datasets: [
         {
-          label: "Random Data 1",
-          data: [110, 210, 310],
+          label: "Accuracy for 'Year'",
+          data: Object.values(graphData).map(item => item[0]), // Using the first value (accuracy for 'year')
           borderColor: "rgba(75, 192, 192, 1)",
+          fill: false,
         },
         {
-          label: "Random Data 2",
-          data: [115, 215, 315],
+          label: "Accuracy for 'Month'",
+          data: Object.values(graphData).map(item => item[1]), // Using the second value (accuracy for 'month')
           borderColor: "rgba(255, 99, 132, 1)",
+          fill: false,
+        },
+        {
+          label: "Accuracy for 'Week'",
+          data: Object.values(graphData).map(item => item[2]), // Using the third value (accuracy for 'week')
+          borderColor: "rgba(54, 162, 235, 1)",
+          fill: false,
         },
       ],
     },
@@ -382,7 +443,7 @@ const Dashboard = () => {
         Generate
       </button>
 
-      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
+      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} sliderValue={sliderValue}  bias={bias}/>
       <ControlButtons onDownload={handleDownload} />
     </div>
   );
