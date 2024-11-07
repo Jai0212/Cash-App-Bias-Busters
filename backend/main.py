@@ -569,6 +569,7 @@ def add_extra_columns() -> None:
 #     print(f"Inserted {len(data)} records successfully.")
 
 if __name__ == "__main__":
+    # fetch_data("test_table")
     # update_comparison_csv("jj@gmail.com", ['race', 'gender'], {'race': ['Black', 'Other', 'Hispanic', ''], 'gender': ['Non-binary', 'Male', 'Female', '']}, "year")
     # add_extra_columns()
     # update_db_for_user("jj@gmail.com", ["race", "state"], {"race": ["Black", "White"], "state": ["Hispanic", "Black", "Other"]}, "month")

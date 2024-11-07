@@ -247,30 +247,34 @@ const Dashboard = () => {
     ],
   } : graphData;
 
-  // useEffect(() => {
-  //   setGraphData({
-  //     'Female_18-26': [0.446, 0.0, 0.554],
-  //     'Female_27-35': [0.577, 0.423, 0.0],
-  //     'Female_36-44': [0.404, 0.596, 0.0],
-  //     'Female_45-53': [0.436, 0.564, 0.0],
-  //     'Female_54-62': [0.55, 0.45, 0.0],
-  //     'Male_18-26': [0.56, 0.0, 0.44],
-  //     'Male_27-35': [0.457, 0.0, 0.543],
-  //     'Male_36-44': [0.403, 0.0, 0.597],
-  //     'Male_45-53': [0.571, 0.0, 0.429],
-  //     'Male_54-62': [0.54, 0.0, 0.46],
-  //     'Non-binary_18-26': [0.55, 0.0, 0.45],
-  //     'Non-binary_27-35': [0.558, 0.0, 0.442],
-  //     'Non-binary_36-44': [0.654, 0.0, 0.346],
-  //     'Non-binary_45-53': [0.359, 0.0, 0.641],
-  //     'Non-binary_54-62': [0.434, 0.0, 0.566],
-  //     'Other_18-26': [0.535, 0.465, 0.0],
-  //     'Other_27-35': [0.36, 0.64, 0.0],
-  //     'Other_36-44': [0.492, 0.508, 0.0],
-  //     'Other_45-53': [0.511, 0.489, 0.0],
-  //     'Other_54-62': [0.494, 0.506, 0.0]
-  //   });
-  // }, []);
+  useEffect(() => {
+    setGraphData({
+      'Female_18-26': [0.446, 0.0, 0.554],
+      'Female_27-35': [0.577, 0.423, 0.0],
+      'Female_36-44': [0.404, 0.596, 0.0],
+      'Female_45-53': [0.436, 0.564, 0.0],
+      'Female_54-62': [0.55, 0.45, 0.0],
+      'Male_18-26': [0.56, 0.0, 0.44],
+      'Male_27-35': [0.457, 0.0, 0.543],
+      'Male_36-44': [0.403, 0.0, 0.597],
+      'Male_45-53': [0.571, 0.0, 0.429],
+      'Male_54-62': [0.54, 0.0, 0.46],
+      'Non-binary_18-26': [0.55, 0.0, 0.45],
+      'Non-binary_27-35': [0.558, 0.0, 0.442],
+      'Non-binary_36-44': [0.654, 0.0, 0.346],
+      'Non-binary_45-53': [0.359, 0.0, 0.641],
+      'Non-binary_54-62': [0.434, 0.0, 0.566],
+      'Other_18-26': [0.535, 0.465, 0.0],
+      'Other_27-35': [0.36, 0.64, 0.0],
+      'Other_36-44': [0.492, 0.508, 0.0],
+      'Other_45-53': [0.511, 0.489, 0.0],
+      'Other_54-62': [0.494, 0.506, 0.0]
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("Graph data updated:", graphData);
+  }, [graphData]);
 
   return (
     <div className="dashboard-container">
@@ -372,11 +376,13 @@ const Dashboard = () => {
       {Object.keys(graphData).length > 0 && (
         <ChartComponent
           ref={chartRef}
-          data={graphData}
+          chartData={graphData}
           sliderValue={sliderValue}
           bias={maxValue()}
         />
-      )}      <ControlButtons onDownload={handleDownload} />
+      )}   
+        
+      <ControlButtons onDownload={handleDownload} />
     </div>
   );
 };
