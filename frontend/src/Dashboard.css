@@ -1,0 +1,102 @@
+/* Dashboard.css */
+
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .dashboard-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .chart-container {
+    width: 60%;
+    margin-right: 20px;
+  }
+  
+  .control-panel {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Green button styling */
+  .timeframe-buttons button,
+  .add-button {
+    background-color: #6db86d; /* Light green */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+  }
+  
+  .timeframe-buttons button:hover,
+  .add-button:hover {
+    background-color: #5ca75c;
+  }
+  
+  /* Green slider styling */
+  .slider-container {
+    width: 80%;
+    margin: 20px 0;
+  }
+  
+  .slider {
+    width: 100%;
+    accent-color: #6db86d; /* Light green for slider */
+  }
+  
+  /* Minimalistic gray buttons for import/download */
+  .download-import-buttons button {
+    background-color: #e0e0e0; /* Light gray */
+    color: black;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .download-import-buttons button:hover {
+    background-color: #cccccc; /* Slightly darker gray */
+  }
+  
+  /* Text input and demographic styling */
+  select, input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    margin-top: 5px;
+  }
+  
+  .generate-button {
+    width: 100%;
+  }
+  
+  /* Plus button styling */
+  .add-button {
+    font-size: 24px;
+    padding: 5px 10px;
+  }
+  
+  /* Graph description */
+  .graph-description {
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+    padding: 15px;
+  }
+  

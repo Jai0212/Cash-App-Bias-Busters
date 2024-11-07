@@ -3,6 +3,7 @@ import axios from "axios";
 import ChartComponent from "./ChartComponent";
 import ControlButtons from "./ControlButtons";
 import { set } from "react-hook-form";
+import "./Dashboard.css"
 // ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const Dashboard = () => {
@@ -284,108 +285,105 @@ const Dashboard = () => {
   };
 
   return (
-      <div>
-        <div>
-          <button onClick={() => handleTimeframeChange("day")}>1 Day</button>
-          <button onClick={() => handleTimeframeChange("week")}>1 Week</button>
-          <button onClick={() => handleTimeframeChange("month")}>1 Month</button>
-          <button onClick={() => handleTimeframeChange("year")}>1 Year</button>
-        </div>
-
-        <div>
-          {/* Timeframe buttons and demographic selectors */}
-
-          {/* Slider Bar */}
-          <div>
-            <label>Adjust the slider (0 to 1): {sliderValue}</label>
-            <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={sliderValue}
-                onChange={handleSliderChange}
-            />
-          </div>
-
-        </div>
-
-        <div>
-          <h2>Select First Demographic</h2>
-          <select onChange={handleDemographicChange} value={selectedDemographic}>
-            <option value="">Select</option>
-            {demographics.map((demo, index) => (
-                <option key={index} value={demo}>
-                  {demo}
-                </option>
-            ))}
-          </select>
-
-          {selectedDemographic && (
-              <div>
-                <h3>Select Values for First Demographic</h3>
-                {[...Array(4)].map((_, idx) => (
-                    <select
-                        key={idx}
-                        onChange={(event) => handleValueChange(event, idx)}
-                        value={selectedValues[idx] || ""}
-                    >
-                      <option value="">Select</option>
-                      {demographicValues
-                          .filter((val) => !selectedSecondValues.includes(val))
-                          .map((val, index) => (
-                              <option key={index} value={val}>
-                                {val}
-                              </option>
-                          ))}
-                    </select>
-                ))}
-              </div>
-          )}
-
-          {selectedDemographic && (
-              <>
-                <h2>Select Second Demographic</h2>
-                <select onChange={handleSecondDemographicChange} value={secondSelectedDemographic}>
-                  <option value="">Select</option>
-                  {demographics
-                      .filter((demo) => demo !== selectedDemographic)
-                      .map((demo, index) => (
-                          <option key={index} value={demo}>
-                            {demo}
-                          </option>
-                      ))}
-                </select>
-              </>
-          )}
-
-          {secondSelectedDemographic && (
-              <div>
-                <h3>Select Values for Second Demographic</h3>
-                {[...Array(4)].map((_, idx) => (
-                    <select
-                        key={idx}
-                        onChange={(event) => handleValueChange(event, idx, true)}
-                        value={selectedSecondValues[idx] || ""}
-                    >
-                      <option value="">Select</option>
-                      {secondDemographicValues
-                          .filter((val) => !selectedValues.includes(val))
-                          .map((val, index) => (
-                              <option key={index} value={val}>
-                                {val}
-                              </option>
-                          ))}
-                    </select>
-                ))}
-              </div>
-          )}
-          <button onClick={handleGenerate}>Generate</button>
-        </div>
-
-        <ChartComponent ref={chartRef} data={dataForChart[timeframe]}/>
-        <ControlButtons onDownload={handleDownload}/>
+    <div className="dashboard-container">
+      <div className="timeframe-buttons">
+        <button onClick={() => handleTimeframeChange("day")}>1 Day</button>
+        <button onClick={() => handleTimeframeChange("week")}>1 Week</button>
+        <button onClick={() => handleTimeframeChange("month")}>1 Month</button>
+        <button onClick={() => handleTimeframeChange("year")}>1 Year</button>
       </div>
+
+      <div className="slider-container">
+        <label>Adjust the slider (0 to 1): {sliderValue}</label>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={sliderValue}
+          onChange={handleSliderChange}
+        />
+      </div>
+
+      <div className="select-container">
+        <h2>Select First Demographic</h2>
+        <select onChange={handleDemographicChange} value={selectedDemographic}>
+          <option value="">Select</option>
+          {demographics.map((demo, index) => (
+            <option key={index} value={demo}>
+              {demo}
+            </option>
+          ))}
+        </select>
+
+        {selectedDemographic && (
+          <div>
+            <h3>Select Values for First Demographic</h3>
+            {[...Array(4)].map((_, idx) => (
+              <select
+                key={idx}
+                onChange={(event) => handleValueChange(event, idx)}
+                value={selectedValues[idx] || ""}
+              >
+                <option value="">Select</option>
+                {demographicValues
+                  .filter((val) => !selectedSecondValues.includes(val))
+                  .map((val, index) => (
+                    <option key={index} value={val}>
+                      {val}
+                    </option>
+                  ))}
+              </select>
+            ))}
+          </div>
+        )}
+
+        {selectedDemographic && (
+          <>
+            <h2>Select Second Demographic</h2>
+            <select onChange={handleSecondDemographicChange} value={secondSelectedDemographic}>
+              <option value="">Select</option>
+              {demographics
+                .filter((demo) => demo !== selectedDemographic)
+                .map((demo, index) => (
+                  <option key={index} value={demo}>
+                    {demo}
+                  </option>
+                ))}
+            </select>
+          </>
+        )}
+
+        {secondSelectedDemographic && (
+          <div>
+            <h3>Select Values for Second Demographic</h3>
+            {[...Array(4)].map((_, idx) => (
+              <select
+                key={idx}
+                onChange={(event) => handleValueChange(event, idx, true)}
+                value={selectedSecondValues[idx] || ""}
+              >
+                <option value="">Select</option>
+                {secondDemographicValues
+                  .filter((val) => !selectedValues.includes(val))
+                  .map((val, index) => (
+                    <option key={index} value={val}>
+                      {val}
+                    </option>
+                  ))}
+              </select>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <button className="generate-button" onClick={handleGenerate}>
+        Generate
+      </button>
+
+      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
+      <ControlButtons onDownload={handleDownload} />
+    </div>
   );
 };
 
