@@ -1,6 +1,6 @@
 :root {
   --primary-color: #007bff;
-  --background-color-light: #ffffff; /* White background */
+  --background-color-dark: #000;
   --text-color-dark: #9aecce;
   --button-bg-color: #00452b;
   --button-hover-color: #00d084;
@@ -10,7 +10,7 @@
 body {
   margin: 0;
   padding: 30px;
-  background-color: var(--background-color-light); /* White background */
+  background-color: var(--background-color-dark);
   color: var(--text-color-dark);
   font-family: Arial, sans-serif;
   display: flex;
