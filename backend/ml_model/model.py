@@ -12,6 +12,7 @@ from fairlearn.metrics import MetricFrame
 single_column_check = False
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../database/output.csv")
+categorical_columns = ["gender", "age_groups", "race", "state",]
 
 
 def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
@@ -28,9 +29,8 @@ def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
     df = pd.read_csv(self.csv_file_path)
     df_cleaned = df.drop(["timestamp", "id"], axis=1, errors="ignore")
 
-    # Check if the DataFrame has only one column
-    if df_cleaned.shape[1] == 2:
-        single_column_check = True
+    if df_cleaned.shape[1] == 2:        # Check if the DataFrame has only one column
+        self.single_column_check = True
 
     df_dropped = age_check(df_cleaned)
     inputs = get_inputs(df_dropped)
@@ -72,34 +72,43 @@ def age_check(df: pd.DataFrame) -> pd.DataFrame:
 
 def labels_encoder():
     """
-    Creates labels for each parameter and enumerates them for the ML model.
+    Orchestrates label encoding and returns encoded data along with mappings.
     """
+    _, inputs, _ = file_reader()
     le_dict = {}
-    categorical_columns = [
-        "gender",
-        "age_groups",
-        "race",
-        "state",
-    ]  # Define your categorical columns
+    inputs = encode_categorical_columns(inputs, le_dict)
+    mappings = get_mappings(le_dict)
+    inputs_n = drop_categorical_columns(inputs)
+    return inputs_n, mappings
 
-    df, inputs, _ = file_reader()
 
-    # Create LabelEncoders for each categorical column
-    for col in categorical_columns:
-        if col in inputs.columns:  # Check if the column exists in inputs
+def encode_categorical_columns(inputs: pd.DataFrame, le_dict: dict) -> pd.DataFrame:
+    """
+    Encodes each categorical column using LabelEncoder.
+    """
+    for col in self.categorical_columns:
+        if col in inputs.columns:
             le = LabelEncoder()
-            inputs[f"{col}_N"] = le.fit_transform(inputs[col])  # Encode the column
-            le_dict[col] = le  # Store the label encoder in a dictionary
+            inputs[f"{col}_N"] = le.fit_transform(inputs[col])
+            le_dict[col] = le
+    return inputs
 
-    # Get mappings from numeric codes back to labels
-    mappings = {
+
+def get_mappings(le_dict: dict) -> dict:
+    """
+    Retrieves mappings from encoded values to original labels.
+    """
+    return {
         col: dict(zip(le.transform(le.classes_), le.classes_))
         for col, le in le_dict.items()
     }
 
-    # Keep the specified columns: 'id', 'timestamp', 'is_biased'
-    inputs_n = inputs.drop(columns=categorical_columns, errors="ignore")
-    return inputs_n, mappings
+
+def drop_categorical_columns(inputs: pd.DataFrame) -> pd.DataFrame:
+    """
+    Drops the original categorical columns and returns necessary columns.
+    """
+    return inputs.drop(columns=self.categorical_columns, errors="ignore")
 
 
 def model() -> dict:
