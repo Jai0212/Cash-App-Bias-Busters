@@ -1,4 +1,3 @@
-// src/ChartComponent.jsx
 import React, {
   useEffect,
   useRef,
@@ -19,7 +18,7 @@ const ChartComponent = forwardRef(({ data }, ref) => {
     }
 
     myChartRef.current = new Chart(ctx, {
-      type: "line",
+      type: "bar", // Change the chart type to 'bar'
       data: {
         labels: data.labels,
         datasets: data.datasets.map((dataset) => ({
@@ -31,7 +30,9 @@ const ChartComponent = forwardRef(({ data }, ref) => {
       options: {
         scales: {
           y: {
-            beginAtZero: true,
+            min: 0, // Set the minimum value of the y-axis to 0
+            max: 1, // Set the maximum value of the y-axis to 1
+            beginAtZero: true, // Ensure the y-axis starts at 0
           },
         },
       },
