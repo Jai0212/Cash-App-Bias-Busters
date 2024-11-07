@@ -1,68 +1,133 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  --primary-color: #007bff;
+  --background-color-dark: #000;
+  --text-color-dark: #9aecce;
+  --button-bg-color: #00452b;
+  --button-hover-color: #00d084;
+  --highlight-color: #dc3545;
 }
 
 body {
-  margin: 0;
+  margin: 0 40px; /* Set horizontal margin to 40px */
+  padding: 30px;
+  background-color: var(--background-color-dark);
+  color: var(--text-color-dark);
+  font-family: Arial, sans-serif;
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
+  text-align: center;
+}
+
+.container {
+  width: 100%;
+  max-width: calc(700px - 80px); /* Adjust max-width considering horizontal margin */
+  text-align: center;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  color: var(--primary-color);
+  margin: 30px 0;
+  font-size: 3rem;
+}
+
+h2, h3 {
+  font-size: 1.5rem;
+  margin: 20px 0;
+}
+
+select, button {
+  margin: 15px 0;
+  padding: 15px;
+  font-size: 1.2rem;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--button-bg-color);
+  color: var(--button-hover-color);
+  border: none;
+  border-radius: 12px;
+  transition: background-color 0.1s ease;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  padding: 15px 20px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+button:hover {
+  background-color: var(--button-hover-color);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+@media (max-width: 1200px) {
+  h1 {
+    font-size: 2.5rem; /* Adjust heading size for medium screens */
   }
-  a:hover {
-    color: #747bff;
+
+  .container {
+    max-width: 600px; /* Smaller max-width for medium screens */
   }
-  button {
-    background-color: #f9f9f9;
+
+  select, button {
+    font-size: 1.1rem; /* Adjust font size for inputs and buttons */
+    padding: 12px;
+  }
+}
+
+@media (max-width: 900px) {
+  h1 {
+    font-size: 2.2rem; /* Slightly smaller heading for tablets */
+  }
+
+  select, button {
+    font-size: 1.1rem;
+    padding: 12px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .controls {
+    flex-direction: column; /* Stack buttons vertically on smaller screens */
+    gap: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 20px; /* Reduce padding for small screens */
+  }
+
+  h1 {
+    font-size: 1.8rem; /* Smaller heading on mobile */
+  }
+
+  select, button {
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .container {
+    padding: 0; /* Remove extra padding for mobile */
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .controls {
+    flex-direction: column; /* Stack buttons vertically on mobile */
+    gap: 8px;
   }
 }
