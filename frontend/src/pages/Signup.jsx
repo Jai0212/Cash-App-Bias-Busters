@@ -48,7 +48,7 @@ const UserSignup = () => {
                         title: res.message,
                         timer: 1500
                     }).then(()=>{
-                        navigate('/login')
+                        navigate('/')
                     })
                 }
             })

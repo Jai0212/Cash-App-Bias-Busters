@@ -45,7 +45,7 @@ function ResetPassword() {
                         icon: "success",
                         title: res.message,
                         timer: 1500
-                    }).then(() => navigate('/login'));
+                    }).then(() => navigate('/'));
                 }
             })
             .catch((e) => {

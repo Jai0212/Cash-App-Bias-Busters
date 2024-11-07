@@ -21,8 +21,8 @@ const App = () => {
       <Routes>
         {/* Public Routes (Login and Signup) */}
         <Route path="/" element={<PublicLayout />}>
+          <Route index element={<UserLogin />} /> {/* Default path renders UserLogin */}
           <Route path="signup" element={<UserSignup />} />
-          <Route path="login" element={<UserLogin />} />
           <Route path="forgot_password" element={<ForgotPassword />} />
           <Route path="reset_password" element={<ResetPassword />} />
         </Route>
