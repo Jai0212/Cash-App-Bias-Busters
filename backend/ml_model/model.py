@@ -30,11 +30,8 @@ def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
     df_cleaned = df.drop(["timestamp", "id"], axis=1, errors="ignore")
 
     # Check if the DataFrame has only one column
-    global single_column_check
     if df_cleaned.shape[1] == 2:
         single_column_check = True
-    else:
-        single_column_check = False
 
     # Check if 'age' column exists
     if "age" in df_cleaned.columns:
@@ -47,6 +44,7 @@ def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
         df_cleaned["age_groups"] = pd.cut(
             df_cleaned["age"], bins=bins, labels=labels, right=False
         )
+
     df_dropped = df_cleaned.drop("age", axis=1, errors="ignore")
 
     inputs = df_dropped.drop(
@@ -128,7 +126,7 @@ def model() -> dict:
 
     # Specify multiple sensitive features
     if (
-        "single_column_check" in globals() and single_column_check
+            "single_column_check" in globals() and single_column_check
     ):  # Ensure single_column_check is defined
         sensitive_features = X_test[[feature1]]  # Add your sensitive features here
     else:

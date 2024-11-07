@@ -18,7 +18,7 @@ from ml_model.model import model
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
 
 
 @app.route("/api/get-all-users", methods=["GET"])
@@ -114,7 +114,7 @@ def generate():
         print(output)
 
         # delete_csv_data()
-        
+
         return jsonify({f"{key[0]}_{key[1]}": value for key, value in output.items()})
 
     return jsonify({"error": "Missing required data."}), 400
