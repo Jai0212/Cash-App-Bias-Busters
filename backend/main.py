@@ -13,6 +13,7 @@ from ml_model.model import model
 curr_dir = os.path.dirname(__file__)
 DATABASE_OUTPUT_PATH = os.path.join(curr_dir, "../database/output.csv")
 
+
 # Load environment variables
 load_dotenv()
 
@@ -319,7 +320,7 @@ def get_values_under_header(table_name: str, header: str) -> List[str]:
 
 
 def update_comparison_csv(
-    curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
+        curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
 ) -> None:
     """Update the comparison CSV file with the user's selections."""
 
@@ -333,19 +334,40 @@ def update_comparison_csv(
     df = pd.read_csv(DATABASE_OUTPUT_PATH)
 
     critical_columns = ["id", "timestamp", "action_status"]
-
-    valid_columns = [col for col in demographics + critical_columns if col in df.columns]
+    valid_columns = [
+        col for col in demographics + critical_columns if col in df.columns
+    ]
     filtered_df = df[valid_columns]
 
     for dem in demographics:
         if dem in choices:
-            filtered_df = filtered_df[filtered_df[dem].isin(choices[dem])]
+            if dem == "age":
+                # For age, parse range strings and filter based on ranges
+                age_ranges = []
+                for range_str in choices[dem]:
+                    try:
+                        min_age, max_age = map(int, range_str.split("-"))
+                        age_ranges.append((min_age, max_age))
+                    except ValueError:
+                        print(f"Invalid range format: {range_str}")
+                        continue
+
+                # Apply age range filtering
+                age_filter = filtered_df["age"].apply(
+                    lambda age: any(
+                        min_age <= age <= max_age for min_age, max_age in age_ranges
+                    )
+                )
+                filtered_df = filtered_df[age_filter]
+            else:
+                # For other demographics, use simple filtering
+                filtered_df = filtered_df[filtered_df[dem].isin(choices[dem])]
 
     filtered_df.to_csv(DATABASE_OUTPUT_PATH, index=False)
 
 
 def update_db_for_user(
-    curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
+        curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
 ) -> None:
     """Update the database for the specified user with the selected demographics and choices."""
 
@@ -421,7 +443,7 @@ def update_db_for_user(
 
 # TODO make api for this by calling all appropriate function
 def get_last_login_data(
-    curr_user: str,
+        curr_user: str,
 ) -> Tuple[Optional[List[str]], Optional[Dict[str, List[str]]], Optional[str]]:
     """Retrieve the last login demographics and choices for the specified user."""
 
@@ -557,10 +579,51 @@ if __name__ == "__main__":
     # see_all_tables()
     # import_csv_to_db("database/test.csv", "test_table")
     # fetch_data("test_table")
+
     # save_data_to_csv("test_table")
-    save_data_to_csv("test_table")
-    update_comparison_csv("jj@gmail.com", ['race', 'state'], {'race': ['Black', 'White', 'Hispanic', 'Mixed'], 'state': ['WI', 'PA', 'OK', 'IL']}, "year")
-    print(model())
+    # update_comparison_csv(
+    #     "jj@gmail.com",
+    #     ["race", "gender"],
+    #     {
+    #         "race": ["Black", "Other", "Hispanic", ""],
+    #         "gender": ["Non-binary", "Male", "Female", ""],
+    #     },
+    #     "year",
+    # )
+
+    # import_csv_to_db("database/single_transaction.csv", "test_table")
+    # save_data_to_csv("test_table")
+    # update_comparison_csv(
+    #     "jj@gmail.com",
+    #     ["gender", "age"],
+    #     {
+    #         "gender": ["Female", "Male", "Non-binary", "Other"],
+    #         "age": ["10-20", "20-30", "30-40", "40-50"],
+    #     },
+    #     "year",
+    # )
+    # update_comparison_csv(
+    #     "test_table",
+    #     ["state", "race"],
+    #     {
+    #         "state": ["WI", "CO", "PA", "AZ"],
+    #         "race": ["Black", "Mixed", "Hispanic", "Other"],
+    #     },
+    #     "year",
+    # )
+    # print(model())
+
+    # save_data_to_csv("test_table")
+    # update_comparison_csv(
+    #     "jj@gmail.com",
+    #     ["gender", "age"],
+    #     {
+    #         "gender": ["Female", "Male", "Non-binary", "Other"],
+    #         "age": ["10-20", "20-30", "30-40", "40-50"],
+    #     },
+    #     "year",
+    # )
+
     # get_headers("test_table")
     # get_values_under_header("test_table", "state")
     # update_comparison_csv("test_table", ["state", "race"], {"state": ["WI", "NY", "AZ"], "race": ["Hispanic", "Black"]}, "year")
