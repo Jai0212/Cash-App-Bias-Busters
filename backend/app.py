@@ -18,7 +18,7 @@ from ml_model.model import model
 load_dotenv()
 
 app = Flask(__name__)
-# CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
+CORS(app)
 
 
 @app.route("/api/get-all-users", methods=["GET"])
@@ -131,8 +131,18 @@ def get_prev_data():
             demographics.append("")
             demographics = demographics[0:2]
 
-            choices[demographics[0]] = choices.get(demographics[0], []) + ["", "", "", ""]
-            choices[demographics[1]] = choices.get(demographics[1], []) + ["", "", "", ""]
+            choices[demographics[0]] = choices.get(demographics[0], []) + [
+                "",
+                "",
+                "",
+                "",
+            ]
+            choices[demographics[1]] = choices.get(demographics[1], []) + [
+                "",
+                "",
+                "",
+                "",
+            ]
 
             choices[demographics[0]] = choices.get(demographics[0], [])[0:4]
             choices[demographics[1]] = choices.get(demographics[1], [])[0:4]
