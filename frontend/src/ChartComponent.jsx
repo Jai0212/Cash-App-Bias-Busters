@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import Chart from "chart.js/auto";
+import './ChartComponent.css';
 
 const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
   const chartRef = useRef(null);
@@ -33,7 +34,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
     if (!chartData) return;
 
     const labels = Object.keys(chartData); // Use keys as labels (Gender_Age Range)
-    
+
     const datasets = [
       {
         label: "Values",
@@ -59,13 +60,13 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
     // Step: Create bar colors based on slider value and bias
     const barColors = datasets[0].data.map((value) => {
       // If sliderValue is greater than bias, color the bar red
-      return sliderValue < bias ? "rgba(255, 0, 0, 0.7)" : "rgba(0, 255, 0, 0.7)";
+      return sliderValue < bias ? "rgba(255, 0, 0, 0.7)" : "rgba(0, 230, 0, 0.7)";
     });
 
     // Calculate max y-axis value to accommodate the line
     const maxYValue = Math.max(
-        sliderValue,
-        ...datasets.flatMap((dataset) => dataset.data)
+      sliderValue,
+      ...datasets.flatMap((dataset) => dataset.data)
     );
 
     const data = {
@@ -123,7 +124,11 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
     },
   }));
 
-  return <canvas ref={chartRef} />;
+  return (
+    <div className="chart-container">
+      <canvas ref={chartRef} />
+    </div>
+  );
 });
 
 export default ChartComponent;

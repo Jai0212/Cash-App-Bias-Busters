@@ -279,10 +279,31 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="timeframe-buttons">
-        <button onClick={() => handleTimeframeChange("day")}>1 Day</button>
-        <button onClick={() => handleTimeframeChange("week")}>1 Week</button>
-        <button onClick={() => handleTimeframeChange("month")}>1 Month</button>
-        <button onClick={() => handleTimeframeChange("year")}>1 Year</button>
+        <button
+          className={timeframe === "day" ? "active-button" : ""}
+          onClick={() => handleTimeframeChange("day")}
+        >
+          1 Day
+        </button>
+        <button
+          className={timeframe === "week" ? "active-button" : ""}
+          onClick={() => handleTimeframeChange("week")}
+        >
+          1 Week
+        </button>
+        <button
+          className={timeframe === "month" ? "active-button" : ""}
+          onClick={() => handleTimeframeChange("month")}
+        >
+          1 Month
+        </button>
+        <button
+          className={timeframe === "year" ? "active-button" : ""}
+          onClick={() => handleTimeframeChange("year")}
+        >
+          1 Year
+        </button>
+
       </div>
 
       <div className="slider-container">
@@ -297,41 +318,43 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="select-container">
-        <h2>Select First Demographic</h2>
-        <select onChange={handleDemographicChange} value={selectedDemographic}>
-          <option value="">Select</option>
-          {demographics.map((demo, index) => (
-            <option key={index} value={demo}>
-              {demo}
-            </option>
-          ))}
-        </select>
-
-        {selectedDemographic && (
-          <div>
-            <h3>Select Values for First Demographic</h3>
-            {[...Array(4)].map((_, idx) => (
-              <select
-                key={idx}
-                onChange={(event) => handleValueChange(event, idx)}
-                value={selectedValues[idx] || ""}
-              >
-                <option value="">Select</option>
-                {demographicValues
-                  .filter((val) => !selectedSecondValues.includes(val))
-                  .map((val, index) => (
-                    <option key={index} value={val}>
-                      {val}
-                    </option>
-                  ))}
-              </select>
+      <div className="select-demographics">
+        <div className="select-container">
+          <h2>Select First Demographic</h2>
+          <select onChange={handleDemographicChange} value={selectedDemographic}>
+            <option value="">Select</option>
+            {demographics.map((demo, index) => (
+              <option key={index} value={demo}>
+                {demo}
+              </option>
             ))}
-          </div>
-        )}
+          </select>
+
+          {selectedDemographic && (
+            <div>
+              <h3>Select Values for First Demographic</h3>
+              {[...Array(4)].map((_, idx) => (
+                <select
+                  key={idx}
+                  onChange={(event) => handleValueChange(event, idx)}
+                  value={selectedValues[idx] || ""}
+                >
+                  <option value="">Select</option>
+                  {demographicValues
+                    .filter((val) => !selectedSecondValues.includes(val))
+                    .map((val, index) => (
+                      <option key={index} value={val}>
+                        {val}
+                      </option>
+                    ))}
+                </select>
+              ))}
+            </div>
+          )}
+        </div>
 
         {selectedDemographic && (
-          <>
+          <div className="select-container">
             <h2>Select Second Demographic</h2>
             <select onChange={handleSecondDemographicChange} value={secondSelectedDemographic}>
               <option value="">Select</option>
@@ -343,31 +366,32 @@ const Dashboard = () => {
                   </option>
                 ))}
             </select>
-          </>
-        )}
 
-        {secondSelectedDemographic && (
-          <div>
-            <h3>Select Values for Second Demographic</h3>
-            {[...Array(4)].map((_, idx) => (
-              <select
-                key={idx}
-                onChange={(event) => handleValueChange(event, idx, true)}
-                value={selectedSecondValues[idx] || ""}
-              >
-                <option value="">Select</option>
-                {secondDemographicValues
-                  .filter((val) => !selectedValues.includes(val))
-                  .map((val, index) => (
-                    <option key={index} value={val}>
-                      {val}
-                    </option>
-                  ))}
-              </select>
-            ))}
+            {secondSelectedDemographic && selectedDemographic && (
+              <div>
+                <h3>Select Values for Second Demographic</h3>
+                {[...Array(4)].map((_, idx) => (
+                  <select
+                    key={idx}
+                    onChange={(event) => handleValueChange(event, idx, true)}
+                    value={selectedSecondValues[idx] || ""}
+                  >
+                    <option value="">Select</option>
+                    {secondDemographicValues
+                      .filter((val) => !selectedValues.includes(val))
+                      .map((val, index) => (
+                        <option key={index} value={val}>
+                          {val}
+                        </option>
+                      ))}
+                  </select>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
+
 
       <button className="generate-button" onClick={handleGenerate}>
         Generate
@@ -380,8 +404,8 @@ const Dashboard = () => {
           sliderValue={sliderValue}
           bias={maxValue()}
         />
-      )}   
-        
+      )}
+
       <ControlButtons onDownload={handleDownload} />
     </div>
   );

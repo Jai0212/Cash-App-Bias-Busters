@@ -1,5 +1,6 @@
 // src/ControlButtons.jsx
 import React, { useRef, useState, useEffect } from "react";
+import "./ControlButtons.css";
 
 const ControlButtons = ({ onDownload }) => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -122,23 +123,22 @@ const ControlButtons = ({ onDownload }) => {
 
 
   return (
-    <div style={{ marginTop: "20px" }}>
+    <div className="file-import-container">
       <input
         type="file"
         ref={fileInputRef1}
-        style={{ display: "none" }}
-        onChange={handleModelFileChange} // Handle model file change
+        onChange={handleModelFileChange}
       />
       <input
         type="file"
         ref={fileInputRef2}
-        style={{ display: "none" }}
-        onChange={handleDatasetFileChange} // Handle dataset file change
+        onChange={handleDatasetFileChange}
       />
       <button onClick={handleImportModels}>Import Models</button>
       <button onClick={handleImportDataset}>Import Dataset</button>
       <button onClick={onDownload}>Download Graph</button>
     </div>
+
   );
 };
 
