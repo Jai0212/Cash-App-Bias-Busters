@@ -5,8 +5,6 @@ import ControlButtons from "./ControlButtons";
 import { set } from "react-hook-form";
 import "./Dashboard.css"
 // ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
-
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -277,8 +275,6 @@ const Dashboard = () => {
   }, []);
 
   const dataForChart = {
-<<<<<<< HEAD
-=======
     "day": {
       labels: ["Hour 1", "Hour 2", "Hour 3"],
       datasets: [
@@ -324,29 +320,19 @@ const Dashboard = () => {
         },
       ],
     },
->>>>>>> 8be01aded6d0a947bbb11f7e39b163156e8ec006
+
     "year": {
       labels: Object.keys(graphData), // Demographic categories as labels
       datasets: [
         {
-<<<<<<< HEAD
           label: "Accuracy for 'Year'",
           data: Object.values(graphData).map(item => item[0]), // Using the first value (accuracy for 'year')
-=======
-          label: "Random Data 1",
-          data: [0.8, 0.6, 0.7],
->>>>>>> 8be01aded6d0a947bbb11f7e39b163156e8ec006
           borderColor: "rgba(75, 192, 192, 1)",
           fill: false,
         },
         {
-<<<<<<< HEAD
           label: "Accuracy for 'Month'",
           data: Object.values(graphData).map(item => item[1]), // Using the second value (accuracy for 'month')
-=======
-          label: "Random Data 2",
-          data: [0.3, 0.9, 0.4],
->>>>>>> 8be01aded6d0a947bbb11f7e39b163156e8ec006
           borderColor: "rgba(255, 99, 132, 1)",
           fill: false,
         },
@@ -457,11 +443,7 @@ const Dashboard = () => {
         Generate
       </button>
 
-<<<<<<< HEAD
-      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} sliderValue={sliderValue} />
-=======
       <ChartComponent ref={chartRef} data={dataForChart[timeframe]} sliderValue={sliderValue}  bias={bias}/>
->>>>>>> 8be01aded6d0a947bbb11f7e39b163156e8ec006
       <ControlButtons onDownload={handleDownload} />
     </div>
   );
