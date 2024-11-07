@@ -381,7 +381,7 @@ const Dashboard = () => {
         Generate
       </button>
 
-      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
+      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} sliderValue={sliderValue} />
       <ControlButtons onDownload={handleDownload} />
     </div>
   );
