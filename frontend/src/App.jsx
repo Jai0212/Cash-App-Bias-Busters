@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Importing Pages
-import UserSignup from "./pages/User_signup.jsx";
+import UserSignup from "./pages/Signup.jsx";
 import UserLogin from "./pages/Login.jsx";
 import Dashboard from "./dashboard.jsx";
 import ChangePassword from "./pages/ChangePassword.jsx";
@@ -21,8 +21,8 @@ const App = () => {
       <Routes>
         {/* Public Routes (Login and Signup) */}
         <Route path="/" element={<PublicLayout />}>
+          <Route index element={<UserLogin />} /> {/* Default path renders UserLogin */}
           <Route path="signup" element={<UserSignup />} />
-          <Route path="login" element={<UserLogin />} />
           <Route path="forgot_password" element={<ForgotPassword />} />
           <Route path="reset_password" element={<ResetPassword />} />
         </Route>
