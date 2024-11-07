@@ -14,6 +14,8 @@ const Dashboard = () => {
 
   // const curr_user = "test_table"; // Example user for fetching data
 
+  const bias = 0.7;
+
   const [error, setError] = useState("");
   const [sliderValue, setSliderValue] = useState(0.5);
 
@@ -228,12 +230,12 @@ const Dashboard = () => {
       datasets: [
         {
           label: "Random Data 1",
-          data: [10, 20, 30],
+          data: [0.3, 0.4, 0.8],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
           label: "Random Data 2",
-          data: [15, 25, 35],
+          data: [0.6, 0.7, 0.4],
           borderColor: "rgba(255, 99, 132, 1)",
         },
       ],
@@ -243,7 +245,7 @@ const Dashboard = () => {
       datasets: [
         {
           label: "Random Data 1",
-          data: [50, 100, 150],
+          data: [0.3, 0.9, 0.4],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
@@ -258,12 +260,12 @@ const Dashboard = () => {
       datasets: [
         {
           label: "Random Data 1",
-          data: [100, 200, 300],
+          data: [0.8, 0.6, 0.7],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
           label: "Random Data 2",
-          data: [150, 250, 350],
+          data: [0.3, 0.9, 0.4],
           borderColor: "rgba(255, 99, 132, 1)",
         },
       ],
@@ -273,12 +275,12 @@ const Dashboard = () => {
       datasets: [
         {
           label: "Random Data 1",
-          data: [110, 210, 310],
+          data: [0.8, 0.6, 0.7],
           borderColor: "rgba(75, 192, 192, 1)",
         },
         {
           label: "Random Data 2",
-          data: [115, 215, 315],
+          data: [0.3, 0.9, 0.4],
           borderColor: "rgba(255, 99, 132, 1)",
         },
       ],
@@ -382,7 +384,7 @@ const Dashboard = () => {
         Generate
       </button>
 
-      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} sliderValue={sliderValue} />
+      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} sliderValue={sliderValue}  bias={bias}/>
       <ControlButtons onDownload={handleDownload} />
     </div>
   );

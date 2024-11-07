@@ -6,7 +6,7 @@ import React, {
 } from "react";
 import Chart from "chart.js/auto";
 
-const ChartComponent = forwardRef(({ data, sliderValue }, ref) => {
+const ChartComponent = forwardRef(({ data, sliderValue, bias }, ref) => {
   const chartRef = useRef(null);
   const myChartRef = useRef(null);
 
@@ -18,19 +18,25 @@ const ChartComponent = forwardRef(({ data, sliderValue }, ref) => {
       myChartRef.current.destroy();
     }
 
-    // Create the line dataset, which spans across all x-axis labels
+    // Create the line dataset with higher zIndex to ensure it is above the bars
     const lineData = {
       label: "Line Overlay",
       data: new Array(data.labels.length).fill(sliderValue), // The line is constant at sliderValue
-      borderColor: "rgba(255, 99, 132, 1)", // Red line color
+      borderColor: "rgba(0, 0, 255, 2)", // Inverted red color
       backgroundColor: "rgba(0, 0, 0, 0)", // No background fill
       fill: false, // No fill under the line
-      borderWidth: 2,
-      tension: 0.6, // Smooth the line
+      borderWidth: 2, // Thicker line for visibility
+      tension: 0.4, // Smooth the line moderately
       pointRadius: 0, // No points on the line
       type: "line", // Line chart type
-      zIndex: 4, // Make sure this line is above the bars
+      zIndex: 10, // Ensure the line is above the bars
     };
+
+    // Step: Create bar colors based on slider value and bias
+    const barColors = data.datasets[0].data.map((value) => {
+      // If sliderValue is greater than bias, color the bar red
+      return sliderValue > bias ? "rgba(255, 0, 0, 0.1)" : "rgba(0, 255, 0, 0.1)";
+    });
 
     // Calculate max y-axis value to accommodate the line
     const maxYValue = Math.max(
@@ -44,12 +50,12 @@ const ChartComponent = forwardRef(({ data, sliderValue }, ref) => {
       data: {
         labels: data.labels,
         datasets: [
-          ...data.datasets.map((dataset) => ({
-            ...dataset,
-            backgroundColor: "rgba(75, 192, 192, 0.2)", // Bar color
+          {
+            ...data.datasets[0],
+            backgroundColor: barColors, // Dynamically set bar colors based on comparison
             borderWidth: 1,
             zIndex: 1, // Bars should be below the line
-          })),
+          },
           lineData, // The line dataset
         ],
       },
@@ -63,7 +69,7 @@ const ChartComponent = forwardRef(({ data, sliderValue }, ref) => {
           },
           y: {
             min: 0, // Set the minimum value of the y-axis to 0
-            max: 1, // Dynamically adjust max y-axis to fit the line
+            max: 1, // Adjust max y-axis to fit the line properly
             beginAtZero: true, // Ensure the y-axis starts at 0
           },
         },
@@ -75,7 +81,7 @@ const ChartComponent = forwardRef(({ data, sliderValue }, ref) => {
         myChartRef.current.destroy();
       }
     };
-  }, [data, sliderValue]); // Re-render chart when data or sliderValue changes
+  }, [data, sliderValue, bias]); // Re-render chart when data, sliderValue, or bias changes
 
   useImperativeHandle(ref, () => ({
     downloadChart() {
