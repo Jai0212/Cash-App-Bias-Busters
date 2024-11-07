@@ -8,7 +8,7 @@
 }
 
 body {
-  margin: 0;
+  margin: 0 40px; /* Set horizontal margin to 40px */
   padding: 30px;
   background-color: var(--background-color-dark);
   color: var(--text-color-dark);
@@ -21,7 +21,8 @@ body {
 }
 
 .container {
-  max-width: 700px;
+  width: 100%;
+  max-width: calc(700px - 80px); /* Adjust max-width considering horizontal margin */
   text-align: center;
 }
 
@@ -47,7 +48,7 @@ button {
   color: var(--button-hover-color);
   border: none;
   border-radius: 12px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.1s ease;
   font-size: 1.2rem;
   cursor: pointer;
   padding: 15px 20px;
@@ -68,4 +69,65 @@ button:hover {
   flex-direction: row;
   gap: 15px;
   margin-top: 30px;
+}
+
+@media (max-width: 1200px) {
+  h1 {
+    font-size: 2.5rem; /* Adjust heading size for medium screens */
+  }
+
+  .container {
+    max-width: 600px; /* Smaller max-width for medium screens */
+  }
+
+  select, button {
+    font-size: 1.1rem; /* Adjust font size for inputs and buttons */
+    padding: 12px;
+  }
+}
+
+@media (max-width: 900px) {
+  h1 {
+    font-size: 2.2rem; /* Slightly smaller heading for tablets */
+  }
+
+  select, button {
+    font-size: 1.1rem;
+    padding: 12px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .controls {
+    flex-direction: column; /* Stack buttons vertically on smaller screens */
+    gap: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 20px; /* Reduce padding for small screens */
+  }
+
+  h1 {
+    font-size: 1.8rem; /* Smaller heading on mobile */
+  }
+
+  select, button {
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .container {
+    padding: 0; /* Remove extra padding for mobile */
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .controls {
+    flex-direction: column; /* Stack buttons vertically on mobile */
+    gap: 8px;
+  }
 }
