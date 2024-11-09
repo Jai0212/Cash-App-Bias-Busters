@@ -20,7 +20,7 @@ function ForgotPassword() {
 
     function handleForm(data) {
         setEmail(data.email);
-        const url = "http://localhost:11395/forgot_password";
+        const url = "http://localhost:11355/forgot_password";
         setIsSubmitting(true);
         fetch(url, {
             method: "POST",
@@ -55,7 +55,7 @@ function ForgotPassword() {
 
     function verify_OTP(e) {
         e.preventDefault(); // Prevent form submission
-        const url = "http://localhost:11395/verifyOTP";
+        const url = "http://localhost:11355/verifyOTP";
         fetch(url, {
             method: "POST",
             headers: {
