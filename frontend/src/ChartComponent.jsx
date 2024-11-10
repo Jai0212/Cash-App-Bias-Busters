@@ -160,5 +160,3 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
     </div>
   );
 });
-
-export default ChartComponent;
