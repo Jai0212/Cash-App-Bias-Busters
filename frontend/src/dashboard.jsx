@@ -374,6 +374,8 @@ const Dashboard = () => {
               bias={maxValue()}
             />
           )}
+
+        <div className="select-demographics-2">
         <div className="select-demographics">
           <div className="title">
 
@@ -456,6 +458,8 @@ const Dashboard = () => {
             </div>
           )}
         </div>
+        </div>
+        
 
 
         
