@@ -50,11 +50,14 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       zIndex: 10, // Ensure the line is above the bars
     };
 
-    // Prepare scatter data
+    // Prepare scatter data with conditional coloring
     const scatterData = labels.map((key, index) => ({
       x: index, // Use index as x-coordinate
       y: chartData[key][0], // Use the first value from each array as y-coordinate
-      label: key, // Store the key as label
+      backgroundColor:
+        chartData[key][0] > sliderValue
+          ? "rgba(255, 0, 0, 0.7)"
+          : "rgba(0, 230, 0, 0.7)",
     }));
 
     const scatterPlotData = {
@@ -62,7 +65,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
         {
           label: "Scatter Values",
           data: scatterData, // Data for scatter plot
-          backgroundColor: "rgba(0, 230, 0, 0.7)", // Green color
+          backgroundColor: scatterData.map((data) => data.backgroundColor), // Apply conditional coloring
           pointRadius: 5, // Point size
         },
       ],
@@ -105,7 +108,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       },
     });
 
-    // Initialize the scatter plot
+    // Initialize the scatter plot with conditional coloring
     scatterChartInstanceRef.current = new Chart(scatterCtx, {
       type: "scatter",
       data: scatterPlotData,
@@ -116,7 +119,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
             position: "bottom", // Position x-axis at the bottom
             ticks: {
               callback: function (value) {
-                return scatterData[value] ? scatterData[value].label : ""; // Display labels on x-axis
+                return scatterData[value] ? labels[value] : ""; // Display labels on x-axis
               },
               autoSkip: false, // Prevent auto skipping of x-axis labels
             },
@@ -137,7 +140,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       if (scatterChartInstanceRef.current) {
         scatterChartInstanceRef.current.destroy(); // Clean up scatter chart on component unmount
       }
-    };
+ 
   }, [chartData, sliderValue, bias]);
 
   useImperativeHandle(ref, () => ({
