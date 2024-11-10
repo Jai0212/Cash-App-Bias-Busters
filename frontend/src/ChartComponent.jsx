@@ -14,38 +14,32 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
   useEffect(() => {
     if (!chartData) return;
 
-    // Define demographic labels mapping
     const demographicMapping = {
       gender: ["Male", "Female", "Non-binary", "Other"],
       // Add more mappings for other demographics if needed
     };
 
-    // Determine the type of demographic (e.g., gender, race) based on chartData keys
     const determineDemographicType = (keys) => {
-      // Example logic to determine demographic type, you may need to adjust this
       if (
         keys.some((key) => key.startsWith("Male_") || key.startsWith("Female_"))
       ) {
         return "gender";
       }
-      // Add more conditions for other demographic types
       return "default";
     };
 
     const keys = Object.keys(chartData);
     const demographicType = determineDemographicType(keys);
+    const labels = demographicMapping[demographicType] || keys;
 
-    const labels = demographicMapping[demographicType] || keys; // Use mapped labels or default keys
-
-    // Group data by demographic type
     const groupData = (data, mapping) => {
       const result = mapping.map(() => []);
       Object.entries(data).forEach(([key, values]) => {
         const index = mapping.findIndex((label) => key.startsWith(label));
         if (index !== -1) {
           result[index].push({
-            ageRange: key.split("_")[1], // Extract age range
-            value: values[0], // Use the first value from each array
+            ageRange: key.split("_")[1],
+            value: values[0],
           });
         }
       });
@@ -57,10 +51,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       demographicMapping[demographicType] || labels
     );
 
-    // Prepare datasets for grouped bars
     const datasets = groupedData.flatMap((group, i) =>
-      group.map((item, j) => ({
-        label: `${labels[i]} (${item.ageRange})`,
+      group.map((item) => ({
+        label: labels[i], // Use only the main category for the legend label
         data: [{ x: labels[i], y: item.value }],
         backgroundColor:
           item.value > sliderValue
@@ -71,11 +64,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       }))
     );
 
-    // Line Data: constant at sliderValue
     const lineData = {
       label: "Line Overlay",
       data: groupedData.flatMap((group, i) =>
-        group.map((item, j) => ({
+        group.map(() => ({
           x: labels[i],
           y: sliderValue,
         }))
@@ -101,7 +93,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       myChartRef.current.destroy();
     }
 
-    // Initialize the chart with grouped bars and the line overlay
+    // Customize legend to show unique main categories
     myChartRef.current = new Chart(ctx, {
       type: "bar",
       data: data,
@@ -121,6 +113,25 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
         responsive: true,
         plugins: {
           legend: {
+            labels: {
+              generateLabels: (chart) => {
+                const labels = [];
+                chart.data.datasets.forEach((dataset) => {
+                  if (!labels.some((label) => label.text === dataset.label)) {
+                    labels.push({
+                      text: dataset.label,
+                      fillStyle: dataset.backgroundColor,
+                      strokeStyle: dataset.borderColor,
+                      lineWidth: dataset.borderWidth,
+                      hidden: false,
+                    });
+                  }
+                });
+                return labels.filter((label) =>
+                  demographicMapping[demographicType].includes(label.text)
+                );
+              },
+            },
             position: "top",
           },
           title: {
