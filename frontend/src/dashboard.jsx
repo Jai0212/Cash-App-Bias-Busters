@@ -364,73 +364,46 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="select-demographics">
-        <div className="select-container">
-          <h2>Select First Demographic</h2>
-          <select
-            onChange={handleDemographicChange}
-            value={selectedDemographic}
-          >
-            <option value="">Select</option>
-            {demographics.map((demo, index) => (
-              <option key={index} value={demo}>
-                {demo}
-              </option>
-            ))}
-          </select>
-
-          {selectedDemographic && (
-            <div>
-              <h3>Select Values for First Demographic</h3>
-              {[...Array(4)].map((_, idx) => (
-                <select
-                  key={idx}
-                  onChange={(event) => handleValueChange(event, idx)}
-                  value={selectedValues[idx] || ""}
-                >
-                  <option value="">Select</option>
-                  {demographicValues
-                    .filter((val) => !selectedSecondValues.includes(val))
-                    .map((val, index) => (
-                      <option key={index} value={val}>
-                        {val}
-                      </option>
-                    ))}
-                </select>
-              ))}
-            </div>
+      <div className="chart-container-container">
+        
+        {Object.keys(graphData).length > 0 && (
+            <ChartComponent
+              ref={chartRef}
+              chartData={graphData}
+              sliderValue={sliderValue}
+              bias={maxValue()}
+            />
           )}
-        </div>
+        <div className="select-demographics">
+          <div className="title">
 
-        {selectedDemographic && (
+          </div>
           <div className="select-container">
-            <h2>Select Second Demographic</h2>
+            
             <select
-              onChange={handleSecondDemographicChange}
-              value={secondSelectedDemographic}
+              onChange={handleDemographicChange}
+              value={selectedDemographic}
             >
               <option value="">Select</option>
-              {demographics
-                .filter((demo) => demo !== selectedDemographic)
-                .map((demo, index) => (
-                  <option key={index} value={demo}>
-                    {demo}
-                  </option>
-                ))}
+              {demographics.map((demo, index) => (
+                <option key={index} value={demo}>
+                  {demo}
+                </option>
+              ))}
             </select>
 
-            {secondSelectedDemographic && selectedDemographic && (
+            {selectedDemographic && (
               <div>
-                <h3>Select Values for Second Demographic</h3>
+                <h3>Select Values for First Demographic</h3>
                 {[...Array(4)].map((_, idx) => (
                   <select
                     key={idx}
-                    onChange={(event) => handleValueChange(event, idx, true)}
-                    value={selectedSecondValues[idx] || ""}
+                    onChange={(event) => handleValueChange(event, idx)}
+                    value={selectedValues[idx] || ""}
                   >
                     <option value="">Select</option>
-                    {secondDemographicValues
-                      .filter((val) => !selectedValues.includes(val))
+                    {demographicValues
+                      .filter((val) => !selectedSecondValues.includes(val))
                       .map((val, index) => (
                         <option key={index} value={val}>
                           {val}
@@ -441,21 +414,58 @@ const Dashboard = () => {
               </div>
             )}
           </div>
-        )}
+
+          {selectedDemographic && (
+            <div className="select-container">
+              
+              <select
+                onChange={handleSecondDemographicChange}
+                value={secondSelectedDemographic}
+              >
+                <option value="">Select</option>
+                {demographics
+                  .filter((demo) => demo !== selectedDemographic)
+                  .map((demo, index) => (
+                    <option key={index} value={demo}>
+                      {demo}
+                    </option>
+                  ))}
+              </select>
+
+              {secondSelectedDemographic && selectedDemographic && (
+                <div>
+                  <h3>Select Values for Second Demographic</h3>
+                  {[...Array(4)].map((_, idx) => (
+                    <select
+                      key={idx}
+                      onChange={(event) => handleValueChange(event, idx, true)}
+                      value={selectedSecondValues[idx] || ""}
+                    >
+                      <option value="">Select</option>
+                      {secondDemographicValues
+                        .filter((val) => !selectedValues.includes(val))
+                        .map((val, index) => (
+                          <option key={index} value={val}>
+                            {val}
+                          </option>
+                        ))}
+                    </select>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+
+        
       </div>
+
+      
 
       <button className="generate-button" onClick={handleGenerate}>
         Generate
       </button>
-
-      {Object.keys(graphData).length > 0 && (
-        <ChartComponent
-          ref={chartRef}
-          chartData={graphData}
-          sliderValue={sliderValue}
-          bias={maxValue()}
-        />
-      )}
 
       <ControlButtons onDownload={handleDownload} />
     </div>
