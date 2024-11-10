@@ -8,10 +8,8 @@ import Chart from "chart.js/auto";
 import "./ChartComponent.css";
 
 const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
-  const barChartRef = useRef(null);
-  const scatterChartRef = useRef(null);
-  const barChartInstanceRef = useRef(null);
-  const scatterChartInstanceRef = useRef(null);
+  const chartRef = useRef(null);
+  const myChartRef = useRef(null);
 
   useEffect(() => {
     if (!chartData) return;
@@ -19,27 +17,30 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
     const labels = Object.keys(chartData); // Use keys as labels (Gender_Age Range)
 
     // Prepare bar data with conditional coloring based on the slider value
-    const barData = {
-      labels: labels, // Gender_Age Range keys as labels
-      datasets: [
-        {
-          label: "Values",
-          data: labels.map((key) => chartData[key][0]), // Use only the first value from each array
-          backgroundColor: labels.map((key) =>
-            chartData[key][0] > sliderValue
-              ? "rgba(255, 0, 0, 0.7)"
-              : "rgba(0, 230, 0, 0.7)"
-          ), // Color red if value is greater than slider value, otherwise green
-          borderColor: "rgba(0, 0, 0, 0.1)",
-          borderWidth: 1,
-        },
-      ],
-    };
+    const datasets = [
+      {
+        label: "Values",
+        data: labels.map((key) => ({
+          x: key, // Use key as x-axis label
+          y: chartData[key][0], // Use the first value from each array as y-coordinate
+        })),
+        backgroundColor: labels.map((key) =>
+          chartData[key][0] > sliderValue
+            ? "rgba(255, 0, 0, 0.7)"
+            : "rgba(0, 230, 0, 0.7)"
+        ), // Color red if value is greater than slider value, otherwise green
+        borderColor: "rgba(0, 0, 0, 0.1)",
+        borderWidth: 1,
+      },
+    ];
 
     // Line Data: constant at sliderValue
     const lineData = {
       label: "Line Overlay",
-      data: labels.map((_, index) => ({ x: index, y: sliderValue })), // Create line data with constant y-value
+      data: datasets[0].data.map((dataPoint) => ({
+        x: dataPoint.x,
+        y: sliderValue,
+      })), // Create line data with constant y-value
       borderColor: "rgba(0, 0, 255, 2)", // Inverted red color
       backgroundColor: "rgba(0, 0, 0, 0)", // No background fill
       fill: false, // No fill under the line
@@ -50,74 +51,28 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       zIndex: 10, // Ensure the line is above the bars
     };
 
-    // Prepare scatter data
-    const scatterData = labels.map((key, index) => ({
-      x: index, // Use index as x-coordinate
-      y: chartData[key][0], // Use the first value from each array as y-coordinate
-      label: key, // Store the key as label
-    }));
-
-    const scatterPlotData = {
+    const data = {
+      labels: labels, // Gender_Age Range keys as labels
       datasets: [
-        {
-          label: "Scatter Values",
-          data: scatterData, // Data for scatter plot
-          backgroundColor: "rgba(0, 230, 0, 0.7)", // Green color
-          pointRadius: 5, // Point size
-        },
+        datasets[0], // Bar dataset with conditional coloring
+        lineData, // The line dataset
       ],
     };
 
-    const barCtx = barChartRef.current.getContext("2d");
-    const scatterCtx = scatterChartRef.current.getContext("2d");
+    const ctx = chartRef.current.getContext("2d");
 
-    // Destroy previous chart instances if they exist
-    if (barChartInstanceRef.current) {
-      barChartInstanceRef.current.destroy();
-    }
-    if (scatterChartInstanceRef.current) {
-      scatterChartInstanceRef.current.destroy();
+    if (myChartRef.current) {
+      myChartRef.current.destroy();
     }
 
-    // Initialize the bar chart with bars and the line overlay
-    barChartInstanceRef.current = new Chart(barCtx, {
+    // Initialize the chart with bars and the line overlay
+    myChartRef.current = new Chart(ctx, {
       type: "bar", // Base chart type is bar
-      data: {
-        ...barData,
-        datasets: [
-          ...barData.datasets,
-          lineData, // The line dataset
-        ],
-      },
+      data: data,
       options: {
         scales: {
           x: {
             ticks: {
-              autoSkip: false, // Prevent auto skipping of x-axis labels
-            },
-          },
-          y: {
-            min: 0,
-            max: 1, // Dynamically adjust max value
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-
-    // Initialize the scatter plot
-    scatterChartInstanceRef.current = new Chart(scatterCtx, {
-      type: "scatter",
-      data: scatterPlotData,
-      options: {
-        scales: {
-          x: {
-            type: "linear", // Ensure x-axis is linear
-            position: "bottom", // Position x-axis at the bottom
-            ticks: {
-              callback: function (value) {
-                return scatterData[value] ? scatterData[value].label : ""; // Display labels on x-axis
-              },
               autoSkip: false, // Prevent auto skipping of x-axis labels
             },
           },
@@ -131,11 +86,8 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
     });
 
     return () => {
-      if (barChartInstanceRef.current) {
-        barChartInstanceRef.current.destroy(); // Clean up bar chart on component unmount
-      }
-      if (scatterChartInstanceRef.current) {
-        scatterChartInstanceRef.current.destroy(); // Clean up scatter chart on component unmount
+      if (myChartRef.current) {
+        myChartRef.current.destroy(); // Clean up chart on component unmount
       }
     };
   }, [chartData, sliderValue, bias]);
@@ -143,7 +95,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
   useImperativeHandle(ref, () => ({
     downloadChart() {
       const link = document.createElement("a");
-      link.href = barChartRef.current.toDataURL("image/png");
+      link.href = chartRef.current.toDataURL("image/png");
       link.download = "chart.png";
       link.click();
     },
@@ -151,12 +103,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
 
   return (
     <div className="chart-container">
-      <div className="bar-chart">
-        <canvas ref={barChartRef} />
-      </div>
-      <div className="scatter-chart">
-        <canvas ref={scatterChartRef} />
-      </div>
+      <canvas ref={chartRef} />
     </div>
   );
 });
+
+export default ChartComponent;
