@@ -13,7 +13,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../database/output.csv")
 
 
-def model() -> dict:
+def model() -> list:
     """
     Calls all the appropriate functions to fit a model and do parameter search.
     Then returns the findings to be displayed by the graphs.
@@ -69,8 +69,8 @@ def model() -> dict:
 
     # Step 9: Create, clean, and sort bias dictionary
     data_point_list = create_bias_data_points(feature1, inputs, mappings, metric_frame, single_column_check)
-
-    return sorted_bias_dictionary
+    data_point_list = clean_datapoints(data_point_list)
+    return data_point_list
 
 
 def clean_datapoints(data_point_list: list[DataPoint]) -> list[DataPoint]:
