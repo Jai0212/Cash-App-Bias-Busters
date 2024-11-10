@@ -193,11 +193,17 @@ def sort_bias_dictionary(cleaned_bias_dictionary):
 
 
 def clean_bias_dictionary(bias_dictionary):
+    """
+    Cleans the dictionary of NaN values
+    """
     return {k: v for k, v in bias_dictionary.items()
             if not any(math.isnan(x) for x in v)}
 
 
 def create_bias_dictionary(feature1, inputs, mappings, metric_frame):
+    """
+    Creates the dictionary depending on whether single_column is true or not.
+    """
     # Create dictionary with mapped keys
     bias_dictionary = {}
     for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
