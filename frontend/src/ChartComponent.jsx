@@ -1,52 +1,45 @@
-import React, { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import Chart from "chart.js/auto";
-import './ChartComponent.css';
+import "./ChartComponent.css";
 
 const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
-  const chartRef = useRef(null);
-  const myChartRef = useRef(null);
-
-  // const chartData = {
-  //   'Female_18-26': [0.446, 0.0, 0.554],
-  //   'Female_27-35': [0.577, 0.423, 0.0],
-  //   'Female_36-44': [0.404, 0.596, 0.0],
-  //   'Female_45-53': [0.436, 0.564, 0.0],
-  //   'Female_54-62': [0.55, 0.45, 0.0],
-  //   'Male_18-26': [0.56, 0.0, 0.44],
-  //   'Male_27-35': [0.457, 0.0, 0.543],
-  //   'Male_36-44': [0.403, 0.0, 0.597],
-  //   'Male_45-53': [0.571, 0.0, 0.429],
-  //   'Male_54-62': [0.54, 0.0, 0.46],
-  //   'Non-binary_18-26': [0.55, 0.0, 0.45],
-  //   'Non-binary_27-35': [0.558, 0.0, 0.442],
-  //   'Non-binary_36-44': [0.654, 0.0, 0.346],
-  //   'Non-binary_45-53': [0.359, 0.0, 0.641],
-  //   'Non-binary_54-62': [0.434, 0.0, 0.566],
-  //   'Other_18-26': [0.535, 0.465, 0.0],
-  //   'Other_27-35': [0.36, 0.64, 0.0],
-  //   'Other_36-44': [0.492, 0.508, 0.0],
-  //   'Other_45-53': [0.511, 0.489, 0.0],
-  //   'Other_54-62': [0.494, 0.506, 0.0]
-  // };
+  const barChartRef = useRef(null);
+  const scatterChartRef = useRef(null);
+  const barChartInstanceRef = useRef(null);
+  const scatterChartInstanceRef = useRef(null);
 
   useEffect(() => {
-    console.log("Chart data received", chartData);
     if (!chartData) return;
 
     const labels = Object.keys(chartData); // Use keys as labels (Gender_Age Range)
 
-    const datasets = [
-      {
-        label: "Values",
-        data: labels.map((key) => chartData[key][0]), // Use only the first value from each array
-        backgroundColor: labels.map((_, index) => `rgba(${index * 40}, ${100 + index * 40}, ${150 - index * 30}, 0.6)`),
-      }
-    ];
+    // Prepare bar data with conditional coloring based on the slider value
+    const barData = {
+      labels: labels, // Gender_Age Range keys as labels
+      datasets: [
+        {
+          label: "Values",
+          data: labels.map((key) => chartData[key][0]), // Use only the first value from each array
+          backgroundColor: labels.map((key) =>
+            chartData[key][0] > sliderValue
+              ? "rgba(255, 0, 0, 0.7)"
+              : "rgba(0, 230, 0, 0.7)"
+          ), // Color red if value is greater than slider value, otherwise green
+          borderColor: "rgba(0, 0, 0, 0.1)",
+          borderWidth: 1,
+        },
+      ],
+    };
 
     // Line Data: constant at sliderValue
     const lineData = {
       label: "Line Overlay",
-      data: new Array(labels.length).fill(sliderValue), // The line is constant at sliderValue
+      data: labels.map((_, index) => ({ x: index, y: sliderValue })), // Create line data with constant y-value
       borderColor: "rgba(0, 0, 255, 2)", // Inverted red color
       backgroundColor: "rgba(0, 0, 0, 0)", // No background fill
       fill: false, // No fill under the line
@@ -57,41 +50,45 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       zIndex: 10, // Ensure the line is above the bars
     };
 
-    // Step: Create bar colors based on slider value and bias
-    const barColors = datasets[0].data.map((value) => {
-      // If sliderValue is greater than bias, color the bar red
-      return sliderValue < bias ? "rgba(255, 0, 0, 0.7)" : "rgba(0, 230, 0, 0.7)";
-    });
+    // Prepare scatter data
+    const scatterData = labels.map((key, index) => ({
+      x: index, // Use index as x-coordinate
+      y: chartData[key][0], // Use the first value from each array as y-coordinate
+      label: key, // Store the key as label
+    }));
 
-    // Calculate max y-axis value to accommodate the line
-    const maxYValue = Math.max(
-      sliderValue,
-      ...datasets.flatMap((dataset) => dataset.data)
-    );
-
-    const data = {
-      labels: labels, // Gender_Age Range keys as labels
+    const scatterPlotData = {
       datasets: [
         {
-          ...datasets[0],
-          backgroundColor: barColors, // Dynamically set bar colors based on comparison
-          borderWidth: 1,
-          zIndex: 1, // Bars should be below the line
+          label: "Scatter Values",
+          data: scatterData, // Data for scatter plot
+          backgroundColor: "rgba(0, 230, 0, 0.7)", // Green color
+          pointRadius: 5, // Point size
         },
-        lineData, // The line dataset
       ],
     };
 
-    const ctx = chartRef.current.getContext("2d");
+    const barCtx = barChartRef.current.getContext("2d");
+    const scatterCtx = scatterChartRef.current.getContext("2d");
 
-    if (myChartRef.current) {
-      myChartRef.current.destroy();
+    // Destroy previous chart instances if they exist
+    if (barChartInstanceRef.current) {
+      barChartInstanceRef.current.destroy();
+    }
+    if (scatterChartInstanceRef.current) {
+      scatterChartInstanceRef.current.destroy();
     }
 
-    // Initialize the chart with bars and the line overlay
-    myChartRef.current = new Chart(ctx, {
+    // Initialize the bar chart with bars and the line overlay
+    barChartInstanceRef.current = new Chart(barCtx, {
       type: "bar", // Base chart type is bar
-      data: data,
+      data: {
+        ...barData,
+        datasets: [
+          ...barData.datasets,
+          lineData, // The line dataset
+        ],
+      },
       options: {
         scales: {
           x: {
@@ -108,9 +105,37 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       },
     });
 
+    // Initialize the scatter plot
+    scatterChartInstanceRef.current = new Chart(scatterCtx, {
+      type: "scatter",
+      data: scatterPlotData,
+      options: {
+        scales: {
+          x: {
+            type: "linear", // Ensure x-axis is linear
+            position: "bottom", // Position x-axis at the bottom
+            ticks: {
+              callback: function (value) {
+                return scatterData[value] ? scatterData[value].label : ""; // Display labels on x-axis
+              },
+              autoSkip: false, // Prevent auto skipping of x-axis labels
+            },
+          },
+          y: {
+            min: 0,
+            max: 1, // Dynamically adjust max value
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+
     return () => {
-      if (myChartRef.current) {
-        myChartRef.current.destroy(); // Clean up chart on component unmount
+      if (barChartInstanceRef.current) {
+        barChartInstanceRef.current.destroy(); // Clean up bar chart on component unmount
+      }
+      if (scatterChartInstanceRef.current) {
+        scatterChartInstanceRef.current.destroy(); // Clean up scatter chart on component unmount
       }
     };
   }, [chartData, sliderValue, bias]);
@@ -118,7 +143,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
   useImperativeHandle(ref, () => ({
     downloadChart() {
       const link = document.createElement("a");
-      link.href = chartRef.current.toDataURL("image/png");
+      link.href = barChartRef.current.toDataURL("image/png");
       link.download = "chart.png";
       link.click();
     },
@@ -126,7 +151,12 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
 
   return (
     <div className="chart-container">
-      <canvas ref={chartRef} />
+      <div className="bar-chart">
+        <canvas ref={barChartRef} />
+      </div>
+      <div className="scatter-chart">
+        <canvas ref={scatterChartRef} />
+      </div>
     </div>
   );
 });
