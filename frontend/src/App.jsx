@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserSignup from "./pages/Signup.jsx";
 import UserLogin from "./pages/Login.jsx";
 import Dashboard from "./dashboard.jsx";
+import Dashboard2 from "./dashboard2.jsx";
 import ChangePassword from "./pages/ChangePassword.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
@@ -34,6 +35,7 @@ const App = () => {
             element={<Dashboard VITE_BACKEND_URL={VITE_BACKEND_URL} />}
           />
           <Route path="change-password" element={<ChangePassword />} />
+          <Route path="dashboard2" element={<Dashboard2 />} />
         </Route>
       </Routes>
     </BrowserRouter>
