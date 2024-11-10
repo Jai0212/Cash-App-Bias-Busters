@@ -11,8 +11,10 @@
 /* Container for buttons (timeframe selection) */
 .timeframe-buttons {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
+  flex-direction: column; 
+  align-items: center; 
+  gap: 10px;
+  
 }
 
 .timeframe-buttons button {
@@ -23,6 +25,8 @@
   border-radius: 5px;
   background-color: #f0f0f0;
   transition: background-color 0.3s;
+  width: 100%; 
+  max-width: 200px;
 }
 
 .timeframe-buttons button:hover {
@@ -147,10 +151,17 @@
 
 /* Adjust widths as necessary */
 .select-demographics {
+  margin: 0px;
+  padding: 0px;
   flex: 1; /* Take up equal width, or set a specific width if needed */
   max-width: 300px; /* Optional: Set a max width for select-demographics */
 }
 
 .chart-container {
   flex: 2; /* Take up twice as much space as .select-demographics */
+}
+
+.demog-clas {
+  padding-left: 30px;
+  text-align: center;
 }

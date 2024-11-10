@@ -325,6 +325,21 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
+      
+
+      <div className="slider-container">
+        <label>Adjust the slider (0 to 1): {sliderValue}</label>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={sliderValue}
+          onChange={handleSliderChange}
+        />
+      </div>
+
+      <div className="chart-container-container">
       <div className="timeframe-buttons">
         <button
           className={timeframe === "day" ? "active-button" : ""}
@@ -351,20 +366,6 @@ const Dashboard = () => {
           1 Year
         </button>
       </div>
-
-      <div className="slider-container">
-        <label>Adjust the slider (0 to 1): {sliderValue}</label>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={sliderValue}
-          onChange={handleSliderChange}
-        />
-      </div>
-
-      <div className="chart-container-container">
         
         {Object.keys(graphData).length > 0 && (
             <ChartComponent
@@ -376,6 +377,7 @@ const Dashboard = () => {
           )}
 
         <div className="select-demographics-2">
+          <div className="demog-clas"><h2>Demographics</h2></div>
         <div className="select-demographics">
           <div className="title">
 
@@ -396,7 +398,7 @@ const Dashboard = () => {
 
             {selectedDemographic && (
               <div>
-                <h3>Select Values for First Demographic</h3>
+                <h3>Values for First Demographic</h3>
                 {[...Array(4)].map((_, idx) => (
                   <select
                     key={idx}
@@ -436,7 +438,7 @@ const Dashboard = () => {
 
               {secondSelectedDemographic && selectedDemographic && (
                 <div>
-                  <h3>Select Values for Second Demographic</h3>
+                  <h3>Values for Second Demographic</h3>
                   {[...Array(4)].map((_, idx) => (
                     <select
                       key={idx}
