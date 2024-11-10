@@ -2,8 +2,10 @@ from sklearn import tree
 from sklearn.model_selection import train_test_split, GridSearchCV
 from fairlearn.metrics import MetricFrame
 import numpy as np
+import pandas as pd
 import os
 from data_access.file_reader import FileReader
+from datapoint_entity import DataPoint
 from data_access.model_saver import save_model
 from preprocessing.data_preprocessing import DataProcessor
 
@@ -74,6 +76,52 @@ def model() -> dict:
     sorted_bias_dictionary = sort_bias_dictionary(cleaned_bias_dictionary)
 
     return sorted_bias_dictionary
+
+
+def create_bias_data_points(
+        feature1: str,
+        inputs: pd.DataFrame,
+        mappings: dict,
+        metric_frame: MetricFrame,
+        single_column_check: bool = False) -> list:
+    """
+    Creates a list of DataPoint entities with metrics by feature group.
+    """
+    data_points = []
+
+    for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
+
+        f1_label = get_mapped_label(mappings, feature1, feature1_code)
+
+        if single_column_check:
+            data_point = single_column_datapoint(metrics, mappings, f1_label)
+        else:
+            data_point = multiple_column_datapoint(metrics, f1_label, mappings, feature2_code, inputs)
+
+        data_points.append(data_point)
+
+    return data_points
+
+
+def single_column_datapoint(metrics: pd.Series, mappings: dict, f1_label: str) -> DataPoint:
+    """
+    Creates a DataPoint for a single feature column.
+    """
+    rounded_metrics = get_rounded_metrics(metrics)
+    data_point = DataPoint(f1_label, "", rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
+    return data_point
+
+
+def multiple_column_datapoint(metrics: pd.Series, f1_label: str, mappings: dict, feature2_code: any,
+                              inputs: pd.DataFrame) -> DataPoint:
+    """
+    Creates a DataPoint for multiple feature columns.
+    """
+    feature2 = inputs.columns[1]
+    f2_label = get_mapped_label(mappings, feature2, feature2_code)
+    rounded_metrics = get_rounded_metrics(metrics)
+    data_point = DataPoint(f1_label, f2_label, rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
+    return data_point
 
 
 if __name__ == "__main__":
