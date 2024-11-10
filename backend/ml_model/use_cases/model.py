@@ -4,10 +4,10 @@ from fairlearn.metrics import MetricFrame
 import numpy as np
 import pandas as pd
 import os
-from data_access.file_reader import FileReader
-from datapoint_entity import DataPoint
-from data_access.model_saver import save_model
-from preprocessing.data_preprocessing import DataProcessor
+from ml_model.data_access.file_reader import FileReader
+from ml_model.datapoint_entity import DataPoint
+from ml_model.data_access.model_saver import save_model
+from ml_model.preprocessing.data_preprocessing import DataProcessor
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../database/output.csv")
