@@ -1,5 +1,6 @@
 from sklearn.model_selection import GridSearchCV
 import pandas as pd
+import pickle
 
 
 def save_model(best_clf: GridSearchCV,
