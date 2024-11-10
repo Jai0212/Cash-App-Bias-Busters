@@ -5,7 +5,7 @@ import numpy as np
 
 
 class FileReader:
-    def __init__(self, csv_file_path: str, categorical_columns: list = None):
+    def __init__(self, csv_file_path: str):
         """
         Initialize the FileReader class with file path and categorical columns.
 

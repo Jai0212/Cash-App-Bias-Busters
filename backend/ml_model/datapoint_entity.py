@@ -3,14 +3,14 @@ class DataPoint:
     A DataPoint entity that represents the core attributes and behaviors of a data point in the graph.
     """
 
-    def __init__(self, feature1: str, feature2: str, accuracy: double, falsepositive: double, falsenegative: double):
+    def __init__(self, feature1: str, feature2: str, accuracy: float, falsepositive: float, falsenegative: float):
         self.feature1 = feature1
         self.feature2 = feature2
         self.accuracy = accuracy
         self.falsepositive = falsepositive
         self.falsenegative = falsenegative
 
-# Getters
+    # Getters
     def get_feature1(self) -> str:
         """Returns the first feature."""
         return self._feature1
