@@ -140,7 +140,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       if (scatterChartInstanceRef.current) {
         scatterChartInstanceRef.current.destroy(); // Clean up scatter chart on component unmount
       }
- 
+    };
   }, [chartData, sliderValue, bias]);
 
   useImperativeHandle(ref, () => ({
