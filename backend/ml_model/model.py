@@ -30,7 +30,7 @@ def file_reader() -> (pd.DataFrame, pd.DataFrame, pd.Series):  # type: ignore
     df_cleaned = df.drop(["timestamp", "id"], axis=1, errors="ignore")
 
     if df_cleaned.shape[1] == 2:        # Check if the DataFrame has only one column
-        self.single_column_check = True
+        single_column_check = True
 
     df_dropped = age_check(df_cleaned)
     inputs = get_inputs(df_dropped)
