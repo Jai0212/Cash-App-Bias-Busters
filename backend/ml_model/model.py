@@ -119,8 +119,7 @@ def model() -> dict:
     _, _, target = file_reader()  # Get the target variable
 
     # Split the data into training and test sets
-    x_train, x_test, y_train, y_test = (
-        train_test_split(inputs, target, test_size=0.2, random_state=48))
+    x_train, x_test, y_train, y_test = (train_test_split(inputs, target, test_size=0.2, random_state=48))
 
     # Define the model
     clf = tree.DecisionTreeClassifier()
@@ -164,26 +163,21 @@ def model() -> dict:
         y_pred=y_pred,
         sensitive_features=sensitive_features,)  # Pass the DataFrame with multiple sensitive features
 
-    # Print metrics for each group
-    print(metric_frame.by_group)
+    save_model(best_clf, x_test, y_test)
+    bias_dictionary = create_bias_dictionary(feature1, inputs, mappings, metric_frame)
+    cleaned_bias_dictionary = clean_bias_dictionary(bias_dictionary)    # Cleaned dictionary without NaN values
+    sorted_bias_dictionary = sort_bias_dictionary(cleaned_bias_dictionary)
 
+    return sorted_bias_dictionary
+
+
+def save_model(best_clf: GridSearchCV, x_test: pd.DataFrame, y_test: pd.Series) -> None:
     # Overall model score
     score = best_clf.score(x_test, y_test)
 
     # Save the model and its score
     with open("model_with_score.pkl", "wb") as f:
         pickle.dump({"model": best_clf, "score": score}, f)
-
-    bias_dictionary = create_bias_dictionary(feature1, inputs,
-                                             mappings, metric_frame)
-
-    # Cleaned dictionary without NaN values
-    cleaned_bias_dictionary = clean_bias_dictionary(bias_dictionary)
-
-    # Sort dictionary by race_label and then by age_label
-    sorted_bias_dictionary = sort_bias_dictionary(cleaned_bias_dictionary)
-
-    return sorted_bias_dictionary
 
 
 def sort_bias_dictionary(cleaned_bias_dictionary):
