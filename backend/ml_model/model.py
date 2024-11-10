@@ -113,7 +113,8 @@ def drop_categorical_columns(inputs: pd.DataFrame) -> pd.DataFrame:
 
 def model() -> dict:
     """
-    Final model.
+    Calls all the appropriate functions to fit a model and do parameter search. Then returns the findings to
+    be displayed by the graphs.
     """
     inputs, mappings = labels_encoder()  # Get encoded inputs and mappings
     _, _, target = file_reader()  # Get the target variable
@@ -172,6 +173,9 @@ def model() -> dict:
 
 
 def save_model(best_clf: GridSearchCV, x_test: pd.DataFrame, y_test: pd.Series) -> None:
+    """
+    Saves the model as a pkl file
+    """
     # Overall model score
     score = best_clf.score(x_test, y_test)
 
@@ -181,6 +185,9 @@ def save_model(best_clf: GridSearchCV, x_test: pd.DataFrame, y_test: pd.Series) 
 
 
 def sort_bias_dictionary(cleaned_bias_dictionary):
+    """
+    Sorts the dictionary with appropriate conditions
+    """
     return dict(sorted(cleaned_bias_dictionary.items(),
                        key=lambda item: (item[0][0], item[0][1])))
 
