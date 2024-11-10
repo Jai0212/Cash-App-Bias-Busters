@@ -20,6 +20,7 @@ from ml_model.repository.data_preprocessing import DataProcessor
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")
 
+
 def model() -> list:
     """
     Calls all the appropriate functions to fit a model and do parameter search.
