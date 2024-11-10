@@ -68,14 +68,14 @@ def model() -> dict:
     save_model(best_clf, x_test, y_test)
 
     # Step 9: Create, clean, and sort bias dictionary
-    bias_dictionary = create_bias_dictionary(feature1, inputs_n, mappings,
-                                             metric_frame,
-                                             file_reader.single_column_check)
-
-    cleaned_bias_dictionary = clean_bias_dictionary(bias_dictionary)
-    sorted_bias_dictionary = sort_bias_dictionary(cleaned_bias_dictionary)
+    data_point_list = create_bias_data_points(feature1, inputs, mappings, metric_frame, single_column_check)
 
     return sorted_bias_dictionary
+
+
+def clean_datapoints(data_point_list: list[DataPoint]) -> list[DataPoint]:
+
+    return [x for x in data_point_list if x.feature1 != "NaN" and x.feature2 != "NaN"]
 
 
 def create_bias_data_points(
