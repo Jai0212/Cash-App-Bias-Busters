@@ -146,7 +146,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       link.href = barChartRef.current.toDataURL("image/png");
       link.download = "chart.png";
       link.click();
-  
+    },
   }));
 
   return (
