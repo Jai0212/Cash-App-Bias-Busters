@@ -201,32 +201,50 @@ def clean_bias_dictionary(bias_dictionary) -> dict:
             if not any(math.isnan(x) for x in v)}
 
 
-def create_bias_dictionary(
+def create_bias_data_points(
         feature1: str,
         inputs: pd.DataFrame,
         mappings: dict,
         metric_frame: MetricFrame,
-        single_column_check: bool = False) -> dict:
+        single_column_check: bool = False) -> list:
     """
-    Creates a bias dictionary with metrics by feature group.
+    Creates a list of DataPoint entities with metrics by feature group.
     """
-    bias_dictionary = {}
+    data_points = []
 
-    for (feature1_code, feature2_code), metrics in (
-            metric_frame.by_group.iterrows()):
+    for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
 
         f1_label = get_mapped_label(mappings, feature1, feature1_code)
 
         if single_column_check:
-            key = str(f1_label)
+            data_point = single_column_datapoint(metrics, mappings, f1_label)
         else:
-            feature2 = inputs.columns[1]
-            f2_label = get_mapped_label(mappings, feature2, feature2_code)
-            key = (str(f1_label), str(f2_label))
+            data_point = multiple_column_datapoint(metrics, f1_label, mappings, feature2_code, inputs)
 
-        bias_dictionary[key] = get_rounded_metrics(metrics)
+        data_points.append(data_point)
 
-    return bias_dictionary
+    return data_points
+
+
+def single_column_datapoint(metrics: pd.Series, mappings: dict, f1_label: str) -> DataPoint:
+    """
+    Creates a DataPoint for a single feature column.
+    """
+    rounded_metrics = get_rounded_metrics(metrics)
+    data_point = DataPoint(f1_label, "", rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
+    return data_point
+
+
+def multiple_column_datapoint(metrics: pd.Series, f1_label: str, mappings: dict, feature2_code: any,
+                               inputs: pd.DataFrame) -> DataPoint:
+    """
+    Creates a DataPoint for multiple feature columns.
+    """
+    feature2 = inputs.columns[1]
+    f2_label = get_mapped_label(mappings, feature2, feature2_code)
+    rounded_metrics = get_rounded_metrics(metrics)
+    data_point = DataPoint(f1_label, f2_label, rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
+    return data_point
 
 
 def get_mapped_label(mappings: dict, feature: str, code: any) -> str:
