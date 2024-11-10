@@ -14,49 +14,85 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
   useEffect(() => {
     if (!chartData) return;
 
-    const labels = Object.keys(chartData); // Use keys as labels (Gender_Age Range)
+    // Define demographic labels mapping
+    const demographicMapping = {
+      gender: ["Male", "Female", "Non-binary", "Other"],
+      // Add more mappings for other demographics if needed
+    };
 
-    // Prepare bar data with conditional coloring based on the slider value
-    const datasets = [
-      {
-        label: "Values",
-        data: labels.map((key) => ({
-          x: key, // Use key as x-axis label
-          y: chartData[key][0], // Use the first value from each array as y-coordinate
-        })),
-        backgroundColor: labels.map((key) =>
-          chartData[key][0] > sliderValue
+    // Determine the type of demographic (e.g., gender, race) based on chartData keys
+    const determineDemographicType = (keys) => {
+      // Example logic to determine demographic type, you may need to adjust this
+      if (
+        keys.some((key) => key.startsWith("Male_") || key.startsWith("Female_"))
+      ) {
+        return "gender";
+      }
+      // Add more conditions for other demographic types
+      return "default";
+    };
+
+    const keys = Object.keys(chartData);
+    const demographicType = determineDemographicType(keys);
+
+    const labels = demographicMapping[demographicType] || keys; // Use mapped labels or default keys
+
+    // Group data by demographic type
+    const groupData = (data, mapping) => {
+      const result = mapping.map(() => []);
+      Object.entries(data).forEach(([key, values]) => {
+        const index = mapping.findIndex((label) => key.startsWith(label));
+        if (index !== -1) {
+          result[index].push({
+            ageRange: key.split("_")[1], // Extract age range
+            value: values[0], // Use the first value from each array
+          });
+        }
+      });
+      return result;
+    };
+
+    const groupedData = groupData(
+      chartData,
+      demographicMapping[demographicType] || labels
+    );
+
+    // Prepare datasets for grouped bars
+    const datasets = groupedData.flatMap((group, i) =>
+      group.map((item, j) => ({
+        label: `${labels[i]} (${item.ageRange})`,
+        data: [{ x: labels[i], y: item.value }],
+        backgroundColor:
+          item.value > sliderValue
             ? "rgba(255, 0, 0, 0.7)"
-            : "rgba(0, 230, 0, 0.7)"
-        ), // Color red if value is greater than slider value, otherwise green
+            : "rgba(0, 230, 0, 0.7)",
         borderColor: "rgba(0, 0, 0, 0.1)",
         borderWidth: 1,
-      },
-    ];
+      }))
+    );
 
     // Line Data: constant at sliderValue
     const lineData = {
       label: "Line Overlay",
-      data: datasets[0].data.map((dataPoint) => ({
-        x: dataPoint.x,
-        y: sliderValue,
-      })), // Create line data with constant y-value
-      borderColor: "rgba(0, 0, 255, 2)", // Inverted red color
-      backgroundColor: "rgba(0, 0, 0, 0)", // No background fill
-      fill: false, // No fill under the line
-      borderWidth: 2, // Thicker line for visibility
-      tension: 0.4, // Smooth the line moderately
-      pointRadius: 0, // No points on the line
-      type: "line", // Line chart type
-      zIndex: 10, // Ensure the line is above the bars
+      data: groupedData.flatMap((group, i) =>
+        group.map((item, j) => ({
+          x: labels[i],
+          y: sliderValue,
+        }))
+      ),
+      borderColor: "rgba(0, 0, 255, 2)",
+      backgroundColor: "rgba(0, 0, 0, 0)",
+      fill: false,
+      borderWidth: 2,
+      tension: 0.4,
+      pointRadius: 0,
+      type: "line",
+      zIndex: 10,
     };
 
     const data = {
-      labels: labels, // Gender_Age Range keys as labels
-      datasets: [
-        datasets[0], // Bar dataset with conditional coloring
-        lineData, // The line dataset
-      ],
+      labels: labels,
+      datasets: [...datasets, lineData],
     };
 
     const ctx = chartRef.current.getContext("2d");
@@ -65,21 +101,31 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       myChartRef.current.destroy();
     }
 
-    // Initialize the chart with bars and the line overlay
+    // Initialize the chart with grouped bars and the line overlay
     myChartRef.current = new Chart(ctx, {
-      type: "bar", // Base chart type is bar
+      type: "bar",
       data: data,
       options: {
         scales: {
           x: {
             ticks: {
-              autoSkip: false, // Prevent auto skipping of x-axis labels
+              autoSkip: false,
             },
           },
           y: {
             min: 0,
-            max: 1, // Dynamically adjust max value
+            max: 1,
             beginAtZero: true,
+          },
+        },
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "top",
+          },
+          title: {
+            display: true,
+            text: "Grouped Bar Chart",
           },
         },
       },
@@ -87,7 +133,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
 
     return () => {
       if (myChartRef.current) {
-        myChartRef.current.destroy(); // Clean up chart on component unmount
+        myChartRef.current.destroy();
       }
     };
   }, [chartData, sliderValue, bias]);
