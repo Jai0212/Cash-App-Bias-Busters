@@ -56,7 +56,8 @@ def get_inputs(df: pd.DataFrame) -> pd.DataFrame:
 
 def age_check(df: pd.DataFrame) -> pd.DataFrame:
     """
-    This function will check if the data frame entered has a age column, then convets it into age_groups where
+    This function will check if the data frame entered has an age column,
+    then converts it into age_groups where
     the age groups are put into bins.
     """
     if "age" in df.columns:     # Check if 'age' column exists
@@ -211,7 +212,9 @@ def create_bias_dictionary(
     """
     bias_dictionary = {}
 
-    for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
+    for (feature1_code, feature2_code), metrics in (
+            metric_frame.by_group.iterrows()):
+
         f1_label = get_mapped_label(mappings, feature1, feature1_code)
 
         if single_column_check:
@@ -230,7 +233,8 @@ def get_mapped_label(mappings: dict, feature: str, code: any) -> str:
     """
     Retrieves the label from mappings based on the feature and code.
     """
-    return mappings.get(feature.removesuffix("_N"), {}).get(code, "Unknown Feature")
+    return (mappings.get(feature.removesuffix("_N"), {}).
+            get(code, "Unknown Feature"))
 
 
 def get_rounded_metrics(metrics: pd.Series) -> list:
