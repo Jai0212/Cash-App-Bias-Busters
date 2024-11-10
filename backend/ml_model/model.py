@@ -165,7 +165,7 @@ def model() -> dict:
         sensitive_features=sensitive_features,)  # Pass the DataFrame with multiple sensitive features
 
     save_model(best_clf, x_test, y_test)
-    bias_dictionary = create_bias_dictionary(feature1, inputs, mappings, metric_frame)
+    bias_dictionary = create_bias_dictionary(feature1, inputs, mappings, metric_frame, single_column_check)
     cleaned_bias_dictionary = clean_bias_dictionary(bias_dictionary)    # Cleaned dictionary without NaN values
     sorted_bias_dictionary = sort_bias_dictionary(cleaned_bias_dictionary)
 
@@ -184,7 +184,7 @@ def save_model(best_clf: GridSearchCV, x_test: pd.DataFrame, y_test: pd.Series) 
         pickle.dump({"model": best_clf, "score": score}, f)
 
 
-def sort_bias_dictionary(cleaned_bias_dictionary):
+def sort_bias_dictionary(cleaned_bias_dictionary) -> dict:
     """
     Sorts the dictionary with appropriate conditions
     """
@@ -192,7 +192,7 @@ def sort_bias_dictionary(cleaned_bias_dictionary):
                        key=lambda item: (item[0][0], item[0][1])))
 
 
-def clean_bias_dictionary(bias_dictionary):
+def clean_bias_dictionary(bias_dictionary) -> dict:
     """
     Cleans the dictionary of NaN values
     """
@@ -200,31 +200,48 @@ def clean_bias_dictionary(bias_dictionary):
             if not any(math.isnan(x) for x in v)}
 
 
-def create_bias_dictionary(feature1, inputs, mappings, metric_frame):
+def create_bias_dictionary(
+        feature1: str,
+        inputs: pd.DataFrame,
+        mappings: dict,
+        metric_frame: MetricFrame,
+        single_column_check: bool = False) -> dict:
     """
-    Creates the dictionary depending on whether single_column is true or not.
+    Creates a bias dictionary with metrics by feature group.
     """
-    # Create dictionary with mapped keys
     bias_dictionary = {}
-    for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
 
-        f1_label = mappings[feature1.removesuffix("_N")].get(
-            feature1_code, "Unknown Feature")
-        if "single_column_check" in globals() and single_column_check:
+    for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
+        f1_label = get_mapped_label(mappings, feature1, feature1_code)
+
+        if single_column_check:
             key = str(f1_label)
         else:
             feature2 = inputs.columns[1]
-            f2_label = mappings[feature2.removesuffix("_N")].get(
-                feature2_code, "Unknown Feature"
-            )
+            f2_label = get_mapped_label(mappings, feature2, feature2_code)
             key = (str(f1_label), str(f2_label))
 
-        bias_dictionary[key] = [
-            round(metrics["accuracy"], 3),
-            round(metrics["false_positive_rate"], 3),
-            round(metrics["false_negative_rate"], 3),]
+        bias_dictionary[key] = get_rounded_metrics(metrics)
 
     return bias_dictionary
+
+
+def get_mapped_label(mappings: dict, feature: str, code: any) -> str:
+    """
+    Retrieves the label from mappings based on the feature and code.
+    """
+    return mappings.get(feature.removesuffix("_N"), {}).get(code, "Unknown Feature")
+
+
+def get_rounded_metrics(metrics: pd.Series) -> list:
+    """
+    Rounds and returns relevant metrics as a list.
+    """
+    return [
+        round(metrics["accuracy"], 3),
+        round(metrics["false_positive_rate"], 3),
+        round(metrics["false_negative_rate"], 3),
+    ]
 
 
 if __name__ == "__main__":
