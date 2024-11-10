@@ -4,16 +4,16 @@ from fairlearn.metrics import MetricFrame
 import numpy as np
 import pandas as pd
 import os
-from data_access.file_reader import FileReader
-from datapoint_entity import DataPoint
-from data_access.model_saver import save_model
-from preprocessing.data_preprocessing import DataProcessor
+from ml_model.data_access.file_reader import FileReader
+from ml_model.datapoint_entity import DataPoint
+from ml_model.data_access.model_saver import save_model
+from ml_model.preprocessing.data_preprocessing import DataProcessor
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../database/output.csv")
 
 
-def model() -> dict:
+def model() -> list:
     """
     Calls all the appropriate functions to fit a model and do parameter search.
     Then returns the findings to be displayed by the graphs.
@@ -68,14 +68,14 @@ def model() -> dict:
     save_model(best_clf, x_test, y_test)
 
     # Step 9: Create, clean, and sort bias dictionary
-    bias_dictionary = create_bias_dictionary(feature1, inputs_n, mappings,
-                                             metric_frame,
-                                             file_reader.single_column_check)
+    data_point_list = create_bias_data_points(feature1, inputs, mappings, metric_frame, single_column_check)
+    data_point_list = clean_datapoints(data_point_list)
+    return data_point_list
 
-    cleaned_bias_dictionary = clean_bias_dictionary(bias_dictionary)
-    sorted_bias_dictionary = sort_bias_dictionary(cleaned_bias_dictionary)
 
-    return sorted_bias_dictionary
+def clean_datapoints(data_point_list: list[DataPoint]) -> list[DataPoint]:
+
+    return [x for x in data_point_list if x.feature1 != "NaN" and x.feature2 != "NaN"]
 
 
 def create_bias_data_points(
