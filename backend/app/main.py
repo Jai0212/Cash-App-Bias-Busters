@@ -8,7 +8,6 @@ import csv
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Tuple
 from werkzeug.datastructures import FileStorage
-from ml_model.model import model
 
 curr_dir = os.path.dirname(__file__)
 DATABASE_OUTPUT_PATH = os.path.join(curr_dir, "../database/output.csv")
@@ -28,12 +27,12 @@ DB_CONFIG = {
 }
 
 
-def create_temp_cert(cert_content: str) -> str:
-    """Create a temporary SSL certificate."""
+# def create_temp_cert(cert_content: str) -> str:
+#     """Create a temporary SSL certificate."""
 
-    with tempfile.NamedTemporaryFile(delete=False) as temp_cert:
-        temp_cert.write(cert_content.encode())
-        return temp_cert.name
+#     with tempfile.NamedTemporaryFile(delete=False) as temp_cert:
+#         temp_cert.write(cert_content.encode())
+#         return temp_cert.name
 
 
 def connect_to_database() -> Optional[mysql.connector.connection.MySQLConnection]:
@@ -320,7 +319,7 @@ def get_values_under_header(table_name: str, header: str) -> List[str]:
 
 
 def update_comparison_csv(
-        curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
+    curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
 ) -> None:
     """Update the comparison CSV file with the user's selections."""
 
@@ -367,7 +366,7 @@ def update_comparison_csv(
 
 
 def update_db_for_user(
-        curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
+    curr_user: str, demographics: List[str], choices: Dict[str, List[str]], time: str
 ) -> None:
     """Update the database for the specified user with the selected demographics and choices."""
 
@@ -443,7 +442,7 @@ def update_db_for_user(
 
 # TODO make api for this by calling all appropriate function
 def get_last_login_data(
-        curr_user: str,
+    curr_user: str,
 ) -> Tuple[Optional[List[str]], Optional[Dict[str, List[str]]], Optional[str]]:
     """Retrieve the last login demographics and choices for the specified user."""
 

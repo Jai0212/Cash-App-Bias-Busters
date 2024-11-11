@@ -3,16 +3,15 @@ import pickle
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
-from main import (
-    connect_to_database,
-    import_csv_to_db,
-    delete_csv_data,
-    get_headers,
-    update_comparison_csv,
-    get_values_under_header,
-    update_db_for_user,
-    get_last_login_data,
+from app.entities import User
+from app.use_cases import (
+    Generate,
+    GetHeaders,
+    GetLastLoginData,
+    GetValuesUnderHeader,
+    UploadData,
 )
+from app.repositories import SqliteDbRepo, CsvFileRepo
 from ml_model.model import model
 
 load_dotenv()
@@ -20,39 +19,35 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+user = User("")
+curr_dir = os.path.dirname(__file__)
+file_path = os.path.join(curr_dir, "../../../database/output.csv")
 
-@app.route("/api/get-all-users", methods=["GET"])
-def get_all_users():
-    connection = connect_to_database()
-    if connection:
-        cursor = connection.cursor()
-        cursor.execute("SELECT id, firstname, lastname, email, password FROM users")
-        users = cursor.fetchall()
-        cursor.close()
-        connection.close()
+db_repo = SqliteDbRepo(user)
+file_repo = CsvFileRepo(user, file_path)
 
-        user_data = [
-            {
-                "id": user[0],
-                "firstname": user[1],
-                "lastname": user[2],
-                "email": user[3],
-                "password": user[4],
-            }
-            for user in users
-        ]
-        return jsonify(user_data), 200
 
-    return jsonify({"error": "Database connection error"}), 500
+@app.route("/api/set-curr-user", methods=["POST"])
+def set_curr_user():
+    data = request.get_json()
+    curr_user = data.get("curr_user")
+
+    user = User(curr_user)
+
+    db_repo.user = user
+    db_repo.table_name = user.table_name
+
+    file_repo.user = user
+    file_repo.table_name = user.table_name
+    file_repo.db_repo = SqliteDbRepo(user)
+
+    return jsonify({"message": "User set successfully."}), 200
 
 
 @app.route("/api/headers", methods=["POST"])
 def headers():
-    data = request.get_json()
-    curr_user = data.get("curr_user")
-
-    if curr_user:
-        return jsonify(get_headers(curr_user))
+    if user.table_name:
+        return jsonify(GetHeaders(file_repo).execute())
     else:
         return jsonify({"error": "Missing required data."}), 400
 
@@ -60,29 +55,25 @@ def headers():
 @app.route("/api/values-under-header", methods=["POST"])
 def values_under_header():
     data = request.get_json()
-    curr_user = data.get("curr_user")
     header = data.get("header")
 
-    if header and curr_user:
-        values = get_values_under_header(curr_user, header)
-        delete_csv_data()
+    if header and user.table_name:
+        values = GetValuesUnderHeader(file_repo).execute(header)
         return jsonify(values)
     else:
         return jsonify({"error": "Missing required data."}), 400
 
 
-# TODO When user log ins, call this and pass in his data stored in user json
 @app.route("/api/generate", methods=["POST"])
 def generate():
     data = request.get_json()
     demographics = data.get("demographics")
     choices = data.get("choices")
-    curr_user = data.get("curr_user")
     time = data.get("time", None)
 
     print("Generating Data received: ", demographics, choices, time)
 
-    if demographics and choices and curr_user:
+    if demographics and choices and user.table_name:
         if demographics[0] == "":
             return jsonify({"error": "Missing required data."}), 400
 
@@ -107,13 +98,9 @@ def generate():
 
         print("Generating data for: ", demographics, choices, time)
 
-        update_comparison_csv(curr_user, demographics, choices, time)
-        update_db_for_user(curr_user, demographics, choices, time)
-
-        output = model()  # TODO akshatt armagan function call
-        print(output)
-
-        # delete_csv_data()
+        output = Generate(file_repo, db_repo).execute(
+            demographics, choices, time
+        )  # TOOD add akshat and armagan function to this
 
         return jsonify({f"{key[0]}_{key[1]}": value for key, value in output.items()})
 
@@ -122,11 +109,8 @@ def generate():
 
 @app.route("/api/get-prev-data", methods=["POST"])
 def get_prev_data():
-    data = request.get_json()
-    curr_user = data.get("curr_user")
-
-    if curr_user:
-        demographics, choices, time = get_last_login_data(curr_user)
+    if user.table_name:
+        demographics, choices, time = GetLastLoginData(db_repo).execute()
         if demographics and choices and time:
             demographics.append("")
             demographics = demographics[0:2]
@@ -161,13 +145,12 @@ def get_prev_data():
 @app.route("/api/upload-data", methods=["POST"])
 def upload_data():
     """Upload data to the database."""
-    curr_user = request.form.get("curr_user")
     csv_to_read = request.files.get("csv_to_read")
 
-    if not curr_user or not csv_to_read:
+    if not user.table_name or not csv_to_read:
         return jsonify({"error": "Missing required data."}), 400
 
-    if import_csv_to_db(csv_to_read, curr_user):
+    if UploadData(file_repo).execute(csv_to_read):
         return jsonify({"message": "Data uploaded successfully."}), 200
     else:
         return jsonify({"error": "Error uploading data."}), 500
@@ -182,15 +165,14 @@ user_models = {}
 
 @app.route("/api/upload-model", methods=["POST"])
 def upload_model():
-    curr_user = request.form.get("curr_user")
     file = request.files.get("model_file")
 
-    if not curr_user or not file:
+    if not user.table_name or not file:
         return jsonify({"error": "Missing required data."}), 400
 
     if file and file.filename.endswith(".pkl"):
         # Create a directory for the user if it doesn't exist
-        user_folder = os.path.join(UPLOAD_FOLDER, curr_user)
+        user_folder = os.path.join(UPLOAD_FOLDER, user.table_name)
         os.makedirs(
             user_folder, exist_ok=True
         )  # Create user folder if it doesn't exist
@@ -204,7 +186,7 @@ def upload_model():
         file.save(file_path)  # Save or overwrite the existing file
 
         # Save model path to "database"
-        user_models[curr_user] = file_path
+        user_models[user.table_name] = file_path
         return jsonify({"message": "Model uploaded successfully."}), 200
     else:
         return jsonify({"error": "Invalid file format."}), 400
