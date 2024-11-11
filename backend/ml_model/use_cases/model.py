@@ -1,4 +1,5 @@
 from sklearn import tree
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from fairlearn.metrics import MetricFrame
 import numpy as np
