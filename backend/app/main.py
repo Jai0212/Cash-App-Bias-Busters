@@ -593,16 +593,17 @@ if __name__ == "__main__":
     # )
 
     # import_csv_to_db("database/single_transaction.csv", "test_table")
-    # save_data_to_csv("test_table")
-    # update_comparison_csv(
-    #     "jj@gmail.com",
-    #     ["gender", "age"],
-    #     {
-    #         "gender": ["Female", "Male", "Non-binary", "Other"],
-    #         "age": ["10-20", "20-30", "30-40", "40-50"],
-    #     },
-    #     "year",
-    # )
+    save_data_to_csv("test_table")
+    update_comparison_csv(
+         "jj@gmail.com",
+         ["gender", "age"],
+         {
+             "gender": ["Female", "Male", "Non-binary", "Other"],
+             "age": ["10-20", "20-30", "30-40", "40-50"],
+         },
+         "year",
+     )
+    model()
     # update_comparison_csv(
     #     "test_table",
     #     ["state", "race"],

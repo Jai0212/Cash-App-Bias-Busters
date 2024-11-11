@@ -1,4 +1,5 @@
 from sklearn import tree
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from fairlearn.metrics import MetricFrame
 import numpy as np
@@ -59,8 +60,10 @@ def model() -> list:
     save_model(best_clf, x_test, y_test)
 
     # Step 9: Create, clean, and sort bias dictionary
-    data_point_list = create_bias_data_points(feature1, inputs, mappings, metric_frame, single_column_check)
+    data_point_list = create_bias_data_points(feature1, inputs, mappings, metric_frame, file_reader.single_column_check)
     data_point_list = clean_datapoints(data_point_list)
+
+    print(data_point_list)
 
     return data_point_list
 
@@ -153,6 +156,39 @@ def multiple_column_datapoint(metrics: pd.Series, f1_label: str, mappings: dict,
     rounded_metrics = get_rounded_metrics(metrics)
     data_point = DataPoint(f1_label, f2_label, rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
     return data_point
+
+
+def get_mapped_label(mappings: dict, feature: str, code: any) -> str:
+    """
+    Gets the mapped label for a given feature code.
+
+    Args:
+        mappings (dict): Dictionary containing the mappings for categorical values.
+        feature (str): The name of the feature.
+        code (any): The code for which to find the mapped label.
+
+    Returns:
+        str: The mapped label for the feature code, or the code itself if no mapping is found.
+    """
+    feature_mapping = mappings.get(feature, {})
+    return feature_mapping.get(code, str(code))
+
+
+def get_rounded_metrics(metrics: pd.Series) -> tuple:
+    """
+    Rounds the metrics in the series to two decimal places.
+
+    Args:
+        metrics (pd.Series): Series containing metrics like accuracy, false positive rate, and false negative rate.
+
+    Returns:
+        tuple: Rounded values of the metrics (accuracy, false positive rate, false negative rate).
+    """
+    accuracy = round(metrics.get("accuracy", 0), 2)
+    false_positive_rate = round(metrics.get("false_positive_rate", 0), 2)
+    false_negative_rate = round(metrics.get("false_negative_rate", 0), 2)
+
+    return accuracy, false_positive_rate, false_negative_rate
 
 
 if __name__ == "__main__":
