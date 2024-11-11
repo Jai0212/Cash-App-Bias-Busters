@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
-import "./ControlButtons.css";
+import "./ControlButtons2.css";
 
-const ControlButton2 = ({ onModelUpload }) => {
+const ControlButton2 = ({ setUploadedFiles }) => {
     const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const [currUser, setCurrUser] = useState(""); // Store current user's email
+    const [uploadedFiles, setUploadedFilesState] = useState([]); // Local state for uploaded files
     const fileInputRef = useRef(null); // For model import
 
     // Fetch email for the current user
@@ -38,57 +39,91 @@ const ControlButton2 = ({ onModelUpload }) => {
     };
 
     const handleModelFileChange = async (event) => {
-        const file = event.target.files[0];
+        const files = event.target.files;
 
-        if (!file) return; // If no file is selected, exit
+        if (!files.length) return; // If no files are selected, exit
 
-        if (!file.name.endsWith(".pkl")) {
-            alert("Please upload a model in .pkl format.");
-            return;
-        }
+        // Create a new array to hold the uploaded files and append the new ones
+        const newUploadedFiles = [...uploadedFiles];
 
-        // Create FormData object
-        const formData = new FormData();
-        formData.append("curr_user", currUser);
-        formData.append("model_file", file); // Use model_file for model uploads
-
-        try {
-            // Make a POST request to upload model
-            const response = await fetch(`${VITE_BACKEND_URL}/api/upload-model`, {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Upload failed:", errorData.error);
-                alert("Error uploading model: " + errorData.error);
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (!file.name.endsWith(".pkl")) {
+                alert("Please upload a model in .pkl format.");
                 return;
             }
 
-            const responseData = await response.json();
-            console.log("Success:", responseData.message);
-            alert("Model uploaded successfully!");
+            if (!currUser || !file) {
+                alert("Error: Missing required data.");
+                return;
+            }
 
-            // You can handle other logic here after a successful upload
-        } catch (error) {
-            console.error("Error during model upload:", error);
-            alert("Error during model upload: " + error.message);
+            const formData = new FormData();
+            formData.append("curr_user", currUser);
+            formData.append("model_file", file);
+            formData.append("dashboard", file.name);
+
+            try {
+                // Make a POST request to upload model
+                const response = await fetch(`${VITE_BACKEND_URL}/api/upload-model`, {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Upload failed:", errorData.error);
+                    alert("Error uploading model: " + errorData.error);
+                    return;
+                }
+
+                const responseData = await response.json();
+                console.log("Success:", responseData.message);
+                alert("Model uploaded successfully!");
+
+                // Add the file to the list of uploaded files
+                newUploadedFiles.push(file.name);
+
+                // Update the state with the new list of uploaded files
+                setUploadedFiles(newUploadedFiles);
+                setUploadedFilesState(newUploadedFiles); // Update local state
+
+                // Reset the file input after uploading
+                event.target.value = null;
+
+            } catch (error) {
+                console.error("Error during model upload:", error);
+                alert("Error during model upload: " + error.message);
+            }
         }
     };
 
     return (
-        <div className="file-import-container">
+        <div className="upload-model-container">
             {/* Invisible file input for model */}
             <input
                 type="file"
                 ref={fileInputRef}
                 style={{ display: "none" }}
+                multiple // Allow multiple files
                 onChange={handleModelFileChange}
             />
 
             {/* Button for importing models */}
-            <button onClick={handleModelUploadClick}>Upload Model</button>
+            <button className="upload-button" onClick={handleModelUploadClick}>Upload Model(s)</button>
+
+            {/* Display the uploaded files below */}
+            {uploadedFiles.length > 0 && <div className="uploaded-files-list">
+                {uploadedFiles.length > 0 && (
+                    <ul>
+                        {uploadedFiles.map((fileName, index) => (
+                            <li key={index}>
+                                <span role="img" aria-label="file-icon">📂</span> {fileName}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>}
         </div>
     );
 };

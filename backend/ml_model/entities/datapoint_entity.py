@@ -13,15 +13,15 @@ class DataPoint:
     # Getters
     def get_feature1(self) -> str:
         """Returns the first feature."""
-        return self._feature1
+        return self.feature1
 
     def get_feature2(self) -> str:
         """Returns the second feature."""
-        return self._feature2
+        return self.feature2
 
     def get_accuracy(self) -> float:
         """Returns the accuracy metric."""
-        return self._accuracy
+        return self.accuracy
 
     def get_false_positive_rate(self) -> float:
         """Returns the false positive rate metric."""

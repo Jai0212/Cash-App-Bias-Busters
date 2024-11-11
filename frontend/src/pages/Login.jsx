@@ -1,18 +1,51 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-// import './Login.css';
 
 const UserLogin = () => {
   const navigate = useNavigate();
+  const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const [currUser, setCurrUser] = useState(""); // Initialize currUser as an empty string
+  const [isLoading, setIsLoading] = useState(true); // Loading state for user data
+
+  const fetchEmailAndDemographics = async () => {
+    const url = "http://localhost:11355/api/get-email"; // Your email fetching URL
+    const token = localStorage.getItem("token"); // Token from local storage
+
+    try {
+      const emailResponse = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      const emailData = await emailResponse.json();
+      console.log(emailData);
+
+      setCurrUser(emailData.email || "");
+      setIsLoading(false); // Stop loading after setting currUser
+    } catch (error) {
+      console.error("Error fetching email:", error);
+      setIsLoading(false); // Stop loading if there's an error
+    }
+  };
+
+  useEffect(() => {
+    fetchEmailAndDemographics();
+  }, []);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  function handleForm(data) {
+
+  const handleForm = (data) => {
     console.log(data);
 
     const url = "http://localhost:11355/login";
@@ -42,6 +75,7 @@ const UserLogin = () => {
               timer: 1500,
             })
             .then(() => {
+              // Remove the API call for setting the current user
               navigate("/dashboard");
             });
         }
@@ -49,7 +83,8 @@ const UserLogin = () => {
       .catch((e) => {
         console.log(e);
       });
-  }
+  };
+
   function Forgot_password() {
     navigate("/forgot_password");
   }
@@ -95,7 +130,9 @@ const UserLogin = () => {
             />
           </div>
 
-          <button className={"btn btn-primary"}>Login</button>
+          <button className={"btn btn-primary"} disabled={isLoading}>
+            {isLoading ? "Loading..." : "Login"}
+          </button>
         </form>
         <button
           className={"btn btn-primary"}

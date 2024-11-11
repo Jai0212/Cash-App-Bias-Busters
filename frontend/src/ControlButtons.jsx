@@ -57,7 +57,8 @@ const ControlButtons = ({ onDownload }) => {
     // Create FormData object
     const formData = new FormData();
     formData.append("curr_user", currUser);
-    formData.append("model_file", file); // Use model_file for model uploads
+    formData.append("model_file", file);
+    formData.append("dashboard", "secret_token");
 
     try {
       // Make a POST request to upload model

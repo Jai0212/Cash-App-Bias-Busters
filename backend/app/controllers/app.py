@@ -26,10 +26,10 @@ db_repo = SqliteDbRepo(user)
 file_repo = CsvFileRepo(user, file_path)
 
 
-@app.route("/api/set-curr-user", methods=["POST"])
-def set_curr_user():
-    data = request.get_json()
-    curr_user = data.get("curr_user")
+def initialize(curr_user: str) -> None:
+    global db_repo
+    global file_repo
+    global user
 
     user = User(curr_user)
 
@@ -40,11 +40,14 @@ def set_curr_user():
     file_repo.table_name = user.table_name
     file_repo.db_repo = SqliteDbRepo(user)
 
-    return jsonify({"message": "User set successfully."}), 200
-
 
 @app.route("/api/headers", methods=["POST"])
 def headers():
+    data = request.get_json()
+    curr_user = data.get("curr_user")
+
+    initialize(curr_user)
+
     if user.table_name:
         return jsonify(GetHeaders(file_repo).execute())
     else:
@@ -54,7 +57,10 @@ def headers():
 @app.route("/api/values-under-header", methods=["POST"])
 def values_under_header():
     data = request.get_json()
+    curr_user = data.get("curr_user")
     header = data.get("header")
+
+    initialize(curr_user)
 
     if header and user.table_name:
         values = GetValuesUnderHeader(file_repo).execute(header)
@@ -66,9 +72,12 @@ def values_under_header():
 @app.route("/api/generate", methods=["POST"])
 def generate():
     data = request.get_json()
+    curr_user = data.get("curr_user")
     demographics = data.get("demographics")
     choices = data.get("choices")
     time = data.get("time", None)
+
+    initialize(curr_user)
 
     print("Generating Data received: ", demographics, choices, time)
 
@@ -120,6 +129,11 @@ def generate():
 
 @app.route("/api/get-prev-data", methods=["POST"])
 def get_prev_data():
+    data = request.get_json()
+    curr_user = data.get("curr_user")
+
+    initialize(curr_user)
+
     if user.table_name:
         demographics, choices, time = GetLastLoginData(db_repo).execute()
         if demographics and choices and time:
@@ -157,6 +171,9 @@ def get_prev_data():
 def upload_data():
     """Upload data to the database."""
     csv_to_read = request.files.get("csv_to_read")
+    curr_user = request.form.get("curr_user")
+
+    initialize(curr_user)
 
     if not user.table_name or not csv_to_read:
         return jsonify({"error": "Missing required data."}), 400
@@ -178,6 +195,9 @@ user_models = {}
 def upload_model():
     file = request.files.get("model_file")
     dashboard = request.form.get("dashboard")
+    curr_user = request.form.get("curr_user")
+
+    initialize(curr_user)
 
     if not user.table_name or not file:
         return jsonify({"error": "Missing required data."}), 400
@@ -189,12 +209,15 @@ def upload_model():
             user_folder, exist_ok=True
         )  # Create user folder if it doesn't exist
 
-        if dashboard == "one":
+        if dashboard == "secret_token":
             fixed_filename = "model.pkl"
         else:
-            fixed_filename = f"{dashboard}.pkl"
+            fixed_filename = dashboard
 
         file_path = os.path.join(user_folder, fixed_filename)
+
+        print("uploaded model file: ", file_path)
+
         file.save(file_path)
 
         # Save model path to "database"
@@ -206,7 +229,36 @@ def upload_model():
 
 @app.route("/api/generate-for-all-models", methods=["POST"])
 def generate_for_all_models():
-    models = get_files_in_folder(user.table_name)
+    try:
+        curr_user = request.form.get("curr_user")
+
+        initialize(curr_user)
+
+        if not user.table_name:
+            return (
+                jsonify({"error": "No current user found"}),
+                400,
+            )  # Return error if no user is provided
+
+        models = get_files_in_folder(curr_user)
+
+        temporary_output = []
+        for model in models:
+            temporary_output.append(
+                {
+                    "model": model,
+                    "output": 0.3,
+                }
+            )
+
+        return jsonify(temporary_output)
+    
+    except Exception as e:
+        return (
+            jsonify({"error": str(e)}),
+            500,
+        )  # Handle any unexpected errors and return 500
+
     # TODO add akshat and armagan function to this and return the output
 
 
@@ -214,11 +266,13 @@ def get_files_in_folder(user_folder: str):
     """
     Get all files in the user's folder, excluding "model.pkl".
     """
+    path = os.path.join(UPLOAD_FOLDER, user_folder)
+
     try:
         # Check if the user folder exists
-        if os.path.exists(user_folder):
+        if os.path.exists(path):
             # List all files in the folder
-            files_in_folder = os.listdir(user_folder)
+            files_in_folder = os.listdir(path)
 
             # Remove "model.pkl" from the list if it exists
             if "model.pkl" in files_in_folder:
@@ -226,7 +280,7 @@ def get_files_in_folder(user_folder: str):
 
             return files_in_folder
         else:
-            print(f"The folder {user_folder} does not exist.")
+            print(f"The folder {path} does not exist.")
             return []
     except Exception as e:
         print(f"Error occurred while getting files: {e}")
@@ -237,15 +291,17 @@ def delete_files_except_model(user_folder: str):
     """
     Delete all files in the user's folder except the file named "model.pkl" if it exists.
     """
+    path = os.path.join(UPLOAD_FOLDER, user_folder)
+
     try:
         # Check if the user folder exists
-        if os.path.exists(user_folder):
+        if os.path.exists(path):
             # List all files in the folder
-            files_in_folder = os.listdir(user_folder)
+            files_in_folder = os.listdir(path)
 
             # Loop through the files
             for file_name in files_in_folder:
-                file_path = os.path.join(user_folder, file_name)
+                file_path = os.path.join(path, file_name)
 
                 # Skip deletion if the file is 'model.pkl'
                 if file_name != "model.pkl" and os.path.isfile(file_path):
@@ -254,7 +310,7 @@ def delete_files_except_model(user_folder: str):
                 else:
                     print(f"Skipped: {file_name}")
         else:
-            print(f"The folder {user_folder} does not exist.")
+            print(f"The folder {path} does not exist.")
     except Exception as e:
         print(f"Error occurred while deleting files: {e}")
 

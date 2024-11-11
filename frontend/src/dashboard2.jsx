@@ -1,66 +1,124 @@
 import React, { useState, useEffect, useRef } from "react";
 import ChartComponent2 from "./ChartComponent2.jsx";
 import ControlButton2 from "./ControlButtons2";
-import "./Dashboard.css";
+import UserNavbar from "./Components/UserNavbar";
+import "./Dashboard2.css";
 
 const Dashboard2 = () => {
     const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
+    const [currUser, setCurrUser] = useState("");
     const [graphData, setGraphData] = useState({});
-    const [currUser, setCurrUser] = useState(""); // Initialize currUser as an empty string
-    const [isChartVisible, setIsChartVisible] = useState(true); // Set to true to show the chart immediately
+    const [isChartVisible, setIsChartVisible] = useState(true);
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+    const [generationResults, setGenerationResults] = useState([]);
+
     const chartRef = useRef(null);
 
-    // Fetch email for the current user
-    const fetchEmail = async () => {
-        const url = "http://localhost:11355/api/get-email"; // URL for fetching email
-        const token = localStorage.getItem("token"); // Get token from local storage
+    const fetchEmailAndDemographics = async () => {
+        const url = "http://localhost:11355/api/get-email";
+        const token = localStorage.getItem('token');
 
         try {
             const emailResponse = await fetch(url, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`, // Pass token in Authorization header
+                    "Authorization": `Bearer ${token}`,
                 },
             });
 
             const emailData = await emailResponse.json();
-            console.log(emailData);
+            setCurrUser(emailData.email || "");
 
-            setCurrUser(emailData.email || ""); // Set email in currUser state
         } catch (error) {
             console.error("Error fetching email:", error);
         }
     };
 
     useEffect(() => {
-        fetchEmail(); // Call the function to fetch email
+        fetchEmailAndDemographics();
     }, []);
 
     useEffect(() => {
-        // Simulate the graph data here directly
         setGraphData({
             labels: ["Category 1", "Category 2", "Category 3"],
             datasets: [
                 {
                     label: "Generated Data",
-                    data: [30, 50, 70], // Hardcoded data points for the chart
+                    data: [30, 50, 70],
                     backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
                 },
             ],
         });
-    }, []); // Set graph data when the component mounts
+    }, []);
+
+    const handleGenerateClick = async () => {
+        if (!currUser) {
+            alert("Error: No current user found.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${VITE_BACKEND_URL}/api/generate-for-all-models`, {
+                method: "POST",
+                body: new URLSearchParams({
+                    curr_user: currUser,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                alert("Error generating models: " + errorData.error);
+                return;
+            }
+
+            const data = await response.json();
+            setGenerationResults(data);
+            console.log("Generation results:", data);
+        } catch (error) {
+            console.error("Error during model generation:", error);
+            alert("Error during model generation: " + error.message);
+        }
+    };
 
     return (
-        <div className="dashboard-container">
-            {/* Control button for uploading models */}
-            <ControlButton2 onModelUpload={null} /> {/* No model upload handler here */}
+        <div className="dashboard-main">
 
-            {/* Display the chart component immediately without waiting for a model upload */}
-            {isChartVisible && Object.keys(graphData).length > 0 && (
-                <ChartComponent2 chartData={graphData} />
-            )}
+            {/* Pass setUploadedFiles to ControlButton2 */}
+            <ControlButton2 setUploadedFiles={setUploadedFiles} />
+
+
+            <div className="action-button-container">
+                <button onClick={handleGenerateClick} className="generate-btn">
+                    Generate
+                </button>
+            </div>
+
+            {generationResults.length > 0 && <div className="result-section">
+                {generationResults.length > 0 && (
+                    <ul>
+                        {generationResults.map((result, index) => (
+                            <li key={index} className="result-item">
+                                <div className="result-details">
+                                    <strong className="model-name">Model:</strong>
+                                    <span className="model-value">{result.model}</span>
+                                </div>
+                                <div className="result-details">
+                                    <strong className="output-name">Output:</strong>
+                                    <span className="output-value">{result.output}</span>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>}
+
+            <div className="chart-section">
+                {isChartVisible && Object.keys(graphData).length > 0 && (
+                    <ChartComponent2 chartData={graphData} />
+                )}
+            </div>
         </div>
     );
 };

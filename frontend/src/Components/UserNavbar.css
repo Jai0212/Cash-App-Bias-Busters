@@ -1,4 +1,32 @@
+/* UserNavbar.css */
+.navbar {
+  width: 100%; /* Ensure navbar stretches across the entire width */
+  top: 0; /* Align at the top */
+  left: 0;
+  z-index: 1000; /* Ensure the navbar is on top of other elements */
+}
+
 .navbar-nav {
-  margin-left: 78%;
-  margin-right: 5%;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav .nav-item {
+  margin-right: 20px; /* Adjust spacing between navbar items */
+}
+
+.navbar-nav .nav-link {
+  font-size: 16px; /* Font size of links */
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: #333; /* Set the link color */
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+  color: #007bff; /* Hover color for links */
+}
+
+.btn-outline-danger {
+  margin-left: auto; /* Push the logout button to the right */
 }

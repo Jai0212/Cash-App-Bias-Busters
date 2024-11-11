@@ -34,9 +34,11 @@ const App = () => {
             path=""
             element={<Dashboard VITE_BACKEND_URL={VITE_BACKEND_URL} />}
           />
-          <Route path="change-password" element={<ChangePassword />} />
-          <Route path="dashboard2" element={<Dashboard2 />} />
         </Route>
+        <Route path="/dashboard2" element={<UserLayout />}>
+          <Route path="" element={<Dashboard2 />} />
+        </Route>
+        <Route path="change-password" element={<ChangePassword />} />
       </Routes>
     </BrowserRouter>
   );

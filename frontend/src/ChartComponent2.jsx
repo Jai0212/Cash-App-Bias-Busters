@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import Chart from "chart.js/auto";
-import './ChartComponent.css';
+import './ChartComponent2.css';
 
 const ChartComponent2 = forwardRef(({ chartData }, ref) => {
+    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
     const chartRef = useRef(null);
     const myChartRef = useRef(null);
 
@@ -65,7 +67,7 @@ const ChartComponent2 = forwardRef(({ chartData }, ref) => {
     }));
 
     return (
-        <div className="chart-container">
+        <div className="chart-component-wrapper">
             <canvas ref={chartRef} />
         </div>
     );
