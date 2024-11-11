@@ -8,7 +8,7 @@ import csv
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Tuple
 from werkzeug.datastructures import FileStorage
-from ml_model.model import model
+from ml_model.use_cases.model import model
 
 curr_dir = os.path.dirname(__file__)
 DATABASE_OUTPUT_PATH = os.path.join(curr_dir, "../database/output.csv")

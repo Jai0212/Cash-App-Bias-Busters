@@ -1,9 +1,18 @@
-import os
 import pickle
-from ml_model.data_access.file_reader import FileReader
-from ml_model.datapoint_entity import DataPoint
-from ml_model.data_access.model_saver import save_model
-from ml_model.preprocessing.data_preprocessing import DataProcessor
+import sys
+import os
+
+
+# Add the root directory of the project to the sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(project_root)
+
+# Now import the modules
+from ml_model.repository.file_reader import FileReader
+from ml_model.entities.datapoint_entity import DataPoint
+from ml_model.repository.model_saver import save_model
+from ml_model.use_cases.model import model
+from ml_model.repository.data_preprocessing import DataProcessor
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -17,7 +26,6 @@ from main import (
     update_db_for_user,
     get_last_login_data,
 )
-from ml_model.model import model
 
 load_dotenv()
 
