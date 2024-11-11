@@ -1,5 +1,5 @@
-import os
 import pickle
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -12,7 +12,6 @@ from app.use_cases import (
     UploadData,
 )
 from app.repositories import SqliteDbRepo, CsvFileRepo
-from ml_model.model import model
 
 load_dotenv()
 
@@ -98,11 +97,23 @@ def generate():
 
         print("Generating data for: ", demographics, choices, time)
 
-        output = Generate(file_repo, db_repo).execute(
+        data_points = Generate(file_repo, db_repo).execute(
             demographics, choices, time
-        )  # TOOD add akshat and armagan function to this
+        )  # TODO add akshat and armagan function to this
 
-        return jsonify({f"{key[0]}_{key[1]}": value for key, value in output.items()})
+        data_points_dict = [
+            {
+                "feature1": dp.get_feature1(),
+                "feature2": dp.get_feature2(),
+                "accuracy": dp.get_accuracy(),
+                "falsepositive": dp.get_false_positive_rate(),
+                "falsenegative": dp.get_false_negative_rate(),
+                "combination_label": dp.get_combination_label(),
+            }
+            for dp in data_points
+        ]
+
+        return jsonify(data_points_dict)  # TODO this needs to be updated in frontend
 
     return jsonify({"error": "Missing required data."}), 400
 
@@ -166,6 +177,7 @@ user_models = {}
 @app.route("/api/upload-model", methods=["POST"])
 def upload_model():
     file = request.files.get("model_file")
+    dashboard = request.form.get("dashboard")
 
     if not user.table_name or not file:
         return jsonify({"error": "Missing required data."}), 400
@@ -177,19 +189,74 @@ def upload_model():
             user_folder, exist_ok=True
         )  # Create user folder if it doesn't exist
 
-        # Define a fixed filename for the model
-        fixed_filename = "model.pkl"  # or use a dynamic name if you prefer
-        file_path = os.path.join(
-            user_folder, fixed_filename
-        )  # Save model with a fixed name
+        if dashboard == "one":
+            fixed_filename = "model.pkl"
+        else:
+            fixed_filename = f"{dashboard}.pkl"
 
-        file.save(file_path)  # Save or overwrite the existing file
+        file_path = os.path.join(user_folder, fixed_filename)
+        file.save(file_path)
 
         # Save model path to "database"
         user_models[user.table_name] = file_path
         return jsonify({"message": "Model uploaded successfully."}), 200
     else:
         return jsonify({"error": "Invalid file format."}), 400
+
+
+@app.route("/api/generate-for-all-models", methods=["POST"])
+def generate_for_all_models():
+    models = get_files_in_folder(user.table_name)
+    # TODO add akshat and armagan function to this and return the output
+
+
+def get_files_in_folder(user_folder: str):
+    """
+    Get all files in the user's folder, excluding "model.pkl".
+    """
+    try:
+        # Check if the user folder exists
+        if os.path.exists(user_folder):
+            # List all files in the folder
+            files_in_folder = os.listdir(user_folder)
+
+            # Remove "model.pkl" from the list if it exists
+            if "model.pkl" in files_in_folder:
+                files_in_folder.remove("model.pkl")
+
+            return files_in_folder
+        else:
+            print(f"The folder {user_folder} does not exist.")
+            return []
+    except Exception as e:
+        print(f"Error occurred while getting files: {e}")
+        return []
+
+
+def delete_files_except_model(user_folder: str):
+    """
+    Delete all files in the user's folder except the file named "model.pkl" if it exists.
+    """
+    try:
+        # Check if the user folder exists
+        if os.path.exists(user_folder):
+            # List all files in the folder
+            files_in_folder = os.listdir(user_folder)
+
+            # Loop through the files
+            for file_name in files_in_folder:
+                file_path = os.path.join(user_folder, file_name)
+
+                # Skip deletion if the file is 'model.pkl'
+                if file_name != "model.pkl" and os.path.isfile(file_path):
+                    os.remove(file_path)  # Delete the file
+                    print(f"Deleted: {file_name}")
+                else:
+                    print(f"Skipped: {file_name}")
+        else:
+            print(f"The folder {user_folder} does not exist.")
+    except Exception as e:
+        print(f"Error occurred while deleting files: {e}")
 
 
 def load_model(curr_user: str):

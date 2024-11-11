@@ -1,85 +1,90 @@
-import React, { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import Chart from "chart.js/auto";
-import './ChartComponent.css';
+import "./ChartComponent.css";
 
 const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
   const chartRef = useRef(null);
   const myChartRef = useRef(null);
 
-  // const chartData = {
-  //   'Female_18-26': [0.446, 0.0, 0.554],
-  //   'Female_27-35': [0.577, 0.423, 0.0],
-  //   'Female_36-44': [0.404, 0.596, 0.0],
-  //   'Female_45-53': [0.436, 0.564, 0.0],
-  //   'Female_54-62': [0.55, 0.45, 0.0],
-  //   'Male_18-26': [0.56, 0.0, 0.44],
-  //   'Male_27-35': [0.457, 0.0, 0.543],
-  //   'Male_36-44': [0.403, 0.0, 0.597],
-  //   'Male_45-53': [0.571, 0.0, 0.429],
-  //   'Male_54-62': [0.54, 0.0, 0.46],
-  //   'Non-binary_18-26': [0.55, 0.0, 0.45],
-  //   'Non-binary_27-35': [0.558, 0.0, 0.442],
-  //   'Non-binary_36-44': [0.654, 0.0, 0.346],
-  //   'Non-binary_45-53': [0.359, 0.0, 0.641],
-  //   'Non-binary_54-62': [0.434, 0.0, 0.566],
-  //   'Other_18-26': [0.535, 0.465, 0.0],
-  //   'Other_27-35': [0.36, 0.64, 0.0],
-  //   'Other_36-44': [0.492, 0.508, 0.0],
-  //   'Other_45-53': [0.511, 0.489, 0.0],
-  //   'Other_54-62': [0.494, 0.506, 0.0]
-  // };
-
   useEffect(() => {
-    console.log("Chart data received", chartData);
     if (!chartData) return;
 
-    const labels = Object.keys(chartData); // Use keys as labels (Gender_Age Range)
-
-    const datasets = [
-      {
-        label: "Values",
-        data: labels.map((key) => chartData[key][0]), // Use only the first value from each array
-        backgroundColor: labels.map((_, index) => `rgba(${index * 40}, ${100 + index * 40}, ${150 - index * 30}, 0.6)`),
-      }
-    ];
-
-    // Line Data: constant at sliderValue
-    const lineData = {
-      label: "Line Overlay",
-      data: new Array(labels.length).fill(sliderValue), // The line is constant at sliderValue
-      borderColor: "rgba(0, 0, 255, 2)", // Inverted red color
-      backgroundColor: "rgba(0, 0, 0, 0)", // No background fill
-      fill: false, // No fill under the line
-      borderWidth: 2, // Thicker line for visibility
-      tension: 0.4, // Smooth the line moderately
-      pointRadius: 0, // No points on the line
-      type: "line", // Line chart type
-      zIndex: 10, // Ensure the line is above the bars
+    const demographicMapping = {
+      gender: ["Male", "Female", "Non-binary", "Other"],
+      // Add more mappings for other demographics if needed
     };
 
-    // Step: Create bar colors based on slider value and bias
-    const barColors = datasets[0].data.map((value) => {
-      // If sliderValue is greater than bias, color the bar red
-      return sliderValue < bias ? "rgba(255, 0, 0, 0.7)" : "rgba(0, 230, 0, 0.7)";
-    });
+    const determineDemographicType = (keys) => {
+      if (
+        keys.some((key) => key.startsWith("Male_") || key.startsWith("Female_"))
+      ) {
+        return "gender";
+      }
+      return "default";
+    };
 
-    // Calculate max y-axis value to accommodate the line
-    const maxYValue = Math.max(
-      sliderValue,
-      ...datasets.flatMap((dataset) => dataset.data)
+    const keys = Object.keys(chartData);
+    const demographicType = determineDemographicType(keys);
+    const labels = demographicMapping[demographicType] || keys;
+
+    const groupData = (data, mapping) => {
+      const result = mapping.map(() => []);
+      Object.entries(data).forEach(([key, values]) => {
+        const index = mapping.findIndex((label) => key.startsWith(label));
+        if (index !== -1) {
+          result[index].push({
+            ageRange: key.split("_")[1],
+            value: values[0],
+          });
+        }
+      });
+      return result;
+    };
+
+    const groupedData = groupData(
+      chartData,
+      demographicMapping[demographicType] || labels
     );
 
+    const datasets = groupedData.flatMap((group, i) =>
+      group.map((item) => ({
+        label: labels[i], // Use only the main category for the legend label
+        data: [{ x: labels[i], y: item.value }],
+        backgroundColor:
+          item.value > sliderValue
+            ? "rgba(255, 0, 0, 0.7)"
+            : "rgba(0, 230, 0, 0.7)",
+        borderColor: "rgba(0, 0, 0, 0.1)",
+        borderWidth: 1,
+      }))
+    );
+
+    const lineData = {
+      label: "Line Overlay",
+      data: groupedData.flatMap((group, i) =>
+        group.map(() => ({
+          x: labels[i],
+          y: sliderValue,
+        }))
+      ),
+      borderColor: "rgba(0, 0, 255, 2)",
+      backgroundColor: "rgba(0, 0, 0, 0)",
+      fill: false,
+      borderWidth: 2,
+      tension: 0.4,
+      pointRadius: 0,
+      type: "line",
+      zIndex: 10,
+    };
+
     const data = {
-      labels: labels, // Gender_Age Range keys as labels
-      datasets: [
-        {
-          ...datasets[0],
-          backgroundColor: barColors, // Dynamically set bar colors based on comparison
-          borderWidth: 1,
-          zIndex: 1, // Bars should be below the line
-        },
-        lineData, // The line dataset
-      ],
+      labels: labels,
+      datasets: [...datasets, lineData],
     };
 
     const ctx = chartRef.current.getContext("2d");
@@ -88,21 +93,50 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       myChartRef.current.destroy();
     }
 
-    // Initialize the chart with bars and the line overlay
+    // Customize legend to show unique main categories
     myChartRef.current = new Chart(ctx, {
-      type: "bar", // Base chart type is bar
+      type: "bar",
       data: data,
       options: {
         scales: {
           x: {
             ticks: {
-              autoSkip: false, // Prevent auto skipping of x-axis labels
+              autoSkip: false,
             },
           },
           y: {
             min: 0,
-            max: 1, // Dynamically adjust max value
+            max: 1,
             beginAtZero: true,
+          },
+        },
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: {
+              generateLabels: (chart) => {
+                const labels = [];
+                chart.data.datasets.forEach((dataset) => {
+                  if (!labels.some((label) => label.text === dataset.label)) {
+                    labels.push({
+                      text: dataset.label,
+                      fillStyle: dataset.backgroundColor,
+                      strokeStyle: dataset.borderColor,
+                      lineWidth: dataset.borderWidth,
+                      hidden: false,
+                    });
+                  }
+                });
+                return labels.filter((label) =>
+                  demographicMapping[demographicType].includes(label.text)
+                );
+              },
+            },
+            position: "top",
+          },
+          title: {
+            display: true,
+            text: "Grouped Bar Chart",
           },
         },
       },
@@ -110,7 +144,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
 
     return () => {
       if (myChartRef.current) {
-        myChartRef.current.destroy(); // Clean up chart on component unmount
+        myChartRef.current.destroy();
       }
     };
   }, [chartData, sliderValue, bias]);

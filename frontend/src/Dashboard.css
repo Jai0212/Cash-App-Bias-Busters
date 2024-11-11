@@ -11,8 +11,10 @@
 /* Container for buttons (timeframe selection) */
 .timeframe-buttons {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
+  flex-direction: column; 
+  align-items: center; 
+  gap: 10px;
+  
 }
 
 .timeframe-buttons button {
@@ -23,6 +25,8 @@
   border-radius: 5px;
   background-color: #f0f0f0;
   transition: background-color 0.3s;
+  width: 100%; 
+  max-width: 200px;
 }
 
 .timeframe-buttons button:hover {
@@ -53,9 +57,9 @@
 /* Styling for demographics select section */
 .select-demographics {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   /* Spreads out the items */
-  gap: 20px;
+  gap: 40px;
   /* Adds space between the two select containers */
   margin-bottom: 30px;
 }
@@ -88,7 +92,7 @@
   color: white;
   transition: background-color 0.3s;
   margin-bottom: 30px;
-  margin-top: -40px;
+  margin-top: 30px;
 }
 
 .generate-button:hover {
@@ -137,4 +141,27 @@
   color: white !important;
   border: 1px solid #0056b3 !important;
   scale: 1.1;
+}
+
+.chart-container-container {
+  display: flex;
+  gap: 20px; /* Optional: adjust the space between the two containers */
+  align-items: flex-start; /* Align items at the top */
+}
+
+/* Adjust widths as necessary */
+.select-demographics {
+  margin: 0px;
+  padding: 0px;
+  flex: 1; /* Take up equal width, or set a specific width if needed */
+  max-width: 300px; /* Optional: Set a max width for select-demographics */
+}
+
+.chart-container {
+  flex: 2; /* Take up twice as much space as .select-demographics */
+}
+
+.demog-clas {
+  padding-left: 30px;
+  text-align: center;
 }
