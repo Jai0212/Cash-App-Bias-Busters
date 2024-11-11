@@ -42,11 +42,11 @@ const Dashboard2 = () => {
 
     useEffect(() => {
         setGraphData({
-            labels: ["Category 1", "Category 2", "Category 3"],
+            labels: ["Model 1", "Model 2", "Model 3", "Model 4", "Model 5"],
             datasets: [
                 {
                     label: "Generated Data",
-                    data: [30, 50, 70],
+                    data: [0.3, 0.8, 0.7],
                     backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
                 },
             ],
