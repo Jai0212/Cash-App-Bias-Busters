@@ -47,11 +47,12 @@ def model() -> list:
 
     # Step 5: Make predictions
     y_pred = best_clf.predict(x_test)
-    feature1 = inputs_n.columns[0]
+    print("Inputs:" + str(inputs_n))
+    feature1 = inputs_n.columns[1]
 
     # Step 6: Handle sensitive features for fairness evaluation
     sensitive_features = x_test[[feature1]] if file_reader.single_column_check \
-        else x_test[[feature1, inputs_n.columns[1]]]
+        else x_test[[feature1, inputs_n.columns[0]]]
 
     # Step 7: Evaluate fairness using Fairlearn's MetricFrame
     metric_frame = evaluate_fairness(y_test, y_pred, sensitive_features)
@@ -124,8 +125,11 @@ def create_bias_data_points(
     data_points = []
 
     for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
-
-        f1_label = get_mapped_label(mappings, feature1, feature1_code)
+        print("Feature1:" + str(feature1_code))
+        print("Feature2:" + str(feature2_code))
+        print(mappings)
+        print("gender:" + str(feature1))
+        f1_label = get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
 
         if single_column_check:
             data_point = single_column_datapoint(metrics, mappings, f1_label)
@@ -154,6 +158,7 @@ def multiple_column_datapoint(metrics: pd.Series, f1_label: str, mappings: dict,
     feature2 = inputs.columns[1]
     f2_label = get_mapped_label(mappings, feature2, feature2_code)
     rounded_metrics = get_rounded_metrics(metrics)
+    print("Label" + str(f2_label))
     data_point = DataPoint(f1_label, f2_label, rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
     return data_point
 

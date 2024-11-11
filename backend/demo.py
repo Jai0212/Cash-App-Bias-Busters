@@ -12,7 +12,7 @@ from app.repositories import SqliteDbRepo, CsvFileRepo
 curr_dir = os.path.dirname(__file__)
 file_path = os.path.join(curr_dir, "../database/output.csv")
 
-user = User("jj@gmail.com")
+user = User("ff@gmail.com")
 
 db_repo = SqliteDbRepo(user)
 file_repo = CsvFileRepo(user, file_path)
@@ -38,4 +38,7 @@ file_repo = CsvFileRepo(user, file_path)
 # }
 # time = "year"
 # generate = Generate(file_repo, db_repo)
-# generate.execute(demographics, choices, time)
+# result = generate.execute(demographics, choices, time)
+# print(len(result))
+# for i in result:
+#     print(i.get_feature1(), i.get_feature2(), i.get_accuracy(), i.get_false_positive_rate(), i.get_false_negative_rate(), i.get_combination_label())

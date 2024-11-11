@@ -17,7 +17,7 @@ class GetValuesUnderHeader:
             if header not in headers:
                 print(f"Header '{header}' does not exist in the dataset.")
                 return []
-
+            
             # Read the data from CSV (file_repo provides the file path)
             df = pd.read_csv(self.file_repo.file_path)
             
@@ -47,7 +47,7 @@ class GetValuesUnderHeader:
 
                 print(f"Age ranges: {list(result)}")
                 return list(result)
-
+            
             return unique_values.tolist()
 
         except Exception as e:
