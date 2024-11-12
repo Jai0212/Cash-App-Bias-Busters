@@ -325,8 +325,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      
-
       <div className="slider-container">
         <label>Adjust the slider (0 to 1): {sliderValue}</label>
         <input
@@ -340,114 +338,75 @@ const Dashboard = () => {
       </div>
 
       <div className="chart-container-container">
-      <div className="timeframe-buttons">
-        <button
-          className={timeframe === "day" ? "active-button" : ""}
-          onClick={() => handleTimeframeChange("day")}
-        >
-          1 Day
-        </button>
-        <button
-          className={timeframe === "week" ? "active-button" : ""}
-          onClick={() => handleTimeframeChange("week")}
-        >
-          1 Week
-        </button>
-        <button
-          className={timeframe === "month" ? "active-button" : ""}
-          onClick={() => handleTimeframeChange("month")}
-        >
-          1 Month
-        </button>
-        <button
-          className={timeframe === "year" ? "active-button" : ""}
-          onClick={() => handleTimeframeChange("year")}
-        >
-          1 Year
-        </button>
-      </div>
-        
+        <div className="timeframe-buttons">
+          <button
+            className={timeframe === "day" ? "active-button" : ""}
+            onClick={() => handleTimeframeChange("day")}
+          >
+            1 Day
+          </button>
+          <button
+            className={timeframe === "week" ? "active-button" : ""}
+            onClick={() => handleTimeframeChange("week")}
+          >
+            1 Week
+          </button>
+          <button
+            className={timeframe === "month" ? "active-button" : ""}
+            onClick={() => handleTimeframeChange("month")}
+          >
+            1 Month
+          </button>
+          <button
+            className={timeframe === "year" ? "active-button" : ""}
+            onClick={() => handleTimeframeChange("year")}
+          >
+            1 Year
+          </button>
+        </div>
+
         {Object.keys(graphData).length > 0 && (
-            <ChartComponent
-              ref={chartRef}
-              chartData={graphData}
-              sliderValue={sliderValue}
-              bias={maxValue()}
-            />
-          )}
+          <ChartComponent
+            ref={chartRef}
+            chartData={graphData}
+            sliderValue={sliderValue}
+            bias={maxValue()}
+          />
+        )}
 
         <div className="select-demographics-2">
-          <div className="demog-clas"><h2>Demographics</h2></div>
-        <div className="select-demographics">
-          <div className="title">
-
+          <div className="demog-clas">
+            <h2>Demographics</h2>
           </div>
-          <div className="select-container">
-            
-            <select
-              onChange={handleDemographicChange}
-              value={selectedDemographic}
-            >
-              <option value="">Select</option>
-              {demographics.map((demo, index) => (
-                <option key={index} value={demo}>
-                  {demo}
-                </option>
-              ))}
-            </select>
-
-            {selectedDemographic && (
-              <div>
-                <h3>Values for First Demographic</h3>
-                {[...Array(4)].map((_, idx) => (
-                  <select
-                    key={idx}
-                    onChange={(event) => handleValueChange(event, idx)}
-                    value={selectedValues[idx] || ""}
-                  >
-                    <option value="">Select</option>
-                    {demographicValues
-                      .filter((val) => !selectedSecondValues.includes(val))
-                      .map((val, index) => (
-                        <option key={index} value={val}>
-                          {val}
-                        </option>
-                      ))}
-                  </select>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {selectedDemographic && (
+          <div className="select-demographics">
+            <div className="title"></div>
             <div className="select-container">
-              
               <select
-                onChange={handleSecondDemographicChange}
-                value={secondSelectedDemographic}
+                onChange={handleDemographicChange}
+                value={selectedDemographic}
               >
-                <option value="">Select</option>
-                {demographics
-                  .filter((demo) => demo !== selectedDemographic)
-                  .map((demo, index) => (
-                    <option key={index} value={demo}>
-                      {demo}
-                    </option>
-                  ))}
+                <option value="" className="demo-dropdown">
+                  Select
+                </option>
+                {demographics.map((demo, index) => (
+                  <option key={index} value={demo}>
+                    {demo}
+                  </option>
+                ))}
               </select>
 
-              {secondSelectedDemographic && selectedDemographic && (
+              {selectedDemographic && (
                 <div>
-                  <h3>Values for Second Demographic</h3>
+                  <h3>Values for First Demographic</h3>
                   {[...Array(4)].map((_, idx) => (
                     <select
                       key={idx}
-                      onChange={(event) => handleValueChange(event, idx, true)}
-                      value={selectedSecondValues[idx] || ""}
+                      onChange={(event) => handleValueChange(event, idx)}
+                      value={selectedValues[idx] || ""}
                     >
                       <option value="">Select</option>
-                      {secondDemographicValues
-                        .filter((val) => !selectedValues.includes(val))
+                      {demographicValues
+                        .filter((val) => !selectedSecondValues.includes(val))
                         .map((val, index) => (
                           <option key={index} value={val}>
                             {val}
@@ -458,16 +417,51 @@ const Dashboard = () => {
                 </div>
               )}
             </div>
-          )}
-        </div>
-        </div>
-        
 
+            {selectedDemographic && (
+              <div className="select-container">
+                <select
+                  onChange={handleSecondDemographicChange}
+                  value={secondSelectedDemographic}
+                >
+                  <option value="">Select</option>
+                  {demographics
+                    .filter((demo) => demo !== selectedDemographic)
+                    .map((demo, index) => (
+                      <option key={index} value={demo}>
+                        {demo}
+                      </option>
+                    ))}
+                </select>
 
-        
+                {secondSelectedDemographic && selectedDemographic && (
+                  <div>
+                    <h3>Values for Second Demographic</h3>
+                    {[...Array(4)].map((_, idx) => (
+                      <select
+                        key={idx}
+                        onChange={(event) =>
+                          handleValueChange(event, idx, true)
+                        }
+                        value={selectedSecondValues[idx] || ""}
+                      >
+                        <option value="">Select</option>
+                        {secondDemographicValues
+                          .filter((val) => !selectedValues.includes(val))
+                          .map((val, index) => (
+                            <option key={index} value={val}>
+                              {val}
+                            </option>
+                          ))}
+                      </select>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-
-      
 
       <button className="generate-button" onClick={handleGenerate}>
         Generate
