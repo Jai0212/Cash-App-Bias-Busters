@@ -16,7 +16,6 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
 
     const demographicMapping = {
       gender: ["Male", "Female", "Non-binary", "Other"],
-      // Add more mappings for other demographics if needed
     };
 
     const determineDemographicType = (keys) => {
@@ -53,7 +52,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
 
     const datasets = groupedData.flatMap((group, i) =>
       group.map((item) => ({
-        label: labels[i], // Use only the main category for the legend label
+        label: labels[i],
         data: [{ x: labels[i], y: item.value }],
         backgroundColor:
           item.value > sliderValue
@@ -93,15 +92,20 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
       myChartRef.current.destroy();
     }
 
-    // Customize legend to show unique main categories
+    // Adjust the bar configuration to align bars and reduce gap between categories
     myChartRef.current = new Chart(ctx, {
       type: "bar",
       data: data,
       options: {
         scales: {
           x: {
+            offset: true,
             ticks: {
               autoSkip: false,
+            },
+            grid: {
+              offset: true,
+              display: false,
             },
           },
           y: {
@@ -139,6 +143,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue, bias }, ref) => {
             text: "Grouped Bar Chart",
           },
         },
+        barThickness: null,
+        maxBarThickness: 30,
+        categoryPercentage: 0.75, // Reduce gap between categories
+        barPercentage: 0.9, // Adjust spacing within categories
       },
     });
 
