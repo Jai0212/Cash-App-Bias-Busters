@@ -4,14 +4,15 @@ import ChartComponent from "./ChartComponent";
 import ControlButtons from "./ControlButtons";
 import { set } from "react-hook-form";
 import "./Dashboard.css";
-import axiosRetry from "axios-retry";
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const [graphData, setGraphData] = useState({});
 
-  const [currUser, setCurrUser] = useState("");
+  const [currUser, setCurrUser] = useState(""); // Initialize currUser as an empty string
+
+  // const curr_user = "test_table"; // Example user for fetching data
 
   const [error, setError] = useState("");
   const [sliderValue, setSliderValue] = useState(0.5);
@@ -26,7 +27,6 @@ const Dashboard = () => {
 
   const [secondSelectedDemographic, setSecondSelectedDemographic] =
     useState("");
-  useState("");
   const [secondDemographicValues, setSecondDemographicValues] = useState([]);
   const [selectedSecondValues, setSelectedSecondValues] = useState([
     "",
@@ -55,7 +55,7 @@ const Dashboard = () => {
       const emailData = await emailResponse.json();
       console.log(emailData);
 
-      setCurrUser(emailData || "");
+      setCurrUser(emailData.email || "");
     } catch (error) {
       console.error("Error fetching email:", error);
     }
@@ -68,6 +68,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fethPrevData = async () => {
       try {
+        if (!currUser) return;
+
         const response = await axios.post(
           `${VITE_BACKEND_URL}/api/get-prev-data`,
           {
@@ -90,10 +92,7 @@ const Dashboard = () => {
             );
           }
 
-          if (
-            response.data.demographics[0] != "" &&
-            response.data.demographics[1] != ""
-          ) {
+          if (response.data.demographics[1] != "") {
             setSecondSelectedDemographic(response.data.demographics[1]);
             setSelectedSecondValues(
               response.data.choices[response.data.demographics[1]]
@@ -105,19 +104,15 @@ const Dashboard = () => {
       } catch (error) {
         console.error("Error fetching previous data:", error);
       } finally {
-        console.log("Setting hasFetchedInitialData to true");
         setHasFetchedInitialData(true);
       }
     };
-    console.log("Prev Data CurrUser:", currUser, hasFetchedInitialData);
-    if (currUser && !hasFetchedInitialData) {
-      fethPrevData();
-    }
-  }, [currUser]);
+
+    fethPrevData();
+  }, [currUser, VITE_BACKEND_URL]);
 
   useEffect(() => {
     if (
-      currUser &&
       hasFetchedInitialData &&
       selectedDemographic &&
       selectedValues.length > 0 &&
@@ -137,214 +132,92 @@ const Dashboard = () => {
       );
       handleGenerate();
     }
-  }, [hasFetchedInitialData]);
+  }, [
+    selectedDemographic,
+    selectedValues,
+    secondSelectedDemographic,
+    selectedSecondValues,
+    timeframe,
+  ]);
 
   useEffect(() => {
-    const fetchDemographics = async (retries = 3, delay = 1000) => {
-      console.log("fetchDemographics called with:", { currUser });
-
-      // Check if currUser is available and proceed
-      if (currUser) {
-        try {
-          const response = await axios.post(`${VITE_BACKEND_URL}/api/headers`, {
-            curr_user: currUser,
-          });
-
-          // If there is an error in the response
-          if (response.data.error) {
-            setError(response.data.error);
-          } else {
-            // If the response is empty, retry logic will trigger
-            if (Array.isArray(response.data) && response.data.length === 0) {
-              console.log(
-                "Received empty response for demographics, retrying..."
-              );
-              if (retries > 0) {
-                setTimeout(
-                  () => fetchDemographics(retries - 1, delay * 2),
-                  delay
-                ); // Exponential backoff
-              } else {
-                setError(
-                  "Received empty response for demographics after multiple attempts"
-                );
-              }
-            } else {
-              console.log("Fetched Demographics:", response.data);
-              setDemographics(response.data); // Set demographics data if not empty
-            }
-          }
-        } catch (err) {
-          console.error("Error fetching demographics", err);
-
-          // Retry logic: only retry if there are remaining attempts
-          if (retries > 0) {
-            console.log(`Retrying... Attempts left: ${retries}`);
-            setTimeout(() => fetchDemographics(retries - 1, delay * 2), delay); // Exponential backoff
-          } else {
-            setError("Error fetching demographics after multiple attempts");
-          }
+    const fetchDemographics = async () => {
+      try {
+        const response = await axios.post(`${VITE_BACKEND_URL}/api/headers`, {
+          curr_user: currUser,
+        });
+        if (response.data.error) {
+          setError(response.data.error);
+        } else {
+          setDemographics(response.data);
         }
+      } catch (err) {
+        setError("Error fetching demographics");
+        console.error(err);
       }
     };
 
-    const timer = setTimeout(() => {
-      fetchDemographics(); // Start fetching demographics or retrying if necessary
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [hasFetchedInitialData]); // Will trigger each time hasFetchedInitialData or currUser changes
-
-  const fetchValues = async (retries = 3, delay = 1000) => {
-    console.log("fetchValues called with:", { selectedDemographic, currUser });
-
-    // Check if the selectedDemographic and currUser are available, and that demographicValues is empty
-    if (selectedDemographic && currUser) {
-      setDemographicValues([]);
-      try {
-        const response = await axios.post(
-          `${VITE_BACKEND_URL}/api/values-under-header`,
-          {
-            curr_user: currUser,
-            header: selectedDemographic,
-          }
-        );
-
-        // If there is an error in the response data
-        if (response.data.error) {
-          setError(response.data.error);
-        } else {
-          // Check if the response data is empty
-          if (Array.isArray(response.data) && response.data.length === 0) {
-            console.log("Received empty list, retrying...");
-            if (retries > 0) {
-              // Retry with exponential backoff
-              setTimeout(() => fetchValues(retries - 1, delay * 2), delay);
-            } else {
-              setError("Received empty response after multiple attempts");
-            }
-          } else {
-            console.log("Fetched Values:", response.data);
-            setDemographicValues(response.data); // Set values if not empty
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching values", err);
-
-        // Retry logic: only retry if there are remaining attempts
-        if (retries > 0) {
-          console.log(`Retrying... Attempts left: ${retries}`);
-          setTimeout(() => fetchValues(retries - 1, delay * 2), delay); // Exponential backoff
-        } else {
-          setError("Error fetching values after multiple attempts");
-        }
-      }
-    }
-  };
+    fetchDemographics();
+  }, [currUser, hasFetchedInitialData]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (selectedDemographic) {
-        fetchValues();
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [selectedDemographic]);
-
-  const fetchSecondValues = async (retries = 3, delay = 1000) => {
-    console.log("fetchSecondValues called with:", {
-      secondSelectedDemographic,
-      currUser,
-      secondDemographicValues,
-    });
-
-    // Check if the secondSelectedDemographic, currUser, and secondDemographicValues are available
-    if (secondSelectedDemographic && currUser) {
-      setSecondDemographicValues([]);
-      try {
-        const response = await axios.post(
-          `${VITE_BACKEND_URL}/api/values-under-header`,
-          {
-            curr_user: currUser,
-            header: secondSelectedDemographic,
-          }
-        );
-
-        // If there is an error in the response data
-        if (response.data.error) {
-          setError(response.data.error);
-        } else {
-          // Check if the response data is empty
-          if (Array.isArray(response.data) && response.data.length === 0) {
-            console.log(
-              "Received empty list for second demographic, retrying..."
-            );
-            if (retries > 0) {
-              // Retry with exponential backoff
-              setTimeout(
-                () => fetchSecondValues(retries - 1, delay * 2),
-                delay
-              );
-            } else {
-              setError(
-                "Received empty response for second demographic after multiple attempts"
-              );
+    if (selectedDemographic) {
+      const fetchValues = async () => {
+        try {
+          const response = await axios.post(
+            `${VITE_BACKEND_URL}/api/values-under-header`,
+            {
+              curr_user: currUser,
+              header: selectedDemographic,
             }
-          } else {
-            console.log("Fetched second demographic values:", response.data);
-            setSecondDemographicValues(response.data); // Set values if not empty
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching second demographic values", err);
-
-        // Retry logic: only retry if there are remaining attempts
-        if (retries > 0) {
-          console.log(`Retrying... Attempts left: ${retries}`);
-          setTimeout(() => fetchSecondValues(retries - 1, delay * 2), delay); // Exponential backoff
-        } else {
-          setError(
-            "Error fetching second demographic values after multiple attempts"
           );
+          if (response.data.error) {
+            setError(response.data.error);
+          } else {
+            setDemographicValues(response.data);
+          }
+        } catch (err) {
+          setError("Error fetching values");
+          console.error(err);
         }
-      }
+      };
+      fetchValues();
     }
-  };
+  }, [currUser, selectedDemographic, hasFetchedInitialData]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (selectedDemographic && secondSelectedDemographic) {
-        fetchSecondValues();
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [secondSelectedDemographic]);
+    if (secondSelectedDemographic) {
+      const fetchSecondValues = async () => {
+        try {
+          const response = await axios.post(
+            `${VITE_BACKEND_URL}/api/values-under-header`,
+            {
+              curr_user: currUser,
+              header: secondSelectedDemographic,
+            }
+          );
+          if (response.data.error) {
+            setError(response.data.error);
+          } else {
+            setSecondDemographicValues(response.data);
+          }
+        } catch (err) {
+          setError("Error fetching second demographic values");
+          console.error(err);
+        }
+      };
+      fetchSecondValues();
+    }
+  }, [currUser, secondSelectedDemographic, hasFetchedInitialData]);
 
   const handleDemographicChange = (event) => {
-    if (event.target.value === "") {
-      setSelectedDemographic("");
-      setSelectedValues(["", "", "", ""]);
-
-      setSecondSelectedDemographic("");
-      setSelectedSecondValues(["", "", "", ""]);
-      return;
-    } else if (event.target.value === secondSelectedDemographic) {
-      setSelectedDemographic(event.target.value);
-      setSelectedValues(["", "", "", ""]);
-
-      setSecondSelectedDemographic("");
-      setSelectedSecondValues(["", "", "", ""]);
-      return;
-    }
     setSelectedDemographic(event.target.value);
-    setSelectedValues(["", "", "", ""]);
+    setSelectedValues(["", "", "", ""]); // Reset values when demographic changes
   };
 
   const handleSecondDemographicChange = (event) => {
     setSecondSelectedDemographic(event.target.value);
-    setSelectedSecondValues(["", "", "", ""]);
+    setSelectedSecondValues(["", "", "", ""]); // Reset values when demographic changes
   };
 
   const handleValueChange = (event, index, isSecond = false) => {
@@ -370,18 +243,6 @@ const Dashboard = () => {
   };
 
   const handleGenerate = () => {
-    if (
-      !currUser ||
-      !selectedDemographic ||
-      !timeframe ||
-      selectedValues[0] === ""
-    ) {
-      console.warn(
-        "currUser or selectedDemographic is missing. Cannot generate data."
-      );
-      return;
-    }
-
     axios
       .post(`${VITE_BACKEND_URL}/api/generate`, {
         demographics: [selectedDemographic, secondSelectedDemographic],
@@ -394,7 +255,7 @@ const Dashboard = () => {
       })
       .then((response) => {
         console.log("Data generated:", response.data); // TODO Display data on chart
-        // setGraphData(response.data);
+        setGraphData(response.data);
       })
       .catch((err) => {
         console.error("Error generating data:", err);
@@ -557,7 +418,9 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="slider-container">
-        <label>Adjust the slider (0 to 1): {sliderValue}</label>
+        <label className="slider-label">
+          Adjust the slider (0 to 1): {sliderValue}
+        </label>
         <input
           type="range"
           min="0"
@@ -653,7 +516,7 @@ const Dashboard = () => {
                   onChange={handleSecondDemographicChange}
                   value={secondSelectedDemographic}
                 >
-                  <option value="">Select</option>
+                  <option classNamevalue="dropdown">Select</option>
                   {demographics
                     .filter((demo) => demo !== selectedDemographic)
                     .map((demo, index) => (
@@ -689,12 +552,13 @@ const Dashboard = () => {
               </div>
             )}
           </div>
+          <div className="generate-btn-container">
+            <button className="generate-button" onClick={handleGenerate}>
+              Generate
+            </button>
+          </div>
         </div>
       </div>
-
-      <button className="generate-button" onClick={handleGenerate}>
-        Generate
-      </button>
 
       <ControlButtons onDownload={handleDownload} />
     </div>
