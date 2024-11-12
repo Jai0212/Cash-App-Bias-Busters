@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Nunito+Sans:wght@400;600&display=swap");
+
 /* Container for the buttons and file inputs */
 .file-import-container {
   margin-top: 20px;
@@ -20,45 +22,50 @@ input[type="file"] {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  border: 1px solid #ccc;
+  border: 1px solid #2e2e2e;
   border-radius: 5px;
-  background-color: #f0f0f0;
+  background-color: #ffcc00;
   transition: background-color 0.3s;
   width: 200px;
   text-align: center;
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Hover effect for all buttons */
 .file-import-container button:hover {
-  background-color: #e0e0e0;
+  background-color: #0088cc;
+  color: #fafafa;
 }
 
 /* Style for the Import Models button */
 .file-import-container button:nth-child(1) {
-  background-color: #4CAF50;
-  color: white;
+  background-color: #4caf50;
+  color: #2e2e2e;
 }
 
 .file-import-container button:nth-child(1):hover {
-  background-color: #45a049;
+  background-color: #0088cc;
+  color: #fafafa;
 }
 
 /* Style for the Import Dataset button */
 .file-import-container button:nth-child(2) {
-  background-color: #2196F3;
-  color: white;
+  background-color: #2196f3;
+  color: #2e2e2e;
 }
 
 .file-import-container button:nth-child(2):hover {
-  background-color: #1976D2;
+  background-color: #0088cc;
+  color: #fafafa;
 }
 
 /* Style for the Download Graph button */
 .file-import-container button:nth-child(3) {
-  background-color: #FF9800;
-  color: white;
+  background-color: #ffcc00;
+  color: #2e2e2e;
 }
 
 .file-import-container button:nth-child(3):hover {
-  background-color: #FB8C00;
+  background-color: #0088cc;
+  color: #fafafa;
 }

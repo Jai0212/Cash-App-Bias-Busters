@@ -13,7 +13,17 @@ function UserNavbar() {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <div>
+            <img
+              className="cash-logo"
+              src="src/assets/cash-app-logo.png"
+              alt="CashApp's logo in green"
+            />
+          </div>
+          <div
+            className="menu-container collapse navbar-collapse"
+            id="navbarSupportedContent"
+          >
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <Link className="nav-link" to="/dashboard">
@@ -31,12 +41,14 @@ function UserNavbar() {
                 </Link>
               </li>
             </ul>
-            <button
-              className="btn btn-outline-danger ms-2"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
+            <div className="btn-container">
+              <button
+                className="logout-btn btn btn-outline-danger ms-2"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </nav>

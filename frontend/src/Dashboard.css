@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Nunito+Sans:wght@400;600&display=swap");
+
 /* Main container to center content and add spacing */
 .dashboard-container {
   width: 90%;
@@ -11,10 +13,11 @@
 /* Container for buttons (timeframe selection) */
 .timeframe-buttons {
   display: flex;
-  flex-direction: column; 
-  align-items: center; 
+  flex-direction: column;
+  align-items: center;
   gap: 10px;
-  
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .timeframe-buttons button {
@@ -25,7 +28,7 @@
   border-radius: 5px;
   background-color: #f0f0f0;
   transition: background-color 0.3s;
-  width: 100%; 
+  width: 100%;
   max-width: 200px;
 }
 
@@ -38,6 +41,13 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+  width: 50%;
+  margin-inline: auto;
+}
+
+.slider-container > label {
+  text-align: center;
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 .slider-container label {
@@ -85,14 +95,16 @@
   width: 100%;
   padding: 13px;
   font-size: 18px;
+  margin-inline: auto;
   cursor: pointer;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   transition: background-color 0.3s;
   margin-bottom: 30px;
   margin-top: 30px;
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 .generate-button:hover {
@@ -125,21 +137,21 @@
   cursor: pointer;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #007BFF;
+  background-color: #0088cc;
   color: white;
   margin-right: 10px;
   transition: background-color 0.3s;
 }
 
 .control-buttons button:hover {
-  background-color: #0056b3;
+  background-color: #0088cc;
 }
 
 /* Highlighted button */
 .active-button {
-  background-color: #007BFF !important;
+  background-color: #0088cc !important;
   color: white !important;
-  border: 1px solid #0056b3 !important;
+  border: 1px solid #0088cc !important;
   scale: 1.1;
 }
 
@@ -164,4 +176,17 @@
 .demog-clas {
   padding-left: 30px;
   text-align: center;
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+body {
+  background-color: #f5deb3;
+}
+
+.demo-dropdown {
+  width: 100vw;
+}
+
+.slider {
+  width: 50vw;
 }

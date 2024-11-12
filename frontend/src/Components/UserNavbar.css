@@ -4,6 +4,7 @@
   top: 0; /* Align at the top */
   left: 0;
   z-index: 1000; /* Ensure the navbar is on top of other elements */
+  margin-top: 0%;
 }
 
 .navbar-nav {
@@ -20,13 +21,57 @@
 }
 
 .navbar-light .navbar-nav .nav-link {
-  color: #333; /* Set the link color */
+  color: #fafafa; /* Set the link color */
 }
 
 .navbar-light .navbar-nav .nav-link:hover {
-  color: #007bff; /* Hover color for links */
+  color: #ffcc00; /* Hover color for links */
+  border: 1px solid #ffcc00;
+  border-radius: 10px 10px 10px 10px;
+}
+
+.nav-link {
+  border-radius: 2px 2px 2px 2px;
 }
 
 .btn-outline-danger {
   margin-left: auto; /* Push the logout button to the right */
+}
+
+.container-fluid {
+  background-color: #2e2e2e;
+  margin-top: 0%;
+}
+
+.navbar {
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+.container-fluid {
+  padding-top: 0;
+  display: flex;
+  padding-bottom: 1vh;
+}
+
+.cash-logo {
+  width: 1w;
+  height: 4vh;
+  padding: 0;
+  margin-right: 5vw;
+}
+
+.menu-container {
+  display: flex;
+}
+
+.btn-container {
+  padding-bottom: 0.5vh;
+  padding-top: 0.5vh;
 }
