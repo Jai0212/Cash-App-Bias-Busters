@@ -14,11 +14,11 @@ class CsvFileRepo(FileRepository):
         """Initialize the file path and database connection."""
         self.connection = None
         self.file_path = file_path
-        
+
         self.user = user
         self.table_name = user.table_name
         self.db_repo = SqliteDbRepo(user)
-    
+
     def connect(self):
         self.connection = DbConnectionManager.get_connection()
 
@@ -52,12 +52,12 @@ class CsvFileRepo(FileRepository):
             if self.connection is None:
                 print("No database connection available.")
                 return False
-            
+
             print(self.connection)
             print(self.connection.is_connected())
             if self.connection.is_connected():
                 cursor = self.connection.cursor()
-                self.db_repo.create_table() 
+                self.db_repo.create_table()
 
                 for _, row in filtered_df.iterrows():
                     # Prepare values for only the columns present in the CSV
@@ -74,7 +74,7 @@ class CsvFileRepo(FileRepository):
                 print("Data imported successfully.")
                 cursor.close()
                 return True
-            
+
             cursor.close()
             return False
 
@@ -172,8 +172,9 @@ class CsvFileRepo(FileRepository):
 
         df = pd.read_csv(self.file_path)
 
-        # Convert the 'Timestamp' column to datetime format
         df["timestamp"] = pd.to_datetime(df["timestamp"])
+
+        latest_timestamp = df["timestamp"].max()
 
         if time == "day":
             days = 1
@@ -184,7 +185,7 @@ class CsvFileRepo(FileRepository):
         else:
             days = 365
 
-        cutoff_date = datetime.now() - timedelta(days=days)
+        cutoff_date = latest_timestamp - timedelta(days=days)
 
         filtered_df = df[df["timestamp"] >= cutoff_date]
 
@@ -201,7 +202,7 @@ class CsvFileRepo(FileRepository):
         self.connect()
 
         self.delete_csv_data()
-        
+
         if time:
             self.get_data_for_time(time)
         else:

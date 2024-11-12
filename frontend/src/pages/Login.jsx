@@ -27,7 +27,7 @@ const UserLogin = () => {
       const emailData = await emailResponse.json();
       console.log(emailData);
 
-      setCurrUser(emailData.email || "");
+      setCurrUser(emailData || "");
       setIsLoading(false); // Stop loading after setting currUser
     } catch (error) {
       console.error("Error fetching email:", error);

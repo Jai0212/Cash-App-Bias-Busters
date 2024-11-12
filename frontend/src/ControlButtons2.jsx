@@ -23,7 +23,7 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             });
 
             const emailData = await emailResponse.json();
-            setCurrUser(emailData.email || "");
+            setCurrUser(emailData || "");
 
         } catch (error) {
             console.error("Error fetching email:", error);

@@ -63,8 +63,11 @@ def values_under_header():
     initialize(curr_user)
 
     if header and user.table_name:
-        values = GetValuesUnderHeader(file_repo).execute(header)
-        return jsonify(values)
+        new_file_repo = CsvFileRepo(user, file_path)
+        get_values_under_header = GetValuesUnderHeader(new_file_repo)
+        values = get_values_under_header.execute(header)
+
+        return jsonify(sorted(values))
     else:
         return jsonify({"error": "Missing required data."}), 400
 

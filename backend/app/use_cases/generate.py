@@ -15,6 +15,7 @@ class Generate:
     def execute(self, demographics: list[str], choices: dict[str, list[str]], time: str) -> None:
         self.file_repo.update_comparison_csv(demographics, choices, time)
         self.db_repo.update_db_for_user(demographics, choices, time)
+        print("GENERATE:", demographics, choices, time)
         output = model()
         print(output)
         return output
