@@ -26,7 +26,7 @@ const Dashboard = () => {
   const [selectedValues, setSelectedValues] = useState(["", "", "", ""]);
 
   const [secondSelectedDemographic, setSecondSelectedDemographic] =
-    useState("");
+      useState("");
   const [secondDemographicValues, setSecondDemographicValues] = useState([]);
   const [selectedSecondValues, setSelectedSecondValues] = useState([
     "",
@@ -71,31 +71,31 @@ const Dashboard = () => {
         if (!currUser) return;
 
         const response = await axios.post(
-          `${VITE_BACKEND_URL}/api/get-prev-data`,
-          {
-            curr_user: currUser,
-          }
+            `${VITE_BACKEND_URL}/api/get-prev-data`,
+            {
+              curr_user: currUser,
+            }
         );
 
         if (
-          response.data &&
-          response.data.demographics &&
-          response.data.choices &&
-          response.data.time
+            response.data &&
+            response.data.demographics &&
+            response.data.choices &&
+            response.data.time
         ) {
           console.log("Previous data:", response.data);
 
           if (response.data.demographics[0] != "") {
             setSelectedDemographic(response.data.demographics[0]);
             setSelectedValues(
-              response.data.choices[response.data.demographics[0]]
+                response.data.choices[response.data.demographics[0]]
             );
           }
 
           if (response.data.demographics[1] != "") {
             setSecondSelectedDemographic(response.data.demographics[1]);
             setSelectedSecondValues(
-              response.data.choices[response.data.demographics[1]]
+                response.data.choices[response.data.demographics[1]]
             );
           }
 
@@ -113,22 +113,22 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (
-      hasFetchedInitialData &&
-      selectedDemographic &&
-      selectedValues.length > 0 &&
-      timeframe
+        hasFetchedInitialData &&
+        selectedDemographic &&
+        selectedValues.length > 0 &&
+        timeframe
     ) {
       console.log(
-        "Selected demographic:",
-        selectedDemographic,
-        "Selected values:",
-        selectedValues
+          "Selected demographic:",
+          selectedDemographic,
+          "Selected values:",
+          selectedValues
       );
       console.log(
-        "Second selected demographic:",
-        secondSelectedDemographic,
-        "Second selected values:",
-        selectedSecondValues
+          "Second selected demographic:",
+          secondSelectedDemographic,
+          "Second selected values:",
+          selectedSecondValues
       );
       handleGenerate();
     }
@@ -165,11 +165,11 @@ const Dashboard = () => {
       const fetchValues = async () => {
         try {
           const response = await axios.post(
-            `${VITE_BACKEND_URL}/api/values-under-header`,
-            {
-              curr_user: currUser,
-              header: selectedDemographic,
-            }
+              `${VITE_BACKEND_URL}/api/values-under-header`,
+              {
+                curr_user: currUser,
+                header: selectedDemographic,
+              }
           );
           if (response.data.error) {
             setError(response.data.error);
@@ -190,11 +190,11 @@ const Dashboard = () => {
       const fetchSecondValues = async () => {
         try {
           const response = await axios.post(
-            `${VITE_BACKEND_URL}/api/values-under-header`,
-            {
-              curr_user: currUser,
-              header: secondSelectedDemographic,
-            }
+              `${VITE_BACKEND_URL}/api/values-under-header`,
+              {
+                curr_user: currUser,
+                header: secondSelectedDemographic,
+              }
           );
           if (response.data.error) {
             setError(response.data.error);
@@ -244,22 +244,22 @@ const Dashboard = () => {
 
   const handleGenerate = () => {
     axios
-      .post(`${VITE_BACKEND_URL}/api/generate`, {
-        demographics: [selectedDemographic, secondSelectedDemographic],
-        choices: {
-          [selectedDemographic]: selectedValues,
-          [secondSelectedDemographic]: selectedSecondValues,
-        },
-        curr_user: currUser,
-        time: timeframe,
-      })
-      .then((response) => {
-        console.log("Data generated:", response.data); // TODO Display data on chart
-        setGraphData(response.data);
-      })
-      .catch((err) => {
-        console.error("Error generating data:", err);
-      });
+        .post(`${VITE_BACKEND_URL}/api/generate`, {
+          demographics: [selectedDemographic, secondSelectedDemographic],
+          choices: {
+            [selectedDemographic]: selectedValues,
+            [secondSelectedDemographic]: selectedSecondValues,
+          },
+          curr_user: currUser,
+          time: timeframe,
+        })
+        .then((response) => {
+          console.log("Data generated:", response.data); // TODO Display data on chart
+          setGraphData(response.data);
+        })
+        .catch((err) => {
+          console.error("Error generating data:", err);
+        });
   };
 
   const maxValue = () => {
@@ -281,42 +281,142 @@ const Dashboard = () => {
 
   // Check if graphData is empty and set all y values to 0 if true
   const modifiedGraphData =
-    Object.keys(graphData).length === 0
-      ? {
-          labels: ["Default Label 1", "Default Label 2", "Default Label 3"], // Default labels
-          datasets: [
-            {
-              label: "Default Data",
-              data: [0, 0, 0], // Default y values set to 0
-              borderColor: "rgba(75, 192, 192, 1)",
-            },
-          ],
-        }
-      : graphData;
+      Object.keys(graphData).length === 0
+          ? {
+            labels: ["Default Label 1", "Default Label 2", "Default Label 3"], // Default labels
+            datasets: [
+              {
+                label: "Default Data",
+                data: [0, 0, 0], // Default y values set to 0
+                borderColor: "rgba(75, 192, 192, 1)",
+              },
+            ],
+          }
+          : graphData;
 
   useEffect(() => {
-    setGraphData({
-      "Female_18-26": [0.446, 0.0, 0.554],
-      "Female_27-35": [0.577, 0.423, 0.0],
-      "Female_36-44": [0.404, 0.596, 0.0],
-      "Female_45-53": [0.436, 0.564, 0.0],
-      "Female_54-62": [0.55, 0.45, 0.0],
-      "Male_18-26": [0.56, 0.0, 0.44],
-      "Male_27-35": [0.457, 0.0, 0.543],
-      "Male_36-44": [0.403, 0.0, 0.597],
-      "Male_45-53": [0.571, 0.0, 0.429],
-      "Male_54-62": [0.54, 0.0, 0.46],
-      "Non-binary_18-26": [0.55, 0.0, 0.45],
-      "Non-binary_27-35": [0.558, 0.0, 0.442],
-      "Non-binary_36-44": [0.654, 0.0, 0.346],
-      "Non-binary_45-53": [0.359, 0.0, 0.641],
-      "Non-binary_54-62": [0.434, 0.0, 0.566],
-      "Other_18-26": [0.535, 0.465, 0.0],
-      "Other_27-35": [0.36, 0.64, 0.0],
-      "Other_36-44": [0.492, 0.508, 0.0],
-      "Other_45-53": [0.511, 0.489, 0.0],
-      "Other_54-62": [0.494, 0.506, 0.0],
-    });
+    setGraphData([
+      {
+        "feature1": "Black",
+        "feature2": "Female",
+        "accuracy": 0.25,
+        "falsepositive": 0.75,
+        "falsenegative": 0.0,
+        "combination_label": "Black Female"
+      },
+      {
+        "feature1": "Black",
+        "feature2": "Male",
+        "accuracy": 0.2,
+        "falsepositive": 0.0,
+        "falsenegative": 1.0,
+        "combination_label": "Black Male"
+      },
+      {
+        "feature1": "Black",
+        "feature2": "Non-binary",
+        "accuracy": 0.5,
+        "falsepositive": 0.0,
+        "falsenegative": 0.5,
+        "combination_label": "Black Non-binary"
+      },
+      {
+        "feature1": "Hispanic",
+        "feature2": "Female",
+        "accuracy": 0.33,
+        "falsepositive": 0.67,
+        "falsenegative": 0.0,
+        "combination_label": "Hispanic Female"
+      },
+      {
+        "feature1": "Hispanic",
+        "feature2": "Male",
+        "accuracy": 0.5,
+        "falsepositive": 0.0,
+        "falsenegative": 0.5,
+        "combination_label": "Hispanic Male"
+      },
+      {
+        "feature1": "Hispanic",
+        "feature2": "Non-binary",
+        "accuracy": 1.0,
+        "falsepositive": 0.0,
+        "falsenegative": 0.0,
+        "combination_label": "Hispanic Non-binary"
+      },
+      {
+        "feature1": "Other",
+        "feature2": "Female",
+        "accuracy": 0.67,
+        "falsepositive": 0.0,
+        "falsenegative": 0.33,
+        "combination_label": "Other Female"
+      },
+      {
+        "feature1": "Other",
+        "feature2": "Male",
+        "accuracy": 0.75,
+        "falsepositive": 0.25,
+        "falsenegative": 0.0,
+        "combination_label": "Other Male"
+      },
+      {
+        "feature1": "Other",
+        "feature2": "Non-binary",
+        "accuracy": 0.7,
+        "falsepositive": 0.0,
+        "falsenegative": 1.0,
+        "combination_label": "Other Non-binary"
+      },
+      {
+        "feature1": "Black",
+        "feature2": "Other",
+        "accuracy": 0.56,
+        "falsepositive": 0.0,
+        "falsenegative": 1.0,
+        "combination_label": "Black Other"
+      },
+      {
+        "feature1": "Hispanic",
+        "feature2": "Other",
+        "accuracy": 0.42,
+        "falsepositive": 0.0,
+        "falsenegative": 1.0,
+        "combination_label": "Hispanic Other"
+      },
+      {
+        "feature1": "White",
+        "feature2": "Male",
+        "accuracy": 0.2,
+        "falsepositive": 0.25,
+        "falsenegative": 0.0,
+        "combination_label": "Wite Male"
+      },
+      {
+        "feature1": "White",
+        "feature2": "Non-binary",
+        "accuracy": 0.5,
+        "falsepositive": 0.0,
+        "falsenegative": 1.0,
+        "combination_label": "White Non-binary"
+      },
+      {
+        "feature1": "White",
+        "feature2": "Other",
+        "accuracy": 0.64,
+        "falsepositive": 0.0,
+        "falsenegative": 1.0,
+        "combination_label": "White Other"
+      },
+      {
+        "feature1": "White",
+        "feature2": "Other",
+        "accuracy": 0.32,
+        "falsepositive": 0.0,
+        "falsenegative": 1.0,
+        "combination_label": "White Other"
+      }
+    ]);
   }, []);
 
   useEffect(() => {
@@ -324,157 +424,157 @@ const Dashboard = () => {
   }, [graphData]);
 
   return (
-    <div className="dashboard-container">
-      
+      <div className="dashboard-container">
 
-      <div className="slider-container">
-        <label>Adjust the slider (0 to 1): {sliderValue}</label>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={sliderValue}
-          onChange={handleSliderChange}
-        />
-      </div>
 
-      <div className="chart-container-container">
-      <div className="timeframe-buttons">
-        <button
-          className={timeframe === "day" ? "active-button" : ""}
-          onClick={() => handleTimeframeChange("day")}
-        >
-          1 Day
-        </button>
-        <button
-          className={timeframe === "week" ? "active-button" : ""}
-          onClick={() => handleTimeframeChange("week")}
-        >
-          1 Week
-        </button>
-        <button
-          className={timeframe === "month" ? "active-button" : ""}
-          onClick={() => handleTimeframeChange("month")}
-        >
-          1 Month
-        </button>
-        <button
-          className={timeframe === "year" ? "active-button" : ""}
-          onClick={() => handleTimeframeChange("year")}
-        >
-          1 Year
-        </button>
-      </div>
-        
-        {Object.keys(graphData).length > 0 && (
-            <ChartComponent
-              ref={chartRef}
-              chartData={graphData}
-              sliderValue={sliderValue}
-              bias={maxValue()}
-            />
+        <div className="slider-container">
+          <label>Adjust the slider (0 to 1): {sliderValue}</label>
+          <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={sliderValue}
+              onChange={handleSliderChange}
+          />
+        </div>
+
+        <div className="chart-container-container">
+          <div className="timeframe-buttons">
+            <button
+                className={timeframe === "day" ? "active-button" : ""}
+                onClick={() => handleTimeframeChange("day")}
+            >
+              1 Day
+            </button>
+            <button
+                className={timeframe === "week" ? "active-button" : ""}
+                onClick={() => handleTimeframeChange("week")}
+            >
+              1 Week
+            </button>
+            <button
+                className={timeframe === "month" ? "active-button" : ""}
+                onClick={() => handleTimeframeChange("month")}
+            >
+              1 Month
+            </button>
+            <button
+                className={timeframe === "year" ? "active-button" : ""}
+                onClick={() => handleTimeframeChange("year")}
+            >
+              1 Year
+            </button>
+          </div>
+
+          {Object.keys(graphData).length > 0 && (
+              <ChartComponent
+                  ref={chartRef}
+                  chartData={graphData}
+                  sliderValue={sliderValue}
+                  bias={maxValue()}
+              />
           )}
 
-        <div className="select-demographics-2">
-          <div className="demog-clas"><h2>Demographics</h2></div>
-        <div className="select-demographics">
-          <div className="title">
+          <div className="select-demographics-2">
+            <div className="demog-clas"><h2>Demographics</h2></div>
+            <div className="select-demographics">
+              <div className="title">
 
-          </div>
-          <div className="select-container">
-            
-            <select
-              onChange={handleDemographicChange}
-              value={selectedDemographic}
-            >
-              <option value="">Select</option>
-              {demographics.map((demo, index) => (
-                <option key={index} value={demo}>
-                  {demo}
-                </option>
-              ))}
-            </select>
-
-            {selectedDemographic && (
-              <div>
-                <h3>Values for First Demographic</h3>
-                {[...Array(4)].map((_, idx) => (
-                  <select
-                    key={idx}
-                    onChange={(event) => handleValueChange(event, idx)}
-                    value={selectedValues[idx] || ""}
-                  >
-                    <option value="">Select</option>
-                    {demographicValues
-                      .filter((val) => !selectedSecondValues.includes(val))
-                      .map((val, index) => (
-                        <option key={index} value={val}>
-                          {val}
-                        </option>
-                      ))}
-                  </select>
-                ))}
               </div>
-            )}
-          </div>
+              <div className="select-container">
 
-          {selectedDemographic && (
-            <div className="select-container">
-              
-              <select
-                onChange={handleSecondDemographicChange}
-                value={secondSelectedDemographic}
-              >
-                <option value="">Select</option>
-                {demographics
-                  .filter((demo) => demo !== selectedDemographic)
-                  .map((demo, index) => (
-                    <option key={index} value={demo}>
-                      {demo}
-                    </option>
+                <select
+                    onChange={handleDemographicChange}
+                    value={selectedDemographic}
+                >
+                  <option value="">Select</option>
+                  {demographics.map((demo, index) => (
+                      <option key={index} value={demo}>
+                        {demo}
+                      </option>
                   ))}
-              </select>
+                </select>
 
-              {secondSelectedDemographic && selectedDemographic && (
-                <div>
-                  <h3>Values for Second Demographic</h3>
-                  {[...Array(4)].map((_, idx) => (
+                {selectedDemographic && (
+                    <div>
+                      <h3>Values for First Demographic</h3>
+                      {[...Array(4)].map((_, idx) => (
+                          <select
+                              key={idx}
+                              onChange={(event) => handleValueChange(event, idx)}
+                              value={selectedValues[idx] || ""}
+                          >
+                            <option value="">Select</option>
+                            {demographicValues
+                                .filter((val) => !selectedSecondValues.includes(val))
+                                .map((val, index) => (
+                                    <option key={index} value={val}>
+                                      {val}
+                                    </option>
+                                ))}
+                          </select>
+                      ))}
+                    </div>
+                )}
+              </div>
+
+              {selectedDemographic && (
+                  <div className="select-container">
+
                     <select
-                      key={idx}
-                      onChange={(event) => handleValueChange(event, idx, true)}
-                      value={selectedSecondValues[idx] || ""}
+                        onChange={handleSecondDemographicChange}
+                        value={secondSelectedDemographic}
                     >
                       <option value="">Select</option>
-                      {secondDemographicValues
-                        .filter((val) => !selectedValues.includes(val))
-                        .map((val, index) => (
-                          <option key={index} value={val}>
-                            {val}
-                          </option>
-                        ))}
+                      {demographics
+                          .filter((demo) => demo !== selectedDemographic)
+                          .map((demo, index) => (
+                              <option key={index} value={demo}>
+                                {demo}
+                              </option>
+                          ))}
                     </select>
-                  ))}
-                </div>
+
+                    {secondSelectedDemographic && selectedDemographic && (
+                        <div>
+                          <h3>Values for Second Demographic</h3>
+                          {[...Array(4)].map((_, idx) => (
+                              <select
+                                  key={idx}
+                                  onChange={(event) => handleValueChange(event, idx, true)}
+                                  value={selectedSecondValues[idx] || ""}
+                              >
+                                <option value="">Select</option>
+                                {secondDemographicValues
+                                    .filter((val) => !selectedValues.includes(val))
+                                    .map((val, index) => (
+                                        <option key={index} value={val}>
+                                          {val}
+                                        </option>
+                                    ))}
+                              </select>
+                          ))}
+                        </div>
+                    )}
+                  </div>
               )}
             </div>
-          )}
-        </div>
-        </div>
-        
+          </div>
 
 
-        
+
+
+        </div>
+
+
+
+        <button className="generate-button" onClick={handleGenerate}>
+          Generate
+        </button>
+
+        <ControlButtons onDownload={handleDownload} />
       </div>
-
-      
-
-      <button className="generate-button" onClick={handleGenerate}>
-        Generate
-      </button>
-
-      <ControlButtons onDownload={handleDownload} />
-    </div>
   );
 };
 
