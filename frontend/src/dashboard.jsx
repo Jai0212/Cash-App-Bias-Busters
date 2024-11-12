@@ -326,7 +326,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="slider-container">
-        <label>Adjust the slider (0 to 1): {sliderValue}</label>
+        <label className="">Adjust the slider (0 to 1): {sliderValue}</label>
         <input
           type="range"
           min="0"
