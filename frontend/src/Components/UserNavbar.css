@@ -17,21 +17,24 @@
 }
 
 .navbar-nav .nav-link {
-  font-size: 16px; /* Font size of links */
+  font-size: 18px; /* Font size of links */
 }
 
 .navbar-light .navbar-nav .nav-link {
   color: #fafafa; /* Set the link color */
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 .navbar-light .navbar-nav .nav-link:hover {
-  color: #ffcc00; /* Hover color for links */
-  border: 1px solid #ffcc00;
+  background-color: #ffcc00; /* Hover color for links */
+  border: 1px solid #fafafa;
+  color: #2e2e2e;
+  font-weight: bold;
   border-radius: 10px 10px 10px 10px;
 }
 
 .nav-link {
-  border-radius: 2px 2px 2px 2px;
+  border-radius: 10px 10px 10px 10px;
 }
 
 .btn-outline-danger {
@@ -61,7 +64,7 @@ html {
 }
 
 .cash-logo {
-  width: 1w;
+  width: 2vw;
   height: 4vh;
   padding: 0;
   margin-right: 5vw;
@@ -69,9 +72,22 @@ html {
 
 .menu-container {
   display: flex;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
 }
 
 .btn-container {
   padding-bottom: 0.5vh;
   padding-top: 0.5vh;
+}
+
+.logout-btn {
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 18px;
+}
+
+.logout-btn:hover {
+  border-radius: 10px 10px 10px 10px;
+  font-weight: bold;
+  color: #fafafa;
 }

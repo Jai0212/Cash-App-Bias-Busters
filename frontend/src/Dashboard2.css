@@ -1,7 +1,6 @@
 .dashboard-main {
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,19 +11,37 @@
   margin: 20px 0;
 }
 
+.upload-button {
+  background-color: #2e2e2e;
+  border-radius: 10px 10px 10px 10px;
+  border: 1px solid #2e2e2e;
+  color: #fafafa;
+  padding: 15px 20px;
+  font-size: 18px;
+}
+
+.upload-button:hover {
+  background-color: #fafafa;
+  color: #2e2e2e;
+  font-weight: bold;
+  padding: 15px 20px;
+  border-radius: 10px 10px 10px 10px;
+}
+
 .generate-btn {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
+  padding: 15px 20px;
+  font-size: 18px;
+  background-color: #4caf50;
   color: #fff;
-  border: none;
-  border-radius: 5px;
+  border: 1px solid #2e2e2e;
+  border-radius: 10px 10px 10px 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 .generate-btn:hover {
-  background-color: #0056b3;
+  background-color: #45a049;
 }
 
 .result-section {
@@ -59,11 +76,11 @@
 
 .chart-section {
   width: 80%;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
+  background-color: wheat;
+  /* border: 1px solid #e0e0e0; */
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .button-container {
