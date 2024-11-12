@@ -407,14 +407,6 @@ const Dashboard = () => {
         "falsepositive": 0.0,
         "falsenegative": 1.0,
         "combination_label": "White Other"
-      },
-      {
-        "feature1": "White",
-        "feature2": "Other",
-        "accuracy": 0.32,
-        "falsepositive": 0.0,
-        "falsenegative": 1.0,
-        "combination_label": "White Other"
       }
     ]);
   }, []);

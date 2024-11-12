@@ -10,13 +10,13 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   useEffect(() => {
     if (!chartData) return;
 
-    // Step 1: Define colors for each feature1 group
-    const feature1Colors = {
-      Black: "rgba(54, 162, 235, 0.7)", // Blue
-      Hispanic: "rgba(75, 192, 192, 0.7)", // Green
-      Other: "rgba(255, 206, 86, 0.7)", // Yellow
-      "Non-binary": "rgba(153, 102, 255, 0.7)", // Purple
-    };
+    // Step 1: Identify unique feature1 values and assign colors dynamically
+    const uniqueFeature1Groups = Array.from(new Set(chartData.map(item => item.feature1)));
+    const colorPalette = ["rgba(54, 162, 235, 0.7)", "rgba(75, 192, 192, 0.7)", "rgba(255, 206, 86, 0.7)", "rgba(153, 102, 255, 0.7)"];
+    const feature1Colors = uniqueFeature1Groups.reduce((acc, group, index) => {
+      acc[group] = colorPalette[index % colorPalette.length];
+      return acc;
+    }, {});
 
     // Step 2: Sort and prepare data for the chart
     const sortedChartData = [...chartData].sort((a, b) =>
@@ -38,11 +38,15 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       {
         label: "Accuracy",
         data: accuracyData.map(d => ({ x: d.label, y: d.accuracy })),
-        backgroundColor: accuracyData.map(d =>
-            d.accuracy > sliderValue ? "rgba(255, 0, 0, 0.7)" : d.color
+        backgroundColor: accuracyData.map(d => d.color), // Bars are filled with the color for each feature1 group
+        borderColor: accuracyData.map(d =>
+            d.accuracy < sliderValue ? "rgba(255, 0, 0, 1)" : d.color // Red border if below threshold, else use the same color as fill
         ),
-        borderColor: "rgba(0, 0, 0, 0.1)",
-        borderWidth: 1,
+        borderWidth: accuracyData.map(d =>
+            d.accuracy < sliderValue ? 3 : 1 // Increased border width if below threshold, else default
+        ),
+        borderCapStyle: "round",
+        borderJoinStyle: "round",
       },
     ];
 
@@ -91,7 +95,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             display: true,
             labels: {
               generateLabels: () => {
-                return Object.keys(feature1Colors).map((feature1, i) => ({
+                return uniqueFeature1Groups.map((feature1, i) => ({
                   text: feature1,
                   fillStyle: feature1Colors[feature1],
                   strokeStyle: feature1Colors[feature1],
