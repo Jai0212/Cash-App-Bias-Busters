@@ -29,6 +29,7 @@ const Dashboard2 = () => {
             });
 
             const emailData = await emailResponse.json();
+            console.log(emailData);
             setCurrUser(emailData.email || "");
 
         } catch (error) {
