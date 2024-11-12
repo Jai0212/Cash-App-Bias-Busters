@@ -38,7 +38,9 @@ const App = () => {
         <Route path="/dashboard2" element={<UserLayout />}>
           <Route path="" element={<Dashboard2 />} />
         </Route>
-        <Route path="change-password" element={<ChangePassword />} />
+        <Route path="/change-password" element={<UserLayout />}>
+          <Route path="" element={<ChangePassword />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

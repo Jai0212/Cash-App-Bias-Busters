@@ -26,7 +26,7 @@ function UserNavbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/dashboard/change-password">
+                <Link className="nav-link" to="/change-password">
                   Change Password
                 </Link>
               </li>

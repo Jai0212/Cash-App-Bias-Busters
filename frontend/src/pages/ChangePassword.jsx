@@ -36,7 +36,6 @@ const ChangePassword = () => {
                     });
                 } else {
                     document.getElementById('form').reset()
-                    localStorage.setItem('token', res.data)
                     swal.fire({
                         icon: "success",
                         title: res.message,

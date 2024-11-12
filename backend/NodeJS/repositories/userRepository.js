@@ -2,16 +2,6 @@ const conn = require('../connection/connection');
 
 const userRepository = {};
 
-userRepository.getUserByEmail = (email) => {
-    const query = `SELECT * FROM users WHERE email = ?`;
-    return new Promise((resolve, reject) => {
-        conn.query(query, [email], (err, result) => {
-            if (err) return reject(err);
-            resolve(result[0]);
-        });
-    });
-};
-
 userRepository.createUser = (firstname, lastname, email, password) => {
     const query = `INSERT INTO users(firstname, lastname, email, password) VALUES(?, ?, ?, ?)`;
     return new Promise((resolve, reject) => {
