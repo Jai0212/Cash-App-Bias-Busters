@@ -26,6 +26,12 @@
 
 .navbar-light .navbar-nav .nav-link:hover {
   color: #ffcc00; /* Hover color for links */
+  border: 1px solid #ffcc00;
+  border-radius: 10px 10px 10px 10px;
+}
+
+.nav-link {
+  border-radius: 2px 2px 2px 2px;
 }
 
 .btn-outline-danger {
