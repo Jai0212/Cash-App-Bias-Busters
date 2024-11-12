@@ -2,38 +2,43 @@
 
 /* Main container to center content and add spacing */
 .dashboard-container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
   padding: 20px;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: "Roboto", Arial, sans-serif;
+  /* border: 2px solid black; */
 }
 
 /* Container for buttons (timeframe selection) */
 .timeframe-buttons {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  gap: 15px;
   margin-top: auto;
   margin-bottom: auto;
+  height: 100%;
+  justify-content: center;
+  /* border: 1px solid red; */
 }
 
 .timeframe-buttons button {
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 15px 20px;
+  font-size: 17px;
   cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f0f0f0;
+  border-radius: 10px 10px 10px 10px;
+  background-color: #2e2e2e;
+  color: #fafafa;
   transition: background-color 0.3s;
-  width: 100%;
-  max-width: 200px;
+  width: 55%;
+  margin-inline: auto;
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 .timeframe-buttons button:hover {
-  background-color: #e0e0e0;
+  background-color: #edf2f4;
+  color: #2e2e2e;
+  font-weight: bold;
 }
 
 /* Container for slider */
@@ -45,8 +50,9 @@
   margin-inline: auto;
 }
 
-.slider-container > label {
+.slider-label {
   text-align: center;
+  font-size: 1000px;
   font-family: "Roboto", Arial, sans-serif;
 }
 
@@ -61,44 +67,40 @@
 
 /* Container for demographics selection */
 .select-container {
-  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10vh;
+  margin-bottom: 10vh;
 }
 
 /* Styling for demographics select section */
 .select-demographics {
   display: flex;
-  justify-content: flex-start;
-  /* Spreads out the items */
-  gap: 40px;
-  /* Adds space between the two select containers */
-  margin-bottom: 30px;
-}
-
-.select-container h2,
-.select-container h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .select-container select {
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
   font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border-radius: 10px 10px 10px 10px;
+  border: 1px solid #2e2e2e;
+  font-family: "Roboto", Arial, sans-serif;
+  font-weight: bold;
+  background-color: #2e2e2ef9;
+  color: #fafafa;
+  margin-inline: auto;
 }
 
 /* Style for the "Generate" button */
 .generate-button {
   display: block;
-  width: 100%;
   padding: 13px;
   font-size: 18px;
   margin-inline: auto;
   cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px 10px 10px 10px;
   background-color: #4caf50;
   color: white;
   transition: background-color 0.3s;
@@ -109,6 +111,7 @@
 
 .generate-button:hover {
   background-color: #45a049;
+  font-weight: bold;
 }
 
 /* Styling for Chart component container */
@@ -116,7 +119,8 @@
   width: 100%;
   height: 400px;
   /* Adjust height as necessary */
-  margin-bottom: 30px;
+  margin-bottom: auto;
+  margin-top: auto;
 }
 
 .chart-container canvas {
@@ -135,10 +139,9 @@
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #0088cc;
-  color: white;
+  color: #fafafa;
   margin-right: 10px;
   transition: background-color 0.3s;
 }
@@ -156,31 +159,33 @@
 }
 
 .chart-container-container {
-  display: flex;
-  gap: 20px; /* Optional: adjust the space between the two containers */
-  align-items: flex-start; /* Align items at the top */
+  margin: 0%;
+  display: grid;
+  grid-template-columns: 15% auto 15%;
+  justify-content: space-evenly;
+  /* border: 2px solid #0088cc; */
 }
 
 /* Adjust widths as necessary */
 .select-demographics {
-  margin: 0px;
-  padding: 0px;
-  flex: 1; /* Take up equal width, or set a specific width if needed */
-  max-width: 300px; /* Optional: Set a max width for select-demographics */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .chart-container {
   flex: 2; /* Take up twice as much space as .select-demographics */
+  /* border: 2px solid green; */
 }
 
 .demog-clas {
-  padding-left: 30px;
   text-align: center;
   font-family: "Roboto", Arial, sans-serif;
+  /* border: 2px solid red; */
 }
 
-body {
-  background-color: #f5deb3;
+body,
+html {
+  background-color: #2e2e2e;
 }
 
 .demo-dropdown {
@@ -189,4 +194,16 @@ body {
 
 .slider {
   width: 50vw;
+}
+
+.select-demographics-2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  /* border: 2px solid blue; */
+}
+
+.generate-btn-container {
+  width: 100%;
 }
