@@ -19,7 +19,7 @@ class DatabaseRepository(ABC):
         pass
 
     @abstractmethod
-    def fetch_data(self) -> tuple[list[str], tuple[str, ...]]:
+    def fetch_data(self, p: bool=False) -> tuple[list[str], tuple[str, ...]]:
         pass
 
     @abstractmethod

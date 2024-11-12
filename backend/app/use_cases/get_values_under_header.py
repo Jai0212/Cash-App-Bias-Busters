@@ -10,19 +10,19 @@ class GetValuesUnderHeader:
         """Fetch unique values under the specified header."""
         try:
             self.file_repo.save_data_to_csv()
-            
+
             # First, get the headers from the repository
             headers = self.file_repo.get_headers()
-            
+
             if header not in headers:
                 print(f"Header '{header}' does not exist in the dataset.")
                 return []
-            
+
             # Read the data from CSV (file_repo provides the file path)
             df = pd.read_csv(self.file_repo.file_path)
-            
-            # Get unique values for the specified header
-            unique_values = df[header].unique()
+
+            # Drop any NaN values in the specified column
+            unique_values = df[header].dropna().unique()
 
             print(f"Unique values under '{header}':", unique_values.tolist())
 
@@ -47,12 +47,12 @@ class GetValuesUnderHeader:
 
                 print(f"Age ranges: {list(result)}")
                 return list(result)
-            
+
             return unique_values.tolist()
 
         except Exception as e:
             print(f"Error in GetValuesUnderHeader use case: {e}")
             return []
-        
+
         finally:
             self.file_repo.delete_csv_data()

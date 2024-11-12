@@ -28,13 +28,14 @@ const Dashboard2 = () => {
         },
       });
 
-      const emailData = await emailResponse.json();
-      console.log(emailData);
-      setCurrUser(emailData.email || "");
-    } catch (error) {
-      console.error("Error fetching email:", error);
-    }
-  };
+            const emailData = await emailResponse.json();
+            console.log(emailData);
+            setCurrUser(emailData || "");
+
+        } catch (error) {
+            console.error("Error fetching email:", error);
+        }
+    };
 
   useEffect(() => {
     fetchEmailAndDemographics();

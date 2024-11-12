@@ -96,7 +96,7 @@ class SqliteDbRepo(DatabaseRepository):
         except Error as e:
             print(f"Error: {e}")
 
-    def fetch_data(self) -> tuple[list[str], tuple[str, ...]]:
+    def fetch_data(self, p=False) -> tuple[list[str], tuple[str, ...]]:
         """Get data for the table"""
 
         self.connect()
@@ -116,11 +116,11 @@ class SqliteDbRepo(DatabaseRepository):
 
             if results:
                 print(f"Data fetched from {self.table_name}:")
-                # Print headers
                 print(headers)
-                # Print each row of data
-                for row in results:
-                    print(row)
+                
+                if p:
+                    for row in results:
+                        print(row)
                 return headers, results
             else:
                 print("No data found.")

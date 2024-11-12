@@ -16,6 +16,8 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   useEffect(() => {
     if (!chartData) return;
 
+    console.log("Rendering chart with data:", chartData);
+    
     // Step 1: Identify unique feature1 values and assign colors dynamically
     const uniqueFeature1Groups = Array.from(
       new Set(chartData.map((item) => item.feature1))

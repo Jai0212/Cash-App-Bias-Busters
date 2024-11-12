@@ -6,6 +6,7 @@ const forgotPasswordInteractor = require('../useCases/forgotPasswordInteractor')
 const verifyOTPInteractor = require('../useCases/verifyOTPInteractor');
 const resetPasswordInteractor = require('../useCases/resetPasswordInteractor');
 const { JWT_SECRET } = require('../utils/jwtUtil');
+const User = require('../entities/User');
 
 let authController = {};
 
@@ -16,6 +17,9 @@ authController.form = async (req, res) => {
         if (password !== confirmPassword) {
             return res.status(400).json({ code: 2, error: true, message: 'Passwords do not match' });
         }
+
+        User.validateEmailFormat(email);
+        User.validatePasswordStrength(password);
 
         await registerUserInteractor(firstname, lastname, email, password);
         return res.status(201).json({ code: 3, error: false, message: 'User registered successfully' });
@@ -47,6 +51,8 @@ authController.changePassword = async (req, res) => {
             return res.status(400).json({ code: 2, error: true, message: 'New password and confirmation must match' });
         }
 
+        User.validatePasswordStrength(new_password);
+
         await changePasswordInteractor(userId, old_password, new_password);
         return res.status(200).json({ code: 3, error: false, message: 'Password changed successfully' });
     } catch (error) {
@@ -57,6 +63,8 @@ authController.changePassword = async (req, res) => {
 authController.forgotPassword = async (req, res) => {
     const { email } = req.body;
     try {
+        User.validateEmailFormat(email);
+
         await forgotPasswordInteractor(email);
         return res.status(200).json({ code: 3, error: false, message: 'OTP sent' });
     } catch (error) {
@@ -79,6 +87,8 @@ authController.resetPassword = async (req, res) => {
     const { newPassword } = req.body;
 
     try {
+
+        User.validatePasswordStrength(newPassword);
         await resetPasswordInteractor(email, newPassword);
         return res.status(200).json({ code: 3, error: false, message: 'Password changed successfully' });
     } catch (error) {
