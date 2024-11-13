@@ -19,7 +19,7 @@ class DatabaseRepository(ABC):
         pass
 
     @abstractmethod
-    def fetch_data(self, p: bool=False) -> tuple[list[str], tuple[str, ...]]:
+    def fetch_data(self, p: bool = False) -> tuple[list[str], tuple[str, ...]]:
         pass
 
     @abstractmethod
@@ -66,4 +66,30 @@ class FileRepository(ABC):
 
     @abstractmethod
     def get_data_for_time(self, time: str) -> None:
+        pass
+
+
+class UserRepositoryInterface(ABC):
+    @abstractmethod
+    def get_user_by_email(self, email: str) -> Optional[dict]:
+        """Fetches a user by their email."""
+        pass
+
+    @abstractmethod
+    def create_user(
+        self, firstname: str, lastname: str, email: str, password: str
+    ) -> None:
+        """Inserts a new user into the users table."""
+        pass
+
+    @abstractmethod
+    def get_user_by_email_and_password(
+        self, email: str, password: str
+    ) -> Optional[dict]:
+        """Fetches a user by their email and password."""
+        pass
+
+    @abstractmethod
+    def update_password(self, email: str, new_password: str) -> None:
+        """Updates the password of a user by their email."""
         pass
