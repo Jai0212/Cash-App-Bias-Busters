@@ -15,7 +15,7 @@ const ChangePassword = () => {
     function handleForm(constant) {
         console.log(constant);
 
-        const url = "http://localhost:11395/change_password";
+        const url = "http://localhost:11355/change_password";
 
         fetch(url, {
             method: "POST",
@@ -36,7 +36,6 @@ const ChangePassword = () => {
                     });
                 } else {
                     document.getElementById('form').reset()
-                    localStorage.setItem('token', res.data)
                     swal.fire({
                         icon: "success",
                         title: res.message,

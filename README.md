@@ -6,8 +6,8 @@
 ```
 pip install -r requirements.txt
 cd backend
+python3 -m app.controllers.app
 ```
-Run the file `demo.py`
 
 ## Frontend
 ```

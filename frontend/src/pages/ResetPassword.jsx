@@ -25,7 +25,7 @@ function ResetPassword() {
             return;
         }
 
-        const url = `http://localhost:11395/reset_password/${encodeURIComponent(email)}`;
+        const url = `http://localhost:11355/reset_password/${encodeURIComponent(email)}`;
         fetch(url, {
             method: "POST",
             headers: {
@@ -45,7 +45,7 @@ function ResetPassword() {
                         icon: "success",
                         title: res.message,
                         timer: 1500
-                    }).then(() => navigate('/login'));
+                    }).then(() => navigate('/'));
                 }
             })
             .catch((e) => {

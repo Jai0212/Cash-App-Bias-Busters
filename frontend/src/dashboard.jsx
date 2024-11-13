@@ -3,15 +3,18 @@ import axios from "axios";
 import ChartComponent from "./ChartComponent";
 import ControlButtons from "./ControlButtons";
 import { set } from "react-hook-form";
+import "./Dashboard.css";
+import axiosRetry from "axios-retry";
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-  const [currUser, setCurrUser] = useState(""); // Initialize currUser as an empty string
+  const [graphData, setGraphData] = useState({});
 
-  // const curr_user = "test_table"; // Example user for fetching data
+  const [currUser, setCurrUser] = useState("");
 
   const [error, setError] = useState("");
+  const [sliderValue, setSliderValue] = useState(0.5);
 
   const [timeframe, setTimeframe] = useState("year");
 
@@ -21,9 +24,15 @@ const Dashboard = () => {
   const [demographicValues, setDemographicValues] = useState([]);
   const [selectedValues, setSelectedValues] = useState(["", "", "", ""]);
 
-  const [secondSelectedDemographic, setSecondSelectedDemographic] = useState("");
+  const [secondSelectedDemographic, setSecondSelectedDemographic] =
+    useState("");
   const [secondDemographicValues, setSecondDemographicValues] = useState([]);
-  const [selectedSecondValues, setSelectedSecondValues] = useState(["", "", "", ""]);
+  const [selectedSecondValues, setSelectedSecondValues] = useState([
+    "",
+    "",
+    "",
+    "",
+  ]);
 
   const [hasFetchedInitialData, setHasFetchedInitialData] = useState(false);
 
@@ -31,22 +40,21 @@ const Dashboard = () => {
 
   const fetchEmailAndDemographics = async () => {
     const url = "http://localhost:11355/api/get-email"; // Your email fetching URL
-    const token = localStorage.getItem('token'); // Token from local storage
+    const token = localStorage.getItem("token"); // Token from local storage
 
     try {
       const emailResponse = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token,
+          Authorization: "Bearer " + token,
         },
       });
 
       const emailData = await emailResponse.json();
       console.log(emailData);
 
-      setCurrUser(emailData.email || "");
-
+      setCurrUser(emailData || "");
     } catch (error) {
       console.error("Error fetching email:", error);
     }
@@ -59,24 +67,36 @@ const Dashboard = () => {
   useEffect(() => {
     const fethPrevData = async () => {
       try {
-        if (!currUser) return;
+        const response = await axios.post(
+          `${VITE_BACKEND_URL}/api/get-prev-data`,
+          {
+            curr_user: currUser,
+          }
+        );
 
-        const response = await axios.post(`${VITE_BACKEND_URL}/api/get-prev-data`, {
-          curr_user: currUser,
-        });
-
-        if (response.data && response.data.demographics && response.data.choices && response.data.time) {
-          
+        if (
+          response.data &&
+          response.data.demographics &&
+          response.data.choices &&
+          response.data.time
+        ) {
           console.log("Previous data:", response.data);
-          
+
           if (response.data.demographics[0] != "") {
             setSelectedDemographic(response.data.demographics[0]);
-            setSelectedValues(response.data.choices[response.data.demographics[0]]);
+            setSelectedValues(
+              response.data.choices[response.data.demographics[0]]
+            );
           }
 
-          if (response.data.demographics[1] != "") {
+          if (
+            response.data.demographics[0] != "" &&
+            response.data.demographics[1] != ""
+          ) {
             setSecondSelectedDemographic(response.data.demographics[1]);
-            setSelectedSecondValues(response.data.choices[response.data.demographics[1]]);
+            setSelectedSecondValues(
+              response.data.choices[response.data.demographics[1]]
+            );
           }
 
           setTimeframe(response.data.time);
@@ -84,94 +104,246 @@ const Dashboard = () => {
       } catch (error) {
         console.error("Error fetching previous data:", error);
       } finally {
+        console.log("Setting hasFetchedInitialData to true");
         setHasFetchedInitialData(true);
       }
     };
-
-    fethPrevData();
-  }, [currUser, VITE_BACKEND_URL]);
+    console.log("Prev Data CurrUser:", currUser, hasFetchedInitialData);
+    if (currUser && !hasFetchedInitialData) {
+      fethPrevData();
+    }
+  }, [currUser]);
 
   useEffect(() => {
-    if (hasFetchedInitialData && selectedDemographic && selectedValues.length > 0 && timeframe) {
-      console.log("Selected demographic:", selectedDemographic, "Selected values:", selectedValues);
-      console.log("Second selected demographic:", secondSelectedDemographic, "Second selected values:", selectedSecondValues);
+    if (
+      currUser &&
+      hasFetchedInitialData &&
+      selectedDemographic &&
+      selectedValues.length > 0 &&
+      timeframe
+    ) {
+      console.log(
+        "Selected demographic:",
+        selectedDemographic,
+        "Selected values:",
+        selectedValues
+      );
+      console.log(
+        "Second selected demographic:",
+        secondSelectedDemographic,
+        "Second selected values:",
+        selectedSecondValues
+      );
       handleGenerate();
     }
-  }, [selectedDemographic, selectedValues, secondSelectedDemographic, selectedSecondValues, timeframe]);
-
+  }, [hasFetchedInitialData]);
 
   useEffect(() => {
-    const fetchDemographics = async () => {
-      try {
-        const response = await axios.post(`${VITE_BACKEND_URL}/api/headers`, {
-          curr_user: currUser,
-        });
-        if (response.data.error) {
-          setError(response.data.error);
-        } else {
-          setDemographics(response.data);
+    const fetchDemographics = async (retries = 3, delay = 1000) => {
+      console.log("fetchDemographics called with:", { currUser });
+
+      // Check if currUser is available and proceed
+      if (currUser) {
+        try {
+          const response = await axios.post(`${VITE_BACKEND_URL}/api/headers`, {
+            curr_user: currUser,
+          });
+
+          // If there is an error in the response
+          if (response.data.error) {
+            setError(response.data.error);
+          } else {
+            // If the response is empty, retry logic will trigger
+            if (Array.isArray(response.data) && response.data.length === 0) {
+              console.log(
+                "Received empty response for demographics, retrying..."
+              );
+              if (retries > 0) {
+                setTimeout(
+                  () => fetchDemographics(retries - 1, delay * 2),
+                  delay
+                ); // Exponential backoff
+              } else {
+                setError(
+                  "Received empty response for demographics after multiple attempts"
+                );
+              }
+            } else {
+              console.log("Fetched Demographics:", response.data);
+              setDemographics(response.data); // Set demographics data if not empty
+            }
+          }
+        } catch (err) {
+          console.error("Error fetching demographics", err);
+
+          // Retry logic: only retry if there are remaining attempts
+          if (retries > 0) {
+            console.log(`Retrying... Attempts left: ${retries}`);
+            setTimeout(() => fetchDemographics(retries - 1, delay * 2), delay); // Exponential backoff
+          } else {
+            setError("Error fetching demographics after multiple attempts");
+          }
         }
-      } catch (err) {
-        setError("Error fetching demographics");
-        console.error(err);
       }
     };
 
-    fetchDemographics();
-  }, [currUser, hasFetchedInitialData]);
+    const timer = setTimeout(() => {
+      fetchDemographics(); // Start fetching demographics or retrying if necessary
+    }, 100);
 
-  useEffect(() => {
-    if (selectedDemographic) {
-      const fetchValues = async () => {
-        try {
-          const response = await axios.post(`${VITE_BACKEND_URL}/api/values-under-header`, {
+    return () => clearTimeout(timer);
+  }, [hasFetchedInitialData]); // Will trigger each time hasFetchedInitialData or currUser changes
+
+  const fetchValues = async (retries = 3, delay = 1000) => {
+    console.log("fetchValues called with:", { selectedDemographic, currUser });
+
+    // Check if the selectedDemographic and currUser are available, and that demographicValues is empty
+    if (selectedDemographic && currUser) {
+      setDemographicValues([]);
+      try {
+        const response = await axios.post(
+          `${VITE_BACKEND_URL}/api/values-under-header`,
+          {
             curr_user: currUser,
             header: selectedDemographic,
-          });
-          if (response.data.error) {
-            setError(response.data.error);
-          } else {
-            setDemographicValues(response.data);
           }
-        } catch (err) {
-          setError("Error fetching values");
-          console.error(err);
+        );
+
+        // If there is an error in the response data
+        if (response.data.error) {
+          setError(response.data.error);
+        } else {
+          // Check if the response data is empty
+          if (Array.isArray(response.data) && response.data.length === 0) {
+            console.log("Received empty list, retrying...");
+            if (retries > 0) {
+              // Retry with exponential backoff
+              setTimeout(() => fetchValues(retries - 1, delay * 2), delay);
+            } else {
+              setError("Received empty response after multiple attempts");
+            }
+          } else {
+            console.log("Fetched Values:", response.data);
+            setDemographicValues(response.data); // Set values if not empty
+          }
         }
-      };
-      fetchValues();
+      } catch (err) {
+        console.error("Error fetching values", err);
+
+        // Retry logic: only retry if there are remaining attempts
+        if (retries > 0) {
+          console.log(`Retrying... Attempts left: ${retries}`);
+          setTimeout(() => fetchValues(retries - 1, delay * 2), delay); // Exponential backoff
+        } else {
+          setError("Error fetching values after multiple attempts");
+        }
+      }
     }
-  }, [currUser, selectedDemographic, hasFetchedInitialData]);
+  };
 
   useEffect(() => {
-    if (secondSelectedDemographic) {
-      const fetchSecondValues = async () => {
-        try {
-          const response = await axios.post(`${VITE_BACKEND_URL}/api/values-under-header`, {
+    const timer = setTimeout(() => {
+      if (selectedDemographic) {
+        fetchValues();
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [selectedDemographic]);
+
+  const fetchSecondValues = async (retries = 3, delay = 1000) => {
+    console.log("fetchSecondValues called with:", {
+      secondSelectedDemographic,
+      currUser,
+      secondDemographicValues,
+    });
+
+    // Check if the secondSelectedDemographic, currUser, and secondDemographicValues are available
+    if (secondSelectedDemographic && currUser) {
+      setSecondDemographicValues([]);
+      try {
+        const response = await axios.post(
+          `${VITE_BACKEND_URL}/api/values-under-header`,
+          {
             curr_user: currUser,
             header: secondSelectedDemographic,
-          });
-          if (response.data.error) {
-            setError(response.data.error);
-          } else {
-            setSecondDemographicValues(response.data);
           }
-        } catch (err) {
-          setError("Error fetching second demographic values");
-          console.error(err);
+        );
+
+        // If there is an error in the response data
+        if (response.data.error) {
+          setError(response.data.error);
+        } else {
+          // Check if the response data is empty
+          if (Array.isArray(response.data) && response.data.length === 0) {
+            console.log(
+              "Received empty list for second demographic, retrying..."
+            );
+            if (retries > 0) {
+              // Retry with exponential backoff
+              setTimeout(
+                () => fetchSecondValues(retries - 1, delay * 2),
+                delay
+              );
+            } else {
+              setError(
+                "Received empty response for second demographic after multiple attempts"
+              );
+            }
+          } else {
+            console.log("Fetched second demographic values:", response.data);
+            setSecondDemographicValues(response.data); // Set values if not empty
+          }
         }
-      };
-      fetchSecondValues();
+      } catch (err) {
+        console.error("Error fetching second demographic values", err);
+
+        // Retry logic: only retry if there are remaining attempts
+        if (retries > 0) {
+          console.log(`Retrying... Attempts left: ${retries}`);
+          setTimeout(() => fetchSecondValues(retries - 1, delay * 2), delay); // Exponential backoff
+        } else {
+          setError(
+            "Error fetching second demographic values after multiple attempts"
+          );
+        }
+      }
     }
-  }, [currUser, secondSelectedDemographic, hasFetchedInitialData]);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (selectedDemographic && secondSelectedDemographic) {
+        fetchSecondValues();
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [secondSelectedDemographic]);
 
   const handleDemographicChange = (event) => {
+    if (event.target.value === "") {
+      setSelectedDemographic("");
+      setSelectedValues(["", "", "", ""]);
+
+      setSecondSelectedDemographic("");
+      setSelectedSecondValues(["", "", "", ""]);
+      return;
+    } else if (event.target.value === secondSelectedDemographic) {
+      setSelectedDemographic(event.target.value);
+      setSelectedValues(["", "", "", ""]);
+
+      setSecondSelectedDemographic("");
+      setSelectedSecondValues(["", "", "", ""]);
+      return;
+    }
     setSelectedDemographic(event.target.value);
-    setSelectedValues(["", "", "", ""]); // Reset values when demographic changes
+    setSelectedValues(["", "", "", ""]);
   };
 
   const handleSecondDemographicChange = (event) => {
     setSecondSelectedDemographic(event.target.value);
-    setSelectedSecondValues(["", "", "", ""]); // Reset values when demographic changes
+    setSelectedSecondValues(["", "", "", ""]);
   };
 
   const handleValueChange = (event, index, isSecond = false) => {
@@ -197,167 +369,349 @@ const Dashboard = () => {
   };
 
   const handleGenerate = () => {
+    if (
+      !currUser ||
+      !selectedDemographic ||
+      !timeframe ||
+      selectedValues[0] === ""
+    ) {
+      console.warn(
+        "currUser or selectedDemographic is missing. Cannot generate data."
+      );
+      return;
+    }
+
     axios
       .post(`${VITE_BACKEND_URL}/api/generate`, {
         demographics: [selectedDemographic, secondSelectedDemographic],
-        choices: { [selectedDemographic]: selectedValues, [secondSelectedDemographic]: selectedSecondValues },
+        choices: {
+          [selectedDemographic]: selectedValues,
+          [secondSelectedDemographic]: selectedSecondValues,
+        },
         curr_user: currUser,
         time: timeframe,
       })
       .then((response) => {
         console.log("Data generated:", response.data); // TODO Display data on chart
+        // setGraphData(response.data);
       })
       .catch((err) => {
         console.error("Error generating data:", err);
       });
   };
 
-  const dataForChart = {
-    "day": {
-      labels: ["Hour 1", "Hour 2", "Hour 3"],
-      datasets: [
-        {
-          label: "Random Data 1",
-          data: [10, 20, 30],
-          borderColor: "rgba(75, 192, 192, 1)",
-        },
-        {
-          label: "Random Data 2",
-          data: [15, 25, 35],
-          borderColor: "rgba(255, 99, 132, 1)",
-        },
-      ],
-    },
-    "week": {
-      labels: ["Day 1", "Day 2", "Day 3"],
-      datasets: [
-        {
-          label: "Random Data 1",
-          data: [50, 100, 150],
-          borderColor: "rgba(75, 192, 192, 1)",
-        },
-        {
-          label: "Random Data 2",
-          data: [75, 125, 175],
-          borderColor: "rgba(255, 99, 132, 1)",
-        },
-      ],
-    },
-    "month": {
-      labels: ["Week 1", "Week 2", "Week 3"],
-      datasets: [
-        {
-          label: "Random Data 1",
-          data: [100, 200, 300],
-          borderColor: "rgba(75, 192, 192, 1)",
-        },
-        {
-          label: "Random Data 2",
-          data: [150, 250, 350],
-          borderColor: "rgba(255, 99, 132, 1)",
-        },
-      ],
-    },
-    "year": {
-      labels: ["Jan", "Feb", "Mar"],
-      datasets: [
-        {
-          label: "Random Data 1",
-          data: [110, 210, 310],
-          borderColor: "rgba(75, 192, 192, 1)",
-        },
-        {
-          label: "Random Data 2",
-          data: [115, 215, 315],
-          borderColor: "rgba(255, 99, 132, 1)",
-        },
-      ],
-    },
+  const maxValue = () => {
+    let maxInitialElement = -Infinity;
+
+    for (const key in graphData) {
+      const initialElement = graphData[key][0];
+      if (initialElement > maxInitialElement) {
+        maxInitialElement = initialElement;
+      }
+    }
+    return maxInitialElement;
   };
 
+  const handleSliderChange = (event) => {
+    setSliderValue(parseFloat(event.target.value));
+    console.log("Slider Value:", event.target.value); // For debugging
+  };
+
+  // Check if graphData is empty and set all y values to 0 if true
+  const modifiedGraphData =
+    Object.keys(graphData).length === 0
+      ? {
+          labels: ["Default Label 1", "Default Label 2", "Default Label 3"], // Default labels
+          datasets: [
+            {
+              label: "Default Data",
+              data: [0, 0, 0], // Default y values set to 0
+              borderColor: "rgba(75, 192, 192, 1)",
+            },
+          ],
+        }
+      : graphData;
+
+  useEffect(() => {
+    setGraphData([
+      {
+        feature1: "Black",
+        feature2: "Female",
+        accuracy: 0.25,
+        falsepositive: 0.75,
+        falsenegative: 0.0,
+        combination_label: "Black Female",
+      },
+      {
+        feature1: "Black",
+        feature2: "Male",
+        accuracy: 0.2,
+        falsepositive: 0.0,
+        falsenegative: 1.0,
+        combination_label: "Black Male",
+      },
+      {
+        feature1: "Black",
+        feature2: "Non-binary",
+        accuracy: 0.5,
+        falsepositive: 0.0,
+        falsenegative: 0.5,
+        combination_label: "Black Non-binary",
+      },
+      {
+        feature1: "Hispanic",
+        feature2: "Female",
+        accuracy: 0.33,
+        falsepositive: 0.67,
+        falsenegative: 0.0,
+        combination_label: "Hispanic Female",
+      },
+      {
+        feature1: "Hispanic",
+        feature2: "Male",
+        accuracy: 0.5,
+        falsepositive: 0.0,
+        falsenegative: 0.5,
+        combination_label: "Hispanic Male",
+      },
+      {
+        feature1: "Hispanic",
+        feature2: "Non-binary",
+        accuracy: 1.0,
+        falsepositive: 0.0,
+        falsenegative: 0.0,
+        combination_label: "Hispanic Non-binary",
+      },
+      {
+        feature1: "Other",
+        feature2: "Female",
+        accuracy: 0.67,
+        falsepositive: 0.0,
+        falsenegative: 0.33,
+        combination_label: "Other Female",
+      },
+      {
+        feature1: "Other",
+        feature2: "Male",
+        accuracy: 0.75,
+        falsepositive: 0.25,
+        falsenegative: 0.0,
+        combination_label: "Other Male",
+      },
+      {
+        feature1: "Other",
+        feature2: "Non-binary",
+        accuracy: 0.7,
+        falsepositive: 0.0,
+        falsenegative: 1.0,
+        combination_label: "Other Non-binary",
+      },
+      {
+        feature1: "Black",
+        feature2: "Other",
+        accuracy: 0.56,
+        falsepositive: 0.0,
+        falsenegative: 1.0,
+        combination_label: "Black Other",
+      },
+      {
+        feature1: "Hispanic",
+        feature2: "Other",
+        accuracy: 0.42,
+        falsepositive: 0.0,
+        falsenegative: 1.0,
+        combination_label: "Hispanic Other",
+      },
+      {
+        feature1: "White",
+        feature2: "Male",
+        accuracy: 0.2,
+        falsepositive: 0.25,
+        falsenegative: 0.0,
+        combination_label: "Wite Male",
+      },
+      {
+        feature1: "White",
+        feature2: "Non-binary",
+        accuracy: 0.5,
+        falsepositive: 0.0,
+        falsenegative: 1.0,
+        combination_label: "White Non-binary",
+      },
+      {
+        feature1: "White",
+        feature2: "Other",
+        accuracy: 0.64,
+        falsepositive: 0.0,
+        falsenegative: 1.0,
+        combination_label: "White Other",
+      },
+    ]);
+  }, []);
+
+  useEffect(() => {
+    console.log("Graph data updated:", graphData);
+  }, [graphData]);
+
   return (
-    <div>
-      <div>
-        <button onClick={() => handleTimeframeChange("day")}>1 Day</button>
-        <button onClick={() => handleTimeframeChange("week")}>1 Week</button>
-        <button onClick={() => handleTimeframeChange("month")}>1 Month</button>
-        <button onClick={() => handleTimeframeChange("year")}>1 Year</button>
+    <div className="dashboard-container">
+      {/* <div className="text-container">
+        - Click **Import Model** to upload the model file you want to use for
+        analysis.
+        <br />- Click **Import Dataset** to upload your data file for
+        processing.
+        <br />- Select a primary **demographic category** (e.g., race, gender,
+        age) from the dropdown.
+        <br />- Select a **second demographic category** for deeper
+        segmentation.
+        <br />- Click **Generate** to display the graph showing insights across
+        the selected demographics.
+      </div> */}
+      <div className="slider-container">
+        <label>Adjust the slider (0 to 1): {sliderValue}</label>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={sliderValue}
+          onChange={handleSliderChange}
+        />
       </div>
 
-      <div>
-        <h2>Select First Demographic</h2>
-        <select onChange={handleDemographicChange} value={selectedDemographic}>
-          <option value="">Select</option>
-          {demographics.map((demo, index) => (
-            <option key={index} value={demo}>
-              {demo}
-            </option>
-          ))}
-        </select>
+      <div className="chart-container-container">
+        <div className="timeframe-buttons">
+          <button
+            className={timeframe === "day" ? "active-button" : ""}
+            onClick={() => handleTimeframeChange("day")}
+          >
+            1 Day
+          </button>
+          <button
+            className={timeframe === "week" ? "active-button" : ""}
+            onClick={() => handleTimeframeChange("week")}
+          >
+            1 Week
+          </button>
+          <button
+            className={timeframe === "month" ? "active-button" : ""}
+            onClick={() => handleTimeframeChange("month")}
+          >
+            1 Month
+          </button>
+          <button
+            className={timeframe === "year" ? "active-button" : ""}
+            onClick={() => handleTimeframeChange("year")}
+          >
+            1 Year
+          </button>
+        </div>
 
-        {selectedDemographic && (
-          <div>
-            <h3>Select Values for First Demographic</h3>
-            {[...Array(4)].map((_, idx) => (
-              <select
-                key={idx}
-                onChange={(event) => handleValueChange(event, idx)}
-                value={selectedValues[idx] || ""}
-              >
-                <option value="">Select</option>
-                {demographicValues
-                  .filter((val) => !selectedSecondValues.includes(val))
-                  .map((val, index) => (
-                    <option key={index} value={val}>
-                      {val}
-                    </option>
-                  ))}
-              </select>
-            ))}
-          </div>
+        {Object.keys(graphData).length > 0 && (
+          <ChartComponent
+            ref={chartRef}
+            chartData={graphData}
+            sliderValue={sliderValue}
+            bias={maxValue()}
+          />
         )}
 
-        {selectedDemographic && (
-          <>
-            <h2>Select Second Demographic</h2>
-            <select onChange={handleSecondDemographicChange} value={secondSelectedDemographic}>
-              <option value="">Select</option>
-              {demographics
-                .filter((demo) => demo !== selectedDemographic)
-                .map((demo, index) => (
+        <div className="select-demographics-2">
+          <div className="demog-clas">
+            <h2>Demographics</h2>
+          </div>
+          <div className="select-demographics">
+            <div className="title"></div>
+            <div className="select-container">
+              <select
+                onChange={handleDemographicChange}
+                value={selectedDemographic}
+              >
+                <option value="">Select</option>
+                {demographics.map((demo, index) => (
                   <option key={index} value={demo}>
                     {demo}
                   </option>
                 ))}
-            </select>
-          </>
-        )}
-
-        {secondSelectedDemographic && (
-          <div>
-            <h3>Select Values for Second Demographic</h3>
-            {[...Array(4)].map((_, idx) => (
-              <select
-                key={idx}
-                onChange={(event) => handleValueChange(event, idx, true)}
-                value={selectedSecondValues[idx] || ""}
-              >
-                <option value="">Select</option>
-                {secondDemographicValues
-                  .filter((val) => !selectedValues.includes(val))
-                  .map((val, index) => (
-                    <option key={index} value={val}>
-                      {val}
-                    </option>
-                  ))}
               </select>
-            ))}
+
+              {selectedDemographic && (
+                <div className="select-options">
+                  <h3 className="demographic-heading">
+                    Values for 1st Demographic
+                  </h3>
+                  {[...Array(4)].map((_, idx) => (
+                    <select
+                      key={idx}
+                      onChange={(event) => handleValueChange(event, idx)}
+                      value={selectedValues[idx] || ""}
+                    >
+                      <option value="">Select</option>
+                      {demographicValues
+                        .filter((val) => !selectedSecondValues.includes(val))
+                        .map((val, index) => (
+                          <option key={index} value={val}>
+                            {val}
+                          </option>
+                        ))}
+                    </select>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {selectedDemographic && (
+              <div className="select-container">
+                <select
+                  onChange={handleSecondDemographicChange}
+                  value={secondSelectedDemographic}
+                >
+                  <option value="">Select</option>
+                  {demographics
+                    .filter((demo) => demo !== selectedDemographic)
+                    .map((demo, index) => (
+                      <option key={index} value={demo}>
+                        {demo}
+                      </option>
+                    ))}
+                </select>
+
+                {secondSelectedDemographic && selectedDemographic && (
+                  <div className="select-options">
+                    <h3 className="demographic-heading">
+                      Values for 2nd Demographic
+                    </h3>
+                    {[...Array(4)].map((_, idx) => (
+                      <select
+                        key={idx}
+                        onChange={(event) =>
+                          handleValueChange(event, idx, true)
+                        }
+                        value={selectedSecondValues[idx] || ""}
+                      >
+                        <option value="">Select</option>
+                        {secondDemographicValues
+                          .filter((val) => !selectedValues.includes(val))
+                          .map((val, index) => (
+                            <option key={index} value={val}>
+                              {val}
+                            </option>
+                          ))}
+                      </select>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        )}
-        <button onClick={handleGenerate}>Generate</button>
+          <div className="generate-btn-container">
+            <button className="generate-button" onClick={handleGenerate}>
+              Generate
+            </button>
+          </div>
+        </div>
       </div>
 
-      <ChartComponent ref={chartRef} data={dataForChart[timeframe]} />
       <ControlButtons onDownload={handleDownload} />
     </div>
   );

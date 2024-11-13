@@ -1,5 +1,6 @@
 // src/ControlButtons.jsx
 import React, { useRef, useState, useEffect } from "react";
+import "./ControlButtons.css";
 
 const ControlButtons = ({ onDownload }) => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -24,7 +25,7 @@ const ControlButtons = ({ onDownload }) => {
 
       const emailData = await emailResponse.json();
 
-      setCurrUser(emailData.email || "");
+      setCurrUser(emailData || "");
 
     } catch (error) {
       console.error("Error fetching email:", error);
@@ -56,7 +57,8 @@ const ControlButtons = ({ onDownload }) => {
     // Create FormData object
     const formData = new FormData();
     formData.append("curr_user", currUser);
-    formData.append("model_file", file); // Use model_file for model uploads
+    formData.append("model_file", file);
+    formData.append("dashboard", "secret_token");
 
     try {
       // Make a POST request to upload model
@@ -122,23 +124,22 @@ const ControlButtons = ({ onDownload }) => {
 
 
   return (
-    <div style={{ marginTop: "20px" }}>
+    <div className="file-import-container">
       <input
         type="file"
         ref={fileInputRef1}
-        style={{ display: "none" }}
-        onChange={handleModelFileChange} // Handle model file change
+        onChange={handleModelFileChange}
       />
       <input
         type="file"
         ref={fileInputRef2}
-        style={{ display: "none" }}
-        onChange={handleDatasetFileChange} // Handle dataset file change
+        onChange={handleDatasetFileChange}
       />
       <button onClick={handleImportModels}>Import Models</button>
       <button onClick={handleImportDataset}>Import Dataset</button>
       <button onClick={onDownload}>Download Graph</button>
     </div>
+
   );
 };
 

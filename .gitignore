@@ -29,3 +29,31 @@ frontend/*.ntvs*
 frontend/*.njsproj
 frontend/*.sln
 frontend/*.sw?
+
+# Python cache files
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+
+# Random or temporary directories
+*.egg-info/
+*.tox/
+*.nox/
+*.coverage
+*.hypothesis/
+*.pytest_cache/
+
+# Bytecode files
+*.pyc
+*.pyo
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Pytest cache
+*.pytest_cache/
