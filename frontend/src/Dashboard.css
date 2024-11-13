@@ -2,10 +2,10 @@
 
 /* Main container to center content and add spacing */
 .dashboard-container {
-  width: 95%;
+  display: flex;
+  flex-direction: column;
   margin-left: auto;
   margin-right: auto;
-  padding: 20px;
   font-family: "Roboto", Arial, sans-serif;
   /* border: 2px solid black; */
 }
@@ -30,7 +30,6 @@
   background-color: #2e2e2e;
   color: #fafafa;
   transition: background-color 0.3s;
-  width: 55%;
   margin-inline: auto;
   font-family: "Roboto", Arial, sans-serif;
 }
@@ -46,10 +45,9 @@
   display: flex;
   flex-direction: column;
   /* margin-bottom: 20px; */
-  width: 50%;
+  width: 15%;
   margin-inline: auto;
-  margin-bottom: 3vh;
-  margin-top: 1vh;
+  /* margin-bottom: 3vh; */
 }
 
 .slider-label {
@@ -72,12 +70,13 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 10vh;
-  margin-bottom: 10vh;
+  margin-bottom: 3vh;
 }
 
 /* Styling for demographics select section */
 .select-demographics {
   display: flex;
+  gap: 20px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -107,7 +106,7 @@
   color: white;
   transition: background-color 0.3s;
   margin-bottom: 30px;
-  margin-top: 30px;
+  margin-top: 1vh;
   font-family: "Roboto", Arial, sans-serif;
 }
 
@@ -161,11 +160,11 @@
 }
 
 .chart-container-container {
-  margin: 0%;
+  /* margin-inline: 2vw; */
   display: grid;
-  grid-template-columns: 15% auto 15%;
+  grid-template-columns: 10% auto 30%;
   justify-content: space-evenly;
-  /* border: 2px solid #0088cc; */
+  /* border: 2px solid blueviolet; */
 }
 
 /* Adjust widths as necessary */
@@ -181,13 +180,17 @@
 
 .demog-clas {
   text-align: center;
-  font-family: "Roboto", Arial, sans-serif;
   /* border: 2px solid red; */
+}
+
+.demog-clas > h2 {
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 2rem;
 }
 
 body,
 html {
-  background-color: wheat;
+  background-color: #f6f2eb;
 }
 
 .demo-dropdown {
@@ -204,4 +207,24 @@ html {
 
 .generate-btn-container {
   width: 100%;
+}
+
+/* .text-container {
+  font-family: "Roboto", Arial, sans-serif;
+  text-align: justify;
+  border: 1px solid black;
+  width: 50%;
+  margin-inline: auto;
+} */
+
+.demographic-heading {
+  font-size: 18px;
+  text-align: center;
+}
+
+.select-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  margin-top: 1vh;
 }

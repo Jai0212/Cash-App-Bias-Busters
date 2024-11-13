@@ -76,7 +76,7 @@
 
 .chart-section {
   width: 80%;
-  background-color: wheat;
+  background-color: #f6f2eb;
   /* border: 1px solid #e0e0e0; */
   border-radius: 8px;
   padding: 20px;
@@ -91,5 +91,5 @@
 
 body,
 html {
-  background-color: wheat;
+  background-color: #f6f2eb;
 }
