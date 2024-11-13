@@ -26,7 +26,7 @@ const UserSignup = () => {
             return;
         }
 
-        const url = "http://localhost:11355/form";
+        const url = "http://127.0.0.1:5000/signup";
 
         fetch(url, {
             method: "POST",
