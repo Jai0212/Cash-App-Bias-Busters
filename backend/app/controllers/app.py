@@ -12,6 +12,7 @@ from app.use_cases import (
     UploadData,
 )
 from app.repositories import SqliteDbRepo, CsvFileRepo
+from use_cases.user_interactors import register_user_interactor, login_user_interactor
 
 load_dotenv()
 
@@ -334,6 +335,42 @@ def load_model(curr_user: str):
 @app.route("/")
 def home():
     return "Welcome to the Backend!"
+
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    firstname = data.get('firstname')
+    lastname = data.get('lastname')
+    email = data.get('email')
+    password = data.get('password')
+    confirm_password = data.get('confirmPassword')
+
+    if password != confirm_password:
+        return jsonify({"code": 2, "error": True, "message": "Passwords do not match"}), 400
+
+    try:
+        response = register_user_interactor(firstname, lastname, email, password)
+        return jsonify({"code": 3, "error": False, "message": response['message']}), 201
+    except ValueError as e:
+        return jsonify({"code": 2, "error": True, "message": str(e)}), 400
+    except Exception as e:
+        return jsonify({"code": 2, "error": True, "message": str(e)}), 500
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    try:
+        response = login_user_interactor(email, password)
+        return jsonify({"code": 3, "error": False, "message": response['message']}), 200
+    except ValueError as e:
+        return jsonify({"code": 2, "error": True, "message": str(e)}), 401
+    except Exception as e:
+        return jsonify({"code": 2, "error": True, "message": str(e)}), 500
 
 
 if __name__ == "__main__":
