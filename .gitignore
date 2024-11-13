@@ -2,6 +2,9 @@
 backend/.env
 frontend/.env
 backend/NodeJS/node_modules
+backend/__pycache__
+backend/app/__pycache__
+backend/controllers/__pycache__
 
 # Frontend
 # Logs
