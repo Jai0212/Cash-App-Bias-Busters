@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Nunito+Sans:wght@400;600&display=swap");
 
-/* Main container to center content and add spacing */
 .dashboard-container {
   display: flex;
   flex-direction: column;
@@ -30,12 +29,21 @@
   border-radius: 10px 10px 10px 10px;
   background-color: #2e2e2e;
   color: #fafafa;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, border 0.3s;
   margin-inline: auto;
   font-family: "Roboto", Arial, sans-serif;
 }
 
+/* Hover state */
 .timeframe-buttons button:hover {
+  background-color: #edf2f4;
+  color: #2e2e2e;
+  font-weight: bold;
+}
+
+/* Focus state (for when tabbing into buttons) */
+.timeframe-buttons button:focus {
+  outline: 3px solid #0088cc; /* Blue outline for focus */
   background-color: #edf2f4;
   color: #2e2e2e;
   font-weight: bold;
@@ -45,10 +53,8 @@
 .slider-container {
   display: flex;
   flex-direction: column;
-  /* margin-bottom: 20px; */
   width: 15%;
   margin-left: 30%;
-  /* margin-bottom: 3vh; */
 }
 
 .slider-label {
@@ -116,11 +122,15 @@
   font-weight: bold;
 }
 
+.generate-button:focus {
+  outline: 3px solid #0088cc;
+  background-color: #45a049;
+}
+
 /* Styling for Chart component container */
 .chart-container {
   width: 100%;
   height: 400px;
-  /* Adjust height as necessary */
   margin-bottom: auto;
   margin-top: auto;
 }
@@ -148,8 +158,11 @@
   transition: background-color 0.3s;
 }
 
-.control-buttons button:hover {
-  background-color: #0088cc;
+/* Hover and focus states for control buttons */
+.control-buttons button:hover,
+.control-buttons button:focus {
+  background-color: #007bb5;
+  outline: 3px solid #0088cc;
 }
 
 /* Highlighted button */
@@ -236,3 +249,48 @@ html {
   margin-right: 20%;
   margin-top: 0%;
 }
+
+/* Style for the select dropdown */
+.select-container select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #2e2e2e;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect for the select element */
+.select-container select:hover {
+  border-color: #007bff; /* Change border color on hover */
+  background-color: #474747; /* Light background on hover */
+  cursor: pointer;
+}
+
+/* Focus effect for the select element */
+.select-container select:focus {
+  border-color: #0056b3; /* Darker border color on focus */
+  outline: none; /* Remove the default focus outline */
+  background-color: #474747; /* Slightly darker background on focus */
+}
+
+/* Style for the option elements inside the select dropdown */
+.select-container select option {
+  padding: 10px;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+}
+
+/* Hover effect for the option elements */
+.select-container select option:hover {
+  background-color: #f1f9ff; /* Background color when hovering over options */
+  color: #007bff; /* Text color on hover */
+}
+
+/* Focus effect for the option elements (focus will apply if the option is selected) */
+.select-container select option:focus {
+  background-color: #e6f7ff; /* Slightly darker background when option is focused */
+  color: #0056b3; /* Text color on option focus */
+}
+
