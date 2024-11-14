@@ -135,9 +135,9 @@ const ControlButtons = ({ onDownload }) => {
         ref={fileInputRef2}
         onChange={handleDatasetFileChange}
       />
-      <button onClick={handleImportModels}>Import Models</button>
-      <button onClick={handleImportDataset}>Import Dataset</button>
-      <button onClick={onDownload}>Download Graph</button>
+      <button onClick={handleImportModels} tabIndex={12}>Import Models</button>
+      <button onClick={handleImportDataset} tabIndex={13}>Import Dataset</button>
+      <button onClick={onDownload} tabIndex={14}>Download Graph</button>
     </div>
 
   );

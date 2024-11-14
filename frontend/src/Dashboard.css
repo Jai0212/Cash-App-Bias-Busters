@@ -6,7 +6,7 @@
   margin-left: auto;
   margin-right: auto;
   font-family: "Roboto", Arial, sans-serif;
-  border: 2px solid black;
+  /* border: 2px solid black; */
 }
 
 /* Container for buttons (timeframe selection) */
@@ -18,7 +18,7 @@
   margin-bottom: auto;
   height: 100%;
   justify-content: center;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .timeframe-buttons button {
@@ -53,19 +53,20 @@
 .slider-container {
   display: flex;
   flex-direction: column;
-  width: 15%;
-  margin-left: 30%;
+  margin-bottom: 2vh;
+  width: 30%;
+  margin-inline: auto;
 }
 
-.slider-label {
-  text-align: center;
-  font-size: 1000px;
+.slider-input {
+  width: 20%;
+}
+
+.slider-label-cont {
+  font-size: 18px;
   font-family: "Roboto", Arial, sans-serif;
-}
-
-.slider-container label {
-  font-size: 16px;
-  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
 }
 
 .slider-container input[type="range"] {
@@ -178,7 +179,8 @@
   display: grid;
   grid-template-columns: 10% auto 30%;
   justify-content: space-evenly;
-  border: 2px solid blueviolet;
+  margin-top: 5vh;
+  /* border: 2px solid blueviolet; */
 }
 
 /* Adjust widths as necessary */
@@ -189,12 +191,12 @@
 
 .chart-container {
   flex: 2; /* Take up twice as much space as .select-demographics */
-  border: 2px solid green;
+  /* border: 2px solid green; */
 }
 
 .demog-clas {
   text-align: center;
-  border: 2px solid red;
+  /* border: 2px solid red; */
 }
 
 .demog-clas > h2 {
@@ -216,7 +218,7 @@ html {
   flex-direction: column;
   justify-content: flex-start;
   height: 100%;
-  border: 2px solid blue;
+  /* border: 2px solid blue; */
 }
 
 .generate-btn-container {
@@ -235,6 +237,23 @@ html {
 .demographic-heading {
   font-size: 18px;
   text-align: center;
+}
+
+.info-button {
+  position: absolute;
+  right: 20px; /* Distance from the right edge */
+  bottom: 20px; /* Distance from the bottom edge */
+  background: #24a0ed; /* Red background for button */
+  color: white; /* White text */
+  font-size: 16px;
+  border: none;
+  border-radius: 50%; /* Circular button */
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .select-options {
@@ -294,3 +313,41 @@ html {
   color: #0056b3; /* Text color on option focus */
 }
 
+.modal {
+  display: block; /* Ensure modal is visible */
+  position: fixed; /* Fix the modal to the screen */
+  z-index: 1000; /* Ensure it sits on top of everything else */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent dark background */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Adjust the width */
+  max-width: 500px; /* Prevent it from growing too wide */
+  border-radius: 8px; /* Optional: rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow */
+}
+
+.close {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
