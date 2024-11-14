@@ -48,11 +48,11 @@ def model() -> list:
     # Step 5: Make predictions
     y_pred = best_clf.predict(x_test)
     print("Inputs:" + str(inputs_n))
-    feature1 = inputs_n.columns[1]
+    feature1 = inputs_n.columns[0]
 
     # Step 6: Handle sensitive features for fairness evaluation
     sensitive_features = x_test[[feature1]] if file_reader.single_column_check \
-        else x_test[[feature1, inputs_n.columns[0]]]
+        else x_test[[feature1, inputs_n.columns[1]]]
 
     # Step 7: Evaluate fairness using Fairlearn's MetricFrame
     metric_frame = evaluate_fairness(y_test, y_pred, sensitive_features)
@@ -61,7 +61,7 @@ def model() -> list:
     save_model(best_clf, x_test, y_test)
 
     # Step 9: Create, clean, and sort bias dictionary
-    data_point_list = create_bias_data_points(feature1, inputs, mappings, metric_frame, file_reader.single_column_check)
+    data_point_list = create_bias_data_points(feature1, inputs_n, mappings, metric_frame, file_reader.single_column_check)
     data_point_list = clean_datapoints(data_point_list)
 
     print(data_point_list)
@@ -113,6 +113,13 @@ def clean_datapoints(data_point_list: list[DataPoint]) -> list[DataPoint]:
     return [x for x in data_point_list if x.feature1 != "NaN" and x.feature2 != "NaN"]
 
 
+def is_nan_in_datapoint(data_point) -> bool:
+    """
+    Checks if any attribute of a data point contains NaN.
+    """
+    return any(pd.isna(value) for value in data_point.__dict__.values())
+
+
 def create_bias_data_points(
         feature1: str,
         inputs: pd.DataFrame,
@@ -120,15 +127,12 @@ def create_bias_data_points(
         metric_frame: MetricFrame,
         single_column_check: bool = False) -> list:
     """
-    Creates a list of DataPoint entities with metrics by feature group.
+    Creates a list of DataPoint entities with metrics by feature group,
+    discarding any DataPoints with NaN values.
     """
     data_points = []
 
     for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
-        print("Feature1:" + str(feature1_code))
-        print("Feature2:" + str(feature2_code))
-        print(mappings)
-        print("gender:" + str(feature1))
         f1_label = get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
 
         if single_column_check:
@@ -136,7 +140,9 @@ def create_bias_data_points(
         else:
             data_point = multiple_column_datapoint(metrics, f1_label, mappings, feature2_code, inputs)
 
-        data_points.append(data_point)
+        # Only append if there are no NaN values in the DataPoint
+        if not is_nan_in_datapoint(data_point):
+            data_points.append(data_point)
 
     return data_points
 
@@ -156,9 +162,8 @@ def multiple_column_datapoint(metrics: pd.Series, f1_label: str, mappings: dict,
     Creates a DataPoint for multiple feature columns.
     """
     feature2 = inputs.columns[1]
-    f2_label = get_mapped_label(mappings, feature2, feature2_code)
+    f2_label = get_mapped_label(mappings, str(feature2)[:-2], feature2_code)
     rounded_metrics = get_rounded_metrics(metrics)
-    print("Label" + str(f2_label))
     data_point = DataPoint(f1_label, f2_label, rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
     return data_point
 

@@ -3,6 +3,7 @@ import ChartComponent2 from "./ChartComponent2.jsx";
 import ControlButton2 from "./ControlButtons2";
 import UserNavbar from "./Components/UserNavbar";
 import "./Dashboard2.css";
+import swal from 'sweetalert2';
 
 const Dashboard2 = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -16,26 +17,47 @@ const Dashboard2 = () => {
   const chartRef = useRef(null);
 
   const fetchEmailAndDemographics = async () => {
-    const url = "http://localhost:11355/api/get-email";
-    const token = localStorage.getItem("token");
+    const url = "http://127.0.0.1:5000/get-email"; // Your email fetching URL
 
     try {
       const emailResponse = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
 
-            const emailData = await emailResponse.json();
-            console.log(emailData);
-            setCurrUser(emailData || "");
+      const emailData = await emailResponse.json();
+      console.log(emailData);
 
-        } catch (error) {
-            console.error("Error fetching email:", error);
-        }
-    };
+      if (emailData && emailData.email) {
+        setCurrUser(emailData.email); // Set the user email if it exists
+      } else {
+        setCurrUser("");
+
+        swal.fire({
+          icon: "error",
+          title: "Please log in first",
+          text: "You need to log in to access this page.",
+          confirmButtonText: "Go to Login",
+          timer: 5000,
+          timerProgressBar: true,
+        }).then(() => {
+
+          window.location.href = "/";
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching email:", error);
+
+      // If there is any error fetching email, show the same alert
+      swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while fetching your email. Please try again later.",
+      });
+    }
+  };
 
   useEffect(() => {
     fetchEmailAndDemographics();

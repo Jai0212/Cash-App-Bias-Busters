@@ -7,8 +7,7 @@ import UserLogin from "./pages/Login.jsx";
 import Dashboard from "./dashboard.jsx";
 import Dashboard2 from "./dashboard2.jsx";
 import ChangePassword from "./pages/ChangePassword.jsx";
-import ForgotPassword from "./pages/ForgotPassword.jsx";
-import ResetPassword from "./pages/ResetPassword.jsx";
+import About from "./pages/About.jsx";
 
 // Importing Layouts
 import PublicLayout from "./Layout/PublicLayout.jsx";
@@ -24,8 +23,6 @@ const App = () => {
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<UserLogin />} /> {/* Default path renders UserLogin */}
           <Route path="signup" element={<UserSignup />} />
-          <Route path="forgot_password" element={<ForgotPassword />} />
-          <Route path="reset_password" element={<ResetPassword />} />
         </Route>
 
         {/* User Routes (Dashboard) */}
@@ -40,6 +37,9 @@ const App = () => {
         </Route>
         <Route path="/change-password" element={<UserLayout />}>
           <Route path="" element={<ChangePassword />} />
+        </Route>
+        <Route path="/about" element={<UserLayout />}>
+          <Route path="" element={<About />} />
         </Route>
       </Routes>
     </BrowserRouter>

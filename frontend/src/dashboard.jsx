@@ -5,6 +5,7 @@ import ControlButtons from "./ControlButtons";
 import { set } from "react-hook-form";
 import "./Dashboard.css";
 import axiosRetry from "axios-retry";
+import swal from 'sweetalert2';
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -39,24 +40,45 @@ const Dashboard = () => {
   const chartRef = useRef(null);
 
   const fetchEmailAndDemographics = async () => {
-    const url = "http://localhost:11355/api/get-email"; // Your email fetching URL
-    const token = localStorage.getItem("token"); // Token from local storage
+    const url = "http://127.0.0.1:5000/get-email"; // Your email fetching URL
 
     try {
       const emailResponse = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
         },
       });
 
       const emailData = await emailResponse.json();
       console.log(emailData);
 
-      setCurrUser(emailData || "");
+      if (emailData && emailData.email) {
+        setCurrUser(emailData.email); // Set the user email if it exists
+      } else {
+        setCurrUser("");
+
+        swal.fire({
+          icon: "error",
+          title: "Please log in first",
+          text: "You need to log in to access this page.",
+          confirmButtonText: "Go to Login",
+          timer: 5000,
+          timerProgressBar: true,
+        }).then(() => {
+
+          window.location.href = "/";
+        });
+      }
     } catch (error) {
       console.error("Error fetching email:", error);
+
+      // If there is any error fetching email, show the same alert
+      swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while fetching your email. Please try again later.",
+      });
     }
   };
 
@@ -568,29 +590,46 @@ const Dashboard = () => {
         the selected demographics.
       </div> */}
 
+      <div className="slider-container">
+        <label>Adjust the slider (0 to 1): {sliderValue}</label>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={sliderValue}
+          onChange={handleSliderChange}
+          tabIndex={1}
+        />
+      </div>
+
       <div className="chart-container-container">
         <div className="timeframe-buttons">
           <button
             className={timeframe === "day" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("day")}
+            tabIndex={2}
           >
             1 Day
           </button>
           <button
             className={timeframe === "week" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("week")}
+            tabIndex={3}
           >
             1 Week
           </button>
           <button
             className={timeframe === "month" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("month")}
+            tabIndex={4}
           >
             1 Month
           </button>
           <button
             className={timeframe === "year" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("year")}
+            tabIndex={5}
           >
             1 Year
           </button>
@@ -632,6 +671,7 @@ const Dashboard = () => {
               <select
                 onChange={handleDemographicChange}
                 value={selectedDemographic}
+                tabIndex={6}
               >
                 <option value="">Select</option>
                 {demographics.map((demo, index) => (
@@ -651,6 +691,7 @@ const Dashboard = () => {
                       key={idx}
                       onChange={(event) => handleValueChange(event, idx)}
                       value={selectedValues[idx] || ""}
+                      tabIndex={7}
                     >
                       <option value="">Select</option>
                       {demographicValues
@@ -671,6 +712,7 @@ const Dashboard = () => {
                 <select
                   onChange={handleSecondDemographicChange}
                   value={secondSelectedDemographic}
+                  tabIndex={8}
                 >
                   <option value="">Select</option>
                   {demographics
@@ -694,6 +736,7 @@ const Dashboard = () => {
                           handleValueChange(event, idx, true)
                         }
                         value={selectedSecondValues[idx] || ""}
+                        tabIndex={9}
                       >
                         <option value="">Select</option>
                         {secondDemographicValues
@@ -711,15 +754,17 @@ const Dashboard = () => {
             )}
           </div>
           <div className="generate-btn-container">
-            <button className="generate-button" onClick={handleGenerate}>
+            <button className="generate-button" onClick={handleGenerate} tabIndex={10}>
               Generate
             </button>
           </div>
         </div>
       </div>
+
       <div className="upload-buttons">
         <ControlButtons onDownload={handleDownload} />
       </div>
+
     </div>
   );
 };
