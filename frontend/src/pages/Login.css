@@ -3,15 +3,17 @@
   margin-top: 20px;
   text-align: center;
   color: #2e7d32;
+  background-color: #f6f2eb;
   /* Dark Green for heading */
 }
 
 h1 {
   font-weight: bold;
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 .alert-primary {
-  background-color: #e8f5e9;
+  background-color: #f6f2eb;
   /* Light Green background for form */
   padding: 30px;
   border-radius: 8px;
@@ -23,13 +25,13 @@ h1 {
 
 /* Adjusting the form input styles */
 .form-control {
-  border-color: #66bb6a;
+  border-color: #2e2e2e;
   /* Green border for inputs */
   border-radius: 8px;
 }
 
 .form-control:focus {
-  border-color: #388e3c;
+  border-color: #2e2e2e;
   box-shadow: 0 0 5px rgba(56, 142, 60, 0.5);
   /* Green shadow */
 }
@@ -38,7 +40,7 @@ h1 {
 .btn-primary {
   background-color: #4caf50;
   /* Green button */
-  border-color: #4caf50;
+  border-color: #2e2e2e;
   border-radius: 8px;
   /* Round button corners */
 }
@@ -46,13 +48,13 @@ h1 {
 .btn-primary:focus {
   background-color: #388e3c;
   /* Darker green on focus */
-  border-color: #388e3c;
+  border-color: #2e2e2e;
 }
 
 .btn-primary:hover {
   background-color: #388e3c;
   /* Dark green on hover */
-  border-color: #388e3c;
+  border-color: #2e2e2e;
 }
 
 .text-danger {
@@ -66,4 +68,8 @@ h1 {
     max-width: 500px;
     /* Increase max-width on larger screens */
   }
+}
+
+label {
+  font-family: "Roboto", Arial, sans-serif;
 }

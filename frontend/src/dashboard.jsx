@@ -589,6 +589,7 @@ const Dashboard = () => {
         <br />- Click **Generate** to display the graph showing insights across
         the selected demographics.
       </div> */}
+
       <div className="slider-container">
         <label>Adjust the slider (0 to 1): {sliderValue}</label>
         <input
@@ -633,15 +634,32 @@ const Dashboard = () => {
             1 Year
           </button>
         </div>
-
-        {Object.keys(graphData).length > 0 && (
-          <ChartComponent
-            ref={chartRef}
-            chartData={graphData}
-            sliderValue={sliderValue}
-            bias={maxValue()}
-          />
-        )}
+        <div>
+          <div className="slider-container">
+            <label className="slider-label-cont">
+              Adjust the slider (0 to 1): {sliderValue}
+            </label>
+            <input
+              className="slider-input"
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={sliderValue}
+              onChange={handleSliderChange}
+            />
+          </div>
+          <div>
+            {Object.keys(graphData).length > 0 && (
+              <ChartComponent
+                ref={chartRef}
+                chartData={graphData}
+                sliderValue={sliderValue}
+                bias={maxValue()}
+              />
+            )}
+          </div>
+        </div>
 
         <div className="select-demographics-2">
           <div className="demog-clas">
@@ -743,7 +761,10 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <ControlButtons onDownload={handleDownload} tabIndex={11}/>
+      <div className="upload-buttons">
+        <ControlButtons onDownload={handleDownload} />
+      </div>
+
     </div>
   );
 };

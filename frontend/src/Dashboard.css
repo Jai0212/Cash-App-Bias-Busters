@@ -7,7 +7,7 @@
   margin-left: auto;
   margin-right: auto;
   font-family: "Roboto", Arial, sans-serif;
-  border: 2px solid black;
+  /* border: 2px solid black; */
 }
 
 /* Container for buttons (timeframe selection) */
@@ -19,7 +19,7 @@
   margin-bottom: auto;
   height: 100%;
   justify-content: center;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .timeframe-buttons button {
@@ -46,20 +46,20 @@
   display: flex;
   flex-direction: column;
   /* margin-bottom: 20px; */
-  width: 15%;
-  margin-left: 30%;
-  /* margin-bottom: 3vh; */
+  margin-bottom: 2vh;
+  width: 30%;
+  margin-inline: auto;
 }
 
-.slider-label {
-  text-align: center;
-  font-size: 1000px;
+.slider-input {
+  width: 20%;
+}
+
+.slider-label-cont {
+  font-size: 18px;
   font-family: "Roboto", Arial, sans-serif;
-}
-
-.slider-container label {
-  font-size: 16px;
-  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
 }
 
 .slider-container input[type="range"] {
@@ -165,7 +165,8 @@
   display: grid;
   grid-template-columns: 10% auto 30%;
   justify-content: space-evenly;
-  border: 2px solid blueviolet;
+  margin-top: 5vh;
+  /* border: 2px solid blueviolet; */
 }
 
 /* Adjust widths as necessary */
@@ -176,12 +177,12 @@
 
 .chart-container {
   flex: 2; /* Take up twice as much space as .select-demographics */
-  border: 2px solid green;
+  /* border: 2px solid green; */
 }
 
 .demog-clas {
   text-align: center;
-  border: 2px solid red;
+  /* border: 2px solid red; */
 }
 
 .demog-clas > h2 {
@@ -203,7 +204,7 @@ html {
   flex-direction: column;
   justify-content: flex-start;
   height: 100%;
-  border: 2px solid blue;
+  /* border: 2px solid blue; */
 }
 
 .generate-btn-container {

@@ -1,0 +1,72 @@
+.navbar {
+  width: 100%; /* Ensure navbar stretches across the entire width */
+  top: 0; /* Align at the top */
+  left: 0;
+  z-index: 1000; /* Ensure the navbar is on top of other elements */
+  margin-top: 0%;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav .nav-item {
+  margin-right: 20px; /* Adjust spacing between navbar items */
+}
+
+.navbar-nav .nav-link {
+  font-size: 18px; /* Font size of links */
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: #fafafa; /* Set the link color */
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+  background-color: #ffcc00; /* Hover color for links */
+  /* border: 1px solid #fafafa; */
+  color: #2e2e2e;
+  font-weight: bold;
+  border-radius: 10px 10px 10px 10px;
+}
+
+.nav-link {
+  border-radius: 10px 10px 10px 10px;
+}
+
+.container-fluid {
+  background-color: #2e2e2e;
+  margin-top: 0%;
+}
+
+.navbar {
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+.container-fluid {
+  padding-top: 0;
+  display: flex;
+  padding-bottom: 1vh;
+}
+
+.cash-logo {
+  width: 2vw;
+  height: 4vh;
+  padding: 0;
+  margin-right: 5vw;
+}
+
+.menu-container {
+  display: flex;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+}
