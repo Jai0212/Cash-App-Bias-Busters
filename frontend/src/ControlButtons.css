@@ -2,9 +2,9 @@
 
 /* Container for the buttons and file inputs */
 .file-import-container {
-  margin-top: 20px;
   display: flex;
   justify-content: center;
+  margin-top: 4vh;
   /* Centers the content horizontally */
   align-items: center;
   /* Centers the content vertically */
@@ -24,7 +24,7 @@ input[type="file"] {
   cursor: pointer;
   border: 1px solid #2e2e2e;
   border-radius: 5px;
-  background-color: #2e2e2e;
+  background-color: #0088cc;
   color: #fafafa;
   border-radius: 10px 10px 10px 10px;
   transition: background-color 0.3s;
@@ -42,7 +42,7 @@ input[type="file"] {
 
 /* Style for the Import Models button */
 .file-import-container button:nth-child(1) {
-  background-color: #2e2e2e;
+  background-color: #0088cc;
   color: #fafafa;
 }
 
@@ -53,7 +53,7 @@ input[type="file"] {
 
 /* Style for the Import Dataset button */
 .file-import-container button:nth-child(2) {
-  background-color: #2e2e2e;
+  background-color: #0088cc;
   color: #fafafa;
 }
 
@@ -64,7 +64,7 @@ input[type="file"] {
 
 /* Style for the Download Graph button */
 .file-import-container button:nth-child(3) {
-  background-color: #2e2e2e;
+  background-color: #0088cc;
   color: #fafafa;
 }
 

@@ -22,12 +22,10 @@
 }
 
 .uploaded-files-list {
-  width: 80%;
-  background-color: #f9f9f9;
+  background-color: rgba(245, 222, 179, 0.5);
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px 10px 10px 10px;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .uploaded-files-list ul {
@@ -38,9 +36,11 @@
 
 .uploaded-files-list li {
   padding: 8px;
+
   border-bottom: 1px solid #e0e0e0;
   font-size: 14px;
   color: #333;
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 .uploaded-files-list li:last-child {
