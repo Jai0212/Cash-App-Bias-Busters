@@ -12,7 +12,11 @@ from app.use_cases import (
     UploadData,
 )
 from app.repositories import SqliteDbRepo, CsvFileRepo
-from app.use_cases.user_interactor import register_user_interactor, login_user_interactor, change_password_interactor
+from app.use_cases.user_interactor import (
+    register_user_interactor,
+    login_user_interactor,
+    change_password_interactor,
+)
 
 load_dotenv()
 
@@ -246,14 +250,50 @@ def generate_for_all_models():
 
         models = get_files_in_folder(curr_user)
 
-        temporary_output = []
-        for model in models:
-            temporary_output.append(
+        temporary_output = [
+            [
                 {
-                    "model": model,
-                    "output": 0.3,
-                }
-            )
+                    "race": 0.33,
+                    "gender": 0.55,
+                    "age": 0.62,
+                    "state": 0.2,
+                    "variance": 0.2,
+                    "mean": 0.4,
+                },
+                {
+                    "race": 0.45,
+                    "gender": 0.60,
+                    "age": 0.72,
+                    "state": 0.3,
+                    "variance": 0.25,
+                    "mean": 0.45,
+                },
+                {
+                    "race": 0.29,
+                    "gender": 0.53,
+                    "age": 0.68,
+                    "state": 0.25,
+                    "variance": 0.15,
+                    "mean": 0.35,
+                },
+                {
+                    "race": 0.50,
+                    "gender": 0.48,
+                    "age": 0.70,
+                    "state": 0.18,
+                    "variance": 0.22,
+                    "mean": 0.42,
+                },
+                {
+                    "race": 0.40,
+                    "gender": 0.58,
+                    "age": 0.65,
+                    "state": 0.22,
+                    "variance": 0.18,
+                    "mean": 0.38,
+                },
+            ]
+        ]
 
         return jsonify(temporary_output)
 
@@ -337,26 +377,38 @@ def home():
     return "Welcome to the Backend!"
 
 
-@app.route('/signup', methods=['POST'])
+@app.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
     print("Received data:", data)
-    firstname = data.get('firstname')
-    lastname = data.get('lastname')
-    email = data.get('email')
-    password = data.get('password')
-    confirm_password = data.get('confirmPassword')
+    firstname = data.get("firstname")
+    lastname = data.get("lastname")
+    email = data.get("email")
+    password = data.get("password")
+    confirm_password = data.get("confirmPassword")
     print(email)
 
     if password != confirm_password:
-        return jsonify({"code": 2, "error": True, "message": "Passwords do not match"}), 400
+        return (
+            jsonify({"code": 2, "error": True, "message": "Passwords do not match"}),
+            400,
+        )
 
-    if not firstname or not lastname or not email or not password or not confirm_password:
-        return jsonify({"code": 2, "error": True, "message": "All fields are required"}), 400
+    if (
+        not firstname
+        or not lastname
+        or not email
+        or not password
+        or not confirm_password
+    ):
+        return (
+            jsonify({"code": 2, "error": True, "message": "All fields are required"}),
+            400,
+        )
 
     try:
         response = register_user_interactor(firstname, lastname, email, password)
-        return jsonify({"code": 3, "error": False, "message": response['message']}), 201
+        return jsonify({"code": 3, "error": False, "message": response["message"]}), 201
 
     except ValueError as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 400
@@ -364,13 +416,16 @@ def signup():
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
 
+
 current_user_email = None
-@app.route('/login', methods=['POST'])
+
+
+@app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
     print(data)
-    email = data.get('email')
-    password = data.get('password')
+    email = data.get("email")
+    password = data.get("password")
 
     try:
         response = login_user_interactor(email, password)
@@ -380,20 +435,25 @@ def login():
             current_user_email = email
             print(current_user_email)
 
-        return jsonify({"code": 3, "error": False, "message": response['message']}), 200
+        return jsonify({"code": 3, "error": False, "message": response["message"]}), 200
     except ValueError as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 401
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
 
-@app.route('/logout', methods=['POST'])
+
+@app.route("/logout", methods=["POST"])
 def logout():
     global current_user_email
     current_user_email = None  # Reset the global variable to None
+
+    delete_files_except_model(current_user_email)
+
     print("User logged out, current_user_email reset to None.")
     return jsonify({"error": False, "message": "Logged out successfully."}), 200
 
-@app.route('/get-email', methods=['GET'])
+
+@app.route("/get-email", methods=["GET"])
 def get_email():
     global current_user_email
     if current_user_email is None:
@@ -401,25 +461,37 @@ def get_email():
     return jsonify({"email": current_user_email}), 200
 
 
-@app.route('/change_password', methods=['POST'])
+@app.route("/change_password", methods=["POST"])
 def change_password():
     data = request.get_json()
     print("Received data:", data)
 
     email = current_user_email
-    old_password = data.get('old_password')
-    new_password = data.get('new_password')
-    confirm_password = data.get('confirm_password')
+    old_password = data.get("old_password")
+    new_password = data.get("new_password")
+    confirm_password = data.get("confirm_password")
 
     if not email or not old_password or not new_password or not confirm_password:
-        return jsonify({"code": 2, "error": True, "message": "All fields are required"}), 400
+        return (
+            jsonify({"code": 2, "error": True, "message": "All fields are required"}),
+            400,
+        )
 
     if new_password != confirm_password:
-        return jsonify({"code": 2, "error": True, "message": "New password and confirm password do not match"}), 400
+        return (
+            jsonify(
+                {
+                    "code": 2,
+                    "error": True,
+                    "message": "New password and confirm password do not match",
+                }
+            ),
+            400,
+        )
 
     try:
         response = change_password_interactor(email, old_password, new_password)
-        return jsonify({"code": 3, "error": False, "message": response['message']}), 200
+        return jsonify({"code": 3, "error": False, "message": response["message"]}), 200
     except ValueError as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 400
     except Exception as e:

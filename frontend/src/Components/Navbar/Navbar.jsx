@@ -9,7 +9,7 @@ function Navbar() {
           <div>
             <img
               className="cash-logo"
-              src="src/assets/cash-app-logo.png"
+              src="/cash-app-logo.png"
               alt="CashApp's logo in green"
             />
           </div>

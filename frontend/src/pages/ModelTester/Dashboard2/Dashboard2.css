@@ -1,71 +1,54 @@
 .dashboard-main {
+  margin-top: 30px;
   padding: 20px;
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 30px; /* Space between sections */
 }
 
-.action-button-container {
-  margin: 20px 0;
+.button-container {
+  display: flex;
+  flex-direction: row; /* Align buttons horizontally */
+  justify-content: center; /* Center the buttons */
+  gap: 20px; /* Space between buttons */
+  width: 100%;
+}
+
+.upload-button,
+.generate-btn {
+  padding: 15px 30px;
+  font-size: 16px; /* Slightly smaller font size for balance */
+  border-radius: 10px;
+  border: 1px solid #2e2e2e;
+  cursor: pointer;
+  width: 200px;
+  text-align: center;
+  transition: all 0.3s ease; /* Smooth transition */
 }
 
 .upload-button {
   background-color: #0088cc;
-  border-radius: 10px 10px 10px 10px;
-  border: 1px solid #2e2e2e;
   color: #fafafa;
-  padding: 15px 20px;
-  font-size: 18px;
+  margin-bottom: 20px;
 }
 
 .upload-button:hover {
-  background-color: #fafafa;
-  color: #2e2e2e;
+  background-color: #005f88; /* Darker shade for hover */
+  color: #fff;
   font-weight: bold;
-  padding: 15px 20px;
-  border-radius: 10px 10px 10px 10px;
 }
 
 .generate-btn {
-  padding: 15px 20px;
-  font-size: 18px;
   background-color: #4caf50;
   color: #fff;
-  border: 1px solid #2e2e2e;
-  border-radius: 10px 10px 10px 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-family: "Roboto", Arial, sans-serif;
 }
 
 .generate-btn:hover {
   background-color: #45a049;
-}
-
-.result-section {
-  width: 80%;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.result-item {
-  padding: 10px 0;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 14px;
-}
-
-.result-item:last-child {
-  border-bottom: none;
-}
-
-.result-details {
-  display: flex;
-  gap: 5px;
+  transform: scale(1.05); /* Slightly enlarge */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
 }
 
 .model-name,
@@ -77,19 +60,118 @@
 .chart-section {
   width: 80%;
   background-color: #f6f2eb;
-  /* border: 1px solid #e0e0e0; */
   border-radius: 8px;
   padding: 20px;
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-}
-
-.button-container {
-  display: flex;
-  width: 25vw;
-  justify-content: space-between;
+  margin-top: 20px;
 }
 
 body,
 html {
   background-color: #f6f2eb;
+}
+
+.uploaded-files-list {
+  align-items: center;
+  justify-content: center;
+  background-color: #2e2e2e; /* Slightly more opaque */
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for better separation */
+  max-height: 300px;
+  overflow-y: auto; /* Allow vertical scrolling */
+  width: 200px; /* Match the width of the upload button */
+}
+
+.uploaded-files-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.uploaded-file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Space between file name and delete button */
+  /* padding: 10px 15px; */
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  color: #333;
+  font-family: "Roboto", Arial, sans-serif;
+  gap: 10px; /* Add a gap between file name and delete button */
+  padding: 15px;
+}
+
+.uploaded-file-item:last-child {
+  border-bottom: none;
+}
+
+.file-name {
+  color: #fafafa;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.delete-file-btn {
+  color: #fff;
+  background-color: #2e2e2e; /* Set a background color for the button */
+  border: none;
+  border-radius: 50%; /* Keep the circle shape */
+  width: 30px; /* Adjusted to better fit the "X" */
+  height: 30px; /* Adjusted to match width */
+  cursor: pointer;
+  font-size: 18px; /* Adjusted to match the size of the "X" */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 0; /* Ensure there's no extra padding */
+  text-align: center; /* Center the "X" */
+  line-height: 1; /* Prevent any vertical spacing issues */
+}
+
+.delete-file-btn:hover {
+  transform: scale(1.15); /* Slightly enlarge the button */
+}
+
+.delete-file-btn:focus {
+  outline: none;
+}
+
+.delete-file-btn:active {
+  transform: scale(1.05); /* Slightly shrink on click */
+}
+
+.result-section {
+  width: 80%;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.result-item {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent wrapping to new lines */
+  justify-content: space-between;
+  gap: 8px; /* Reduce the gap for more room */
+}
+
+.result-details {
+  flex: 1 1 13%; /* Adjusted width to fit seven items in one line */
+  display: flex;
+  align-items: center;
+  min-width: 90px; /* Optionally, reduce the minimum width */
+}
+
+.output-name {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.output-value {
+  font-style: italic;
 }
