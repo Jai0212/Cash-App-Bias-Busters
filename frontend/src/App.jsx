@@ -7,6 +7,7 @@ import UserLogin from "./pages/Login.jsx";
 import Dashboard from "./dashboard.jsx";
 import Dashboard2 from "./dashboard2.jsx";
 import ChangePassword from "./pages/ChangePassword.jsx";
+import About from "./pages/About.jsx";
 
 // Importing Layouts
 import PublicLayout from "./Layout/PublicLayout.jsx";
@@ -36,6 +37,9 @@ const App = () => {
         </Route>
         <Route path="/change-password" element={<UserLayout />}>
           <Route path="" element={<ChangePassword />} />
+        </Route>
+        <Route path="/about" element={<UserLayout />}>
+          <Route path="" element={<About />} />
         </Route>
       </Routes>
     </BrowserRouter>
