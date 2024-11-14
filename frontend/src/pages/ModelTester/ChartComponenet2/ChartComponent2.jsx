@@ -6,6 +6,8 @@ const ChartComponent2 = forwardRef(({ chartData }, ref) => {
     const chartRef = useRef(null);
     const myChartRef = useRef(null);
 
+    console.log("ChartData Model Tester", chartData);
+
     useEffect(() => {
         if (!chartData) return;
 

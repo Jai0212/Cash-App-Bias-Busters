@@ -65,6 +65,10 @@ const ControlButton2 = ({ setUploadedFiles }) => {
 
         if (!files.length) return; // If no files are selected, exit
 
+        if (uploadedFiles.length === 5) {
+            alert("You can only upload 5 models at a time.");
+            return;
+        }
         // Create a new array to hold the uploaded files and append the new ones
         const newUploadedFiles = [...uploadedFiles];
 
@@ -120,6 +124,39 @@ const ControlButton2 = ({ setUploadedFiles }) => {
         }
     };
 
+    const handleDeleteFile = (index) => {
+        const fileName = uploadedFiles[index];
+
+        // Remove the file from the local state
+        const updatedFiles = uploadedFiles.filter((_, i) => i !== index);
+
+        setUploadedFiles(updatedFiles);
+        setUploadedFilesState(updatedFiles); // Update local state as well
+
+        // Optionally, delete the file from the server
+        // If you have an API for deleting files, you can call it here
+        const deleteFile = async () => {
+            try {
+                const response = await fetch(`${VITE_BACKEND_URL}/api/delete-model`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ curr_user: currUser, file_name: fileName }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error deleting file');
+                }
+                console.log(`Successfully deleted ${fileName}`);
+            } catch (error) {
+                console.error('Error during file deletion:', error);
+            }
+        };
+
+        deleteFile();
+    };
+
     return (
         <div className="upload-model-container">
             {/* Invisible file input for model */}
@@ -135,17 +172,24 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             <button className="upload-button" onClick={handleModelUploadClick}>Upload Model(s)</button>
 
             {/* Display the uploaded files below */}
-            {uploadedFiles.length > 0 && <div className="uploaded-files-list">
-                {uploadedFiles.length > 0 && (
+            {uploadedFiles.length > 0 && (
+                <div className="uploaded-files-list">
                     <ul>
                         {uploadedFiles.map((fileName, index) => (
-                            <li key={index}>
-                                <span role="img" aria-label="file-icon">📂</span> {fileName}
+                            <li key={index} className="uploaded-file-item">
+                                <span role="img" aria-label="file-icon" className="file-icon">📂</span>
+                                <span className="file-name">{fileName}</span>
+                                <button
+                                    className="delete-file-btn"
+                                    onClick={() => handleDeleteFile(index)} // Handle file deletion
+                                >
+                                    ❌
+                                </button>
                             </li>
                         ))}
                     </ul>
-                )}
-            </div>}
+                </div>
+            )}
         </div>
     );
 };
