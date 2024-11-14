@@ -1,0 +1,54 @@
+/* Dashboard container */
+.chart-container-container {
+    position: relative; /* Makes the dashboard a positioned container for the button */
+    height: 100vh; /* Adjust as needed */
+    padding: 20px; /* For space around the content */
+    background-color: #f4f4f4; /* Example background */
+}
+/* Modal styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 900px; /* Increase the maximum width */
+    width: 90%; /* You can adjust this value based on your preference */
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Close button in the bottom-right corner */
+.close-button {
+    position: absolute;
+    right: 20px; /* Distance from the right edge */
+    bottom: 20px; /* Distance from the bottom edge */
+    background: #f44336; /* Red background for button */
+    color: white; /* White text */
+    font-size: 16px;
+    border: none;
+    border-radius: 50%; /* Circular button */
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Optional: Add hover effect */
+.close-button:hover {
+    background-color: #e53935;
+}
