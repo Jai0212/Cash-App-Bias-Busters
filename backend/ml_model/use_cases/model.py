@@ -16,6 +16,7 @@ sys.path.append(project_root)
 from ml_model.repository.file_reader import FileReader
 from ml_model.entities.datapoint_entity import DataPoint
 from ml_model.repository.model_saver import save_model
+from ml_model.repository.fairness import FairnessEvaluator
 from ml_model.repository.data_preprocessing import DataProcessor
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -55,7 +56,8 @@ def model() -> list:
         else x_test[[feature1, inputs_n.columns[1]]]
 
     # Step 7: Evaluate fairness using Fairlearn's MetricFrame
-    metric_frame = evaluate_fairness(y_test, y_pred, sensitive_features)
+    fairness_evaluator = FairnessEvaluator(y_test, y_pred, sensitive_features)
+    metric_frame = fairness_evaluator.evaluate_fairness()
 
     # Step 8: Save the model
     save_model(best_clf, x_test, y_test)
