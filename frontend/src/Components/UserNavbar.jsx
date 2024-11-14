@@ -8,12 +8,10 @@ function UserNavbar() {
 
   const handleLogout = async () => {
     try {
-      // Make a POST request to the logout endpoint
       const response = await axios.post("http://127.0.0.1:5000/logout");
 
-      // Check if the response is successful
       if (response.data.error === false) {
-        navigate("/"); // Redirect to the homepage or login page
+        navigate("/");
       } else {
         console.error("Logout failed:", response.data.message);
       }
@@ -45,12 +43,17 @@ function UserNavbar() {
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/dashboard2">
-                    Dashboard 2
+                    Model Tester
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/change-password">
                     Change Password
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/about">
+                    About Us
                   </Link>
                 </li>
               </ul>
