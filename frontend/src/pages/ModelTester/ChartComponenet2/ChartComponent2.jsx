@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import Chart from "chart.js/auto";
-import './ChartComponent.css';
+import './ChartComponent2.css';
 
 const ChartComponent2 = forwardRef(({ chartData }, ref) => {
     const chartRef = useRef(null);

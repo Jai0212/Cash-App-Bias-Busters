@@ -11,24 +11,45 @@ const ControlButtons = ({ onDownload }) => {
   const fileInputRef2 = useRef(null); // For dataset import
 
   const fetchEmailAndDemographics = async () => {
-    const url = "http://localhost:11355/api/get-email"; // Your email fetching URL
-    const token = localStorage.getItem('token'); // Token from local storage
+    const url = `${VITE_BACKEND_URL}/get-email`;
 
     try {
       const emailResponse = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token,
         },
       });
 
       const emailData = await emailResponse.json();
+      console.log(emailData);
 
-      setCurrUser(emailData || "");
+      if (emailData && emailData.email) {
+        setCurrUser(emailData.email); // Set the user email if it exists
+      } else {
+        setCurrUser("");
 
+        swal.fire({
+          icon: "error",
+          title: "Please log in first",
+          text: "You need to log in to access this page.",
+          confirmButtonText: "Go to Login",
+          timer: 5000,
+          timerProgressBar: true,
+        }).then(() => {
+
+          window.location.href = "/";
+        });
+      }
     } catch (error) {
       console.error("Error fetching email:", error);
+
+      // If there is any error fetching email, show the same alert
+      swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "An error occurred while fetching your email. Please try again later.",
+      });
     }
   };
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import ChartComponent2 from "./ChartComponent2.jsx";
-import ControlButton2 from "./ControlButtons2";
-import UserNavbar from "./Components/UserNavbar";
+import ChartComponent2 from "../ChartComponenet2/ChartComponent2.jsx";
+import ControlButton2 from "../ControlButtons2/ControlButtons2.jsx";
 import "./Dashboard2.css";
 import swal from 'sweetalert2';
 
@@ -17,7 +16,7 @@ const Dashboard2 = () => {
   const chartRef = useRef(null);
 
   const fetchEmailAndDemographics = async () => {
-    const url = "http://127.0.0.1:5000/get-email"; // Your email fetching URL
+    const url = `${VITE_BACKEND_URL}/get-email`;
 
     try {
       const emailResponse = await fetch(url, {

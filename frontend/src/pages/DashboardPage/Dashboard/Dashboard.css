@@ -22,7 +22,7 @@
 }
 
 .timeframe-buttons button {
-  width: 100%;
+  width: 90%;
   padding: 15px 20px;
   font-size: 17px;
   cursor: pointer;
@@ -102,6 +102,16 @@
   margin-inline: auto;
 }
 
+.slider-value {
+  font-size: 20px;
+  font-family: "Roboto", Arial, sans-serif;
+  text-align: center;
+  margin-top: 1vh;
+  color: #2e2e2e;
+  font-weight: bold; /* Makes the text bold */
+  letter-spacing: 1px; /* Increases letter spacing for a modern look */
+}
+
 /* Style for the "Generate" button */
 .generate-button {
   width: 95%;
@@ -113,15 +123,17 @@
   border-radius: 10px 10px 10px 10px;
   background-color: #4caf50;
   color: white;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; /* Add transition for transform and shadow */
   margin-top: 1vh;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 .generate-button:hover {
   background-color: #45a049;
-  font-weight: bold;
+  transform: scale(1.03); /* Slightly enlarge the button */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
 }
+
 
 .generate-button:focus {
   outline: 3px solid #0088cc;
@@ -171,8 +183,16 @@
   background-color: #0088cc !important;
   color: white !important;
   border: 1px solid #0088cc !important;
-  scale: 1.1;
+  transform: scale(1.1); /* Initial scale */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
+
+.active-button:hover {
+  background-color: #edf2f4 !important;
+  color: #2e2e2e !important;
+  font-weight: bold !important;
+}
+
 
 .chart-container-container {
   /* margin-inline: 2vw; */
@@ -235,6 +255,8 @@ html {
 } */
 
 .demographic-heading {
+  margin-top: 3px;
+  margin-bottom: 1px;
   font-size: 18px;
   text-align: center;
 }

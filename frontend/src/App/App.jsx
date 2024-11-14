@@ -2,16 +2,16 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Importing Pages
-import UserSignup from "./pages/Signup.jsx";
-import UserLogin from "./pages/Login.jsx";
-import Dashboard from "./dashboard.jsx";
-import Dashboard2 from "./dashboard2.jsx";
-import ChangePassword from "./pages/ChangePassword.jsx";
-import About from "./pages/About.jsx";
+import UserSignup from "../pages/UserSignup/UserSignup.jsx";
+import UserLogin from "../pages/UserLogin/UserLogin.jsx";
+import Dashboard from "../pages/DashboardPage/Dashboard/Dashboard.jsx";
+import Dashboard2 from "../pages/ModelTester/Dashboard2/Dashboard2.jsx";
+import ChangePassword from "../pages/ChangePassword/ChangePassword.jsx";
+import AboutPage from "../pages/AboutPage/AboutPage.jsx";
 
 // Importing Layouts
-import PublicLayout from "./Layout/PublicLayout.jsx";
-import UserLayout from "./Layout/UserLayout.jsx";
+import PublicLayout from "../Layout/PublicLayout.jsx";
+import UserLayout from "../Layout/UserLayout.jsx";
 
 const App = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -32,14 +32,14 @@ const App = () => {
             element={<Dashboard VITE_BACKEND_URL={VITE_BACKEND_URL} />}
           />
         </Route>
-        <Route path="/dashboard2" element={<UserLayout />}>
+        <Route path="/model-tester" element={<UserLayout />}>
           <Route path="" element={<Dashboard2 />} />
         </Route>
         <Route path="/change-password" element={<UserLayout />}>
           <Route path="" element={<ChangePassword />} />
         </Route>
         <Route path="/about" element={<UserLayout />}>
-          <Route path="" element={<About />} />
+          <Route path="" element={<AboutPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

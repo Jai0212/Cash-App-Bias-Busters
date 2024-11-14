@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import ChartComponent from "./ChartComponent";
-import ControlButtons from "./ControlButtons";
+import ChartComponent from "../ChartComponenet/ChartComponent.jsx";
+import ControlButtons from "../ControlButtons/ControlButtons.jsx";
 import { set } from "react-hook-form";
 import "./Dashboard.css";
-import Modal from './Modal.jsx';
+import Modal from '../../../Components/Modal/Modal.jsx';
 import axiosRetry from "axios-retry";
 import swal from 'sweetalert2';
 
@@ -40,12 +40,11 @@ const Dashboard = () => {
 
   const chartRef = useRef(null);
 
-
   const openModal = () => setIsModalOpen(true);  // Open the modal
   const closeModal = () => setIsModalOpen(false); // Close the modal
 
   const fetchEmailAndDemographics = async () => {
-    const url = "http://127.0.0.1:5000/get-email"; // Your email fetching URL
+    const url = `${VITE_BACKEND_URL}/get-email`;
 
     try {
       const emailResponse = await fetch(url, {
@@ -420,7 +419,7 @@ const Dashboard = () => {
       })
       .then((response) => {
         console.log("Data generated:", response.data); // TODO Display data on chart
-        // setGraphData(response.data);
+        setGraphData(response.data);
       })
       .catch((err) => {
         console.error("Error generating data:", err);
@@ -448,15 +447,15 @@ const Dashboard = () => {
   const modifiedGraphData =
     Object.keys(graphData).length === 0
       ? {
-          labels: ["Default Label 1", "Default Label 2", "Default Label 3"], // Default labels
-          datasets: [
-            {
-              label: "Default Data",
-              data: [0, 0, 0], // Default y values set to 0
-              borderColor: "rgba(75, 192, 192, 1)",
-            },
-          ],
-        }
+        labels: ["Default Label 1", "Default Label 2", "Default Label 3"], // Default labels
+        datasets: [
+          {
+            label: "Default Data",
+            data: [0, 0, 0], // Default y values set to 0
+            borderColor: "rgba(75, 192, 192, 1)",
+          },
+        ],
+      }
       : graphData;
 
   useEffect(() => {
@@ -582,64 +581,50 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-
-      <div className="slider-container">
-        <label>Adjust the slider (0 to 1): {sliderValue}</label>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={sliderValue}
-          onChange={handleSliderChange}
-          tabIndex={1}
-        />
-      </div>
+      {/* <div className="text-container">
+        - Click **Import Model** to upload the model file you want to use for
+        analysis.
+        <br />- Click **Import Dataset** to upload your data file for
+        processing.
+        <br />- Select a primary **demographic category** (e.g., race, gender,
+        age) from the dropdown.
+        <br />- Select a **second demographic category** for deeper
+        segmentation.
+        <br />- Click **Generate** to display the graph showing insights across
+        the selected demographics.
+      </div> */}
 
       <div className="chart-container-container">
-
         <div className="timeframe-buttons">
           <button
-              className={timeframe === "day" ? "active-button" : ""}
-              onClick={() => handleTimeframeChange("day")}
             className={timeframe === "day" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("day")}
-            tabIndex={2}
           >
             1 Day
           </button>
           <button
-              className={timeframe === "week" ? "active-button" : ""}
-              onClick={() => handleTimeframeChange("week")}
             className={timeframe === "week" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("week")}
-            tabIndex={3}          >
+          >
             1 Week
           </button>
           <button
-              className={timeframe === "month" ? "active-button" : ""}
-              onClick={() => handleTimeframeChange("month")}
             className={timeframe === "month" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("month")}
-            tabIndex={4}
           >
             1 Month
           </button>
           <button
-              className={timeframe === "year" ? "active-button" : ""}
-              onClick={() => handleTimeframeChange("year")}
             className={timeframe === "year" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("year")}
-            tabIndex={5}
           >
             1 Year
           </button>
         </div>
-
         <div>
           <div className="slider-container">
             <label className="slider-label-cont">
-              Adjust the slider (0 to 1): {sliderValue}
+              Adjust the slider (0 to 1): <span className="slider-value">{sliderValue}</span>
             </label>
             <input
               className="slider-input"
@@ -671,17 +656,14 @@ const Dashboard = () => {
             <div className="title"></div>
             <div className="select-container">
               <select
-                  onChange={handleDemographicChange}
-                  value={selectedDemographic}
                 onChange={handleDemographicChange}
                 value={selectedDemographic}
-                tabIndex={6}
               >
                 <option value="">Select</option>
                 {demographics.map((demo, index) => (
-                    <option key={index} value={demo}>
-                      {demo}
-                    </option>
+                  <option key={index} value={demo}>
+                    {demo}
+                  </option>
                 ))}
               </select>
 
@@ -695,7 +677,6 @@ const Dashboard = () => {
                       key={idx}
                       onChange={(event) => handleValueChange(event, idx)}
                       value={selectedValues[idx] || ""}
-                      tabIndex={7}
                     >
                       <option value="">Select</option>
                       {demographicValues
@@ -716,7 +697,6 @@ const Dashboard = () => {
                 <select
                   onChange={handleSecondDemographicChange}
                   value={secondSelectedDemographic}
-                  tabIndex={8}
                 >
                   <option value="">Select</option>
                   {demographics
@@ -731,30 +711,15 @@ const Dashboard = () => {
                 {secondSelectedDemographic && selectedDemographic && (
                   <div className="select-options">
                     <h3 className="demographic-heading">
-                      Values for 1st Demographic
+                      Values for 2nd Demographic
                     </h3>
                     {[...Array(4)].map((_, idx) => (
-                        <select
-                            key={idx}
-                            onChange={(event) => handleValueChange(event, idx)}
-                            value={selectedValues[idx] || ""}
-                        >
-                          <option value="">Select</option>
-                          {demographicValues
-                              .filter((val) => !selectedSecondValues.includes(val))
-                              .map((val, index) => (
-                                  <option key={index} value={val}>
-                                    {val}
-                                  </option>
-                              ))}
-                        </select>
                       <select
                         key={idx}
                         onChange={(event) =>
                           handleValueChange(event, idx, true)
                         }
                         value={selectedSecondValues[idx] || ""}
-                        tabIndex={9}
                       >
                         <option value="">Select</option>
                         {secondDemographicValues
@@ -767,70 +732,22 @@ const Dashboard = () => {
                       </select>
                     ))}
                   </div>
-              )}
-            </div>
-
-            {selectedDemographic && (
-                <div className="select-container">
-                  <select
-                      onChange={handleSecondDemographicChange}
-                      value={secondSelectedDemographic}
-                  >
-                    <option value="">Select</option>
-                    {demographics
-                        .filter((demo) => demo !== selectedDemographic)
-                        .map((demo, index) => (
-                            <option key={index} value={demo}>
-                              {demo}
-                            </option>
-                        ))}
-                  </select>
-
-                  {secondSelectedDemographic && selectedDemographic && (
-                      <div className="select-options">
-                        <h3 className="demographic-heading">
-                          Values for 2nd Demographic
-                        </h3>
-                        {[...Array(4)].map((_, idx) => (
-                            <select
-                                key={idx}
-                                onChange={(event) =>
-                                    handleValueChange(event, idx, true)
-                                }
-                                value={selectedSecondValues[idx] || ""}
-                            >
-                              <option value="">Select</option>
-                              {secondDemographicValues
-                                  .filter((val) => !selectedValues.includes(val))
-                                  .map((val, index) => (
-                                      <option key={index} value={val}>
-                                        {val}
-                                      </option>
-                                  ))}
-                            </select>
-                        ))}
-                      </div>
-                  )}
-                </div>
+                )}
+              </div>
             )}
           </div>
-          <div className="generate-btn-container">
-            <button className="generate-button" onClick={handleGenerate} tabIndex={10}>
+          {selectedDemographic && <div className="generate-btn-container">
+            <button className="generate-button" onClick={handleGenerate}>
               Generate
             </button>
-          </div>
-
+          </div>}
         </div>
-
         <button className="info-button" onClick={openModal}>?</button>
         {isModalOpen && <Modal closeModal={closeModal} />}
       </div>
-
       <div className="upload-buttons">
         <ControlButtons onDownload={handleDownload} />
-        <ControlButtons onDownload={handleDownload} tabIndex={11}/>
       </div>
-
     </div>
   );
 };
