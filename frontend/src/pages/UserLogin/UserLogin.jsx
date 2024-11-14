@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import "../pages/Login.css";
+import "./UserLogin.css";
 
 const UserLogin = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const UserLogin = () => {
   const handleForm = (data) => {
     console.log(data);
 
-    const url = "http://127.0.0.1:5000/login";
+    const url = `${VITE_BACKEND_URL}/login`;
 
     fetch(url, {
       method: "POST",
@@ -44,6 +44,7 @@ const UserLogin = () => {
                   timer: 1500,
                 })
                 .then(() => {
+                  console.log("Login successful");
                   navigate("/dashboard");
                 });
           }

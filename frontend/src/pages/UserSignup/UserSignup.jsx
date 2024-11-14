@@ -3,9 +3,11 @@ import { ErrorMessage } from "@hookform/error-message";
 import swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../pages/Signup.css";
+import "./UserSignup.css";
 
 const UserSignup = () => {
+  const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const navigate = useNavigate();
 
   const {
@@ -26,7 +28,7 @@ const UserSignup = () => {
       return;
     }
 
-    const url = "http://127.0.0.1:5000/signup";
+    const url = `${VITE_BACKEND_URL}/signup`;
 
     fetch(url, {
       method: "POST",

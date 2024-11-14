@@ -4,11 +4,13 @@ import axios from "axios";  // You will need to install axios for making API req
 import "./UserNavbar.css";
 
 function UserNavbar() {
+  const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:5000/logout");
+      const response = await axios.post(`${VITE_BACKEND_URL}/logout`);
 
       if (response.data.error === false) {
         navigate("/");
@@ -36,24 +38,24 @@ function UserNavbar() {
                 id="navbarSupportedContent"
             >
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                  <Link className="nav-link" to="/about">
+                    About Us
+                  </Link>
+                </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/dashboard">
                     Dashboard
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/dashboard2">
+                  <Link className="nav-link" to="/model-tester">
                     Model Tester
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/change-password">
                     Change Password
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/about">
-                    About Us
                   </Link>
                 </li>
               </ul>

@@ -4,6 +4,8 @@ import swal from 'sweetalert2';
 import { useState } from 'react';
 
 const ChangePassword = () => {
+    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
     const {
         register,
         handleSubmit,
@@ -13,7 +15,7 @@ const ChangePassword = () => {
     const handleForm = (data) => {
         console.log(data);
 
-        const url = "http://127.0.0.1:5000/change_password";
+        const url = `${VITE_BACKEND_URL}/change_password`;
 
         fetch(url, {
             method: "POST",

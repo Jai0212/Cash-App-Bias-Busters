@@ -1,0 +1,79 @@
+/* UserNavbar.css */
+
+/* Keeping the current navbar container styles */
+.container-fluid {
+  background-color: #2e2e2e;
+  margin-top: 0;
+  display: flex;
+  justify-content: flex-start; /* Start aligning the items from the left */
+  align-items: center; /* Center items vertically */
+  padding: 1vh 2vw; /* Add padding for spacing */
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align the nav items to the left */
+  flex-grow: 1; /* Allow the navbar items to take up available space */
+}
+
+.navbar-nav .nav-item {
+  margin-right: 20px; /* Adjust spacing between navbar items */
+}
+
+/* Adjust logo's position and ensure it doesn't push the content too much */
+.cash-logo {
+  width: 2.3vw;
+  height: 4vh;
+  padding: 0;
+  margin-right: 2vw; /* Adjust margin so that logo doesn't push content too far */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-container {
+  display: flex;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+}
+
+.btn-container {
+  padding-bottom: 0.5vh;
+  padding-top: 0.5vh;
+}
+
+.btn-outline-danger {
+  margin-left: auto; /* Keep logout button on the right */
+}
+
+.logout-btn {
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 18px;
+}
+
+/* Logo hover effect */
+.cash-logo:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Navbar link hover effect */
+.navbar-light .navbar-nav .nav-link:hover {
+  background-color: #ffcc00;
+  border: 1px solid #fafafa;
+  color: #2e2e2e;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.logout-btn:hover {
+  border-radius: 10px;
+  font-weight: bold;
+  color: #fafafa;
+}
+
+/* Ensure the body and html have no padding/margin */
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
