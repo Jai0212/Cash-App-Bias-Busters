@@ -93,17 +93,16 @@ def model():
 
     # Evaluate fairness
     metric_frame = evaluate_fairness(y_test, y_pred, sensitive_features)
-
     # Save the model
     save_model(best_clf, x_test, y_test)
 
     # Create, clean, and sort bias dictionary
     if file_reader.single_column_check:
-        data_point_list = create_bias_data_points_single(feature1, inputs_n, metric_frame)
+        data_point_list = create_bias_data_points_single(feature1, mappings, metric_frame)
     else:
-        data_point_list = create_bias_data_points_multiple(feature1, inputs_n, metric_frame)
+        data_point_list = create_bias_data_points_multiple(feature1, inputs_n, mappings, metric_frame)
 
-    data_point_list = clean_datapoints(filereader, data_point_list)
+    data_point_list = clean_datapoints(file_reader, data_point_list)
 
     print(data_point_list)
 
@@ -143,7 +142,6 @@ def evaluate_fairness(y_true, y_pred, sensitive_features) -> MetricFrame:
         y_pred=y_pred,
         sensitive_features=sensitive_features,
     )
-
     return metric_frame
 
 
