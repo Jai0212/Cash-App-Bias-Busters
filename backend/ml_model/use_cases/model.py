@@ -16,59 +16,95 @@ sys.path.append(project_root)
 from ml_model.repository.file_reader import FileReader
 from ml_model.entities.datapoint_entity import DataPoint
 from ml_model.repository.model_saver import save_model
-from ml_model.repository.fairness import FairnessEvaluator
 from ml_model.repository.data_preprocessing import DataProcessor
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")
 
+from sklearn.model_selection import train_test_split, KFold
+from sklearn.exceptions import NotFittedError
 
-def model() -> list:
+def safe_train_test_split(inputs, target, test_size=0.2, random_state=48):
+    try:
+        x_train, x_test, y_train, y_test = train_test_split(
+            inputs, target, test_size=test_size, random_state=random_state
+        )
+        return x_train, x_test, y_train, y_test
+    except ValueError as e:
+        if "With n_samples=0" in str(e):
+            print("Not enough samples to split. Returning None.")
+            return None  # Returning None when there aren't enough samples
+        else:
+            raise e  # Re-raise any other ValueErrors
+
+def safe_grid_search(x_train, y_train):
+    try:
+        # Perform grid search
+        clf = DecisionTreeClassifier()
+        param_grid = {
+            "criterion": ["gini", "entropy"],
+            "max_depth": [None] + list(range(1, 11)),
+            "min_samples_split": [2, 5, 10],
+        }
+        grid_search = GridSearchCV(clf, param_grid, cv=5, scoring="accuracy")
+        grid_search.fit(x_train, y_train)
+        return grid_search.best_estimator_
+    except ValueError as e:
+        if "Cannot have number of splits n_splits" in str(e):
+            print("Not enough samples for cross-validation. Returning None.")
+            return None  # Returning None when there aren't enough samples
+        else:
+            raise e  # Re-raise other ValueErrors
+
+def model():
     """
     Calls all the appropriate functions to fit a model and do parameter search.
     Then returns the findings to be displayed by the graphs.
     """
-    # Step 1: Load and preprocess data
+    # Load and preprocess data
     file_reader = FileReader(csv_file_path)
     df_dropped, inputs, target = file_reader.read_file()
 
-    # Step 2: Encode categorical columns using DataProcessor
+    # Encode categorical columns using DataProcessor
     data_processor = DataProcessor(inputs)
     inputs_encoded = data_processor.encode_categorical_columns()
     mappings = data_processor.get_mappings()
     inputs_n = data_processor.drop_categorical_columns()
 
-    # Step 3: Split the data into training and test sets
-    x_train, x_test, y_train, y_test = train_test_split(
-        inputs_n, target, test_size=0.2, random_state=48
-    )
+    # Split data
+    split_data = safe_train_test_split(inputs_n, target)
+    if split_data is None:
+        return None  # Early exit if there aren't enough samples
 
-    # Step 4: Define and tune the model using grid search
-    best_clf = grid_search(x_train, y_train)
+    x_train, x_test, y_train, y_test = split_data
 
-    # Step 5: Make predictions
+    # Perform grid search for hyperparameter tuning
+    best_clf = safe_grid_search(x_train, y_train)
+    if best_clf is None:
+        return None  # Early exit if grid search fails due to insufficient samples
+
+    # Make predictions
     y_pred = best_clf.predict(x_test)
-    print("Inputs:" + str(inputs_n))
-    feature1 = inputs_n.columns[0]
 
-    # Step 6: Handle sensitive features for fairness evaluation
+    # Handle sensitive features for fairness evaluation
+    feature1 = inputs_n.columns[0]
     sensitive_features = x_test[[feature1]] if file_reader.single_column_check \
         else x_test[[feature1, inputs_n.columns[1]]]
 
-    # Step 7: Evaluate fairness using Fairlearn's MetricFrame
-    fairness_evaluator = FairnessEvaluator(y_test, y_pred, sensitive_features)
-    metric_frame = fairness_evaluator.evaluate_fairness()
+    # Evaluate fairness
+    metric_frame = evaluate_fairness(y_test, y_pred, sensitive_features)
 
-    # Step 8: Save the model
+    # Save the model
     save_model(best_clf, x_test, y_test)
 
-    # Step 9: Create, clean, and sort bias dictionary
+    # Create, clean, and sort bias dictionary
     data_point_list = create_bias_data_points(feature1, inputs_n, mappings, metric_frame, file_reader.single_column_check)
-    data_point_list = clean_datapoints(data_point_list)
+    data_point_list = clean_datapoints(filereader, data_point_list)
 
     print(data_point_list)
 
     return data_point_list
+
 
 
 def grid_search(x_train, y_train) -> object:
@@ -108,11 +144,15 @@ def evaluate_fairness(y_true, y_pred, sensitive_features) -> MetricFrame:
     return metric_frame
 
 
-def clean_datapoints(data_point_list: list[DataPoint]) -> list[DataPoint]:
+def clean_datapoints(filereader: FileReader, data_point_list: list[DataPoint]) -> list[DataPoint]:
     """
     Cleans the list of DataPoint objects from instances with NaN in them.
     """
-    return [x for x in data_point_list if x.feature1 != "NaN" and x.feature2 != "NaN"]
+    if filereader.single_column_check:
+        return [x for x in data_point_list if
+                x.feature1 != "NaN"]
+
+    return [x for x in data_point_list if x.feature1 != "NaN" and  x.feature2 != "NaN"]
 
 
 def is_nan_in_datapoint(data_point) -> bool:
@@ -122,7 +162,33 @@ def is_nan_in_datapoint(data_point) -> bool:
     return any(pd.isna(value) for value in data_point.__dict__.values())
 
 
-def create_bias_data_points(
+def create_bias_data_points_single(
+        feature1: str,
+        inputs: pd.DataFrame,
+        mappings: dict,
+        metric_frame: MetricFrame,
+        single_column_check: bool = False) -> list:
+    """
+    Creates a list of DataPoint entities with metrics by feature group,
+    discarding any DataPoints with NaN values.
+    """
+    data_points = []
+
+    for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
+        f1_label = get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
+
+        if single_column_check:
+            data_point = single_column_datapoint(metrics, mappings, f1_label)
+        else:
+            data_point = multiple_column_datapoint(metrics, f1_label, mappings, feature2_code, inputs)
+
+        # Only append if there are no NaN values in the DataPoint
+        if not is_nan_in_datapoint(data_point):
+            data_points.append(data_point)
+
+    return data_points
+
+def create_bias_data_points_multiple(
         feature1: str,
         inputs: pd.DataFrame,
         mappings: dict,
