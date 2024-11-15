@@ -98,13 +98,16 @@ def model():
     save_model(best_clf, x_test, y_test)
 
     # Create, clean, and sort bias dictionary
-    data_point_list = create_bias_data_points(feature1, inputs_n, mappings, metric_frame, file_reader.single_column_check)
+    if file_reader.single_column_check:
+        data_point_list = create_bias_data_points_single(feature1, inputs_n, metric_frame)
+    else:
+        data_point_list = create_bias_data_points_multiple(feature1, inputs_n, metric_frame)
+
     data_point_list = clean_datapoints(filereader, data_point_list)
 
     print(data_point_list)
 
     return data_point_list
-
 
 
 def grid_search(x_train, y_train) -> object:
@@ -164,36 +167,32 @@ def is_nan_in_datapoint(data_point) -> bool:
 
 def create_bias_data_points_single(
         feature1: str,
-        inputs: pd.DataFrame,
         mappings: dict,
         metric_frame: MetricFrame,
-        single_column_check: bool = False) -> list:
+        ) -> list:
     """
     Creates a list of DataPoint entities with metrics by feature group,
     discarding any DataPoints with NaN values.
     """
     data_points = []
 
-    for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
+    for feature1_code, metrics in metric_frame.by_group.iterrows():
+
         f1_label = get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
+        data_point = single_column_datapoint(metrics, mappings, f1_label)
 
-        if single_column_check:
-            data_point = single_column_datapoint(metrics, mappings, f1_label)
-        else:
-            data_point = multiple_column_datapoint(metrics, f1_label, mappings, feature2_code, inputs)
-
-        # Only append if there are no NaN values in the DataPoint
         if not is_nan_in_datapoint(data_point):
             data_points.append(data_point)
 
     return data_points
 
+
 def create_bias_data_points_multiple(
         feature1: str,
         inputs: pd.DataFrame,
         mappings: dict,
-        metric_frame: MetricFrame,
-        single_column_check: bool = False) -> list:
+        metric_frame: MetricFrame
+        ) -> list:
     """
     Creates a list of DataPoint entities with metrics by feature group,
     discarding any DataPoints with NaN values.
@@ -203,10 +202,7 @@ def create_bias_data_points_multiple(
     for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
         f1_label = get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
 
-        if single_column_check:
-            data_point = single_column_datapoint(metrics, mappings, f1_label)
-        else:
-            data_point = multiple_column_datapoint(metrics, f1_label, mappings, feature2_code, inputs)
+        data_point = multiple_column_datapoint(metrics, f1_label, mappings, feature2_code, inputs)
 
         # Only append if there are no NaN values in the DataPoint
         if not is_nan_in_datapoint(data_point):
