@@ -7,6 +7,7 @@ import "./Dashboard.css";
 import Modal from '../../../Components/Modal/Modal.jsx';
 import axiosRetry from "axios-retry";
 import swal from 'sweetalert2';
+import Joyride from 'react-joyride';
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -36,12 +37,63 @@ const Dashboard = () => {
     "",
   ]);
 
+
   const [hasFetchedInitialData, setHasFetchedInitialData] = useState(false);
 
   const chartRef = useRef(null);
 
   const openModal = () => setIsModalOpen(true);  // Open the modal
   const closeModal = () => setIsModalOpen(false); // Close the modal
+  const [runTour, setRunTour] = useState(false); // State to control the tour
+  const [steps, setSteps] = useState([
+    {
+      target: '.upload-model-button',  // Targeting "Upload Model" button
+      content: 'Click here to upload the model file you want to use for analysis.',
+      placement: 'bottom',
+    },
+    {
+      target: '.upload-dataset-button',  // Targeting "Upload Dataset" button
+      content: 'Click here to upload the dataset file for processing.',
+      placement: 'bottom',
+    },
+    {
+      target: '.select-container1',  // Targeting the dropdown for selecting demographics
+      content: 'Select a primary demographic category (e.g., race, gender, age) from the dropdown.',
+      placement: 'bottom',
+    },
+    {
+      target: '.select-options1',  // Targeting the dropdown for selecting values of the first demographic
+      content: 'Choose values for the first demographic category.',
+      placement: 'bottom',
+    },
+    {
+      target: '.select-container2',  // Targeting the dropdown for selecting the second demographic category
+      content: 'Now, select a second demographic category for deeper segmentation.',
+      placement: 'bottom',
+    },
+    {
+      target: '.select-options2',  // Targeting the values selection for second demographic
+      content: 'Choose values for the second demographic category.',
+      placement: 'bottom',
+    },
+    {
+      target: '.slider-input',  // Targeting the slider for adjusting the graph
+      content: 'Adjust the slider to set the desired value between 0 and 1.',
+      placement: 'top',
+    },
+    {
+      target: '.timeframe-buttons',  // Targeting the slider for adjusting the graph
+      content: 'Select the timeframe you want to see.',
+      placement: 'top',
+    },
+
+    {
+      target: '.generate-button',  // Targeting the "Generate" button
+      content: 'Click the "Generate" button to generate the graph showing insights across the selected demographics.',
+      placement: 'top',
+    },
+  ]);
+
 
   const fetchEmailAndDemographics = async () => {
     const url = `${VITE_BACKEND_URL}/get-email`;
@@ -89,6 +141,11 @@ const Dashboard = () => {
   useEffect(() => {
     fetchEmailAndDemographics();
   }, []);
+
+  useEffect(() => {
+    setRunTour(true);
+  }, []);
+
 
   useEffect(() => {
     const fethPrevData = async () => {
@@ -419,7 +476,7 @@ const Dashboard = () => {
       })
       .then((response) => {
         console.log("Data generated:", response.data); // TODO Display data on chart
-        setGraphData(response.data);
+        // setGraphData(response.data);
       })
       .catch((err) => {
         console.error("Error generating data:", err);
@@ -581,18 +638,17 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      {/* <div className="text-container">
-        - Click **Import Model** to upload the model file you want to use for
-        analysis.
-        <br />- Click **Import Dataset** to upload your data file for
-        processing.
-        <br />- Select a primary **demographic category** (e.g., race, gender,
-        age) from the dropdown.
-        <br />- Select a **second demographic category** for deeper
-        segmentation.
-        <br />- Click **Generate** to display the graph showing insights across
-        the selected demographics.
-      </div> */}
+      <Joyride
+          steps={steps}
+          run={runTour} // Set to true to run the tour
+          continuous // Automatically go to the next step
+          showSkipButton // Show button to skip the tour
+          styles={{
+            options: {
+              zIndex: 1000, // Ensure the tour overlay is above all other content
+            },
+          }}
+      />
 
       <div className="chart-container-container">
         <div className="timeframe-buttons">
@@ -659,7 +715,7 @@ const Dashboard = () => {
           </div>
           <div className="select-demographics">
             <div className="title"></div>
-            <div className="select-container">
+            <div className="select-container1">
               <select
                 onChange={handleDemographicChange}
                 value={selectedDemographic}
@@ -674,8 +730,8 @@ const Dashboard = () => {
               </select>
 
               {selectedDemographic && (
-                <div className="select-options">
-                  <h2 className="demographic-heading">
+                <div className="select-options1">
+                  <h3 className="demographic-heading">
                     Values for 1st Demographic
                   </h2>
                   {[...Array(4)].map((_, idx) => (
@@ -700,7 +756,7 @@ const Dashboard = () => {
             </div>
 
             {selectedDemographic && (
-              <div className="select-container">
+              <div className="select-container2">
                 <select
                   onChange={handleSecondDemographicChange}
                   value={secondSelectedDemographic}
@@ -717,7 +773,7 @@ const Dashboard = () => {
                 </select>
 
                 {secondSelectedDemographic && selectedDemographic && (
-                  <div className="select-options">
+                  <div className="select-options2">
                     <h3 className="demographic-heading">
                       Values for 2nd Demographic
                     </h3>
