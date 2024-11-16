@@ -17,12 +17,14 @@ from ml_model.repository.file_reader import FileReader
 from ml_model.entities.datapoint_entity import DataPoint
 from ml_model.repository.model_saver import save_model
 from ml_model.repository.data_preprocessing import DataProcessor
+from ml_model.repository.fairness import FairnessEvaluator
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")
 
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.exceptions import NotFittedError
+
 
 def safe_train_test_split(inputs, target, test_size=0.2, random_state=48):
     try:
@@ -36,6 +38,7 @@ def safe_train_test_split(inputs, target, test_size=0.2, random_state=48):
             return None  # Returning None when there aren't enough samples
         else:
             raise e  # Re-raise any other ValueErrors
+
 
 def safe_grid_search(x_train, y_train):
     try:
@@ -55,6 +58,7 @@ def safe_grid_search(x_train, y_train):
             return None  # Returning None when there aren't enough samples
         else:
             raise e  # Re-raise other ValueErrors
+
 
 def model():
     """
@@ -92,7 +96,8 @@ def model():
         else x_test[[feature1, inputs_n.columns[1]]]
 
     # Evaluate fairness
-    metric_frame = evaluate_fairness(y_test, y_pred, sensitive_features)
+    fairness_evaluator = FairnessEvaluator(y_test, y_pred, sensitive_features)
+    metric_frame = fairness_evaluator.evaluate_fairness()
     # Save the model
     save_model(best_clf, x_test, y_test)
 
