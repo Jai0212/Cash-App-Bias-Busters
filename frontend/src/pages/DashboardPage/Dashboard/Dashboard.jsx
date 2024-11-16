@@ -650,7 +650,7 @@ const Dashboard = () => {
 
         <div className="select-demographics-2">
           <div className="demog-clas">
-            <h2>Demographics</h2>
+            <h1>Demographics</h1>
           </div>
           <div className="select-demographics">
             <div className="title"></div>
@@ -669,9 +669,9 @@ const Dashboard = () => {
 
               {selectedDemographic && (
                 <div className="select-options">
-                  <h3 className="demographic-heading">
+                  <h2 className="demographic-heading">
                     Values for 1st Demographic
-                  </h3>
+                  </h2>
                   {[...Array(4)].map((_, idx) => (
                     <select
                       key={idx}
