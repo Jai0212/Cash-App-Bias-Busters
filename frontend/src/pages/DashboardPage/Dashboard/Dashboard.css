@@ -337,7 +337,7 @@ html {
 }
 
 .modal {
-  display: block; /* Ensure modal is visible */
+  display: flex; /* Ensure modal is visible */
   position: fixed; /* Fix the modal to the screen */
   z-index: 1000; /* Ensure it sits on top of everything else */
   left: 0;
@@ -352,8 +352,11 @@ html {
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
+  top: -25px;
   width: 80%; /* Adjust the width */
-  max-width: 500px; /* Prevent it from growing too wide */
+  height: 100%;
+  max-width: 1000px; /* Prevent it from growing too wide */
+  max-height: 400px;
   border-radius: 8px; /* Optional: rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow */
 }
