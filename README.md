@@ -1,6 +1,13 @@
 # Bias Detection and Visualization Tool
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9d9acd0b-6a91-4ec6-9320-88890ccc00eb/deploy-status)](https://app.netlify.com/sites/cash-app-bias-busters/deploys)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.9-blue)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-2.1.1-blue)](https://flask.palletsprojects.com/)
+[![React](https://img.shields.io/badge/React-17.0.2-blue)](https://reactjs.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)](https://www.mysql.com/)
+
+# Bias Detection and Visualization Tool
 
 As part of the Technology Leadership Initiative, we developed a bias detection and visualization tool in partnership with Cash App. This tool is designed as a dashboard that enables Cash App machine learning (ML) engineers to:
 
@@ -10,9 +17,9 @@ As part of the Technology Leadership Initiative, we developed a bias detection a
 ## Index
 
 1. [Title](#bias-detection-and-visualization-tool)
-2. [Short Description](#short-description)
+2. [Description](#short-description)
 3. [Motivation](#motivation)
-4. [How to Run](#how-to-runuser)
+4. [How to Run](#how-to-runuse)
 5. [Features](#features)
 6. [Technical Implementation Details](#technical-implementation-details)
 7. [Acknowledgements/Credits](#acknowledgementscredits)
@@ -91,9 +98,3 @@ This project is licensed under the MIT License. You are free to use, modify, and
 ### MIT License
 
 MIT License Copyright (c) [2024] [Bias Busters]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
