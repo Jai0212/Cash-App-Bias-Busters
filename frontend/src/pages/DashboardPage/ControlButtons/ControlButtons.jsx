@@ -1,4 +1,3 @@
-// src/ControlButtons.jsx
 import React, { useRef, useState, useEffect } from "react";
 import "./ControlButtons.css";
 
@@ -145,22 +144,38 @@ const ControlButtons = ({ onDownload }) => {
 
 
   return (
-    <div className="file-import-container">
-      <input
-        type="file"
-        ref={fileInputRef1}
-        onChange={handleModelFileChange}
-      />
-      <input
-        type="file"
-        ref={fileInputRef2}
-        onChange={handleDatasetFileChange}
-      />
-      <button onClick={handleImportModels} tabIndex={12}>Import Models</button>
-      <button onClick={handleImportDataset} tabIndex={13}>Import Dataset</button>
-      <button onClick={onDownload} tabIndex={14}>Download Graph</button>
-    </div>
-
+      <div className="file-import-container">
+        <input
+            type="file"
+            ref={fileInputRef1}
+            onChange={handleModelFileChange}
+        />
+        <input
+            type="file"
+            ref={fileInputRef2}
+            onChange={handleDatasetFileChange}
+        />
+        <button
+            className="upload-model-button"
+            onClick={handleImportModels}
+            tabIndex={12}
+        >
+          Import Models
+        </button>
+        <button
+            className="upload-dataset-button"
+            onClick={handleImportDataset}
+            tabIndex={13}
+        >
+          Import Dataset
+        </button>
+        <button
+            onClick={onDownload}
+            tabIndex={14}
+        >
+          Download Graph
+        </button>
+      </div>
   );
 };
 
