@@ -31,7 +31,7 @@ def safe_train_test_split(inputs, target, test_size=0.2, random_state=48):
         )
         return x_train, x_test, y_train, y_test
     except ValueError as e:
-        if "With n_samples=0" in str(e):
+        if "With n_samples=" in str(e):
             print("Not enough samples to split. Returning None.")
             return None  # Returning None when there aren't enough samples
         else:
@@ -74,7 +74,7 @@ def model():
     # Split data
     split_data = safe_train_test_split(inputs_n, target)
     if split_data is None:
-        return None  # Early exit if there aren't enough samples
+        return []  # Early exit if there aren't enough samples
 
     x_train, x_test, y_train, y_test = split_data
 
