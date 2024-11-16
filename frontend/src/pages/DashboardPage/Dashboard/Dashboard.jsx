@@ -599,24 +599,28 @@ const Dashboard = () => {
           <button
             className={timeframe === "day" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("day")}
+            tabIndex={2}
           >
             1 Day
           </button>
           <button
             className={timeframe === "week" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("week")}
+            tabIndex={3}
           >
             1 Week
           </button>
           <button
             className={timeframe === "month" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("month")}
+            tabIndex={4}
           >
             1 Month
           </button>
           <button
             className={timeframe === "year" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("year")}
+            tabIndex={5}
           >
             1 Year
           </button>
@@ -634,6 +638,7 @@ const Dashboard = () => {
               step="0.01"
               value={sliderValue}
               onChange={handleSliderChange}
+              tabIndex={1}
             />
           </div>
           <div>
@@ -658,6 +663,7 @@ const Dashboard = () => {
               <select
                 onChange={handleDemographicChange}
                 value={selectedDemographic}
+                tabIndex={6}
               >
                 <option value="">Select</option>
                 {demographics.map((demo, index) => (
@@ -677,6 +683,7 @@ const Dashboard = () => {
                       key={idx}
                       onChange={(event) => handleValueChange(event, idx)}
                       value={selectedValues[idx] || ""}
+                      tabIndex={7}
                     >
                       <option value="">Select</option>
                       {demographicValues
@@ -697,6 +704,7 @@ const Dashboard = () => {
                 <select
                   onChange={handleSecondDemographicChange}
                   value={secondSelectedDemographic}
+                  tabIndex={8}
                 >
                   <option value="">Select</option>
                   {demographics
@@ -720,6 +728,7 @@ const Dashboard = () => {
                           handleValueChange(event, idx, true)
                         }
                         value={selectedSecondValues[idx] || ""}
+                        tabIndex={9}
                       >
                         <option value="">Select</option>
                         {secondDemographicValues
@@ -737,7 +746,7 @@ const Dashboard = () => {
             )}
           </div>
           {selectedDemographic && <div className="generate-btn-container">
-            <button className="generate-button" onClick={handleGenerate}>
+            <button className="generate-button" onClick={handleGenerate} tabIndex={10}>
               Generate
             </button>
           </div>}
