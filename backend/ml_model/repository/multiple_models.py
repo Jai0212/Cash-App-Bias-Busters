@@ -1,20 +1,29 @@
-from fairness import FairnessEvaluator
-from file_reader import FileReader
-from data_preprocessing import DataProcessor
-from safe_train_grid import safe_train_test_split, safe_grid_search
 import pickle
 import os
+import sys
+
+# Dynamically add the project root to the system path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.append(project_root)
+
+
+from ml_model.repository.fairness import FairnessEvaluator
+from ml_model.repository.file_reader_multiple_models import FileReaderMultiple
+from ml_model.repository.data_preprocessing_multiple_models import (
+    DataProcessorMultiple)
+from ml_model.repository.safe_train_grid import (safe_train_test_split,
+                                                 safe_grid_search)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir,
                              "../../../database/full_single_transaction.csv")
 
 
-def multiple_models_tester(model_files):
-    file_reader = FileReader(csv_file_path)
+def evaluate_multiple_models(model_files):
+    file_reader = FileReaderMultiple(csv_file_path)
     df_dropped, inputs, target = file_reader.read_file()
 
-    data_processor = DataProcessor(inputs)
+    data_processor = DataProcessorMultiple(inputs)
     inputs_encoded = data_processor.encode_categorical_columns()
     inputs_n = data_processor.drop_categorical_columns()
 
@@ -35,13 +44,17 @@ def multiple_models_tester(model_files):
         try:
             # Load the model
             with open(model_file, 'rb') as f:
-                model = pickle.load(f)
+                model_dict = pickle.load(f)
+                model = model_dict['model']
+                print(f"Loaded object type: {type(model)}")
+                print(f"Loaded object: {model}")
 
             # Make predictions
             y_pred = model.predict(x_test)
 
             # Evaluate fairness
-            fairness_evaluator = FairnessEvaluator(y_test, y_pred, sensitive_features)
+            fairness_evaluator = FairnessEvaluator(y_test, y_pred,
+                                                   sensitive_features)
             metric_frame = fairness_evaluator.evaluate_fairness()
 
             # Store the metrics
