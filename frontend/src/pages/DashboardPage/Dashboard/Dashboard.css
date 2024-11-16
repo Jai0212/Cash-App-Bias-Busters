@@ -6,6 +6,7 @@
   margin-left: auto;
   margin-right: auto;
   font-family: "Roboto", Arial, sans-serif;
+  position: relative;
   /* border: 2px solid black; */
 }
 
@@ -263,9 +264,9 @@ html {
 
 .info-button {
   position: absolute;
-  right: 20px; /* Distance from the right edge */
-  bottom: 20px; /* Distance from the bottom edge */
-  background: #24a0ed; /* Red background for button */
+  top: 10px; /* Distance from the top edge */
+  right: 10px; /* Distance from the right edge */
+  background: #24a0ed; /* Blue background for button */
   color: white; /* White text */
   font-size: 16px;
   border: none;
@@ -336,7 +337,7 @@ html {
 }
 
 .modal {
-  display: block; /* Ensure modal is visible */
+  display: flex; /* Ensure modal is visible */
   position: fixed; /* Fix the modal to the screen */
   z-index: 1000; /* Ensure it sits on top of everything else */
   left: 0;
@@ -351,8 +352,11 @@ html {
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
+  top: -25px;
   width: 80%; /* Adjust the width */
-  max-width: 500px; /* Prevent it from growing too wide */
+  height: 100%;
+  max-width: 1000px; /* Prevent it from growing too wide */
+  max-height: 400px;
   border-radius: 8px; /* Optional: rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow */
 }
