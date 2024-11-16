@@ -6,6 +6,7 @@
   margin-left: auto;
   margin-right: auto;
   font-family: "Roboto", Arial, sans-serif;
+  position: relative;
   /* border: 2px solid black; */
 }
 
@@ -263,9 +264,9 @@ html {
 
 .info-button {
   position: absolute;
-  right: 20px; /* Distance from the right edge */
-  bottom: 20px; /* Distance from the bottom edge */
-  background: #24a0ed; /* Red background for button */
+  top: 10px; /* Distance from the top edge */
+  right: 10px; /* Distance from the right edge */
+  background: #24a0ed; /* Blue background for button */
   color: white; /* White text */
   font-size: 16px;
   border: none;
