@@ -1,7 +1,7 @@
 from fairness import FairnessEvaluator
 from file_reader import FileReader
 from data_preprocessing import DataProcessor
-from safe_test import safe_train_test_split, safe_grid_search
+from safe_train_grid import safe_train_test_split, safe_grid_search
 import pickle
 import os
 

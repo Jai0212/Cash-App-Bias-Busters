@@ -18,8 +18,8 @@ from ml_model.entities.datapoint_entity import DataPoint
 from ml_model.repository.model_saver import save_model
 from ml_model.repository.data_preprocessing import DataProcessor
 from ml_model.repository.fairness import FairnessEvaluator
-from ml_model.repository.safe_test import (safe_train_test_split,
-                                           safe_grid_search)
+from ml_model.repository.safe_train_grid import (safe_train_test_split,
+                                                 safe_grid_search)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")
