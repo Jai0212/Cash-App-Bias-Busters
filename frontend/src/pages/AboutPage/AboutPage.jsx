@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Card, ListGroup } from "react-bootstrap";
+import "./AboutPage.css"
 
 const AboutPage = () => {
     return (
@@ -8,9 +9,9 @@ const AboutPage = () => {
 
             <Row>
                 <Col>
-                    <p>
+                    <h2 class="paragraph-like">
                         We are proud to announce the launch of a new tool that helps engineers identify and address bias in CashApp's machine-learning models. In an effort to promote fairness and equity, we focused on providing clear, actionable insights into gender, race, and other demographic disparities, ensuring that automated decisions are fair across the board.
-                    </p>
+                    </h2>
 
                     <h3>Key Features:</h3>
 
@@ -41,9 +42,9 @@ const AboutPage = () => {
                         </Card.Body>
                     </Card>
 
-                    <p>
+                    <h4 class="paragraph-like">
                         Our feedback so far has been great, and our product has demonstrated to the engineers at CashApp that there are vast and quick ways, like our product, to tackle the problem of machine-learning bias in today’s world.
-                    </p>
+                    </h4>
                 </Col>
             </Row>
 
