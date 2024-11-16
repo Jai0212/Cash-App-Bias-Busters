@@ -97,4 +97,5 @@ This project is licensed under the MIT License. You are free to use, modify, and
 
 ### MIT License
 
-MIT License Copyright (c) [2024] [Bias Busters]
+This project is licensed under the MIT License. You are free to use, modify, and distribute this project as per the license terms.
+See the [LICENSE.txt](/LICENSE.txt) file for more details.
