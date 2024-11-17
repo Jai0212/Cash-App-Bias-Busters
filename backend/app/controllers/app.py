@@ -249,6 +249,9 @@ def generate_for_all_models():
             )  # Return error if no user is provided
 
         models = get_files_in_folder(curr_user)
+        for i in range(len(models)):
+            models[i] = os.path.join(UPLOAD_FOLDER, curr_user, models[i])
+        print(models)
 
         temporary_output = [
             [
@@ -306,6 +309,37 @@ def generate_for_all_models():
     # TODO add akshat and armagan function to this and return the output
 
 
+@app.route("/api/delete-model", methods=["POST"])
+def delete_model():
+    data = request.get_json()
+    curr_user = data.get("curr_user")
+    file_name = data.get("file_name")
+
+    if not curr_user or not file_name:
+        return (
+            jsonify({"error": "Missing required fields: curr_user or file_name"}),
+            400,
+        )
+
+    initialize(curr_user)
+
+    if not user.table_name:
+        return jsonify({"error": "No current user found"}), 400
+
+    path = os.path.join(UPLOAD_FOLDER, curr_user, file_name)
+
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+            print(f"Deleted: {file_name}")
+            return jsonify({"message": f"Successfully deleted {file_name}"}), 200
+        else:
+            return jsonify({"error": f"The file {file_name} does not exist"}), 404
+    except Exception as e:
+        print(f"Error occurred while deleting model file: {e}")
+        return jsonify({"error": "Error during file deletion"}), 500
+
+
 def get_files_in_folder(user_folder: str):
     """
     Get all files in the user's folder, excluding "model.pkl".
@@ -335,6 +369,7 @@ def delete_files_except_model(user_folder: str):
     """
     Delete all files in the user's folder except the file named "model.pkl" if it exists.
     """
+    print(f"Deleting files in folder: {UPLOAD_FOLDER + user_folder}")
     path = os.path.join(UPLOAD_FOLDER, user_folder)
 
     try:
@@ -445,9 +480,10 @@ def login():
 @app.route("/logout", methods=["POST"])
 def logout():
     global current_user_email
-    current_user_email = None  # Reset the global variable to None
 
     delete_files_except_model(current_user_email)
+
+    current_user_email = None
 
     print("User logged out, current_user_email reset to None.")
     return jsonify({"error": False, "message": "Logged out successfully."}), 200

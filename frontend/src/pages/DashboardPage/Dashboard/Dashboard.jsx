@@ -7,13 +7,125 @@ import "./Dashboard.css";
 import Modal from '../../../Components/Modal/Modal.jsx';
 import axiosRetry from "axios-retry";
 import swal from 'sweetalert2';
-import Joyride from 'react-joyride';
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
 
-  const [graphData, setGraphData] = useState({});
+  const [graphData, setGraphData] = useState([
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+  ]);
 
   const [currUser, setCurrUser] = useState("");
 
@@ -37,63 +149,12 @@ const Dashboard = () => {
     "",
   ]);
 
-
   const [hasFetchedInitialData, setHasFetchedInitialData] = useState(false);
 
   const chartRef = useRef(null);
 
   const openModal = () => setIsModalOpen(true);  // Open the modal
   const closeModal = () => setIsModalOpen(false); // Close the modal
-  const [runTour, setRunTour] = useState(false); // State to control the tour
-  const [steps, setSteps] = useState([
-    {
-      target: '.upload-model-button',  // Targeting "Upload Model" button
-      content: 'Click here to upload the model file you want to use for analysis.',
-      placement: 'bottom',
-    },
-    {
-      target: '.upload-dataset-button',  // Targeting "Upload Dataset" button
-      content: 'Click here to upload the dataset file for processing.',
-      placement: 'bottom',
-    },
-    {
-      target: '.select-container1',  // Targeting the dropdown for selecting demographics
-      content: 'Select a primary demographic category (e.g., race, gender, age) from the dropdown.',
-      placement: 'bottom',
-    },
-    {
-      target: '.select-options1',  // Targeting the dropdown for selecting values of the first demographic
-      content: 'Choose values for the first demographic category.',
-      placement: 'bottom',
-    },
-    {
-      target: '.select-container2',  // Targeting the dropdown for selecting the second demographic category
-      content: 'Now, select a second demographic category for deeper segmentation.',
-      placement: 'bottom',
-    },
-    {
-      target: '.select-options2',  // Targeting the values selection for second demographic
-      content: 'Choose values for the second demographic category.',
-      placement: 'bottom',
-    },
-    {
-      target: '.slider-input',  // Targeting the slider for adjusting the graph
-      content: 'Adjust the slider to set the desired value between 0 and 1.',
-      placement: 'top',
-    },
-    {
-      target: '.timeframe-buttons',  // Targeting the slider for adjusting the graph
-      content: 'Select the timeframe you want to see.',
-      placement: 'top',
-    },
-
-    {
-      target: '.generate-button',  // Targeting the "Generate" button
-      content: 'Click the "Generate" button to generate the graph showing insights across the selected demographics.',
-      placement: 'top',
-    },
-  ]);
-
 
   const fetchEmailAndDemographics = async () => {
     const url = `${VITE_BACKEND_URL}/get-email`;
@@ -141,11 +202,6 @@ const Dashboard = () => {
   useEffect(() => {
     fetchEmailAndDemographics();
   }, []);
-
-  useEffect(() => {
-    setRunTour(true);
-  }, []);
-
 
   useEffect(() => {
     const fethPrevData = async () => {
@@ -217,6 +273,7 @@ const Dashboard = () => {
         "Second selected values:",
         selectedSecondValues
       );
+      console.log("Fetched Data and calling generate data");
       handleGenerate();
     }
   }, [hasFetchedInitialData]);
@@ -454,13 +511,16 @@ const Dashboard = () => {
   const handleGenerate = () => {
     if (
       !currUser ||
-      !selectedDemographic ||
-      !timeframe ||
-      selectedValues[0] === ""
+      !timeframe
     ) {
       console.warn(
         "currUser or selectedDemographic is missing. Cannot generate data."
       );
+      return;
+    }
+
+    if (!selectedDemographic || selectedValues[0] === "") {
+      alert("Upload data and model and the select a demographic and values to generate data.");
       return;
     }
 
@@ -475,8 +535,12 @@ const Dashboard = () => {
         time: timeframe,
       })
       .then((response) => {
-        console.log("Data generated:", response.data); // TODO Display data on chart
-        // setGraphData(response.data);
+        console.log("Data generated:", response.data);
+        if (response.data.length === 0) {
+          alert("No data found for the selected demographics and values. Choose a different combination.");
+          return;
+        }
+        setGraphData(response.data);
       })
       .catch((err) => {
         console.error("Error generating data:", err);
@@ -500,183 +564,152 @@ const Dashboard = () => {
     console.log("Slider Value:", event.target.value); // For debugging
   };
 
-  // Check if graphData is empty and set all y values to 0 if true
-  const modifiedGraphData =
-    Object.keys(graphData).length === 0
-      ? {
-        labels: ["Default Label 1", "Default Label 2", "Default Label 3"], // Default labels
-        datasets: [
-          {
-            label: "Default Data",
-            data: [0, 0, 0], // Default y values set to 0
-            borderColor: "rgba(75, 192, 192, 1)",
-          },
-        ],
-      }
-      : graphData;
+  // useEffect(() => {
+  //   setGraphData([
+  //     {
+  //       feature1: "Black",
+  //       feature2: "Female",
+  //       accuracy: 0.25,
+  //       falsepositive: 0.75,
+  //       falsenegative: 0.0,
+  //       combination_label: "Black Female",
+  //     },
+  //     {
+  //       feature1: "Black",
+  //       feature2: "Male",
+  //       accuracy: 0.2,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "Black Male",
+  //     },
+  //     {
+  //       feature1: "Black",
+  //       feature2: "Non-binary",
+  //       accuracy: 0.5,
+  //       falsepositive: 0.0,
+  //       falsenegative: 0.5,
+  //       combination_label: "Black Non-binary",
+  //     },
+  //     {
+  //       feature1: "Hispanic",
+  //       feature2: "Female",
+  //       accuracy: 0.33,
+  //       falsepositive: 0.67,
+  //       falsenegative: 0.0,
+  //       combination_label: "Hispanic Female",
+  //     },
+  //     {
+  //       feature1: "Hispanic",
+  //       feature2: "Male",
+  //       accuracy: 0.5,
+  //       falsepositive: 0.0,
+  //       falsenegative: 0.5,
+  //       combination_label: "Hispanic Male",
+  //     },
+  //     {
+  //       feature1: "Hispanic",
+  //       feature2: "Non-binary",
+  //       accuracy: 1.0,
+  //       falsepositive: 0.0,
+  //       falsenegative: 0.0,
+  //       combination_label: "Hispanic Non-binary",
+  //     },
+  //     {
+  //       feature1: "Other",
+  //       feature2: "Female",
+  //       accuracy: 0.67,
+  //       falsepositive: 0.0,
+  //       falsenegative: 0.33,
+  //       combination_label: "Other Female",
+  //     },
+  //     {
+  //       feature1: "Other",
+  //       feature2: "Male",
+  //       accuracy: 0.75,
+  //       falsepositive: 0.25,
+  //       falsenegative: 0.0,
+  //       combination_label: "Other Male",
+  //     },
+  //     {
+  //       feature1: "Other",
+  //       feature2: "Non-binary",
+  //       accuracy: 0.7,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "Other Non-binary",
+  //     },
+  //     {
+  //       feature1: "Black",
+  //       feature2: "Other",
+  //       accuracy: 0.56,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "Black Other",
+  //     },
+  //     {
+  //       feature1: "Hispanic",
+  //       feature2: "Other",
+  //       accuracy: 0.42,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "Hispanic Other",
+  //     },
+  //     {
+  //       feature1: "White",
+  //       feature2: "Male",
+  //       accuracy: 0.2,
+  //       falsepositive: 0.25,
+  //       falsenegative: 0.0,
+  //       combination_label: "Wite Male",
+  //     },
+  //     {
+  //       feature1: "White",
+  //       feature2: "Non-binary",
+  //       accuracy: 0.5,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "White Non-binary",
+  //     },
+  //     {
+  //       feature1: "White",
+  //       feature2: "Other",
+  //       accuracy: 0.64,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "White Other",
+  //     },
+  //   ]);
+  // }, []);
 
-  useEffect(() => {
-    setGraphData([
-      {
-        feature1: "Black",
-        feature2: "Female",
-        accuracy: 0.25,
-        falsepositive: 0.75,
-        falsenegative: 0.0,
-        combination_label: "Black Female",
-      },
-      {
-        feature1: "Black",
-        feature2: "Male",
-        accuracy: 0.2,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "Black Male",
-      },
-      {
-        feature1: "Black",
-        feature2: "Non-binary",
-        accuracy: 0.5,
-        falsepositive: 0.0,
-        falsenegative: 0.5,
-        combination_label: "Black Non-binary",
-      },
-      {
-        feature1: "Hispanic",
-        feature2: "Female",
-        accuracy: 0.33,
-        falsepositive: 0.67,
-        falsenegative: 0.0,
-        combination_label: "Hispanic Female",
-      },
-      {
-        feature1: "Hispanic",
-        feature2: "Male",
-        accuracy: 0.5,
-        falsepositive: 0.0,
-        falsenegative: 0.5,
-        combination_label: "Hispanic Male",
-      },
-      {
-        feature1: "Hispanic",
-        feature2: "Non-binary",
-        accuracy: 1.0,
-        falsepositive: 0.0,
-        falsenegative: 0.0,
-        combination_label: "Hispanic Non-binary",
-      },
-      {
-        feature1: "Other",
-        feature2: "Female",
-        accuracy: 0.67,
-        falsepositive: 0.0,
-        falsenegative: 0.33,
-        combination_label: "Other Female",
-      },
-      {
-        feature1: "Other",
-        feature2: "Male",
-        accuracy: 0.75,
-        falsepositive: 0.25,
-        falsenegative: 0.0,
-        combination_label: "Other Male",
-      },
-      {
-        feature1: "Other",
-        feature2: "Non-binary",
-        accuracy: 0.7,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "Other Non-binary",
-      },
-      {
-        feature1: "Black",
-        feature2: "Other",
-        accuracy: 0.56,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "Black Other",
-      },
-      {
-        feature1: "Hispanic",
-        feature2: "Other",
-        accuracy: 0.42,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "Hispanic Other",
-      },
-      {
-        feature1: "White",
-        feature2: "Male",
-        accuracy: 0.2,
-        falsepositive: 0.25,
-        falsenegative: 0.0,
-        combination_label: "Wite Male",
-      },
-      {
-        feature1: "White",
-        feature2: "Non-binary",
-        accuracy: 0.5,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "White Non-binary",
-      },
-      {
-        feature1: "White",
-        feature2: "Other",
-        accuracy: 0.64,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "White Other",
-      },
-    ]);
-  }, []);
-
-  useEffect(() => {
-    console.log("Graph data updated:", graphData);
-  }, [graphData]);
+  // useEffect(() => {
+  //   console.log("Graph data updated:", graphData);
+  // }, [graphData]);
 
   return (
     <div className="dashboard-container">
-      <Joyride
-          steps={steps}
-          run={runTour} // Set to true to run the tour
-          continuous // Automatically go to the next step
-          showSkipButton // Show button to skip the tour
-          styles={{
-            options: {
-              zIndex: 1000, // Ensure the tour overlay is above all other content
-            },
-          }}
-      />
-
       <div className="chart-container-container">
         <div className="timeframe-buttons">
           <button
             className={timeframe === "day" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("day")}
-            tabIndex={2}
           >
             1 Day
           </button>
           <button
             className={timeframe === "week" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("week")}
-            tabIndex={3}
           >
             1 Week
           </button>
           <button
             className={timeframe === "month" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("month")}
-            tabIndex={4}
           >
             1 Month
           </button>
           <button
             className={timeframe === "year" ? "active-button" : ""}
             onClick={() => handleTimeframeChange("year")}
-            tabIndex={5}
           >
             1 Year
           </button>
@@ -694,7 +727,6 @@ const Dashboard = () => {
               step="0.01"
               value={sliderValue}
               onChange={handleSliderChange}
-              tabIndex={1}
             />
           </div>
           <div>
@@ -711,15 +743,14 @@ const Dashboard = () => {
 
         <div className="select-demographics-2">
           <div className="demog-clas">
-            <h1>Demographics</h1>
+            <h2>Demographics</h2>
           </div>
           <div className="select-demographics">
             <div className="title"></div>
-            <div className="select-container1">
+            <div className="select-container">
               <select
                 onChange={handleDemographicChange}
                 value={selectedDemographic}
-                tabIndex={6}
               >
                 <option value="">Select</option>
                 {demographics.map((demo, index) => (
@@ -730,7 +761,7 @@ const Dashboard = () => {
               </select>
 
               {selectedDemographic && (
-                <div className="select-options1">
+                <div className="select-options">
                   <h3 className="demographic-heading">
                     Values for 1st Demographic
                   </h3>
@@ -739,7 +770,6 @@ const Dashboard = () => {
                       key={idx}
                       onChange={(event) => handleValueChange(event, idx)}
                       value={selectedValues[idx] || ""}
-                      tabIndex={7}
                     >
                       <option value="">Select</option>
                       {demographicValues
@@ -756,11 +786,10 @@ const Dashboard = () => {
             </div>
 
             {selectedDemographic && (
-              <div className="select-container2">
+              <div className="select-container">
                 <select
                   onChange={handleSecondDemographicChange}
                   value={secondSelectedDemographic}
-                  tabIndex={8}
                 >
                   <option value="">Select</option>
                   {demographics
@@ -773,7 +802,7 @@ const Dashboard = () => {
                 </select>
 
                 {secondSelectedDemographic && selectedDemographic && (
-                  <div className="select-options2">
+                  <div className="select-options">
                     <h3 className="demographic-heading">
                       Values for 2nd Demographic
                     </h3>
@@ -784,7 +813,6 @@ const Dashboard = () => {
                           handleValueChange(event, idx, true)
                         }
                         value={selectedSecondValues[idx] || ""}
-                        tabIndex={9}
                       >
                         <option value="">Select</option>
                         {secondDemographicValues
@@ -802,7 +830,7 @@ const Dashboard = () => {
             )}
           </div>
           {selectedDemographic && <div className="generate-btn-container">
-            <button className="generate-button" onClick={handleGenerate} tabIndex={10}>
+            <button className="generate-button" onClick={handleGenerate}>
               Generate
             </button>
           </div>}

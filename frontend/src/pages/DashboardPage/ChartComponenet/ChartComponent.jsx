@@ -17,10 +17,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     if (!chartData) return;
 
     console.log("Rendering chart with data:", chartData);
-    
+
     // Step 1: Identify unique feature1 values and assign colors dynamically
     const uniqueFeature1Groups = Array.from(
-      new Set(chartData.map((item) => item.feature1))
+        new Set(chartData.map((item) => item.feature1))
     );
     const colorPalette = [
       "rgba(54, 162, 235, 0.7)",
@@ -35,7 +35,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
     // Step 2: Sort and prepare data for the chart
     const sortedChartData = [...chartData].sort((a, b) =>
-      a.feature1.localeCompare(b.feature1)
+        a.feature1.localeCompare(b.feature1)
     );
 
     const labels = sortedChartData.map((item) => item.feature2); // Only feature2 labels
@@ -55,10 +55,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
         data: accuracyData.map((d) => ({ x: d.label, y: d.accuracy })),
         backgroundColor: accuracyData.map((d) => d.color), // Bars are filled with the color for each feature1 group
         borderColor: accuracyData.map(
-          (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) // Red border if above threshold, else use the same color as fill
+            (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) // Red border if above threshold, else use the same color as fill
         ),
         borderWidth: accuracyData.map(
-          (d) => (d.accuracy > sliderValue ? 3 : 1) // Increased border width if above threshold, else default
+            (d) => (d.accuracy > sliderValue ? 3 : 1) // Increased border width if above threshold, else default
         ),
         borderCapStyle: "round",
         borderJoinStyle: "round",
@@ -159,10 +159,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             ctx.save();
             ctx.fillStyle = "rgba(200, 200, 200, 0.3)";
             ctx.fillRect(
-              left,
-              chartArea.top,
-              right - left,
-              chartArea.bottom - chartArea.top
+                left,
+                chartArea.top,
+                right - left,
+                chartArea.bottom - chartArea.top
             );
             ctx.restore();
           },
@@ -181,9 +181,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   }));
 
   return (
-    <div className="chart-container">
-      <canvas ref={chartRef} />
-    </div>
+      <div className="chart-container">
+        <canvas ref={chartRef} />
+      </div>
   );
 });
 
