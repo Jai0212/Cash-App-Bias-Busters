@@ -36,7 +36,6 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                     timer: 5000,
                     timerProgressBar: true,
                 }).then(() => {
-
                     window.location.href = "/";
                 });
             }
@@ -54,6 +53,12 @@ const ControlButton2 = ({ setUploadedFiles }) => {
 
     useEffect(() => {
         fetchEmailAndDemographics();
+
+        // Load the uploaded files from localStorage when the component mounts
+        const storedFiles = JSON.parse(localStorage.getItem("uploadedFiles"));
+        if (storedFiles) {
+            setUploadedFilesState(storedFiles);
+        }
     }, []);
 
     const handleModelUploadClick = () => {
@@ -69,6 +74,7 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             alert("You can only upload 5 models at a time.");
             return;
         }
+
         // Create a new array to hold the uploaded files and append the new ones
         const newUploadedFiles = [...uploadedFiles];
 
@@ -82,6 +88,16 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             if (!currUser || !file) {
                 alert("Error: Missing required data.");
                 return;
+            }
+
+            if (uploadedFiles.includes(file.name)) {
+                alert(`File with name ${file.name} already uploaded.`);
+                continue;
+            }
+
+            if (file.name === "model.pkl") {
+                alert("You cannot upload a file named model.pkl.");
+                continue;
             }
 
             const formData = new FormData();
@@ -114,6 +130,9 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                 setUploadedFiles(newUploadedFiles);
                 setUploadedFilesState(newUploadedFiles); // Update local state
 
+                // Save the new list to localStorage
+                localStorage.setItem("uploadedFiles", JSON.stringify(newUploadedFiles));
+
                 // Reset the file input after uploading
                 event.target.value = null;
 
@@ -133,8 +152,10 @@ const ControlButton2 = ({ setUploadedFiles }) => {
         setUploadedFiles(updatedFiles);
         setUploadedFilesState(updatedFiles); // Update local state as well
 
+        // Save the updated list to localStorage
+        localStorage.setItem("uploadedFiles", JSON.stringify(updatedFiles));
+
         // Optionally, delete the file from the server
-        // If you have an API for deleting files, you can call it here
         const deleteFile = async () => {
             try {
                 const response = await fetch(`${VITE_BACKEND_URL}/api/delete-model`, {
