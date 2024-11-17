@@ -733,7 +733,7 @@ const Dashboard = () => {
                 <div className="select-options1">
                   <h3 className="demographic-heading">
                     Values for 1st Demographic
-                  </h2>
+                  </h3>
                   {[...Array(4)].map((_, idx) => (
                     <select
                       key={idx}
