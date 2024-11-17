@@ -11,21 +11,6 @@ const ChartComponent2 = forwardRef(({ chartData }, ref) => {
     useEffect(() => {
         if (!chartData) return;
 
-        const labels = chartData.labels || []; // Expect labels to be passed in chartData as an array of "Model 1", "Model 2", ...
-
-        const datasets = [
-            {
-                label: "Generated Data", // Label for the dataset
-                data: chartData.datasets?.[0]?.data || [], // Data values corresponding to the models
-                backgroundColor: labels.map((_, index) => `rgba(${index * 40}, ${100 + index * 40}, ${150 - index * 30}, 0.6)`), // Dynamic color for each bar
-            },
-        ];
-
-        const data = {
-            labels: labels, // Use the dynamic model labels here
-            datasets: datasets,
-        };
-
         const ctx = chartRef.current.getContext("2d");
 
         if (myChartRef.current) {
@@ -35,7 +20,7 @@ const ChartComponent2 = forwardRef(({ chartData }, ref) => {
         // Initialize the chart with a bar graph
         myChartRef.current = new Chart(ctx, {
             type: "bar", // Bar chart type
-            data: data,
+            data: chartData,
             options: {
                 scales: {
                     x: {
