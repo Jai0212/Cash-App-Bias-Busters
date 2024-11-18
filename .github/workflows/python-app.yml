@@ -25,15 +25,15 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-python-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-python-${{ hashFiles('backend/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-python-
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        # Install dependencies from requirements.txt if it exists
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # Install dependencies from backend/requirements.txt if it exists
+        if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
         # Install werkzeug for the missing module
         pip install werkzeug
         # Install pytest for testing
