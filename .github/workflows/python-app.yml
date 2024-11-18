@@ -47,8 +47,6 @@ jobs:
         echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
         echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> $GITHUB_ENV
-        # Decode DB_CERTIFICATE from base64 and save it to a file
-        echo "${{ secrets.DB_CERTIFICATE }}" | base64 --decode > db_cert.pem
         echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
 
     - name: Lint with flake8
