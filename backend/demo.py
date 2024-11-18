@@ -1,5 +1,6 @@
 import os
 from app.entities import User
+from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 from app.use_cases import (
     Generate,
     GetHeaders,
@@ -9,10 +10,11 @@ from app.use_cases import (
 )
 from app.repositories import SqliteDbRepo, CsvFileRepo
 
+
 curr_dir = os.path.dirname(__file__)
 file_path = os.path.join(curr_dir, "../database/output.csv")
 
-user = User("jj@gmail.com")
+user = User("ff@gmail.com")
 
 db_repo = SqliteDbRepo(user)
 file_repo = CsvFileRepo(user, file_path)
@@ -27,31 +29,33 @@ file_repo = CsvFileRepo(user, file_path)
 
 # get_values_under_header = GetValuesUnderHeader(file_repo)
 # print(get_values_under_header.execute("race"))
-
+evaluator = EvaluateModelsUseCase([os.path.join("uploads/jj@gmail.com/model_with_score.pkl")])
+eval_results = evaluator.execute()
+print(eval_results)
 # get_last_login_data = GetLastLoginData(db_repo)
 # print(get_last_login_data.execute())
 
-# demographics = ["gender", "race"]
-# choices = {
-#     "gender": ["Non-binary", "Male", "Female", ""],
-#     "race": ["Black", "Other", "Hispanic", ""],
-# }
-demographics = ["gender", ""]
+demographics = ["race", "gender"]
 choices = {
+    "race": ["Black", "Other", "Hispanic", ""],
     "gender": ["Non-binary", "Male", "Female", ""],
 }
+# demographics = ["gender", ""]
+# choices = {
+#     "gender": ["Non-binary", "Male", "Female", ""],
+# }
 time = "year"
 # file_repo.update_comparison_csv(demographics, choices, time)
 
-# generate = Generate(file_repo, db_repo)
-# result = generate.execute(demographics, choices, time)
-# print(len(result))
-# for i in result:
-#     print(
-#         i.get_feature1(),
-#         i.get_feature2(),
-#         i.get_accuracy(),
-#         i.get_false_positive_rate(),
-#         i.get_false_negative_rate(),
-#         i.get_combination_label(),
-#     )
+generate = Generate(file_repo, db_repo)
+result = generate.execute(demographics, choices, time)
+print(len(result))
+for i in result:
+    print(
+        i.get_feature1(),
+        i.get_feature2(),
+        i.get_accuracy(),
+        i.get_false_positive_rate(),
+        i.get_false_negative_rate(),
+        i.get_combination_label(),
+    )

@@ -18,46 +18,14 @@ from ml_model.entities.datapoint_entity import DataPoint
 from ml_model.repository.model_saver import save_model
 from ml_model.repository.data_preprocessing import DataProcessor
 from ml_model.repository.fairness import FairnessEvaluator
+from ml_model.repository.safe_train_grid import (safe_train_test_split,
+                                                 safe_grid_search)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")
 
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.exceptions import NotFittedError
-
-
-def safe_train_test_split(inputs, target, test_size=0.2, random_state=48):
-    try:
-        x_train, x_test, y_train, y_test = train_test_split(
-            inputs, target, test_size=test_size, random_state=random_state
-        )
-        return x_train, x_test, y_train, y_test
-    except ValueError as e:
-        if "With n_samples=" in str(e):
-            print("Not enough samples to split. Returning None.")
-            return None  # Returning None when there aren't enough samples
-        else:
-            raise e  # Re-raise any other ValueErrors
-
-
-def safe_grid_search(x_train, y_train):
-    try:
-        # Perform grid search
-        clf = DecisionTreeClassifier()
-        param_grid = {
-            "criterion": ["gini", "entropy"],
-            "max_depth": [None] + list(range(1, 11)),
-            "min_samples_split": [2, 5, 10],
-        }
-        grid_search = GridSearchCV(clf, param_grid, cv=5, scoring="accuracy")
-        grid_search.fit(x_train, y_train)
-        return grid_search.best_estimator_
-    except ValueError as e:
-        if "Cannot have number of splits n_splits" in str(e):
-            print("Not enough samples for cross-validation. Returning None.")
-            return None  # Returning None when there aren't enough samples
-        else:
-            raise e  # Re-raise other ValueErrors
 
 
 def model():

@@ -16,15 +16,15 @@ def test_generate(mock_file_repo, mock_db_repo):
 
     # Create a list of mock DataPoint objects to simulate the return value
     mock_data_points = [
-        DataPoint("Black", "Female", 0.25, 0.75, 0.0),
-        DataPoint("Black", "Male", 0.0, 0.0, 1.0),
-        DataPoint("Black", "Non-binary", 0.5, 0.0, 0.5),
-        DataPoint("Hispanic", "Female", 0.33, 0.67, 0.0),
-        DataPoint("Hispanic", "Male", 0.5, 0.0, 0.5),
-        DataPoint("Hispanic", "Non-binary", 1.0, 0.0, 0.0),
-        DataPoint("Other", "Female", 0.67, 0.0, 0.33),
-        DataPoint("Other", "Male", 0.75, 0.25, 0.0),
-        DataPoint("Other", "Non-binary", 0.0, 0.0, 1.0),
+        DataPoint("Female", "Black", 0.25, 0.75, 0.0),
+        DataPoint("Female", "Hispanic", 0.33, 0.67, 0.0),
+        DataPoint("Female", "Other", 0.67, 0.0, 0.33),
+        DataPoint("Male", "Black", 0.0, 0.0, 1.0),
+        DataPoint("Male", "Hispanic", 0.5, 0.0, 0.5),
+        DataPoint("Male", "Other", 0.75, 0.25, 0.0),
+        DataPoint("Non-binary", "Black", 0.5, 0.0, 0.5),
+        DataPoint("Non-binary", "Hispanic", 1.0, 0.0, 0.0),
+        DataPoint("Non-binary", "Other", 0.0, 0.0, 1.0),
     ]
 
     # Act

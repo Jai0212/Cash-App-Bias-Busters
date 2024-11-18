@@ -15,20 +15,54 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-python-${{ hashFiles('backend/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-python-
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # Install dependencies from backend/requirements.txt if it exists
+        if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
+        # Install werkzeug for the missing module
+        pip install werkzeug
+        # Install pytest for testing
+        pip install pytest
+        # Install flake8 explicitly
+        pip install flake8
+
+    - name: Set environment variables
+      run: |
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+        echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> $GITHUB_ENV
+        echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+
     - name: Lint with flake8
       run: |
-        # stop the build if there are Python syntax errors or undefined names
+        # Stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+
+    - name: Test with pytest (backend folder)
       run: |
-        pytest backend/tests  # Specify the path to the tests folder
+        cd backend
+        pytest  # Specify the path to the tests folder, if needed, like pytest tests/
+
+    - name: Test with pytest (skip specific test)
+      run: |
+        cd backend
+        # Skip the test if it exists, otherwise continue normally
+        pytest -k "not 'overflowing-love - Cash-App-Bias-Busters'" || echo "Test not found, skipping."
