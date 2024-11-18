@@ -114,14 +114,13 @@ const Dashboard2 = () => {
       setGenerationResults(data);
       console.log("Model Tester Generation Results:", data);
 
-      const labels = data[0].map((_, index) => `Model ${index + 1}`);
-      const meanData = data[0].map(result => result.mean);
+      const meanData = data.map(result => result.mean);
 
       setGraphData({
-        labels: labels,
+        labels: uploadedFiles,
         datasets: [
           {
-            label: "Generated Data",
+            label: "Bias",
             data: meanData,
             backgroundColor: backgroundColours,
           },
@@ -150,42 +149,40 @@ const Dashboard2 = () => {
 
       {generationResults.length > 0 && (
         <div className="result-section">
-          {generationResults[0].length > 0 && (
-            <ul>
-              {generationResults[0].map((result, index) => (
-                <li key={index} className="result-item">
-                  <div className="result-details">
-                    <strong className="output-name">File:</strong>
-                    <span className="output-value">{tempUploadedFiles[index]}</span>
-                  </div>
-                  <div className="result-details">
-                    <strong className="output-name">Race:</strong>
-                    <span className="output-value">{result.race}</span>
-                  </div>
-                  <div className="result-details">
-                    <strong className="output-name">Gender:</strong>
-                    <span className="output-value">{result.gender}</span>
-                  </div>
-                  <div className="result-details">
-                    <strong className="output-name">Age:</strong>
-                    <span className="output-value">{result.age}</span>
-                  </div>
-                  <div className="result-details">
-                    <strong className="output-name">State:</strong>
-                    <span className="output-value">{result.state}</span>
-                  </div>
-                  <div className="result-details">
-                    <strong className="output-name">Variance:</strong>
-                    <span className="output-value">{result.variance}</span>
-                  </div>
-                  <div className="result-details">
-                    <strong className="output-name">Bias:</strong>
-                    <span className="output-value">{result.mean}</span>
-                  </div>
-                </li>
-              ))}
+          {generationResults.map((result, index) => (
+            <ul key={index}>
+              <li className="result-item">
+                <div className="result-details">
+                  <strong className="output-name">File:</strong>
+                  <span className="output-value">{uploadedFiles[index]}</span>
+                </div>
+                <div className="result-details">
+                  <strong className="output-name">Race:</strong>
+                  <span className="output-value">{result.race}</span>
+                </div>
+                <div className="result-details">
+                  <strong className="output-name">Gender:</strong>
+                  <span className="output-value">{result.gender}</span>
+                </div>
+                <div className="result-details">
+                  <strong className="output-name">Age:</strong>
+                  <span className="output-value">{result.age_groups}</span>
+                </div>
+                <div className="result-details">
+                  <strong className="output-name">State:</strong>
+                  <span className="output-value">{result.state}</span>
+                </div>
+                <div className="result-details">
+                  <strong className="output-name">Variance:</strong>
+                  <span className="output-value">{result.variance}</span>
+                </div>
+                <div className="result-details">
+                  <strong className="output-name">Bias:</strong>
+                  <span className="output-value">{result.mean}</span>
+                </div>
+              </li>
             </ul>
-          )}
+          ))}
         </div>
       )}
 
