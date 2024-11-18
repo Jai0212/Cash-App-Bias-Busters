@@ -60,7 +60,7 @@ def evaluate_multiple_models(model_files):
             print(f"True Labels (y_test): {y_test.head()}")
             print(f"Predicted Labels (y_pred): {y_pred[:10]}")
 
-            # Dictionary to store fairness results for the model
+            # Dictionary and list to store fairness results for the model
             model_results = {}
             fairness_values = []
 
