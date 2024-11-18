@@ -41,17 +41,6 @@ jobs:
         # Install flake8 explicitly
         pip install flake8
 
-    - name: Lint with flake8
-      run: |
-        # Stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-
-    - name: Test with pytest
-      run: |
-        pytest  # Specify the path to the tests folder, if needed, like pytest tests/
-
     - name: Set environment variables
       run: |
         echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
@@ -60,3 +49,22 @@ jobs:
         echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> $GITHUB_ENV
         echo "DB_CERTIFICATE=${{ secrets.DB_CERTIFICATE }}" >> $GITHUB_ENV
         echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+
+    - name: Lint with flake8
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Test with pytest (backend folder)
+      run: |
+        cd backend
+        pytest  # Specify the path to the tests folder, if needed, like pytest tests/
+
+    - name: Test with pytest (skip specific test)
+      run: |
+        cd backend
+        pytest --deselect "overflowing-love - Cash-App-Bias-Busters"  # Skip this specific test
+        # Or use -k to specify test patterns to run or skip
+        # pytest -k "not Cash-App-Bias-Busters"  # Skip tests with this name pattern
