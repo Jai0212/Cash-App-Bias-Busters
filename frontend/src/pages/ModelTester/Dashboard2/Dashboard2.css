@@ -174,4 +174,8 @@ html {
 
 .output-value {
   font-style: italic;
+  width: 100px; /* Adjust the width as needed */
+  white-space: nowrap; /* Prevents the text from wrapping */
+  overflow: hidden; /* Hides any overflowed content */
+  text-overflow: ellipsis; /* Adds "..." if the text overflows */
 }

@@ -17,6 +17,7 @@ from app.use_cases.user_interactor import (
     login_user_interactor,
     change_password_interactor,
 )
+from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
 load_dotenv()
 
@@ -251,7 +252,19 @@ def generate_for_all_models():
         models = get_files_in_folder(curr_user)
         for i in range(len(models)):
             models[i] = os.path.join(UPLOAD_FOLDER, curr_user, models[i])
-        print(models)
+        print("Multiple Models Paths:", models)
+
+        evaluator = EvaluateModelsUseCase(models)
+        output = evaluator.execute()
+
+        print("Multiple Models Output", output)
+
+        output_filtered = []
+
+        for _, value in output.items():
+            output_filtered.append(value)
+
+        print("Filtered Multiple Models Output", output_filtered)
 
         temporary_output = [
             [
@@ -298,7 +311,7 @@ def generate_for_all_models():
             ]
         ]
 
-        return jsonify(temporary_output)
+        return jsonify(output_filtered)
 
     except Exception as e:
         return (
