@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "axios-retry": "^4.5.0",
+    "bootstrap": "^5.3.3",
+    "chart.js": "^4.4.6",
+    "react-chartjs-2": "^5.2.0",
+    "react-spinner": "^0.2.7"
+  }
+}

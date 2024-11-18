@@ -377,3 +377,36 @@ html {
   text-decoration: none;
   cursor: pointer;
 }
+
+.loading-overlay {
+  position: absolute; /* Stays on top of the content */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 215, 44, 1.0);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  z-index: 1000; /* Ensure it overlays other elements */
+}
+
+.cashapp-logo, .spinner, .spinner2 {
+  width: 300px;  /* Force the size */
+  height: 300px; /* Maintain proportional size */
+  position: absolute;
+  top: 50%; /* Center both elements vertically */
+  left: 50%; /* Center both elements horizontally */
+  transform: translate(-50%, -50%); /* Fine-tune centering (removes extra space) */
+}
+
+.spinner2 {
+  width: 310px;
+  height: 310px;
+}
+
+
+
+

@@ -7,13 +7,15 @@ import "./Dashboard.css";
 import Modal from '../../../Components/Modal/Modal.jsx';
 import axiosRetry from "axios-retry";
 import swal from 'sweetalert2';
+import spinner from '../../../assets/spinner.gif';
+
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
 
   const [graphData, setGraphData] = useState({});
-
+  const [loading, setLoading] = useState(false);
   const [currUser, setCurrUser] = useState("");
 
   const [error, setError] = useState("");
@@ -396,35 +398,44 @@ const Dashboard = () => {
 
   const handleGenerate = () => {
     if (
-      !currUser ||
-      !selectedDemographic ||
-      !timeframe ||
-      selectedValues[0] === ""
+        !currUser ||
+        !selectedDemographic ||
+        !timeframe ||
+        selectedValues[0] === ""
     ) {
       console.warn(
-        "currUser or selectedDemographic is missing. Cannot generate data."
+          "currUser or selectedDemographic is missing. Cannot generate data."
       );
       return;
     }
 
+    setLoading(true); // Start loading
+    console.log("burası true olucak");
+
     axios
-      .post(`${VITE_BACKEND_URL}/api/generate`, {
-        demographics: [selectedDemographic, secondSelectedDemographic],
-        choices: {
-          [selectedDemographic]: selectedValues,
-          [secondSelectedDemographic]: selectedSecondValues,
-        },
-        curr_user: currUser,
-        time: timeframe,
-      })
-      .then((response) => {
-        console.log("Data generated:", response.data); // TODO Display data on chart
-        setGraphData(response.data);
-      })
-      .catch((err) => {
-        console.error("Error generating data:", err);
-      });
+        .post(`${VITE_BACKEND_URL}/api/generate`, {
+          demographics: [selectedDemographic, secondSelectedDemographic],
+          choices: {
+            [selectedDemographic]: selectedValues,
+            [secondSelectedDemographic]: selectedSecondValues,
+          },
+          curr_user: currUser,
+          time: timeframe,
+        })
+        .then((response) => {
+          console.log("Data generated:", response.data); // TODO Display data on chart
+          setGraphData(response.data); // Set graph data to update the UI
+          console.log("hello world");
+        })
+        .catch((err) => {
+          console.error("Error generating data:", err);
+        })
+        .finally(() => {
+          // Ensure loading stops regardless of success or failure
+          setLoading(false);
+        });
   };
+
 
   const maxValue = () => {
     let maxInitialElement = -Infinity;
@@ -580,8 +591,24 @@ const Dashboard = () => {
   }, [graphData]);
 
   return (
-    <div className="dashboard-container">
-      {/* <div className="text-container">
+      <>
+        {
+          loading ? (
+              <div className="loading-overlay">
+                <img
+                    src="https://www.logo.wine/a/logo/Cash_App/Cash_App-Logo.wine.svg"
+                    alt="CashApp-Logo"
+                    className="cashapp-logo"
+                />
+                <img
+                    src={spinner}
+                    alt="Loading Spinner"
+                    className="spinner"
+                />
+              </div>
+          ) : (
+              <div className="dashboard-container">
+                {/* <div className="text-container">
         - Click **Import Model** to upload the model file you want to use for
         analysis.
         <br />- Click **Import Dataset** to upload your data file for
@@ -594,161 +621,164 @@ const Dashboard = () => {
         the selected demographics.
       </div> */}
 
-      <div className="chart-container-container">
-        <div className="timeframe-buttons">
-          <button
-            className={timeframe === "day" ? "active-button" : ""}
-            onClick={() => handleTimeframeChange("day")}
-          >
-            1 Day
-          </button>
-          <button
-            className={timeframe === "week" ? "active-button" : ""}
-            onClick={() => handleTimeframeChange("week")}
-          >
-            1 Week
-          </button>
-          <button
-            className={timeframe === "month" ? "active-button" : ""}
-            onClick={() => handleTimeframeChange("month")}
-          >
-            1 Month
-          </button>
-          <button
-            className={timeframe === "year" ? "active-button" : ""}
-            onClick={() => handleTimeframeChange("year")}
-          >
-            1 Year
-          </button>
-        </div>
-        <div>
-          <div className="slider-container">
-            <label className="slider-label-cont">
-              Adjust the slider (0 to 1): <span className="slider-value">{sliderValue}</span>
-            </label>
-            <input
-              className="slider-input"
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={sliderValue}
-              onChange={handleSliderChange}
-            />
-          </div>
-          <div>
-            {Object.keys(graphData).length > 0 && (
-              <ChartComponent
-                ref={chartRef}
-                chartData={graphData}
-                sliderValue={sliderValue}
-                bias={maxValue()}
-              />
-            )}
-          </div>
-        </div>
-
-        <div className="select-demographics-2">
-          <div className="demog-clas">
-            <h1>Demographics</h1>
-          </div>
-          <div className="select-demographics">
-            <div className="title"></div>
-            <div className="select-container">
-              <select
-                onChange={handleDemographicChange}
-                value={selectedDemographic}
-              >
-                <option value="">Select</option>
-                {demographics.map((demo, index) => (
-                  <option key={index} value={demo}>
-                    {demo}
-                  </option>
-                ))}
-              </select>
-
-              {selectedDemographic && (
-                <div className="select-options">
-                  <h2 className="demographic-heading">
-                    Values for 1st Demographic
-                  </h2>
-                  {[...Array(4)].map((_, idx) => (
-                    <select
-                      key={idx}
-                      onChange={(event) => handleValueChange(event, idx)}
-                      value={selectedValues[idx] || ""}
+                <div className="chart-container-container">
+                  <div className="timeframe-buttons">
+                    <button
+                        className={timeframe === "day" ? "active-button" : ""}
+                        onClick={() => handleTimeframeChange("day")}
                     >
-                      <option value="">Select</option>
-                      {demographicValues
-                        .filter((val) => !selectedSecondValues.includes(val))
-                        .map((val, index) => (
-                          <option key={index} value={val}>
-                            {val}
-                          </option>
-                        ))}
-                    </select>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {selectedDemographic && (
-              <div className="select-container">
-                <select
-                  onChange={handleSecondDemographicChange}
-                  value={secondSelectedDemographic}
-                >
-                  <option value="">Select</option>
-                  {demographics
-                    .filter((demo) => demo !== selectedDemographic)
-                    .map((demo, index) => (
-                      <option key={index} value={demo}>
-                        {demo}
-                      </option>
-                    ))}
-                </select>
-
-                {secondSelectedDemographic && selectedDemographic && (
-                  <div className="select-options">
-                    <h3 className="demographic-heading">
-                      Values for 2nd Demographic
-                    </h3>
-                    {[...Array(4)].map((_, idx) => (
-                      <select
-                        key={idx}
-                        onChange={(event) =>
-                          handleValueChange(event, idx, true)
-                        }
-                        value={selectedSecondValues[idx] || ""}
-                      >
-                        <option value="">Select</option>
-                        {secondDemographicValues
-                          .filter((val) => !selectedValues.includes(val))
-                          .map((val, index) => (
-                            <option key={index} value={val}>
-                              {val}
-                            </option>
-                          ))}
-                      </select>
-                    ))}
+                      1 Day
+                    </button>
+                    <button
+                        className={timeframe === "week" ? "active-button" : ""}
+                        onClick={() => handleTimeframeChange("week")}
+                    >
+                      1 Week
+                    </button>
+                    <button
+                        className={timeframe === "month" ? "active-button" : ""}
+                        onClick={() => handleTimeframeChange("month")}
+                    >
+                      1 Month
+                    </button>
+                    <button
+                        className={timeframe === "year" ? "active-button" : ""}
+                        onClick={() => handleTimeframeChange("year")}
+                    >
+                      1 Year
+                    </button>
                   </div>
-                )}
+                  <div>
+                    <div className="slider-container">
+                      <label className="slider-label-cont">
+                        Adjust the slider (0 to 1): <span className="slider-value">{sliderValue}</span>
+                      </label>
+                      <input
+                          className="slider-input"
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.01"
+                          value={sliderValue}
+                          onChange={handleSliderChange}
+                      />
+                    </div>
+                    <div>
+                      {Object.keys(graphData).length > 0 && (
+                          <ChartComponent
+                              ref={chartRef}
+                              chartData={graphData}
+                              sliderValue={sliderValue}
+                              bias={maxValue()}
+                          />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="select-demographics-2">
+                    <div className="demog-clas">
+                      <h1>Demographics</h1>
+                    </div>
+                    <div className="select-demographics">
+                      <div className="title"></div>
+                      <div className="select-container">
+                        <select
+                            onChange={handleDemographicChange}
+                            value={selectedDemographic}
+                        >
+                          <option value="">Select</option>
+                          {demographics.map((demo, index) => (
+                              <option key={index} value={demo}>
+                                {demo}
+                              </option>
+                          ))}
+                        </select>
+
+                        {selectedDemographic && (
+                            <div className="select-options">
+                              <h2 className="demographic-heading">
+                                Values for 1st Demographic
+                              </h2>
+                              {[...Array(4)].map((_, idx) => (
+                                  <select
+                                      key={idx}
+                                      onChange={(event) => handleValueChange(event, idx)}
+                                      value={selectedValues[idx] || ""}
+                                  >
+                                    <option value="">Select</option>
+                                    {demographicValues
+                                        .filter((val) => !selectedSecondValues.includes(val))
+                                        .map((val, index) => (
+                                            <option key={index} value={val}>
+                                              {val}
+                                            </option>
+                                        ))}
+                                  </select>
+                              ))}
+                            </div>
+                        )}
+                      </div>
+
+                      {selectedDemographic && (
+                          <div className="select-container">
+                            <select
+                                onChange={handleSecondDemographicChange}
+                                value={secondSelectedDemographic}
+                            >
+                              <option value="">Select</option>
+                              {demographics
+                                  .filter((demo) => demo !== selectedDemographic)
+                                  .map((demo, index) => (
+                                      <option key={index} value={demo}>
+                                        {demo}
+                                      </option>
+                                  ))}
+                            </select>
+
+                            {secondSelectedDemographic && selectedDemographic && (
+                                <div className="select-options">
+                                  <h3 className="demographic-heading">
+                                    Values for 2nd Demographic
+                                  </h3>
+                                  {[...Array(4)].map((_, idx) => (
+                                      <select
+                                          key={idx}
+                                          onChange={(event) =>
+                                              handleValueChange(event, idx, true)
+                                          }
+                                          value={selectedSecondValues[idx] || ""}
+                                      >
+                                        <option value="">Select</option>
+                                        {secondDemographicValues
+                                            .filter((val) => !selectedValues.includes(val))
+                                            .map((val, index) => (
+                                                <option key={index} value={val}>
+                                                  {val}
+                                                </option>
+                                            ))}
+                                      </select>
+                                  ))}
+                                </div>
+                            )}
+                          </div>
+                      )}
+                    </div>
+                    {selectedDemographic && <div className="generate-btn-container">
+                      <button className="generate-button" onClick={handleGenerate}>
+                        Generate
+                      </button>
+                    </div>}
+                  </div>
+                  <button className="info-button" onClick={openModal}>?</button>
+                  {isModalOpen && <Modal closeModal={closeModal} />}
+                </div>
+                <div className="upload-buttons">
+                  <ControlButtons onDownload={handleDownload} />
+                </div>
               </div>
-            )}
-          </div>
-          {selectedDemographic && <div className="generate-btn-container">
-            <button className="generate-button" onClick={handleGenerate}>
-              Generate
-            </button>
-          </div>}
-        </div>
-        <button className="info-button" onClick={openModal}>?</button>
-        {isModalOpen && <Modal closeModal={closeModal} />}
-      </div>
-      <div className="upload-buttons">
-        <ControlButtons onDownload={handleDownload} />
-      </div>
-    </div>
+          )
+        }
+      </>
   );
 };
 
