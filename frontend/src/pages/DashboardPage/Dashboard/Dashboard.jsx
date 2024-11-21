@@ -569,10 +569,6 @@ const Dashboard = () => {
     return maxInitialElement;
   };
 
-  // const handleSliderChange = (event) => {
-  //   setSliderValue(parseFloat(event.target.value));
-  //   console.log("Slider Value:", event.target.value); // For debugging
-  // };
   const handleSliderValueChange = (value) => {
     console.log('Slider Value:', value); // Handle the slider value update
   };

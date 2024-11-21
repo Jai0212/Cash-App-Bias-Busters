@@ -1,10 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";  // Import Bootstrap CSS
 import "./ControlButtons.css";
 
 const ControlButtons = ({ onDownload }) => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const [currUser, setCurrUser] = useState("");
+  const [showModal, setShowModal] = useState(false); // Modal visibility state
 
   const fileInputRef1 = useRef(null); // For model import
   const fileInputRef2 = useRef(null); // For dataset import
@@ -36,7 +38,6 @@ const ControlButtons = ({ onDownload }) => {
           timer: 5000,
           timerProgressBar: true,
         }).then(() => {
-
           window.location.href = "/";
         });
       }
@@ -57,7 +58,7 @@ const ControlButtons = ({ onDownload }) => {
   }, []);
 
   const handleImportModels = () => {
-    fileInputRef1.current.click();
+    setShowModal(true);  // Open the modal when button is clicked
   };
 
   const handleImportDataset = () => {
@@ -142,6 +143,9 @@ const ControlButtons = ({ onDownload }) => {
     }
   };
 
+  const closeModal = () => {
+    setShowModal(false); // Close the modal
+  };
 
   return (
       <div className="file-import-container">
@@ -149,11 +153,13 @@ const ControlButtons = ({ onDownload }) => {
             type="file"
             ref={fileInputRef1}
             onChange={handleModelFileChange}
+            style={{ display: 'none' }} // Hide the file input
         />
         <input
             type="file"
             ref={fileInputRef2}
             onChange={handleDatasetFileChange}
+            style={{ display: 'none' }} // Hide the file input
         />
         <button
             className="upload-model-button"
@@ -175,6 +181,72 @@ const ControlButtons = ({ onDownload }) => {
         >
           Download Graph
         </button>
+
+        {/* Bootstrap Modal for model upload instructions */}
+        {showModal && (
+            <div className="modal show" style={{ display: "block" }}>
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Model Upload Instructions</h5>
+                    <button
+                        type="button"
+                        className="close"
+                        style={{
+                          backgroundColor: "#45a049",
+                          borderColor: "#45a049",
+                          fontSize: "0.875rem",  // Smaller font size
+                          padding: "0.25rem 0.5rem",  // Smaller padding
+                          borderRadius: "0.2rem"  // Optional: round corners slightly
+                        }}
+                        onClick={closeModal}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <p><strong>File format:</strong> The file must be in <code>.pkl</code> format.</p>
+                    <p><strong>File size:</strong> The file size must be less than 1 MB.</p>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        style={{
+                          backgroundColor: "#45a049",
+                          borderColor: "#45a049",
+                          fontSize: "0.875rem",  // Smaller font size
+                          padding: "0.25rem 0.5rem",  // Smaller padding
+                          borderRadius: "0.2rem"  // Optional: round corners slightly
+                        }}
+                        onClick={() => {
+                          fileInputRef1.current.click();  // Trigger file input inside modal
+                          closeModal(); // Close the modal after triggering file input
+                        }}
+                    >
+                      Upload Model
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        style={{
+                          backgroundColor: "#45a049",
+                          borderColor: "#45a049",
+                          fontSize: "0.875rem",  // Smaller font size
+                          padding: "0.25rem 0.5rem",  // Smaller padding
+                          borderRadius: "0.2rem"  // Optional: round corners slightly
+                        }}
+                        onClick={closeModal}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        )}
+
+
       </div>
   );
 };
