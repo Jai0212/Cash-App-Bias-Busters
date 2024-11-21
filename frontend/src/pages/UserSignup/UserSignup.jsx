@@ -1,14 +1,40 @@
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./UserSignup.css";
+import axios from "axios";
 
 const UserSignup = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const uploadedFiles = localStorage.getItem("uploadedFiles");
+
+    if (uploadedFiles && uploadedFiles.length > 0) {
+      handleLogout();
+    }
+
+    localStorage.removeItem("uploadedFiles");
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(`${VITE_BACKEND_URL}/logout`);
+
+      if (response.data.error === false) {
+        navigate("/");
+      } else {
+        console.error("Logout failed:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
 
   const {
     register,

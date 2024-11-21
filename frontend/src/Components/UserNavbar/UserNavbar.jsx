@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";  // You will need to install axios for making API requests
+import axios from "axios";
 import "./UserNavbar.css";
 
 function UserNavbar() {
