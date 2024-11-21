@@ -1,27 +1,30 @@
 # Bias Detection and Visualization Tool
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/9d9acd0b-6a91-4ec6-9320-88890ccc00eb/deploy-status)](https://app.netlify.com/sites/cash-app-bias-busters/deploys)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.9-blue)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-2.1.1-blue)](https://flask.palletsprojects.com/)
-[![React](https://img.shields.io/badge/React-17.0.2-blue)](https://reactjs.org/)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)](https://www.mysql.com/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9d9acd0b-6a91-4ec6-9320-88890ccc00eb/deploy-status?color=brightgreen)](https://app.netlify.com/sites/cash-app-bias-busters/deploys)
+[![License](https://img.shields.io/badge/MIT_License-brightgreen)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-blueviolet)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-darkorange)](https://flask.palletsprojects.com/)
+[![React](https://img.shields.io/badge/React-deeppink)](https://reactjs.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-dodgerblue)](https://www.mysql.com/)
 
 # Bias Detection and Visualization Tool
 
-As part of the Technology Leadership Initiative, we developed a bias detection and visualization tool in partnership with Cash App. This tool is designed as a dashboard that enables Cash App machine learning (ML) engineers to:
+As part of the 2024 cohort of the Technology Leadership Initiative, we developed a platform in collaboration with Cash App to assist machine learning engineers in identifying and visualizing biases in their models.
 
-- Import their transaction data and transaction approval models.
-- Select core demographic categories like gender, age, and race.
+- Users can upload their transaction data and approval models, which are processed by a Flask-based backend utilizing the Fairlearn library to detect biases.
+- The results are intuitively visualized on the frontend using dynamic charts powered by Chart.js.
+- The platform allows users to select key demographic categories such as gender, age, and race and further refine these by specifying subcategories (e.g., age ranges like 18–25).
+- Additionally, users can upload multiple models to compare biases across different demographic categories and models, providing a comprehensive understanding of their systems' performance and fairness.
+- Built with a focus on clean architecture, the platform ensures a modular and maintainable design with extensive testing coverage.
 
 ## Index
 
 1. [Title](#bias-detection-and-visualization-tool)
 2. [Description](#short-description)
 3. [Motivation](#motivation)
-4. [How to Run](#how-to-runuse)
-5. [Features](#features)
-6. [Technical Implementation Details](#technical-implementation-details)
+4. [Features](#features)
+5. [Technical Implementation Details](#technical-implementation-details)
+6. [How to Run](#how-to-runuse)
 7. [Acknowledgements/Credits](#acknowledgementscredits)
 
 ## Motivation
@@ -41,12 +44,51 @@ Our backend analyzes the bias in the selected demographic categories using the F
 - <b>Visualizations:</b> Generate intuitive graphs and charts using Chart.js for detailed insights.
 - <b>Model Comparison:</b> Easily compare fairness metrics across different models.
 
+## Technical Implementation Details
+
+- **Backend**: Built using Python with the Flask framework, the backend handles data processing and bias detection. Hosted on **Render**.
+
+  - **Packages Used**:
+    - `numpy`: For numerical computations and matrix operations used in model analysis.
+    - `pandas`: For handling and preprocessing data.
+    - `scikit-learn`: For building and training the machine learning models.
+    - `scipy`: For advanced statistical computations required in analysis.
+    - `mysql-connector`: To establish a connection with the MySQL database and execute queries.
+    - `pytest`: For unit testing the backend to ensure robust and error-free functionality.
+
+- **Frontend**: Built using React and Vite, the frontend is responsible for the interactive dashboard and visualizations. Hosted on **Netlify**.
+
+  - **Packages Used**:
+    - `react-joyride`: To implement an onboarding tutorial that guides first-time users with step-by-step instructions on using the platform.
+    - `sweetalert2`: For displaying elegant and customizable alerts, such as login prompts or error messages.
+    - `axios-retry`: To automatically retry failed API requests to the backend, ensuring smooth user experience even under intermittent connectivity.
+
+- **Database**: We use **MySQL** to store all the data uploaded by users. The database is hosted on **Aiven**.
+
+- **Fairlearn**: This Python library is used for detecting and assessing fairness in ML models.
+
+- **Chart.js**: Used to render dynamic and interactive graphs and charts to visualize bias metrics.
+
+- **Clean Architecture**:  
+  The project follows a **Clean Architecture** approach, organizing the system into separate layers such as presentation, business logic, and data access. This ensures modularity, maintainability, and scalability of the application.
+
+  - **Testing**:  
+    We use **pytest** for unit and integration testing. Pytest helps ensure the correctness of the application’s logic by automating tests for backend functionality, database interactions, and model processing.
+
 ## How to run/use
 
-If you want to use the project, simply visit the publicly hosted website: [https://cash-app-bias-busters.netlify.app/](https://cash-app-bias-busters.netlify.app/)
+If you want to use the project, simply visit the publicly hosted website: [https://cash-app-bias-busters.netlify.app/](https://cash-app-bias-busters.netlify.app/).
+The backend is hosted on render and can be accessed through the publicly available link [https://cash-app-bias-busters.onrender.com](https://cash-app-bias-busters.onrender.com)
+Please note, the backend may take up to a minute to start up on the first visit.
 .
 
 If you'd like to run it locally instead, follow these steps:
+
+### Clone the repository:
+
+```
+git clone https://github.com/Jai0212/Cash-App-Bias-Busters.git
+```
 
 ### Backend:
 
@@ -62,29 +104,6 @@ python3 -m app.controllers.app
 cd frontend
 npm run dev
 ```
-
-## Technical Implementation Details
-
-### Technical Implementation Details
-
-- **Backend**: Built using Python with the Flask framework, the backend handles data processing and bias detection. Hosted on **Render**.
-
-  - **Packages Used**:
-    - `numpy`: For numerical computations and matrix operations used in model analysis.
-    - `pandas`: For handling and preprocessing data.
-    - `scikit-learn`: For building and training the machine learning models.
-    - `scipy`: For advanced statistical computations required in analysis.
-
-- **Frontend**: Built using React and Vite, the frontend is responsible for the interactive dashboard and visualizations. Hosted on **Netlify**.
-
-  - **Packages Used**:
-    - `react-joyride`: To implement an onboarding tutorial that guides first-time users with step-by-step instructions on using the platform.
-
-- **Database**: We use **MySQL** to store all the data uploaded by users. The database is hosted on **Aiven**.
-
-- **Fairlearn**: This Python library is used for detecting and assessing fairness in ML models.
-
-- **Chart.js**: Used to render dynamic and interactive graphs and charts to visualize bias metrics.
 
 ## Acknowledgements/Credits
 
