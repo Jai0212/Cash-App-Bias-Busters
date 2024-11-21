@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ChartComponent2 from "../ChartComponenet2/ChartComponent2.jsx";
 import ControlButton2 from "../ControlButtons2/ControlButtons2.jsx";
 import "./Dashboard2.css";

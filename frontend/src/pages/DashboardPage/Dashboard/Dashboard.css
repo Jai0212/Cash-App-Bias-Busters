@@ -37,10 +37,9 @@
 
 /* Hover state */
 .timeframe-buttons button:hover {
-  color: #fafafa;
+  background-color: #fafafa;
+  color: #2e2e2e;
   font-weight: bold;
-  outline: 3px solid #0088cc; /* Blue outline for focus */
-  background-color: #0088cc;
 }
 
 /* Focus state (for when tabbing into buttons) */
@@ -187,16 +186,15 @@
 
 /* Highlighted button */
 .active-button {
-  background-color: #474747 !important;
-  color: white !important;
-  border: 1px solid #4caf50 !important;
-  transform: scale(1.1); /* Initial scale */
+  background-color: #0088cc !important;
+  color: #fafafa !important;
+  transform: scale(1.11);
   transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
 
 .active-button:hover {
-  background-color: #545454 !important;
-  color: white !important;
+  background-color: #fafafa !important;
+  color: #2e2e2e !important;
   font-weight: bold !important;
 }
 
@@ -376,7 +374,7 @@ html {
 }
 
 /* Hover effect for the select element */
-.select-container2 select:hover {
+.select-container2 select:hover { 
   border-color: #4caf50; /* Change border color on hover */
   color: #fafafa;
   background-color: #474747; /* Light background on hover */

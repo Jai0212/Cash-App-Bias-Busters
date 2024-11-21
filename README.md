@@ -1,21 +1,27 @@
-# Bias Detection and Visualization Tool
+# Bias Detection and Visualization Tool - CashApp 
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9d9acd0b-6a91-4ec6-9320-88890ccc00eb/deploy-status?color=brightgreen)](https://app.netlify.com/sites/cash-app-bias-busters/deploys)
-[![License](https://img.shields.io/badge/MIT_License-brightgreen)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-blueviolet)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-darkorange)](https://flask.palletsprojects.com/)
 [![React](https://img.shields.io/badge/React-deeppink)](https://reactjs.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-dodgerblue)](https://www.mysql.com/)
+[![Flask](https://img.shields.io/badge/Flask-darkorange)](https://flask.palletsprojects.com/)
+[![License](https://img.shields.io/badge/MIT_License-brightgreen)](https://opensource.org/licenses/MIT)
 
-# Bias Detection and Visualization Tool
+<div style="text-align: center;">
+  <img src="frontend/public/cash-app-logo.png" alt="CashApp Logo" width="100"/>
+</div>
 
-As part of the 2024 cohort of the Technology Leadership Initiative, we developed a platform in collaboration with Cash App to assist machine learning engineers in identifying and visualizing biases in their models.
+As part of the 2024 cohort of the Technology Leadership Initiative, we developed a platform in collaboration with **Cash App** to assist machine learning engineers in identifying and visualizing biases in their models.
 
 - Users can upload their transaction data and approval models, which are processed by a Flask-based backend utilizing the Fairlearn library to detect biases.
 - The results are intuitively visualized on the frontend using dynamic charts powered by Chart.js.
 - The platform allows users to select key demographic categories such as gender, age, and race and further refine these by specifying subcategories (e.g., age ranges like 18–25).
 - Additionally, users can upload multiple models to compare biases across different demographic categories and models, providing a comprehensive understanding of their systems' performance and fairness.
 - Built with a focus on clean architecture, the platform ensures a modular and maintainable design with extensive testing coverage.
+
+<div style="text-align: center;">
+  <img src="frontend/public/img_dashboard.png" alt="Dashboard Logo"/>
+</div>
 
 ## Index
 
@@ -35,14 +41,15 @@ Our backend analyzes the bias in the selected demographic categories using the F
 
 ## Features
 
-- **Login/Sign-up and Account Management**: Secure user authentication and account management to ensure data privacy and personalized access.
-
 - <b>Bias Analysis:</b> Detect bias in transaction approval models for selected demographic categories using the Fairlearn library.
 - <b>Interactive Dashboard:</b> User-friendly interface to import data and select demographic groups.
 - **User Data Storage**: All user-uploaded data is securely stored in a MySQL database hosted on Aiven.
 
 - <b>Visualizations:</b> Generate intuitive graphs and charts using Chart.js for detailed insights.
+
 - <b>Model Comparison:</b> Easily compare fairness metrics across different models.
+
+- **Login/Sign-up and Account Management**: Secure user authentication and account management to ensure data privacy and personalized access.
 
 ## Technical Implementation Details
 
@@ -77,9 +84,11 @@ Our backend analyzes the bias in the selected demographic categories using the F
 
 ## How to run/use
 
-If you want to use the project, simply visit the publicly hosted website: [https://cash-app-bias-busters.netlify.app/](https://cash-app-bias-busters.netlify.app/).
+If you want to use the project, simply visit the publicly hosted website: [https://cash-app-bias-busters.netlify.app](https://cash-app-bias-busters.netlify.app).
+
 The backend is hosted on render and can be accessed through the publicly available link [https://cash-app-bias-busters.onrender.com](https://cash-app-bias-busters.onrender.com)
-Please note, the backend may take up to a minute to start up on the first visit.
+
+**NOTE:** the backend may take up to a minute to start up on the first visit.
 .
 
 If you'd like to run it locally instead, follow these steps:
