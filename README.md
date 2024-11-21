@@ -23,7 +23,6 @@ As part of the Technology Leadership Initiative, we developed a bias detection a
 5. [Features](#features)
 6. [Technical Implementation Details](#technical-implementation-details)
 7. [Acknowledgements/Credits](#acknowledgementscredits)
-8. [License](#license)
 
 ## Motivation
 
@@ -66,11 +65,26 @@ npm run dev
 
 ## Technical Implementation Details
 
-- <b>Backend:</b> Built using <b>Python</b> with the <b>Flask</b> framework, the backend handles data processing and bias detection. Hosted on <b>Render</b>.
-- <b>Frontend:</b> Built using <b>React</b> and Vite, the frontend is responsible for the interactive dashboard and visualizations. Hosted on <b>Netlify</b>.
-- <b>Database:</b> We use <b>MySQL</b> to store all the data uploaded by users. The database is hosted on Aiven.
-- <b>Fairlearn:</b> This Python library is used for detecting and assessing fairness in ML models.
-- <b>Chart.js:</b> Used to render dynamic and interactive graphs and charts to visualize bias metrics.
+### Technical Implementation Details
+
+- **Backend**: Built using Python with the Flask framework, the backend handles data processing and bias detection. Hosted on **Render**.
+
+  - **Packages Used**:
+    - `numpy`: For numerical computations and matrix operations used in model analysis.
+    - `pandas`: For handling and preprocessing data.
+    - `scikit-learn`: For building and training the machine learning models.
+    - `scipy`: For advanced statistical computations required in analysis.
+
+- **Frontend**: Built using React and Vite, the frontend is responsible for the interactive dashboard and visualizations. Hosted on **Netlify**.
+
+  - **Packages Used**:
+    - `react-joyride`: To implement an onboarding tutorial that guides first-time users with step-by-step instructions on using the platform.
+
+- **Database**: We use **MySQL** to store all the data uploaded by users. The database is hosted on **Aiven**.
+
+- **Fairlearn**: This Python library is used for detecting and assessing fairness in ML models.
+
+- **Chart.js**: Used to render dynamic and interactive graphs and charts to visualize bias metrics.
 
 ## Acknowledgements/Credits
 
@@ -89,13 +103,5 @@ npm run dev
 }
 ```
 
-2. Special thanks to [https://cash.app/](Cash App) for their collaboration and support in this initiative.
-
-## License
-
-This project is licensed under the MIT License. You are free to use, modify, and distribute this project as per the license terms.
-
-### MIT License
-
-This project is licensed under the MIT License. You are free to use, modify, and distribute this project as per the license terms.
-See the [LICENSE.txt](/LICENSE.txt) file for more details.
+2. Special thanks to [Cash App](https://www.cash.app)
+   for their collaboration and support in this initiative.
