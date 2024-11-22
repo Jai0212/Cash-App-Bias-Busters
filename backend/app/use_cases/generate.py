@@ -24,5 +24,18 @@ class Generate:
         if output is None:
             output = []
 
+        new_output = []
+        for i in output:
+            new_output.append(
+                {
+                    "feature1": i.get_feature1(),
+                    "feature2": i.get_feature2(),
+                    "accuracy": 1 - i.get_accuracy(),
+                    "false_positive_rate": i.get_false_positive_rate(),
+                    "false_negative_rate": i.get_false_negative_rate(),
+                    "combination_label": i.get_combination_label(),
+                }
+            )
+
         print(output)
         return output

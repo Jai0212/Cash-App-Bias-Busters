@@ -112,7 +112,7 @@ const Dashboard2 = () => {
       setGenerationResults(data);
       console.log("Model Tester Generation Results:", data);
 
-      const meanData = data.map(result => result.mean);
+      const meanData = data.map(result => 1 - result.mean);
 
       setGraphData({
         labels: uploadedFiles,
@@ -176,7 +176,7 @@ const Dashboard2 = () => {
                 </div>
                 <div className="result-details">
                   <strong className="output-name">Bias:</strong>
-                  <span className="output-value">{result.mean}</span>
+                  <span className="output-value">{1 - result.mean}</span>
                 </div>
               </li>
             </ul>
