@@ -6,6 +6,7 @@ const ControlButton2 = ({ setUploadedFiles }) => {
 
     const [currUser, setCurrUser] = useState(""); // Store current user's email
     const [uploadedFiles, setUploadedFilesState] = useState([]); // Local state for uploaded files
+    const [showModal, setShowModal] = useState(false); // Modal visibility state
     const fileInputRef = useRef(null); // For model import
 
     // Fetch email for the current user
@@ -62,7 +63,13 @@ const ControlButton2 = ({ setUploadedFiles }) => {
     }, []);
 
     const handleModelUploadClick = () => {
-        fileInputRef.current.click(); // Trigger model file input
+        setShowModal(true);
+         // Trigger model file input
+    };
+
+    const closeModal = () => {
+        setShowModal(false); // Close the modal
+
     };
 
     const handleModelFileChange = async (event) => {
@@ -221,6 +228,61 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                     </ul>
                 </div>
             )}
+
+            {showModal && (
+                <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Model Upload Instructions</h5>
+                                <button
+                                    type="button"
+                                    className="close"
+                                    style={{
+                                        backgroundColor: "#45a049",
+                                        borderColor: "#45a049",
+                                        fontSize: "0.875rem",
+                                        padding: "0.25rem 0.5rem",
+                                        borderRadius: "0.2rem",
+                                    }}
+                                    onClick={closeModal}
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <p>
+                                    <strong>File format:</strong> The file must be in <code>.pkl</code> format.
+                                </p>
+
+                                <p>
+                                    <strong>Important:</strong> The model name should not be <code>model.pkl</code>. Avoid uploading models with the same name as existing ones to prevent conflicts.
+                                </p>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    style={{
+                                        backgroundColor: "#45a049",
+                                        borderColor: "#45a049",
+                                        fontSize: "0.875rem",
+                                        padding: "0.25rem 0.5rem",
+                                        borderRadius: "0.2rem",
+                                    }}
+                                    onClick={() => {
+                                        fileInputRef.current.click(); // Trigger file input inside modal
+                                        closeModal(); // Close the modal after triggering file input
+                                    }}
+                                >
+                                    Upload Model
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };
