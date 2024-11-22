@@ -7,6 +7,7 @@ const ControlButtons = ({ onDownload }) => {
 
   const [currUser, setCurrUser] = useState("");
   const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const [showModaldataset, setshowModaldataset] = useState(false);
 
   const fileInputRef1 = useRef(null); // For model import
   const fileInputRef2 = useRef(null); // For dataset import
@@ -62,7 +63,7 @@ const ControlButtons = ({ onDownload }) => {
   };
 
   const handleImportDataset = () => {
-    fileInputRef2.current.click();
+    setshowModaldataset(true);
   };
 
   const handleModelFileChange = async (event) => {
@@ -145,7 +146,12 @@ const ControlButtons = ({ onDownload }) => {
 
   const closeModal = () => {
     setShowModal(false); // Close the modal
+
   };
+  const closeModal2 = () => {
+    setshowModaldataset(false) // Close the modal
+  };
+
 
   return (
       <div className="file-import-container">
@@ -184,8 +190,8 @@ const ControlButtons = ({ onDownload }) => {
 
         {/* Bootstrap Modal for model upload instructions */}
         {showModal && (
-            <div className="modal show" style={{ display: "block" }}>
-              <div className="modal-dialog">
+            <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
+              <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                   <div className="modal-header">
                     <h5 className="modal-title">Model Upload Instructions</h5>
@@ -195,9 +201,9 @@ const ControlButtons = ({ onDownload }) => {
                         style={{
                           backgroundColor: "#45a049",
                           borderColor: "#45a049",
-                          fontSize: "0.875rem",  // Smaller font size
-                          padding: "0.25rem 0.5rem",  // Smaller padding
-                          borderRadius: "0.2rem"  // Optional: round corners slightly
+                          fontSize: "0.875rem",
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "0.2rem",
                         }}
                         onClick={closeModal}
                     >
@@ -205,8 +211,9 @@ const ControlButtons = ({ onDownload }) => {
                     </button>
                   </div>
                   <div className="modal-body">
-                    <p><strong>File format:</strong> The file must be in <code>.pkl</code> format.</p>
-                    <p><strong>File size:</strong> The file size must be less than 1 MB.</p>
+                    <p>
+                      <strong>File format:</strong> The file must be in <code>.pkl</code> format.
+                    </p>
                   </div>
                   <div className="modal-footer">
                     <button
@@ -215,36 +222,74 @@ const ControlButtons = ({ onDownload }) => {
                         style={{
                           backgroundColor: "#45a049",
                           borderColor: "#45a049",
-                          fontSize: "0.875rem",  // Smaller font size
-                          padding: "0.25rem 0.5rem",  // Smaller padding
-                          borderRadius: "0.2rem"  // Optional: round corners slightly
+                          fontSize: "0.875rem",
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "0.2rem",
                         }}
                         onClick={() => {
-                          fileInputRef1.current.click();  // Trigger file input inside modal
+                          fileInputRef1.current.click(); // Trigger file input inside modal
                           closeModal(); // Close the modal after triggering file input
                         }}
                     >
                       Upload Model
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-secondary"
-                        style={{
-                          backgroundColor: "#45a049",
-                          borderColor: "#45a049",
-                          fontSize: "0.875rem",  // Smaller font size
-                          padding: "0.25rem 0.5rem",  // Smaller padding
-                          borderRadius: "0.2rem"  // Optional: round corners slightly
-                        }}
-                        onClick={closeModal}
-                    >
-                      Close
                     </button>
                   </div>
                 </div>
               </div>
             </div>
         )}
+
+
+        {showModaldataset && (
+            <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
+              <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Dataset Upload Instructions</h5>
+                    <button
+                        type="button"
+                        className="close"
+                        style={{
+                          backgroundColor: "#45a049",
+                          borderColor: "#45a049",
+                          fontSize: "0.875rem",
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "0.2rem",
+                        }}
+                        onClick={closeModal2}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <p>
+                      <strong>File format:</strong> The file must be in <code>.csv</code> format.
+                    </p>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        style={{
+                          backgroundColor: "#45a049",
+                          borderColor: "#45a049",
+                          fontSize: "0.875rem",
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "0.2rem",
+                        }}
+                        onClick={() => {
+                          fileInputRef2.current.click(); // Trigger file input inside modal
+                          closeModal2(); // Close the modal after triggering file input
+                        }}
+                    >
+                      Upload Dataset
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        )}
+
 
 
       </div>
