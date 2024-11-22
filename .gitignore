@@ -7,6 +7,7 @@ backend/app/__pycache__
 backend/app/controllers/__pycache__
 backend/__pycache__
 backend/app/__pycache__
+backend/ml_model/model_with_score.pkl
 
 # Frontend
 # Logs
@@ -62,3 +63,6 @@ env/
 
 # Pytest cache
 *.pytest_cache/
+
+
+
