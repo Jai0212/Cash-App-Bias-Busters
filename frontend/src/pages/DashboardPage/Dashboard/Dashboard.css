@@ -356,7 +356,7 @@ html {
   width: 80%; /* Adjust the width */
   height: 100%;
   max-width: 1000px; /* Prevent it from growing too wide */
-  max-height: 400px;
+  max-height: 480px;
   border-radius: 8px; /* Optional: rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow */
 }
