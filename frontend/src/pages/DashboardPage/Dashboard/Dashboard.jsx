@@ -14,7 +14,7 @@ import Slider from '../Slider/Slider.jsx';
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
-
+  const [loading, setLoading] = useState(false)
   const [graphData, setGraphData] = useState([
     {
       feature1: "Demographic 1",
@@ -534,6 +534,8 @@ const Dashboard = () => {
       return;
     }
 
+    setLoading(true); // Start loading
+
     axios
       .post(`${VITE_BACKEND_URL}/api/generate`, {
         demographics: [selectedDemographic, secondSelectedDemographic],
@@ -554,7 +556,10 @@ const Dashboard = () => {
       })
       .catch((err) => {
         console.error("Error generating data:", err);
-      });
+      })
+        .finally(() => {
+          setLoading(false);
+        });
   };
 
   const maxValue = () => {
@@ -572,127 +577,6 @@ const Dashboard = () => {
   const handleSliderValueChange = (value) => {
     console.log('Slider Value:', value); // Handle the slider value update
   };
-
-  // useEffect(() => {
-  //   setGraphData([
-  //     {
-  //       feature1: "Black",
-  //       feature2: "Female",
-  //       accuracy: 0.25,
-  //       falsepositive: 0.75,
-  //       falsenegative: 0.0,
-  //       combination_label: "Black Female",
-  //     },
-  //     {
-  //       feature1: "Black",
-  //       feature2: "Male",
-  //       accuracy: 0.2,
-  //       falsepositive: 0.0,
-  //       falsenegative: 1.0,
-  //       combination_label: "Black Male",
-  //     },
-  //     {
-  //       feature1: "Black",
-  //       feature2: "Non-binary",
-  //       accuracy: 0.5,
-  //       falsepositive: 0.0,
-  //       falsenegative: 0.5,
-  //       combination_label: "Black Non-binary",
-  //     },
-  //     {
-  //       feature1: "Hispanic",
-  //       feature2: "Female",
-  //       accuracy: 0.33,
-  //       falsepositive: 0.67,
-  //       falsenegative: 0.0,
-  //       combination_label: "Hispanic Female",
-  //     },
-  //     {
-  //       feature1: "Hispanic",
-  //       feature2: "Male",
-  //       accuracy: 0.5,
-  //       falsepositive: 0.0,
-  //       falsenegative: 0.5,
-  //       combination_label: "Hispanic Male",
-  //     },
-  //     {
-  //       feature1: "Hispanic",
-  //       feature2: "Non-binary",
-  //       accuracy: 1.0,
-  //       falsepositive: 0.0,
-  //       falsenegative: 0.0,
-  //       combination_label: "Hispanic Non-binary",
-  //     },
-  //     {
-  //       feature1: "Other",
-  //       feature2: "Female",
-  //       accuracy: 0.67,
-  //       falsepositive: 0.0,
-  //       falsenegative: 0.33,
-  //       combination_label: "Other Female",
-  //     },
-  //     {
-  //       feature1: "Other",
-  //       feature2: "Male",
-  //       accuracy: 0.75,
-  //       falsepositive: 0.25,
-  //       falsenegative: 0.0,
-  //       combination_label: "Other Male",
-  //     },
-  //     {
-  //       feature1: "Other",
-  //       feature2: "Non-binary",
-  //       accuracy: 0.7,
-  //       falsepositive: 0.0,
-  //       falsenegative: 1.0,
-  //       combination_label: "Other Non-binary",
-  //     },
-  //     {
-  //       feature1: "Black",
-  //       feature2: "Other",
-  //       accuracy: 0.56,
-  //       falsepositive: 0.0,
-  //       falsenegative: 1.0,
-  //       combination_label: "Black Other",
-  //     },
-  //     {
-  //       feature1: "Hispanic",
-  //       feature2: "Other",
-  //       accuracy: 0.42,
-  //       falsepositive: 0.0,
-  //       falsenegative: 1.0,
-  //       combination_label: "Hispanic Other",
-  //     },
-  //     {
-  //       feature1: "White",
-  //       feature2: "Male",
-  //       accuracy: 0.2,
-  //       falsepositive: 0.25,
-  //       falsenegative: 0.0,
-  //       combination_label: "Wite Male",
-  //     },
-  //     {
-  //       feature1: "White",
-  //       feature2: "Non-binary",
-  //       accuracy: 0.5,
-  //       falsepositive: 0.0,
-  //       falsenegative: 1.0,
-  //       combination_label: "White Non-binary",
-  //     },
-  //     {
-  //       feature1: "White",
-  //       feature2: "Other",
-  //       accuracy: 0.64,
-  //       falsepositive: 0.0,
-  //       falsenegative: 1.0,
-  //       combination_label: "White Other",
-  //     },
-  //   ]);
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log("Graph data updated:", graphData);
-  // }, [graphData]);
 
   return (
     <div className="dashboard-container">
@@ -725,7 +609,15 @@ const Dashboard = () => {
             1 Year
           </button>
         </div>
-        <div>
+        {loading && (
+            <div className="loading-container">
+              <img
+                   src="https://media.tenor.com/kMCwoAD4RNAAAAAj/loading-gif-loading.gif"
+                   alt="Loading..."
+                   className="loading-gif" />
+            </div>
+        )}
+        <div className={loading ? "hidden" : ""}>
           <Slider graphData={graphData} maxValue={maxValue} />
         </div>
 
