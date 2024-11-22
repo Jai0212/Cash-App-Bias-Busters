@@ -14,7 +14,7 @@ import Slider from '../Slider/Slider.jsx';
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
-
+  const [loading, setLoading] = useState(false)
   const [graphData, setGraphData] = useState([
     {
       feature1: "Demographic 1",
