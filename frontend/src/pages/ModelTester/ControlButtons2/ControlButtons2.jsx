@@ -70,8 +70,8 @@ const ControlButton2 = ({ setUploadedFiles }) => {
 
         if (!files.length) return; // If no files are selected, exit
 
-        if (uploadedFiles.length === 5) {
-            alert("You can only upload 5 models at a time.");
+        if (uploadedFiles.length === 5 || uploadedFiles.length + files.length > 5) {
+            alert("You can only upload 5 models.");
             return;
         }
 
@@ -80,33 +80,41 @@ const ControlButton2 = ({ setUploadedFiles }) => {
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            if (!file.name.endsWith(".pkl")) {
-                alert("Please upload a model in .pkl format.");
-                return;
-            }
 
             if (!currUser || !file) {
                 alert("Error: Missing required data.");
                 return;
             }
 
-            if (uploadedFiles.includes(file.name)) {
+            if (!file.name.endsWith(".pkl")) {
+                alert("Please upload a model in .pkl format.");
+                return;
+            }
+
+            if (newUploadedFiles.includes(file.name)) {
                 alert(`File with name ${file.name} already uploaded.`);
-                continue;
+                return;
             }
 
             if (file.name === "model.pkl") {
                 alert("You cannot upload a file named model.pkl.");
-                continue;
+                return;
             }
 
-            const formData = new FormData();
-            formData.append("curr_user", currUser);
-            formData.append("model_file", file);
-            formData.append("dashboard", file.name);
+            newUploadedFiles.push(file.name);
+        }
 
-            try {
-                // Make a POST request to upload model
+        // Prepare for the file upload
+        const uploadedFilesToPush = [...uploadedFiles];
+
+        try {
+            // Make a POST request to upload models
+            const uploadPromises = Array.from(files).map(async (file) => {
+                const formData = new FormData();
+                formData.append("curr_user", currUser);
+                formData.append("model_file", file);
+                formData.append("dashboard", file.name);
+
                 const response = await fetch(`${VITE_BACKEND_URL}/api/upload-model`, {
                     method: "POST",
                     body: formData,
@@ -121,25 +129,27 @@ const ControlButton2 = ({ setUploadedFiles }) => {
 
                 const responseData = await response.json();
                 console.log("Success:", responseData.message);
-                alert("Model uploaded successfully!");
 
-                // Add the file to the list of uploaded files
-                newUploadedFiles.push(file.name);
+                uploadedFilesToPush.push(file.name); // Add to local list of uploaded files
+            });
 
-                // Update the state with the new list of uploaded files
-                setUploadedFiles(newUploadedFiles);
-                setUploadedFilesState(newUploadedFiles); // Update local state
+            // Wait for all files to be uploaded
+            await Promise.all(uploadPromises);
 
-                // Save the new list to localStorage
-                localStorage.setItem("uploadedFiles", JSON.stringify(newUploadedFiles));
+            // Update the state with the new list of uploaded files
+            setUploadedFiles(uploadedFilesToPush);
+            setUploadedFilesState(uploadedFilesToPush); // Update local state
 
-                // Reset the file input after uploading
-                event.target.value = null;
+            // Save the new list to localStorage
+            localStorage.setItem("uploadedFiles", JSON.stringify(uploadedFilesToPush));
 
-            } catch (error) {
-                console.error("Error during model upload:", error);
-                alert("Error during model upload: " + error.message);
-            }
+            // Reset the file input after uploading
+            event.target.value = null;
+
+            alert("Model(s) uploaded successfully!");
+        } catch (error) {
+            console.error("Error during model upload:", error);
+            alert("Error during model upload: " + error.message);
         }
     };
 

@@ -10,18 +10,18 @@ const Dashboard2 = () => {
   const [currUser, setCurrUser] = useState("");
 
   const backgroundColours = [
-    "#00CC00", // Darker bright green 1
-    "#66CC66", // Darker bright green 2
-    "#66FF66", // Bright green 3 (unchanged)
-    "#99CC99", // Darker bright green 4
-    "#99FF99", // Bright green 5 (unchanged)
+    "#FF5733", // Vibrant Red
+    "#33FF57", // Vibrant Green
+    "#3357FF", // Vibrant Blue
+    "#F3F33B", // Bright Yellow
+    "#F33BF3", // Bright Purple
   ];
 
   const [graphData, setGraphData] = useState({
     labels: ["Model 1", "Model 2", "Model 3", "Model 4", "Model 5"],
     datasets: [
       {
-        label: "Models",
+        label: "Bias",
         data: [0, 0, 0, 0, 0],
         backgroundColor: backgroundColours,
       },
@@ -29,8 +29,6 @@ const Dashboard2 = () => {
   });
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
-
-  const tempUploadedFiles = ['model1', 'model2', 'model3', 'model4', 'model5'];
 
   const [generationResults, setGenerationResults] = useState([]);
 
@@ -188,7 +186,7 @@ const Dashboard2 = () => {
 
       <div className="chart-section">
         {Object.keys(graphData).length > 0 && (
-          <ChartComponent2 chartData={graphData} />
+          <ChartComponent2 chartData={graphData} generationalResults={generationResults} />
         )}
       </div>
     </div>
