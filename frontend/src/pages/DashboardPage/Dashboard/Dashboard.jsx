@@ -7,7 +7,8 @@ import "./Dashboard.css";
 import Modal from '../../../Components/Modal/Modal.jsx';
 import axiosRetry from "axios-retry";
 import swal from 'sweetalert2';
-import Joyride from 'react-joyride';
+import TourGuide from '../TourGuide/TourGuide.jsx';
+import Slider from '../Slider/Slider.jsx';
 
 
 const Dashboard = () => {
@@ -132,7 +133,7 @@ const Dashboard = () => {
   const [currUser, setCurrUser] = useState("");
 
   const [error, setError] = useState("");
-  const [sliderValue, setSliderValue] = useState(0.5);
+  // const [sliderValue, setSliderValue] = useState(0.5);
 
   const [timeframe, setTimeframe] = useState("year");
   const [demographics, setDemographics] = useState([]);
@@ -159,54 +160,6 @@ const Dashboard = () => {
   const closeModal = () => setIsModalOpen(false); // Close the modal
 
   const [runTour, setRunTour] = useState(false); // State to control the tour
-  const [steps, setSteps] = useState([
-    {
-      target: '.upload-model-button',  // Targeting "Upload Model" button
-      content: 'Click here to upload the model file you want to use for analysis.',
-      placement: 'bottom',
-    },
-    {
-      target: '.upload-dataset-button',  // Targeting "Upload Dataset" button
-      content: 'Click here to upload the dataset file for processing.',
-      placement: 'bottom',
-    },
-    {
-      target: '.select-container1',  // Targeting the dropdown for selecting demographics
-      content: 'Select a primary demographic category (e.g., race, gender, age) from the dropdown.',
-      placement: 'bottom',
-    },
-    {
-      target: '.select-options1',  // Targeting the dropdown for selecting values of the first demographic
-      content: 'Choose values for the first demographic category.',
-      placement: 'bottom',
-    },
-    {
-      target: '.select-container2',  // Targeting the dropdown for selecting the second demographic category
-      content: 'Now, select a second demographic category for deeper segmentation.',
-      placement: 'bottom',
-    },
-    {
-      target: '.select-options2',  // Targeting the values selection for second demographic
-      content: 'Choose values for the second demographic category.',
-      placement: 'bottom',
-    },
-    {
-      target: '.slider-input',  // Targeting the slider for adjusting the graph
-      content: 'Adjust the slider to set the desired value between 0 and 1.',
-      placement: 'top',
-    },
-    {
-      target: '.timeframe-buttons',  // Targeting the slider for adjusting the graph
-      content: 'Select the timeframe you want to see.',
-      placement: 'top',
-    },
-
-    {
-      target: '.generate-button',  // Targeting the "Generate" button
-      content: 'Click the "Generate" button to generate the graph showing insights across the selected demographics.',
-      placement: 'top',
-    },
-  ]);
 
   const fetchEmailAndDemographics = async () => {
     const url = `${VITE_BACKEND_URL}/get-email`;
@@ -616,9 +569,8 @@ const Dashboard = () => {
     return maxInitialElement;
   };
 
-  const handleSliderChange = (event) => {
-    setSliderValue(parseFloat(event.target.value));
-    console.log("Slider Value:", event.target.value); // For debugging
+  const handleSliderValueChange = (value) => {
+    console.log('Slider Value:', value); // Handle the slider value update
   };
 
   // useEffect(() => {
@@ -744,17 +696,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <Joyride
-          steps={steps}
-          run={runTour} // Set to true to run the tour
-          continuous // Automatically go to the next step
-          showSkipButton // Show button to skip the tour
-          styles={{
-            options: {
-              zIndex: 1000, // Ensure the tour overlay is above all other content
-            },
-          }}
-      />
+      <TourGuide runTour={runTour} />
 
       <div className="chart-container-container">
         <div className="timeframe-buttons">
@@ -784,30 +726,7 @@ const Dashboard = () => {
           </button>
         </div>
         <div>
-          <div className="slider-container">
-            <label className="slider-label-cont">
-              Adjust the slider (0 to 1): <span className="slider-value">{sliderValue}</span>
-            </label>
-            <input
-              className="slider-input"
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={sliderValue}
-              onChange={handleSliderChange}
-            />
-          </div>
-          <div>
-            {Object.keys(graphData).length > 0 && (
-              <ChartComponent
-                ref={chartRef}
-                chartData={graphData}
-                sliderValue={sliderValue}
-                bias={maxValue()}
-              />
-            )}
-          </div>
+          <Slider graphData={graphData} maxValue={maxValue} />
         </div>
 
         <div className="select-demographics-2">

@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import swal from 'sweetalert2';
-import { useState } from 'react';
 
 const ChangePassword = () => {
     const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;

@@ -29,7 +29,7 @@ file_repo = CsvFileRepo(user, file_path)
 
 # get_values_under_header = GetValuesUnderHeader(file_repo)
 # print(get_values_under_header.execute("race"))
-evaluator = EvaluateModelsUseCase([os.path.join("uploads/jj@gmail.com/model_with_score.pkl")])
+evaluator = EvaluateModelsUseCase([os.path.join(curr_dir, "uploads/jj@gmail.com/model.pkl")])
 eval_results = evaluator.execute()
 print(eval_results)
 # get_last_login_data = GetLastLoginData(db_repo)
@@ -47,15 +47,15 @@ choices = {
 time = "year"
 # file_repo.update_comparison_csv(demographics, choices, time)
 
-generate = Generate(file_repo, db_repo)
-result = generate.execute(demographics, choices, time)
-print(len(result))
-for i in result:
-    print(
-        i.get_feature1(),
-        i.get_feature2(),
-        i.get_accuracy(),
-        i.get_false_positive_rate(),
-        i.get_false_negative_rate(),
-        i.get_combination_label(),
-    )
+# generate = Generate(file_repo, db_repo)
+# result = generate.execute(demographics, choices, time)
+# print(len(result))
+# for i in result:
+#     print(
+#         i.get_feature1(),
+#         i.get_feature2(),
+#         i.get_accuracy(),
+#         i.get_false_positive_rate(),
+#         i.get_false_negative_rate(),
+#         i.get_combination_label(),
+#     )
