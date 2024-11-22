@@ -4,7 +4,10 @@
     width: 100%; /* Makes the chart take up full width of the container */
     max-width: 800px; /* Limit the maximum width of the chart */
     margin: 0 auto; /* Centers the chart horizontally */
-    padding: 20px;
+    padding-bottom: 14px;
+    padding-left: 14px;
+    padding-right: 38px;
+    padding-top: 20px;
     box-sizing: border-box;
   }
   
