@@ -220,8 +220,8 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             )}
 
             {showModal && (
-                <div className="modal show" style={{ display: "block" }}>
-                    <div className="modal-dialog">
+                <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
+                    <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Model Upload Instructions</h5>
@@ -231,9 +231,9 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                                     style={{
                                         backgroundColor: "#45a049",
                                         borderColor: "#45a049",
-                                        fontSize: "0.875rem",  // Smaller font size
-                                        padding: "0.25rem 0.5rem",  // Smaller padding
-                                        borderRadius: "0.2rem"  // Optional: round corners slightly
+                                        fontSize: "0.875rem",
+                                        padding: "0.25rem 0.5rem",
+                                        borderRadius: "0.2rem",
                                     }}
                                     onClick={closeModal}
                                 >
@@ -241,8 +241,13 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                                 </button>
                             </div>
                             <div className="modal-body">
-                                <p><strong>File format:</strong> The file must be in <code>.pkl</code> format.</p>
-                                <p><strong>File size:</strong> The file size must be less than 1 MB.</p>
+                                <p>
+                                    <strong>File format:</strong> The file must be in <code>.pkl</code> format.
+                                </p>
+
+                                <p>
+                                    <strong>Important:</strong> The model name should not be <code>model.pkl</code>. Avoid uploading models with the same name as existing ones to prevent conflicts.
+                                </p>
                             </div>
                             <div className="modal-footer">
                                 <button
@@ -251,25 +256,23 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                                     style={{
                                         backgroundColor: "#45a049",
                                         borderColor: "#45a049",
-                                        fontSize: "0.875rem",  // Smaller font size
-                                        padding: "0.25rem 0.5rem",  // Smaller padding
-                                        borderRadius: "0.2rem"  // Optional: round corners slightly
+                                        fontSize: "0.875rem",
+                                        padding: "0.25rem 0.5rem",
+                                        borderRadius: "0.2rem",
                                     }}
                                     onClick={() => {
-                                        fileInputRef.current.click();  // Trigger file input inside modal
+                                        fileInputRef.current.click(); // Trigger file input inside modal
                                         closeModal(); // Close the modal after triggering file input
                                     }}
                                 >
                                     Upload Model
                                 </button>
-
-
-
                             </div>
                         </div>
                     </div>
                 </div>
             )}
+
         </div>
     );
 };
