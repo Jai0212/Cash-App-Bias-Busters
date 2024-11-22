@@ -609,16 +609,16 @@ const Dashboard = () => {
             1 Year
           </button>
         </div>
-        <div>
-          {loading ? (
-              <div className="loading-container">
-                <img src="https://media.tenor.com/kMCwoAD4RNAAAAAj/loading-gif-loading.gif"
-                     alt="Loading..."
-                     className="loading-gif" />
-              </div>
-          ) : (
-              <Slider graphData={graphData} maxValue={maxValue} />
-          )}
+        {loading && (
+            <div className="loading-container">
+              <img
+                   src="https://media.tenor.com/kMCwoAD4RNAAAAAj/loading-gif-loading.gif"
+                   alt="Loading..."
+                   className="loading-gif" />
+            </div>
+        )}
+        <div className={loading ? "hidden" : ""}>
+          <Slider graphData={graphData} maxValue={maxValue} />
         </div>
 
         <div className="select-demographics-2">
