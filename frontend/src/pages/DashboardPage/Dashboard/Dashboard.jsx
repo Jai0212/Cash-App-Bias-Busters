@@ -534,6 +534,8 @@ const Dashboard = () => {
       return;
     }
 
+    setLoading(true); // Start loading
+
     axios
       .post(`${VITE_BACKEND_URL}/api/generate`, {
         demographics: [selectedDemographic, secondSelectedDemographic],
@@ -554,7 +556,10 @@ const Dashboard = () => {
       })
       .catch((err) => {
         console.error("Error generating data:", err);
-      });
+      })
+        .finally(() => {
+          setLoading(false);
+        });
   };
 
   const maxValue = () => {
