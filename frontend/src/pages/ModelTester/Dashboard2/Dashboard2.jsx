@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import ChartComponent2 from "../ChartComponenet2/ChartComponent2.jsx";
 import ControlButton2 from "../ControlButtons2/ControlButtons2.jsx";
 import "./Dashboard2.css";
@@ -8,7 +8,7 @@ const Dashboard2 = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const [currUser, setCurrUser] = useState("");
-
+  const [uploaded, setUploaded] = useState(false);
   const backgroundColours = [
     "#FF5733", // Vibrant Red
     "#33FF57", // Vibrant Green
@@ -93,13 +93,13 @@ const Dashboard2 = () => {
 
     try {
       const response = await fetch(
-        `${VITE_BACKEND_URL}/api/generate-for-all-models`,
-        {
-          method: "POST",
-          body: new URLSearchParams({
-            curr_user: currUser,
-          }),
-        }
+          `${VITE_BACKEND_URL}/api/generate-for-all-models`,
+          {
+            method: "POST",
+            body: new URLSearchParams({
+              curr_user: currUser,
+            }),
+          }
       );
 
       if (!response.ok) {
@@ -133,64 +133,78 @@ const Dashboard2 = () => {
 
 
   return (
-    <div className="dashboard-main">
-      {/* Pass setUploadedFiles to ControlButton2 */}
-      <div className="button-container">
-        <ControlButton2 setUploadedFiles={setUploadedFiles} />
+      <>
+        {uploaded ? (
+            <div className="dashboard-main">
+              {/* Pass setUploadedFiles to ControlButton2 */}
+              <div className="button-container">
+                <ControlButton2 setUploadedFiles={setUploadedFiles} />
 
-        {uploadedFiles.length > 0 && <div className="action-button-container">
-          <button onClick={handleGenerateClick} className="generate-btn">
-            Generate
-          </button>
-        </div>}
-      </div>
+                {uploadedFiles.length > 0 && (
+                    <div className="action-button-container">
+                      <button onClick={handleGenerateClick} className="generate-btn">
+                        Generate
+                      </button>
+                    </div>
+                )}
+              </div>
 
-      {generationResults.length > 0 && (
-        <div className="result-section">
-          {generationResults.map((result, index) => (
-            <ul key={index}>
-              <li className="result-item">
-                <div className="result-details">
-                  <strong className="output-name">File:</strong>
-                  <span className="output-value">{uploadedFiles[index]}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Race:</strong>
-                  <span className="output-value">{result.race}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Gender:</strong>
-                  <span className="output-value">{result.gender}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Age:</strong>
-                  <span className="output-value">{result.age_groups}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">State:</strong>
-                  <span className="output-value">{result.state}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Variance:</strong>
-                  <span className="output-value">{result.variance}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Bias:</strong>
-                  <span className="output-value">{result.mean}</span>
-                </div>
-              </li>
-            </ul>
-          ))}
-        </div>
-      )}
+              {generationResults.length > 0 && (
+                  <div className="result-section">
+                    {generationResults.map((result, index) => (
+                        <ul key={index}>
+                          <li className="result-item">
+                            <div className="result-details">
+                              <strong className="output-name">File:</strong>
+                              <span className="output-value">{uploadedFiles[index]}</span>
+                            </div>
+                            <div className="result-details">
+                              <strong className="output-name">Race:</strong>
+                              <span className="output-value">{result.race}</span>
+                            </div>
+                            <div className="result-details">
+                              <strong className="output-name">Gender:</strong>
+                              <span className="output-value">{result.gender}</span>
+                            </div>
+                            <div className="result-details">
+                              <strong className="output-name">Age:</strong>
+                              <span className="output-value">{result.age_groups}</span>
+                            </div>
+                            <div className="result-details">
+                              <strong className="output-name">State:</strong>
+                              <span className="output-value">{result.state}</span>
+                            </div>
+                            <div className="result-details">
+                              <strong className="output-name">Variance:</strong>
+                              <span className="output-value">{result.variance}</span>
+                            </div>
+                            <div className="result-details">
+                              <strong className="output-name">Bias:</strong>
+                              <span className="output-value">{1 - result.mean}</span>
+                            </div>
+                          </li>
+                        </ul>
+                    ))}
+                  </div>
+              )}
 
-      <div className="chart-section">
-        {Object.keys(graphData).length > 0 && (
-          <ChartComponent2 chartData={graphData} generationalResults={generationResults} />
+              <div className="chart-section">
+                {Object.keys(graphData).length > 0 && (
+                    <ChartComponent2
+                        chartData={graphData}
+                        generationalResults={generationResults}
+                    />
+                )}
+              </div>
+            </div>
+        ) : (
+            <div className="upload-placeholder">
+              <h2>Please upload your data to access the dashboard</h2>
+            </div>
         )}
-      </div>
-    </div>
+      </>
   );
 };
 
 export default Dashboard2;
+
