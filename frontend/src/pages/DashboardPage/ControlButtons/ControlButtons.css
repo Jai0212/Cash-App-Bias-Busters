@@ -77,7 +77,7 @@ input[type="file"] {
 
 /* Style for the Download Graph button */
 .file-import-container button:nth-child(3) {
-  background-color: #0088cc;
+  background-color: #45a049;
   color: #fafafa;
 }
 
