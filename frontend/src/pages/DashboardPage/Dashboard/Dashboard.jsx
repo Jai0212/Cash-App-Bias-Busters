@@ -612,7 +612,7 @@ const Dashboard = () => {
         {loading && (
             <div className="loading-container">
               <img
-                   src="https://media.tenor.com/kMCwoAD4RNAAAAAj/loading-gif-loading.gif"
+                   src="/spinner.gif"
                    alt="Loading..."
                    className="loading-gif" />
             </div>

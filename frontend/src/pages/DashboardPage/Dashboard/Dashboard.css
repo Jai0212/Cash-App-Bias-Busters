@@ -491,8 +491,8 @@ button:focus-visible {
 
 .loading-container {
   position: absolute;        /* Overlay on top of the chart-placeholder */
-  top: 45%;                  /* Vertically center the spinner */
-  left: 30%;                 /* Adjust this value to move the spinner to the left */
+  top: 50%;                  /* Vertically center the spinner */
+  left: 23%;                 /* Adjust this value to move the spinner to the left */
   transform: translateY(-50%); /* Ensure the spinner is vertically centered */
   z-index: 10;              /* Ensures it sits on top of the chart */
   display: flex;
@@ -500,8 +500,9 @@ button:focus-visible {
 }
 
 .loading-gif {
-  width: 300px; /* Adjust width of the gif if necessary */
-  height: 300px; /* Adjust height of the gif if necessary */
+  width: 550px; /* Adjust width of the gif if necessary */
+  height: 650px; /* Adjust height of the gif if necessary */
+  opacity: 80%;
 }
 
 .hidden {
