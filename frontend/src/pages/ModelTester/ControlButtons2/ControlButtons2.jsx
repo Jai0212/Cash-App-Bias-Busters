@@ -207,7 +207,7 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             />
 
             {/* Button for importing models */}
-            <button className="upload-button" onClick={handleModelUploadClick}>Upload Model(s)</button>
+            <button className="upload-button" onClick={handleModelUploadClick}>Upload Models</button>
 
             {/* Display the uploaded files below */}
             {uploadedFiles.length > 0 && (

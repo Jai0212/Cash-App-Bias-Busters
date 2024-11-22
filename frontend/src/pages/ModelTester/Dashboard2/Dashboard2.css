@@ -29,14 +29,19 @@
 }
 
 .upload-button {
-  background-color: #0088cc;
+  background-color: #04CF22;
   color: #fafafa;
   margin-bottom: 20px;
+  font-size: 40px;
+  border: none;
+  height: 100px;
+  width: 350px;
+  border-radius: 120px; /* Rounds the edges */
 }
 
 .upload-button:hover {
-  background-color: #005f88; /* Darker shade for hover */
-  color: #fff;
+  background-color: #ffffff; /* Darker shade for hover */
+  color: #04CF22;
   font-weight: bold;
 }
 
@@ -178,4 +183,23 @@ html {
   white-space: nowrap; /* Prevents the text from wrapping */
   overflow: hidden; /* Hides any overflowed content */
   text-overflow: ellipsis; /* Adds "..." if the text overflows */
+}
+
+.illustration {
+
+}
+
+.pre-upload-dashboard {
+  background-color: #04CF22;
+  height: 100vh;
+  width: 100vw;
+}
+
+.button-container-pre {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: row; /* Align buttons horizontally */
+  justify-content: center; /* Center the buttons */
+  gap: 20px; /* Space between buttons */
+  width: 100%;
 }

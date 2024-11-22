@@ -198,8 +198,23 @@ const Dashboard2 = () => {
               </div>
             </div>
         ) : (
-            <div className="upload-placeholder">
-              <h2>Please upload your data to access the dashboard</h2>
+            <div className="pre-upload-dashboard">
+              <div className="button-container-pre">
+                <ControlButton2 setUploadedFiles={setUploadedFiles}/>
+
+                {uploadedFiles.length > 0 && (
+                    setUploaded(true),
+                        <div className="action-button-container">
+                          <button onClick={handleGenerateClick} className="generate-btn">
+                            Generate
+                          </button>
+                        </div>
+                )}
+              </div>
+              <img
+                  src="https://camo.githubusercontent.com/61aab9aae5110eeab0b40fa7cf623d9550344cb9db26bcf1a35612c5b1725647/68747470733a2f2f696d616765732e73717561726573706163652d63646e2e636f6d2f636f6e74656e742f76312f3534313037626339653462306637363832313838333132622f313531373638393835353530352d31505155373542514e54554a55534a54344d4f4f2f41445f76342e6769663f666f726d61743d3135303077"
+                  alt="Cashapp illustration"
+                  className="illustration"/>
             </div>
         )}
       </>
