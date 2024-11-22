@@ -114,7 +114,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             beginAtZero: true,
             title: {
               display: true,   // Display the y-axis title
-              text: 'Accuracy', // Set the y-axis label
+              text: 'Bias', // Set the y-axis label
               font: {
                 size: 16,   // Font size for the title
                 weight: 'bold', // Make the title bold
@@ -145,7 +145,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
               label: (tooltipItem) => {
                 const item = accuracyData[tooltipItem.dataIndex];
                 return [
-                  `Accuracy: ${item.accuracy}`,
+                  `Bias: ${item.accuracy}`,
                   `False Positive: ${item.falsePositive}`,
                   `False Negative: ${item.falseNegative}`,
                 ];

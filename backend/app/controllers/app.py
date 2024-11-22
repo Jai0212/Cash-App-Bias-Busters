@@ -12,11 +12,11 @@ from app.use_cases import (
     UploadData,
 )
 from app.repositories import SqliteDbRepo, CsvFileRepo
-from app.use_cases.user_interactor import (
-    register_user_interactor,
-    login_user_interactor,
-    change_password_interactor,
-)
+from app.use_cases.register_user_interactor import RegisterUserInteractor
+from app.use_cases.login_user_interactor import LoginUserInteractor
+from app.use_cases.change_password_interactor import ChangePasswordInteractor
+from app.repositories.user_repository import UserRepository
+
 from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
 load_dotenv()
@@ -425,37 +425,31 @@ def home():
     return "Welcome to the Backend!"
 
 
+user_repo = UserRepository(table_name="users")
+
 @app.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
     print("Received data:", data)
+
     firstname = data.get("firstname")
     lastname = data.get("lastname")
     email = data.get("email")
     password = data.get("password")
     confirm_password = data.get("confirmPassword")
-    print(email)
 
+    # Validate required fields and password confirmation
     if password != confirm_password:
-        return (
-            jsonify({"code": 2, "error": True, "message": "Passwords do not match"}),
-            400,
-        )
+        return jsonify({"code": 2, "error": True, "message": "Passwords do not match"}), 400
 
-    if (
-        not firstname
-        or not lastname
-        or not email
-        or not password
-        or not confirm_password
-    ):
-        return (
-            jsonify({"code": 2, "error": True, "message": "All fields are required"}),
-            400,
-        )
+    if not firstname or not lastname or not email or not password or not confirm_password:
+        return jsonify({"code": 2, "error": True, "message": "All fields are required"}), 400
 
     try:
-        response = register_user_interactor(firstname, lastname, email, password)
+
+        # Use the `RegisterUserInteractor` with the repository
+        register_interactor = RegisterUserInteractor(user_repo)
+        response = register_interactor.execute(firstname, lastname, email, password)
         return jsonify({"code": 3, "error": False, "message": response["message"]}), 201
 
     except ValueError as e:
@@ -464,28 +458,39 @@ def signup():
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
 
-
 current_user_email = None
 
 
 @app.route("/login", methods=["POST"])
 def login():
+    global current_user_email
+
     data = request.get_json()
-    print(data)
+    print("Received data:", data)
+
     email = data.get("email")
     password = data.get("password")
 
+    if not email or not password:
+        return (
+            jsonify({"code": 2, "error": True, "message": "Email and Password are required"}),
+            400,
+        )
+
     try:
-        response = login_user_interactor(email, password)
-        if not response.get("error"):
-            # Store the email in the global variable only if login is successful
-            global current_user_email
-            current_user_email = email
-            print(current_user_email)
+        # Use the LoginUserInteractor with the UserRepository
+        login_interactor = LoginUserInteractor(user_repo)
+        response = login_interactor.execute(email, password)
+
+        # Store the email globally if login is successful
+        current_user_email = email
+        print(f"Current logged-in user: {current_user_email}")
 
         return jsonify({"code": 3, "error": False, "message": response["message"]}), 200
+
     except ValueError as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 401
+
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
 
@@ -512,6 +517,8 @@ def get_email():
 
 @app.route("/change_password", methods=["POST"])
 def change_password():
+    global current_user_email
+
     data = request.get_json()
     print("Received data:", data)
 
@@ -539,10 +546,15 @@ def change_password():
         )
 
     try:
-        response = change_password_interactor(email, old_password, new_password)
+        # Use the ChangePasswordInteractor with the UserRepository
+        change_password_interactor = ChangePasswordInteractor(user_repo)
+        response = change_password_interactor.execute(email, old_password, new_password)
+
         return jsonify({"code": 3, "error": False, "message": response["message"]}), 200
+
     except ValueError as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 400
+
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
 

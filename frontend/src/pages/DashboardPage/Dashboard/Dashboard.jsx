@@ -1,139 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import ChartComponent from "../ChartComponenet/ChartComponent.jsx";
 import ControlButtons from "../ControlButtons/ControlButtons.jsx";
-import { set } from "react-hook-form";
 import "./Dashboard.css";
 import Modal from '../../../Components/Modal/Modal.jsx';
-import axiosRetry from "axios-retry";
 import swal from 'sweetalert2';
 import TourGuide from '../TourGuide/TourGuide.jsx';
 import Slider from '../Slider/Slider.jsx';
-
+import DemographicsSelector from "../Demographics/DemographicsSelector.jsx";
+import graphDataDefault from '../data/graphDataDefault.js';
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [loading, setLoading] = useState(false)
-  const [graphData, setGraphData] = useState([
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-    {
-      feature1: "Demographic 1",
-      feature2: "Demographic 2",
-      accuracy: 0,
-      falsepositive: 0,
-      falsenegative: 0,
-      combination_label: "Demographic 1 Demographic 2",
-    },
-  ]);
+  const [graphData, setGraphData] = useState(graphDataDefault);
 
   const [currUser, setCurrUser] = useState("");
 
   const [error, setError] = useState("");
-  // const [sliderValue, setSliderValue] = useState(0.5);
 
   const [timeframe, setTimeframe] = useState("year");
   const [demographics, setDemographics] = useState([]);
@@ -557,9 +441,9 @@ const Dashboard = () => {
       .catch((err) => {
         console.error("Error generating data:", err);
       })
-        .finally(() => {
-          setLoading(false);
-        });
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const maxValue = () => {
@@ -572,10 +456,6 @@ const Dashboard = () => {
       }
     }
     return maxInitialElement;
-  };
-
-  const handleSliderValueChange = (value) => {
-    console.log('Slider Value:', value); // Handle the slider value update
   };
 
   return (
@@ -610,111 +490,31 @@ const Dashboard = () => {
           </button>
         </div>
         {loading && (
-            <div className="loading-container">
-              <img
-                   src="https://media.tenor.com/kMCwoAD4RNAAAAAj/loading-gif-loading.gif"
-                   alt="Loading..."
-                   className="loading-gif" />
-            </div>
+          <div className="loading-container">
+            <img
+              src="/spinner.gif"
+              alt="Loading..."
+              className="loading-gif" />
+          </div>
         )}
         <div className={loading ? "hidden" : ""}>
           <Slider graphData={graphData} maxValue={maxValue} />
         </div>
 
-        <div className="select-demographics-2">
-          <div className="demog-clas">
-            <h2>Demographics</h2>
-          </div>
-          <div className="select-demographics">
-            <div className="title"></div>
-            <div className="select-container1">
-              <select
-                onChange={handleDemographicChange}
-                value={selectedDemographic}
-              >
-                <option value="">Select</option>
-                {demographics.map((demo, index) => (
-                  <option key={index} value={demo}>
-                    {demo}
-                  </option>
-                ))}
-              </select>
+        <DemographicsSelector
+          demographics={demographics}
+          selectedDemographic={selectedDemographic}
+          handleDemographicChange={handleDemographicChange}
+          selectedValues={selectedValues}
+          handleValueChange={handleValueChange}
+          demographicValues={demographicValues}
+          selectedSecondValues={selectedSecondValues}
+          secondSelectedDemographic={secondSelectedDemographic}
+          handleSecondDemographicChange={handleSecondDemographicChange}
+          secondDemographicValues={secondDemographicValues}
+          handleGenerate={handleGenerate}
+        />
 
-              {selectedDemographic && (
-                <div className="select-options1">
-                  <h3 className="demographic-heading">
-                    Values for 1st Demographic
-                  </h3>
-                  {[...Array(4)].map((_, idx) => (
-                    <select
-                      key={idx}
-                      onChange={(event) => handleValueChange(event, idx)}
-                      value={selectedValues[idx] || ""}
-                    >
-                      <option value="">Select</option>
-                      {demographicValues
-                        .filter((val) => !selectedSecondValues.includes(val))
-                        .map((val, index) => (
-                          <option key={index} value={val}>
-                            {val}
-                          </option>
-                        ))}
-                    </select>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {selectedDemographic && (
-              <div className="select-container2">
-                <select
-                  onChange={handleSecondDemographicChange}
-                  value={secondSelectedDemographic}
-                >
-                  <option value="">Select</option>
-                  {demographics
-                    .filter((demo) => demo !== selectedDemographic)
-                    .map((demo, index) => (
-                      <option key={index} value={demo}>
-                        {demo}
-                      </option>
-                    ))}
-                </select>
-
-                {secondSelectedDemographic && selectedDemographic && (
-                  <div className="select-options2">
-                    <h3 className="demographic-heading">
-                      Values for 2nd Demographic
-                    </h3>
-                    {[...Array(4)].map((_, idx) => (
-                      <select
-                        key={idx}
-                        onChange={(event) =>
-                          handleValueChange(event, idx, true)
-                        }
-                        value={selectedSecondValues[idx] || ""}
-                      >
-                        <option value="">Select</option>
-                        {secondDemographicValues
-                          .filter((val) => !selectedValues.includes(val))
-                          .map((val, index) => (
-                            <option key={index} value={val}>
-                              {val}
-                            </option>
-                          ))}
-                      </select>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-          {selectedDemographic && <div className="generate-btn-container">
-            <button className="generate-button" onClick={handleGenerate}>
-              Generate
-            </button>
-          </div>}
-        </div>
         <button className="info-button" onClick={openModal}>?</button>
         {isModalOpen && <Modal closeModal={closeModal} />}
       </div>
