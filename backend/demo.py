@@ -47,15 +47,15 @@ choices = {
 time = "year"
 # file_repo.update_comparison_csv(demographics, choices, time)
 
-# generate = Generate(file_repo, db_repo)
-# result = generate.execute(demographics, choices, time)
+generate = Generate(file_repo, db_repo)
+result = generate.execute(demographics, choices, time)
 # print(len(result))
-# for i in result:
-#     print(
-#         i.get_feature1(),
-#         i.get_feature2(),
-#         i.get_accuracy(),
-#         i.get_false_positive_rate(),
-#         i.get_false_negative_rate(),
-#         i.get_combination_label(),
-#     )
+for i in result:
+    print(
+        i.get_feature1(),
+        i.get_feature2(),
+        i.get_accuracy(),
+        i.get_false_positive_rate(),
+        i.get_false_negative_rate(),
+        i.get_combination_label(),
+    )

@@ -145,7 +145,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
               label: (tooltipItem) => {
                 const item = accuracyData[tooltipItem.dataIndex];
                 return [
-                  `Bias: ${1 - item.accuracy}`,
+                  `Bias: ${item.accuracy}`,
                   `False Positive: ${item.falsePositive}`,
                   `False Negative: ${item.falseNegative}`,
                 ];

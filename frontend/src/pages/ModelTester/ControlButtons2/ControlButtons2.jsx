@@ -64,7 +64,7 @@ const ControlButton2 = ({ setUploadedFiles }) => {
 
     const handleModelUploadClick = () => {
         setShowModal(true);
-         // Trigger model file input
+        // Trigger model file input
     };
 
     const closeModal = () => {
@@ -244,6 +244,7 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                                         fontSize: "0.875rem",
                                         padding: "0.25rem 0.5rem",
                                         borderRadius: "0.2rem",
+                                        color: "#fff",
                                     }}
                                     onClick={closeModal}
                                 >
@@ -275,7 +276,7 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                                         closeModal(); // Close the modal after triggering file input
                                     }}
                                 >
-                                    Upload Model
+                                    Upload Model(s)
                                 </button>
                             </div>
                         </div>
