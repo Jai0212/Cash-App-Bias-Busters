@@ -8,7 +8,6 @@ const Dashboard2 = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const [currUser, setCurrUser] = useState("");
-  const [uploaded, setUploaded] = useState(false);
   const backgroundColours = [
     "#FF5733", // Vibrant Red
     "#33FF57", // Vibrant Green
@@ -134,11 +133,76 @@ const Dashboard2 = () => {
 
   return (
       <>
-        {uploaded ? (
+        {uploadedFiles.length > 0 ? (
             <div className="dashboard-main">
-              {/* Pass setUploadedFiles to ControlButton2 */}
-              <div className="button-container">
-                <ControlButton2 setUploadedFiles={setUploadedFiles} />
+              <div className="left-container">
+                <div className="chart-section">
+                  {Object.keys(graphData).length > 0 && (
+                      <ChartComponent2
+                          chartData={graphData}
+                          generationalResults={generationResults}
+                      />
+                  )}
+
+                  {generationResults.length > 0 && (
+                      <div className="result-section">
+                        {generationResults.map((result, index) => (
+                            <ul key={index}>
+                              <li className="result-item">
+                                <div className="result-details">
+                                  <strong className="output-name">File:</strong>
+                                  <span className="output-value">{uploadedFiles[index]}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Race:</strong>
+                                  <span className="output-value">{result.race}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Gender:</strong>
+                                  <span className="output-value">{result.gender}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Age:</strong>
+                                  <span className="output-value">{result.age_groups}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">State:</strong>
+                                  <span className="output-value">{result.state}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Variance:</strong>
+                                  <span className="output-value">{result.variance}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Bias:</strong>
+                                  <span className="output-value">{1 - result.mean}</span>
+                                </div>
+                              </li>
+                            </ul>
+                        ))}
+                      </div>
+                  )}
+                </div>
+              </div>
+              <div className="right-container">
+                {/* Pass setUploadedFiles to ControlButton2 */}
+                <div className="button-container">
+                  <ControlButton2 setUploadedFiles={setUploadedFiles}/>
+
+                  {uploadedFiles.length > 0 && (
+                      <div className="action-button-container">
+                        <button onClick={handleGenerateClick} className="generate-btn">
+                          Generate
+                        </button>
+                      </div>
+                  )}
+                </div>
+              </div>
+            </div>
+        ) : (
+            <div className="pre-upload-dashboard">
+              <div className="button-container-pre">
+                <ControlButton2 setUploadedFiles={setUploadedFiles}/>
 
                 {uploadedFiles.length > 0 && (
                     <div className="action-button-container">
@@ -148,75 +212,35 @@ const Dashboard2 = () => {
                     </div>
                 )}
               </div>
-
-              {generationResults.length > 0 && (
-                  <div className="result-section">
-                    {generationResults.map((result, index) => (
-                        <ul key={index}>
-                          <li className="result-item">
-                            <div className="result-details">
-                              <strong className="output-name">File:</strong>
-                              <span className="output-value">{uploadedFiles[index]}</span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">Race:</strong>
-                              <span className="output-value">{result.race}</span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">Gender:</strong>
-                              <span className="output-value">{result.gender}</span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">Age:</strong>
-                              <span className="output-value">{result.age_groups}</span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">State:</strong>
-                              <span className="output-value">{result.state}</span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">Variance:</strong>
-                              <span className="output-value">{result.variance}</span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">Bias:</strong>
-                              <span className="output-value">{1 - result.mean}</span>
-                            </div>
-                          </li>
-                        </ul>
-                    ))}
-                  </div>
-              )}
-
-              <div className="chart-section">
-                {Object.keys(graphData).length > 0 && (
-                    <ChartComponent2
-                        chartData={graphData}
-                        generationalResults={generationResults}
-                    />
-                )}
-              </div>
-            </div>
-        ) : (
-            <div className="pre-upload-dashboard">
-              <div className="button-container-pre">
-                <ControlButton2 setUploadedFiles={setUploadedFiles}/>
-
-                {uploadedFiles.length > 0 && (
-                    setUploaded(true),
-                        <div className="action-button-container">
-                          <button onClick={handleGenerateClick} className="generate-btn">
-                            Generate
-                          </button>
-                        </div>
-                )}
-              </div>
               <img
-                  src="https://camo.githubusercontent.com/61aab9aae5110eeab0b40fa7cf623d9550344cb9db26bcf1a35612c5b1725647/68747470733a2f2f696d616765732e73717561726573706163652d63646e2e636f6d2f636f6e74656e742f76312f3534313037626339653462306637363832313838333132622f313531373638393835353530352d31505155373542514e54554a55534a54344d4f4f2f41445f76342e6769663f666f726d61743d3135303077"
+                  src="/bg-bottom-left-desktop.webp"
                   alt="Cashapp illustration"
                   className="illustration"/>
-            </div>
-        )}
+              <img
+                  src="/bg-bottom-right-desktop.webp"
+                  alt="Cashapp illustration"
+                  className="illustration3"/>
+              <img
+                  src="/bg-top-right-desktop.webp"
+                  alt="Cashapp illustration"
+                  className="illustration2"/>
+              <img
+                  src="/star.png"
+                  alt="Cashapp illustration"
+                  className="illustration4"/>
+              <img
+                  src="/flower.png"
+                  alt="Cashapp illustration"
+                  className="illustration5"/>
+              <img
+                  src="/star2.png"
+                  alt="Cashapp illustration"
+                  className="illustration6"/>
+              <img
+                  src="/bg-bottom-left-desktop copy.webp"
+                  alt="Cashapp illustration"
+                  className="illustration7"/>
+            </div>)}
       </>
   );
 };

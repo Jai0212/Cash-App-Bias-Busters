@@ -8,6 +8,18 @@
   gap: 30px; /* Space between sections */
 }
 
+.left-container {
+  flex: 1; /* Takes up the left side */
+  margin-right: 20px; /* Space between the sections */
+}
+
+.right-container {
+  flex: 1; /* Takes up the right side */
+  display: flex;
+  flex-direction: column; /* Align buttons vertically */
+  justify-content: flex-start;
+}
+
 .button-container {
   display: flex;
   flex-direction: row; /* Align buttons horizontally */
@@ -16,7 +28,7 @@
   width: 100%;
 }
 
-.upload-button,
+.upload-button-pre,
 .generate-btn {
   padding: 15px 30px;
   font-size: 16px; /* Slightly smaller font size for balance */
@@ -28,7 +40,7 @@
   transition: all 0.3s ease; /* Smooth transition */
 }
 
-.upload-button {
+.upload-button-pre{
   background-color: #04CF22;
   color: #fafafa;
   margin-bottom: 20px;
@@ -39,7 +51,7 @@
   border-radius: 120px; /* Rounds the edges */
 }
 
-.upload-button:hover {
+.upload-button-pre:hover {
   background-color: #ffffff; /* Darker shade for hover */
   color: #04CF22;
   font-weight: bold;
@@ -185,21 +197,118 @@ html {
   text-overflow: ellipsis; /* Adds "..." if the text overflows */
 }
 
-.illustration {
-
+.pre-upload-dashboard {
+  display: flex;
+  justify-content: space-between; /* Adjusts content alignment */
+  align-items: center; /* Centers content horizontally */
+  height: 90vh; /* Full height of the viewport */
+  width: 100vw; /* Full width of the viewport */
+  overflow: hidden; /* Prevent any accidental overflow */
+  position: relative;
+  background-color: #00D72E; /* Your green background color */
+  box-sizing: border-box; /* Includes padding in width/height calculations */
+  margin: 0;
 }
 
-.pre-upload-dashboard {
-  background-color: #04CF22;
+.illustration {
+  position: absolute;
+  bottom: 0; /* Place it at the bottom */
+  right: -150px;
+  max-width: 100%; /* Ensure it scales within the container */
+  height: 400px;
+  width: 40%;
+  transform: scaleX(-1); /* Flip the element horizontally */
+  display: inline-block;
+}
+
+.illustration2 {
+  position: absolute;
+  left: 0;
+  max-width: 100%; /* Ensure it scales within the container */
   height: 100vh;
-  width: 100vw;
+  transform: scaleX(-1); /* Flip the element horizontally */
+  display: inline-block;
+}
+
+.illustration3 {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 300px;
+  width: auto;
+  transform: scale(-1, -1); /* Flip horizontally and vertically */
+  display: inline-block;
+}
+
+.illustration4 {
+  position: absolute;
+  right: 30%;
+  width: 12%;
+  max-width: 100%; /* Ensure it scales within the container */
+  height: 24%;
+  rotate: 20deg;
+  bottom: 10%;
+}
+
+.illustration5 {
+  position: absolute;
+  top: -120px;
+  width: 20%;
+  max-width: 100%; /* Ensure it scales within the container */
+
+  height: 40%;
+  right: 40%
+}
+
+.illustration6 {
+  position: absolute;
+  top: 5%;
+  width: 12%;
+  max-width: 100%; /* Ensure it scales within the container */
+  height: 24%;
+  left: 25%;
+  rotate: -20deg;
+}
+
+.illustration7 {
+  position: absolute;
+  bottom: -100px; /* Place it at the bottom */
+  left: 20%;
+  rotate: 20deg;
+  max-width: 100%; /* Ensure it scales within the container */
+  height: 400px;
+  width: 40%;
+  display: inline-block;
 }
 
 .button-container-pre {
-  margin-top: 40px;
+  top: 50%;
   display: flex;
   flex-direction: row; /* Align buttons horizontally */
   justify-content: center; /* Center the buttons */
   gap: 20px; /* Space between buttons */
   width: 100%;
+}
+
+.upload-button-post {
+  padding: 15px 30px;
+  font-size: 16px; /* Slightly smaller font size for balance */
+  border-radius: 10px;
+  border: 1px solid #2e2e2e;
+  cursor: pointer;
+  width: 200px;
+  text-align: center;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.upload-button-post {
+  background-color: #0088cc;
+  color: #fafafa;
+  margin-bottom: 20px;
+}
+
+.upload-button-post:hover {
+  background-color: #005f88; /* Darker shade for hover */
+  color: #fff;
+  font-weight: bold;
 }

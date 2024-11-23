@@ -207,7 +207,8 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             />
 
             {/* Button for importing models */}
-            <button className="upload-button" onClick={handleModelUploadClick}>Upload Models</button>
+            <button className={`upload-button${uploadedFiles.length > 0 ? '-post' : '-pre'}`} // Conditional class name
+                    onClick={handleModelUploadClick}>Upload Models</button>
 
             {/* Display the uploaded files below */}
             {uploadedFiles.length > 0 && (
