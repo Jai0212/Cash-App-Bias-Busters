@@ -254,7 +254,9 @@ def generate_for_all_models():
             models[i] = os.path.join(UPLOAD_FOLDER, curr_user, models[i])
         print("Multiple Models Paths:", models)
 
-        evaluator = EvaluateModelsUseCase(models)
+        new_file_repo = CsvFileRepo(User("SECRET_KEY"), file_path)
+
+        evaluator = EvaluateModelsUseCase(new_file_repo, models)
         output = evaluator.execute()
 
         print("Multiple Models Output", output)
@@ -266,51 +268,6 @@ def generate_for_all_models():
 
         print("Filtered Multiple Models Output", output_filtered)
 
-        temporary_output = [
-            [
-                {
-                    "race": 0.33,
-                    "gender": 0.55,
-                    "age": 0.62,
-                    "state": 0.2,
-                    "variance": 0.2,
-                    "mean": 0.4,
-                },
-                {
-                    "race": 0.45,
-                    "gender": 0.60,
-                    "age": 0.72,
-                    "state": 0.3,
-                    "variance": 0.25,
-                    "mean": 0.45,
-                },
-                {
-                    "race": 0.29,
-                    "gender": 0.53,
-                    "age": 0.68,
-                    "state": 0.25,
-                    "variance": 0.15,
-                    "mean": 0.35,
-                },
-                {
-                    "race": 0.50,
-                    "gender": 0.48,
-                    "age": 0.70,
-                    "state": 0.18,
-                    "variance": 0.22,
-                    "mean": 0.42,
-                },
-                {
-                    "race": 0.40,
-                    "gender": 0.58,
-                    "age": 0.65,
-                    "state": 0.22,
-                    "variance": 0.18,
-                    "mean": 0.38,
-                },
-            ]
-        ]
-
         return jsonify(output_filtered)
 
     except Exception as e:
@@ -318,8 +275,6 @@ def generate_for_all_models():
             jsonify({"error": str(e)}),
             500,
         )  # Handle any unexpected errors and return 500
-
-    # TODO add akshat and armagan function to this and return the output
 
 
 @app.route("/api/delete-model", methods=["POST"])
@@ -382,6 +337,10 @@ def delete_files_except_model(user_folder: str):
     """
     Delete all files in the user's folder except the file named "model.pkl" if it exists.
     """
+    if not user_folder:
+        print("No user provided in delete_files_except_model.")
+        return
+    
     print(f"Deleting files in folder: {UPLOAD_FOLDER + user_folder}")
     path = os.path.join(UPLOAD_FOLDER, user_folder)
 
@@ -427,6 +386,7 @@ def home():
 
 user_repo = UserRepository(table_name="users")
 
+
 @app.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
@@ -440,10 +400,22 @@ def signup():
 
     # Validate required fields and password confirmation
     if password != confirm_password:
-        return jsonify({"code": 2, "error": True, "message": "Passwords do not match"}), 400
+        return (
+            jsonify({"code": 2, "error": True, "message": "Passwords do not match"}),
+            400,
+        )
 
-    if not firstname or not lastname or not email or not password or not confirm_password:
-        return jsonify({"code": 2, "error": True, "message": "All fields are required"}), 400
+    if (
+        not firstname
+        or not lastname
+        or not email
+        or not password
+        or not confirm_password
+    ):
+        return (
+            jsonify({"code": 2, "error": True, "message": "All fields are required"}),
+            400,
+        )
 
     try:
 
@@ -457,6 +429,7 @@ def signup():
 
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
+
 
 current_user_email = None
 
@@ -473,7 +446,9 @@ def login():
 
     if not email or not password:
         return (
-            jsonify({"code": 2, "error": True, "message": "Email and Password are required"}),
+            jsonify(
+                {"code": 2, "error": True, "message": "Email and Password are required"}
+            ),
             400,
         )
 

@@ -18,7 +18,7 @@ from ml_model.repository.safe_train_grid import (safe_train_test_split,
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir,
-                             "../../../database/full_single_transaction.csv")
+                             "../../../database/output.csv")
 
 
 def evaluate_multiple_models(model_files):

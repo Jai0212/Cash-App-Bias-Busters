@@ -36,6 +36,9 @@ frontend/*.njsproj
 frontend/*.sln
 frontend/*.sw?
 
+database/full_single_transaction.csv
+database/test.csv
+
 # Python cache files
 **/__pycache__/
 **/*.py[cod]
