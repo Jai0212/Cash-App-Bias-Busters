@@ -8,6 +8,7 @@ import TourGuide from '../TourGuide/TourGuide.jsx';
 import Slider from '../Slider/Slider.jsx';
 import DemographicsSelector from "../Demographics/DemographicsSelector.jsx";
 import graphDataDefault from '../data/graphDataDefault.js';
+import QRCodeShare from "../QRCodeShare/QRCodeShare.jsx";
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -414,37 +415,47 @@ const Dashboard = () => {
     }
 
     if (!selectedDemographic || selectedValues[0] === "") {
-      alert("Upload data and model and the select a demographic and values to generate data.");
+      alert("Upload data and model and select a demographic and values to generate data.");
       return;
     }
 
     setLoading(true); // Start loading
 
-    axios
-      .post(`${VITE_BACKEND_URL}/api/generate`, {
-        demographics: [selectedDemographic, secondSelectedDemographic],
-        choices: {
-          [selectedDemographic]: selectedValues,
-          [secondSelectedDemographic]: selectedSecondValues,
-        },
-        curr_user: currUser,
-        time: timeframe,
-      })
-      .then((response) => {
+    const fetchData = async (retries = 5, delay = 1000) => {
+      try {
+        const response = await axios.post(`${VITE_BACKEND_URL}/api/generate`, {
+          demographics: [selectedDemographic, secondSelectedDemographic],
+          choices: {
+            [selectedDemographic]: selectedValues,
+            [secondSelectedDemographic]: selectedSecondValues,
+          },
+          curr_user: currUser,
+          time: timeframe,
+        });
+
         console.log("Data generated:", response.data);
         if (response.data.length === 0) {
           alert("No data found for the selected demographics and values. Choose a different combination.");
           return;
         }
-        setGraphData(response.data);
-      })
-      .catch((err) => {
+        setGraphData(response.data); // Set the graph data from the response
+      } catch (err) {
         console.error("Error generating data:", err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        // Retry logic: only retry if there are remaining attempts
+        if (retries > 0) {
+          console.log(`Retrying... Attempts left: ${retries}`);
+          setTimeout(() => fetchData(retries - 1, delay * 2), delay); // Exponential backoff
+        } else {
+          alert("Error generating data after multiple attempts. Please try again later.");
+        }
+      } finally {
+        setLoading(false); // Ensure loading state is reset when done
+      }
+    };
+
+    fetchData(); // Start the fetch process
   };
+
 
   const maxValue = () => {
     let maxInitialElement = -Infinity;
@@ -517,6 +528,17 @@ const Dashboard = () => {
 
         <button className="info-button" onClick={openModal}>?</button>
         {isModalOpen && <Modal closeModal={closeModal} />}
+
+        <QRCodeShare
+          selectedDemographic={selectedDemographic}
+          selectedValues={selectedValues}
+          selectedSecondValues={selectedSecondValues}
+          secondSelectedDemographic={secondSelectedDemographic}
+          graphData={graphData}
+          currUser={currUser}
+          timeframe={timeframe}
+        />
+
       </div>
       <div className="upload-buttons">
         <ControlButtons onDownload={handleDownload} />

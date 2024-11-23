@@ -1,5 +1,7 @@
 import pickle
 import os
+import base64
+import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -340,7 +342,7 @@ def delete_files_except_model(user_folder: str):
     if not user_folder:
         print("No user provided in delete_files_except_model.")
         return
-    
+
     print(f"Deleting files in folder: {UPLOAD_FOLDER + user_folder}")
     path = os.path.join(UPLOAD_FOLDER, user_folder)
 
@@ -532,6 +534,26 @@ def change_password():
 
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
+
+
+@app.route("/share/<encoded_data>", methods=["GET"])
+def share(encoded_data):
+    try:
+        # Decode the Base64 encoded string
+        decoded_data = base64.b64decode(encoded_data).decode("utf-8")
+
+        # Parse the JSON string to a Python dictionary
+        data = json.loads(decoded_data)
+
+        # Now you can return the data in the response (or handle it however you'd like)
+        return jsonify(data)
+
+    except Exception as e:
+        # If decoding or JSON parsing fails, return a 400 error
+        return (
+            jsonify({"error": "Failed to decode or parse data", "message": str(e)}),
+            400,
+        )
 
 
 if __name__ == "__main__":
