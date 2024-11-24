@@ -8,7 +8,6 @@ const PublicLayout = () => {
         <>
             <Navbar /> {/* Render the Navbar */}
             <Outlet /> {/* Render child routes here */}
-            <Footer /> {/* Render the Footer */}
         </>
     );
 };

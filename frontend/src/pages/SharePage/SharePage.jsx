@@ -29,9 +29,23 @@ const SharePage = () => {
                     return response.json();
                 })
                 .then((data) => {
-                    setData(data);
+
+                    if (!data.other_data || !data.graph_data) {
+                        throw new Error("Invalid data format");
+                    }
+                    if (!data.other_data.currUser || !data.other_data.timeframe || !data.other_data.selectedDemographic || !data.other_data.selectedValues || data.other_data.selectedValues[0] === "") {
+                        throw new Error("Missing required data fields");
+                    }
+                    setData(data.other_data);
                     setLoading(false);
-                    handleGenerate(data);
+
+                    if (data.graph_data.length === 0) {
+                        alert("No data found for the selected demographics and values. Choose a different combination.");
+                        return;
+                    }
+
+                    setGraphData(data.graph_data);
+                    calculateAverageBias(data.graph_data);
                 })
                 .catch((error) => {
                     setError(error.message);
@@ -42,55 +56,6 @@ const SharePage = () => {
             setLoading(false);
         }
     }, [encodedData]);
-
-    const handleGenerate = (dataParam) => {
-        if (
-            !dataParam.currUser ||
-            !dataParam.timeframe ||
-            !dataParam.selectedDemographic ||
-            !dataParam.selectedValues
-        ) {
-            console.warn(
-                "currUser or selectedDemographic is missing. Cannot generate data."
-            );
-            return;
-        }
-
-        if (!dataParam.selectedDemographic || dataParam.selectedValues[0] === "") {
-            alert("Upload data and model and select a demographic and values to generate data.");
-            return;
-        }
-
-        const fetchData = async (retries = 5, delay = 1000) => {
-            try {
-                const response = await axios.post(`${VITE_BACKEND_URL}/api/generate`, {
-                    demographics: [dataParam.selectedDemographic, dataParam.secondSelectedDemographic],
-                    choices: {
-                        [dataParam.selectedDemographic]: dataParam.selectedValues,
-                        [dataParam.secondSelectedDemographic]: dataParam.selectedSecondValues,
-                    },
-                    curr_user: dataParam.currUser,
-                    time: dataParam.timeframe,
-                });
-
-                if (response.data.length === 0) {
-                    alert("No data found for the selected demographics and values. Choose a different combination.");
-                    return;
-                }
-                setGraphData(response.data); // Set the graph data from the response
-                calculateAverageBias(response.data); // Calculate the average bias
-            } catch (err) {
-                console.error("Error generating data:", err);
-                // Retry logic: only retry if there are remaining attempts
-                if (retries > 0) {
-                    console.log(`Retrying... Attempts left: ${retries}`);
-                    setTimeout(() => fetchData(retries - 1, delay * 2), delay); // Exponential backoff
-                }
-            }
-        };
-
-        fetchData(); // Start the fetch process
-    };
 
     const calculateAverageBias = (data) => {
         if (!Array.isArray(data) || data.length === 0) {
