@@ -2,7 +2,14 @@
 import React from "react";
 import "./TimeButtons.css";
 
+
 const TimeButtons = ({ handleTimeframeChange, timeframe }) => {
+  const handleKeyDown = (event, timeFrame) => {
+    if (event.key === 'Enter') {
+      handleTimeframeChange(timeFrame);
+    }
+  };
+
   return (
     <div className="timeframe-buttons">
       <button
