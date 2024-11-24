@@ -272,7 +272,7 @@ html {
 
 .info-button {
   position: absolute;
-  top: 10px; /* Distance from the top edge */
+  top: -4%; /* Distance from the top edge */
   right: 10px; /* Distance from the right edge */
   background: #24a0ed; /* Blue background for button */
   color: white; /* White text */
@@ -514,6 +514,8 @@ button:focus-visible {
   background-color: #4CAF50;
   color: white;
   transition: all 0.3s ease;
+  height: 10%;
+  width: auto;
 }
 
 .chatbot-button:hover {
@@ -521,4 +523,10 @@ button:focus-visible {
   color: #e0e0e0;
   transform: scale(1.03); /* Slightly enlarge the button */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.chatbot-div {
+  right: 2%;
+  bottom: 0;
+  position: absolute;
 }

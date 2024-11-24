@@ -1,33 +1,37 @@
 .upload-model-container {
-    overflow-x: hidden;
+    overflow: hidden;
+    top: -1%;
+    height: 61%;
+    position: relative;
 }
 
 .uploaded-files-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    /* Two equal columns */
-    gap: 16px;
-    /* Space between the boxes */
+    grid-template-columns: 1fr; /* 1 column */
+    grid-template-rows: repeat(4, auto); /* 4 rows */
+    gap: 10%; /* Adjust the gap between rows if needed */
+    height: 100%;
 }
 
 .uploaded-file-box {
-    max-width: 15vw;
+    position: relative;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     gap: 8px;
     /* Space between the icon and file name */
     padding: 16px;
     border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0);
-    border: 1px solid #0A0A0A;
+    background-color: #E6E6E6;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     /* Optional: subtle shadow */
 }
 
 .file-name {
-    color: #333333;
+    color: #003f5c;
     font-weight: bold;
-    max-width: 20vh;
+    width: 19vh;
     flex-grow: 1;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -59,10 +63,10 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
     padding: 0;
     /* Ensure there's no extra padding */
-    text-align: center;
     /* Center the "X" */
     line-height: 1;
     /* Prevent any vertical spacing issues */
+    right: 0;
 }
 
 .delete-file-btn:hover {

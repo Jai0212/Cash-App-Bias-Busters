@@ -3,7 +3,7 @@
   height: 100vh;
   width: 100vw;
   font-family: Arial, sans-serif;
-  background-color: #FAFAD0;
+  background-color: #003f5c;
   overflow-x: hidden;
 }
 
@@ -21,24 +21,20 @@
 }
 
 .button-container {
-  position: relative;
+  position: absolute;
   top: 0;
-  left: 50%;
+  left: 45%;
   /* Centers the button-container horizontally */
   transform: translateX(-50%);
   /* Adjusts for the width of the container */
   display: flex;
   flex-direction: column;
-  /* Align buttons horizontally */
-  gap: 20px;
-  /* Space between buttons */
   width: 100%;
   padding: 10%;
   height: 100%;
 }
 
-.upload-button-pre,
-.generate-btn {
+.upload-button-pre {
   padding: 15px 30px;
   font-size: 16px;
   /* Slightly smaller font size for balance */
@@ -70,35 +66,6 @@
   font-weight: bold;
 }
 
-.generate-btn {
-  background-color: #47663B;
-  /* Purple background */
-  color: #E8ECD7;
-  /* Text color */
-  border: 2px solid #E8ECD7;
-  /* White border */
-  border-radius: 25px;
-  /* Rounded corners */
-  font-size: 16px;
-  /* Font size */
-  font-weight: bold;
-  /* Bold text */
-  cursor: pointer;
-  /* Pointer cursor on hover */
-  transition: all 0.3s ease;
-  /* Smooth transition for hover effect */
-  position: relative;
-  right: -30%;
-}
-
-.generate-btn:hover {
-  background-color: #E8ECD7;
-  /* Invert background color */
-  color: #47663B;
-  /* Purple text color */
-  border: 2px solid #47663B;
-  /* Invert border color */
-}
 
 .model-name,
 .output-name {
@@ -113,11 +80,6 @@
   position: relative;
   left: 3%;
   top: 1.4%;
-}
-
-.action-button-container {
-  align-items: center;
-  margin-top: 30px;
 }
 
 .pre-upload-dashboard {
@@ -250,35 +212,39 @@
 .result-item {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: space-between;
   align-items: center;
   border: 1px solid #ccc;
+  background-color: #a3b7ca;
   padding: 10px 30px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 7px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative; /* Needed to allow positioning of the tag */
 }
 
-.result-item:hover {
-  transform: translateY(-3px);
-  /* Slight lift effect */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  /* Enhance shadow on hover */
-  border-color: #888;
-  /* Change border color on hover */
+.result-tag {
+  position: absolute; /* Position the tag absolutely to avoid gap influence */
+  border-radius: 8px;
+  left: -1px; /* Align the tag to the left edge of the parent */
+  width: 40px; /* Narrow width for the tag */
+  height: 103%; /* Full height of the result item */
 }
 
 .result-details {
+  margin-left: 3.2%;
+  margin-right: 3.2%;
   display: flex;
   align-items: center;
   padding: 5px 0;
   gap: 5px;
+  min-width: 7.2%;
 }
 
 .output-name {
   font-weight: bold;
   margin-right: 0;
+  color: black;
 }
 
 .output-value {
@@ -287,6 +253,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 0.2s ease;
+  color: black;
 }
 
 .output-value:hover {
@@ -295,3 +262,4 @@
   cursor: pointer;
   /* Show pointer cursor */
 }
+
