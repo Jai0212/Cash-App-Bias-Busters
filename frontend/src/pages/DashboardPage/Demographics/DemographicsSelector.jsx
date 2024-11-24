@@ -24,6 +24,7 @@ const DemographicsSelector = ({
                     <select
                         onChange={handleDemographicChange}
                         value={selectedDemographic}
+                        tabIndex={6}
                     >
                         <option value="">Select</option>
                         {demographics.map((demo, index) => (
@@ -40,6 +41,7 @@ const DemographicsSelector = ({
                             </h3>
                             {[...Array(4)].map((_, idx) => (
                                 <select
+                                tabIndex={7}
                                     key={idx}
                                     onChange={(event) => handleValueChange(event, idx)}
                                     value={selectedValues[idx] || ""}
@@ -52,8 +54,11 @@ const DemographicsSelector = ({
                                                 {val}
                                             </option>
                                         ))}
+                                    
                                 </select>
+                                
                             ))}
+                            
                         </div>
                     )}
                 </div>
@@ -61,6 +66,7 @@ const DemographicsSelector = ({
                 {selectedDemographic && (
                     <div className="select-container2">
                         <select
+                        tabIndex={8}
                             onChange={handleSecondDemographicChange}
                             value={secondSelectedDemographic}
                         >
@@ -81,6 +87,7 @@ const DemographicsSelector = ({
                                 </h3>
                                 {[...Array(4)].map((_, idx) => (
                                     <select
+                                        tabIndex={9}
                                         key={idx}
                                         onChange={(event) =>
                                             handleValueChange(event, idx, true)
@@ -95,6 +102,7 @@ const DemographicsSelector = ({
                                                     {val}
                                                 </option>
                                             ))}
+                                            
                                     </select>
                                 ))}
                             </div>
@@ -103,7 +111,8 @@ const DemographicsSelector = ({
                 )}
             </div>
             {selectedDemographic && <div className="generate-btn-container">
-                <button className="generate-button" onClick={handleGenerate}>
+                <button className="generate-button" onClick={handleGenerate}
+                tabIndex={10}>
                     Generate
                 </button>
             </div>}

@@ -13,6 +13,7 @@ import QRCodeShare from "../QRCodeShare/QRCodeShare.jsx";
 import ChatbotComponent from "../Chatbot/Chatbot.jsx"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaComment } from 'react-icons/fa';
+import { FaVolumeUp } from 'react-icons/fa';
 import Footer from "../../../Components/Footer/Footer.jsx";
 
 const Dashboard = () => {
@@ -517,6 +518,22 @@ const Dashboard = () => {
         <div>
           <button
               className="btn rounded-circle p-3 chatbot-button"
+              onClick={openChatBot}
+              tabIndex={11}
+          >
+            <FaComment/>
+          </button>
+          <button
+            className="btn rounded-circle p-3 speaker-button"
+            onClick={openChatBot}
+            aria-label="Activate voice assistant"
+            title="Activate voice assistant"
+            tabIndex={12}
+          >
+            <FaVolumeUp aria-hidden="true" />
+          </button>
+          <button
+              className="info-button"
               onClick={openChatBot}
           >
             <FaComment/>
