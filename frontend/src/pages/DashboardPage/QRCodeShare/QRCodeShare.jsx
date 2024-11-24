@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import QRCode from 'react-qr-code';  // Import from react-qr-code
 import "bootstrap/dist/css/bootstrap.min.css";  // Import Bootstrap CSS
 import './QRCodeShare.css';  // Import the CSS file for styling
+import { useNavigate } from "react-router-dom";  // Import useNavigate
 
 const QRCodeShare = ({
     selectedDemographic,
@@ -11,21 +12,19 @@ const QRCodeShare = ({
     timeframe,
     currUser,
 }) => {
-    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const VITE_FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
     const [showModal, setShowModal] = useState(false); // Modal visibility state
     const [shareSuccess, setShareSuccess] = useState(null);  // State to track success or failure
     const [encodedData, setEncodedData] = useState(null); // State to store the encoded data
+    const navigate = useNavigate(); // Hook for programmatic navigation
 
     const closeModal = () => {
         setShowModal(false); // Close the modal
     };
 
-    // Function to encode the data (you can use Base64 or another encoding method as needed)
     const encodeData = (data) => {
         try {
-            // Convert the object into a JSON string and then encode it in Base64
             const jsonData = JSON.stringify(data);
             const encoded = btoa(jsonData); // Base64 encode the string
             return encoded;
@@ -38,7 +37,6 @@ const QRCodeShare = ({
     const handleShare = () => {
         setShowModal(true); // Open the modal
 
-        // Prepare data to encode
         const dataToEncode = {
             selectedDemographic,
             selectedValues,
@@ -48,7 +46,6 @@ const QRCodeShare = ({
             currUser,
         };
 
-        // Encode data directly in the frontend
         const encoded = encodeData(dataToEncode);
 
         if (encoded) {
@@ -59,7 +56,11 @@ const QRCodeShare = ({
         }
     };
 
-    console.log("QR Code URL", `${VITE_FRONTEND_URL}/share/${encodedData}`);
+    const handleNavigate = () => {
+        if (encodedData) {
+            window.open(`${VITE_FRONTEND_URL}/share/${encodedData}`, '_blank'); // Open in a new tab
+        }
+    };
 
     return (
         <div>
@@ -78,7 +79,7 @@ const QRCodeShare = ({
             </button>
 
             {showModal && (
-                <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
+                <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)", marginBottom: "-10px" }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -106,7 +107,12 @@ const QRCodeShare = ({
                                 </p>
                                 <div style={{ textAlign: "center" }}>
                                     {encodedData && (
-                                        <QRCode value={`${VITE_FRONTEND_URL}/share/${encodedData}`} size={256} />
+                                        <>
+                                            <QRCode value={`${VITE_FRONTEND_URL}/share/${encodedData}`} size={256} />
+                                            <p style={{ marginTop: "10px", textDecoration: "underline", cursor: "pointer", color: "#007bff" }} onClick={handleNavigate}>
+                                                Link
+                                            </p>
+                                        </>
                                     )}
                                 </div>
                                 {shareSuccess !== null && (

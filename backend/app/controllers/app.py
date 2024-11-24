@@ -1,7 +1,5 @@
 import pickle
 import os
-import base64
-import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -12,12 +10,12 @@ from app.use_cases import (
     GetLastLoginData,
     GetValuesUnderHeader,
     UploadData,
+    RegisterUserInteractor,
+    LoginUserInteractor,
+    ChangePasswordInteractor,
+    Share,
 )
-from app.repositories import SqliteDbRepo, CsvFileRepo
-from app.use_cases.register_user_interactor import RegisterUserInteractor
-from app.use_cases.login_user_interactor import LoginUserInteractor
-from app.use_cases.change_password_interactor import ChangePasswordInteractor
-from app.repositories.user_repository import UserRepository
+from app.repositories import SqliteDbRepo, CsvFileRepo, UserRepository
 
 from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
@@ -539,17 +537,11 @@ def change_password():
 @app.route("/share/<encoded_data>", methods=["GET"])
 def share(encoded_data):
     try:
-        # Decode the Base64 encoded string
-        decoded_data = base64.b64decode(encoded_data).decode("utf-8")
-
-        # Parse the JSON string to a Python dictionary
-        data = json.loads(decoded_data)
-
-        # Now you can return the data in the response (or handle it however you'd like)
+        sharer = Share(user_repo, encoded_data)
+        data = sharer.execute()
         return jsonify(data)
 
     except Exception as e:
-        # If decoding or JSON parsing fails, return a 400 error
         return (
             jsonify({"error": "Failed to decode or parse data", "message": str(e)}),
             400,
