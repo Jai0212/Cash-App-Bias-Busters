@@ -65,7 +65,6 @@ def test_drop_categorical_columns(data_processor):
 
 def test_combined_functionality(data_processor):
     processed_df = data_processor.encode_categorical_columns()
-
     mappings = data_processor.get_mappings()
 
     updated_df = data_processor.drop_categorical_columns()
