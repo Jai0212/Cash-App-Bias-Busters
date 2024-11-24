@@ -542,10 +542,6 @@ const Dashboard = () => {
 
 
       </div>
-      <Footer />
-    </div>
-
-);
-};
+);};
 
 export default Dashboard;
