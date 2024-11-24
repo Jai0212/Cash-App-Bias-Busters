@@ -1,0 +1,39 @@
+/* Container for buttons (timeframe selection) */
+.timeframe-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 100%;
+  justify-content: center;
+  /* border: 1px solid red; */
+}
+
+.timeframe-buttons button {
+  width: 90%;
+  padding: 15px 20px;
+  font-size: 17px;
+  cursor: pointer;
+  border-radius: 10px 10px 10px 10px;
+  background-color: #2e2e2e;
+  color: #fafafa;
+  transition: background-color 0.3s, border 0.3s;
+  margin-inline: auto;
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+/* Hover state */
+.timeframe-buttons button:hover {
+  background-color: #fafafa;
+  color: #2e2e2e;
+  font-weight: bold;
+}
+
+/* Focus state (for when tabbing into buttons) */
+.timeframe-buttons button:focus {
+  outline: 3px solid #0088cc; /* Blue outline for focus */
+  background-color: #0088cc;
+  color: #fafafa;
+  font-weight: bold;
+}

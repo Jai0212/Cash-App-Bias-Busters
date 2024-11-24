@@ -2,17 +2,19 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import ControlButtons from "../ControlButtons/ControlButtons.jsx";
 import "./Dashboard.css";
-import Modal from '../../../Components/Modal/Modal.jsx';
-import swal from 'sweetalert2';
-import TourGuide from '../TourGuide/TourGuide.jsx';
-import Slider from '../Slider/Slider.jsx';
+import Modal from "../../../Components/Modal/Modal.jsx";
+import swal from "sweetalert2";
+import TourGuide from "../TourGuide/TourGuide.jsx";
+import Slider from "../Slider/Slider.jsx";
 import DemographicsSelector from "../Demographics/DemographicsSelector.jsx";
-import graphDataDefault from '../data/graphDataDefault.js';
+import graphDataDefault from "../data/graphDataDefault.js";
+import TimeButtons from "../TimeButtons/TimeButtons.jsx";
+import QRCodeShare from "../QRCodeShare/QRCodeShare.jsx";
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [graphData, setGraphData] = useState(graphDataDefault);
 
   const [currUser, setCurrUser] = useState("");
@@ -40,7 +42,7 @@ const Dashboard = () => {
 
   const chartRef = useRef(null);
 
-  const openModal = () => setIsModalOpen(true);  // Open the modal
+  const openModal = () => setIsModalOpen(true); // Open the modal
   const closeModal = () => setIsModalOpen(false); // Close the modal
 
   const [runTour, setRunTour] = useState(false); // State to control the tour
@@ -64,17 +66,18 @@ const Dashboard = () => {
       } else {
         setCurrUser("");
 
-        swal.fire({
-          icon: "error",
-          title: "Please log in first",
-          text: "You need to log in to access this page.",
-          confirmButtonText: "Go to Login",
-          timer: 5000,
-          timerProgressBar: true,
-        }).then(() => {
-
-          window.location.href = "/";
-        });
+        swal
+          .fire({
+            icon: "error",
+            title: "Please log in first",
+            text: "You need to log in to access this page.",
+            confirmButtonText: "Go to Login",
+            timer: 5000,
+            timerProgressBar: true,
+          })
+          .then(() => {
+            window.location.href = "/";
+          });
       }
     } catch (error) {
       console.error("Error fetching email:", error);
@@ -95,7 +98,6 @@ const Dashboard = () => {
   useEffect(() => {
     setRunTour(true);
   }, []);
-
 
   useEffect(() => {
     const fethPrevData = async () => {
@@ -403,10 +405,7 @@ const Dashboard = () => {
   };
 
   const handleGenerate = () => {
-    if (
-      !currUser ||
-      !timeframe
-    ) {
+    if (!currUser || !timeframe) {
       console.warn(
         "currUser or selectedDemographic is missing. Cannot generate data."
       );
@@ -414,37 +413,49 @@ const Dashboard = () => {
     }
 
     if (!selectedDemographic || selectedValues[0] === "") {
-      alert("Upload data and model and the select a demographic and values to generate data.");
+      alert("Upload data and model and select a demographic and values to generate data.");
       return;
     }
 
     setLoading(true); // Start loading
 
-    axios
-      .post(`${VITE_BACKEND_URL}/api/generate`, {
-        demographics: [selectedDemographic, secondSelectedDemographic],
-        choices: {
-          [selectedDemographic]: selectedValues,
-          [secondSelectedDemographic]: selectedSecondValues,
-        },
-        curr_user: currUser,
-        time: timeframe,
-      })
-      .then((response) => {
+    const fetchData = async (retries = 5, delay = 1000) => {
+      try {
+        const response = await axios.post(`${VITE_BACKEND_URL}/api/generate`, {
+          demographics: [selectedDemographic, secondSelectedDemographic],
+          choices: {
+            [selectedDemographic]: selectedValues,
+            [secondSelectedDemographic]: selectedSecondValues,
+          },
+          curr_user: currUser,
+          time: timeframe,
+        });
+
         console.log("Data generated:", response.data);
         if (response.data.length === 0) {
-          alert("No data found for the selected demographics and values. Choose a different combination.");
+          alert(
+            "No data found for the selected demographics and values. Choose a different combination."
+          );
           return;
         }
-        setGraphData(response.data);
-      })
-      .catch((err) => {
+        setGraphData(response.data); // Set the graph data from the response
+      } catch (err) {
         console.error("Error generating data:", err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        // Retry logic: only retry if there are remaining attempts
+        if (retries > 0) {
+          console.log(`Retrying... Attempts left: ${retries}`);
+          setTimeout(() => fetchData(retries - 1, delay * 2), delay); // Exponential backoff
+        } else {
+          alert("Error generating data after multiple attempts. Please try again later.");
+        }
+      } finally {
+        setLoading(false); // Ensure loading state is reset when done
+      }
+    };
+
+    fetchData(); // Start the fetch process
   };
+
 
   const maxValue = () => {
     let maxInitialElement = -Infinity;
@@ -464,37 +475,14 @@ const Dashboard = () => {
 
       <div className="chart-container-container">
         <div className="timeframe-buttons">
-          <button
-            className={timeframe === "day" ? "active-button" : ""}
-            onClick={() => handleTimeframeChange("day")}
-          >
-            1 Day
-          </button>
-          <button
-            className={timeframe === "week" ? "active-button" : ""}
-            onClick={() => handleTimeframeChange("week")}
-          >
-            1 Week
-          </button>
-          <button
-            className={timeframe === "month" ? "active-button" : ""}
-            onClick={() => handleTimeframeChange("month")}
-          >
-            1 Month
-          </button>
-          <button
-            className={timeframe === "year" ? "active-button" : ""}
-            onClick={() => handleTimeframeChange("year")}
-          >
-            1 Year
-          </button>
+          <TimeButtons
+            handleTimeframeChange={handleTimeframeChange}
+            timeframe={timeframe}
+          />
         </div>
         {loading && (
           <div className="loading-container">
-            <img
-              src="/spinner.gif"
-              alt="Loading..."
-              className="loading-gif" />
+            <img src="/spinner.gif" alt="Loading..." className="loading-gif" />
           </div>
         )}
         <div className={loading ? "hidden" : ""}>
@@ -515,8 +503,21 @@ const Dashboard = () => {
           handleGenerate={handleGenerate}
         />
 
-        <button className="info-button" onClick={openModal}>?</button>
+        <button className="info-button" onClick={openModal}>
+          ?
+        </button>
         {isModalOpen && <Modal closeModal={closeModal} />}
+
+        <QRCodeShare
+          selectedDemographic={selectedDemographic}
+          selectedValues={selectedValues}
+          selectedSecondValues={selectedSecondValues}
+          secondSelectedDemographic={secondSelectedDemographic}
+          graphData={graphData}
+          currUser={currUser}
+          timeframe={timeframe}
+        />
+
       </div>
       <div className="upload-buttons">
         <ControlButtons onDownload={handleDownload} />
