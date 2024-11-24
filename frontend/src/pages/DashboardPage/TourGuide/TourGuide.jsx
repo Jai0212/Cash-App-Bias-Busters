@@ -51,28 +51,28 @@ const TourGuide = ({ runTour }) => {
     ]);
 
     // Function to speak the content of the current step
-    const speak = (text) => {
-        const synth = window.speechSynthesis;
-        synth.cancel(); // Stop any ongoing speech
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 1; // Adjust the rate if needed
-        synth.speak(utterance);
-    };
-
-    // Callback to handle Joyride step changes
-    const handleTourCallback = (data) => {
-        const { action, step } = data;
-
-        console.log('Joyride Callback:', data); // Debugging log
-
-        if (['start', 'next', 'prev'].includes(action)) {
-            speak(step.content); // Speak the current step content
-        }
-
-        if (['close', 'skip', 'last', 'stop'].includes(action)) {
-            window.speechSynthesis.cancel(); // Stop voice feedback
-        }
-    };
+    // const speak = (text) => {
+    //     const synth = window.speechSynthesis;
+    //     synth.cancel(); // Stop any ongoing speech
+    //     const utterance = new SpeechSynthesisUtterance(text);
+    //     utterance.rate = 1; // Adjust the rate if needed
+    //     synth.speak(utterance);
+    // };
+    //
+    // // Callback to handle Joyride step changes
+    // const handleTourCallback = (data) => {
+    //     const { action, step } = data;
+    //
+    //     console.log('Joyride Callback:', data); // Debugging log
+    //
+    //     if (['start', 'next', 'prev'].includes(action)) {
+    //         speak(step.content); // Speak the current step content
+    //     }
+    //
+    //     if (['close', 'skip', 'last', 'stop'].includes(action)) {
+    //         window.speechSynthesis.cancel(); // Stop voice feedback
+    //     }
+    // };
 
     return (
         <Joyride
@@ -85,7 +85,7 @@ const TourGuide = ({ runTour }) => {
                     zIndex: 1000,
                 },
             }}
-            callback={handleTourCallback}
+            // callback={handleTourCallback}
         />
     );
 };

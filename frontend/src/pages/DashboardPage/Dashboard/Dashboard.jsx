@@ -10,6 +10,9 @@ import DemographicsSelector from "../Demographics/DemographicsSelector.jsx";
 import graphDataDefault from "../data/graphDataDefault.js";
 import TimeButtons from "../TimeButtons/TimeButtons.jsx";
 import QRCodeShare from "../QRCodeShare/QRCodeShare.jsx";
+import ChatbotComponent from "../Chatbot/Chatbot.jsx"
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { FaComment } from 'react-icons/fa';
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -19,6 +22,7 @@ const Dashboard = () => {
 
   const [currUser, setCurrUser] = useState("");
 
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [error, setError] = useState("");
 
   const [timeframe, setTimeframe] = useState("year");
@@ -27,6 +31,8 @@ const Dashboard = () => {
   const [selectedDemographic, setSelectedDemographic] = useState("");
   const [demographicValues, setDemographicValues] = useState([]);
   const [selectedValues, setSelectedValues] = useState(["", "", "", ""]);
+  const openChatBot = () => setIsChatbotOpen(true);
+  const closeChatbot = () => setIsChatbotOpen(false);
 
   const [secondSelectedDemographic, setSecondSelectedDemographic] =
     useState("");
@@ -476,51 +482,62 @@ const Dashboard = () => {
       <div className="chart-container-container">
         <div className="timeframe-buttons">
           <TimeButtons
-            handleTimeframeChange={handleTimeframeChange}
-            timeframe={timeframe}
+              handleTimeframeChange={handleTimeframeChange}
+              timeframe={timeframe}
           />
         </div>
         {loading && (
-          <div className="loading-container">
-            <img src="/spinner.gif" alt="Loading..." className="loading-gif" />
-          </div>
+            <div className="loading-container">
+              <img src="/spinner.gif" alt="Loading..." className="loading-gif"/>
+            </div>
         )}
         <div className={loading ? "hidden" : ""}>
-          <Slider graphData={graphData} maxValue={maxValue} />
+          <Slider graphData={graphData} maxValue={maxValue}/>
         </div>
 
         <DemographicsSelector
-          demographics={demographics}
-          selectedDemographic={selectedDemographic}
-          handleDemographicChange={handleDemographicChange}
-          selectedValues={selectedValues}
-          handleValueChange={handleValueChange}
-          demographicValues={demographicValues}
-          selectedSecondValues={selectedSecondValues}
-          secondSelectedDemographic={secondSelectedDemographic}
-          handleSecondDemographicChange={handleSecondDemographicChange}
-          secondDemographicValues={secondDemographicValues}
-          handleGenerate={handleGenerate}
+            demographics={demographics}
+            selectedDemographic={selectedDemographic}
+            handleDemographicChange={handleDemographicChange}
+            selectedValues={selectedValues}
+            handleValueChange={handleValueChange}
+            demographicValues={demographicValues}
+            selectedSecondValues={selectedSecondValues}
+            secondSelectedDemographic={secondSelectedDemographic}
+            handleSecondDemographicChange={handleSecondDemographicChange}
+            secondDemographicValues={secondDemographicValues}
+            handleGenerate={handleGenerate}
         />
 
         <button className="info-button" onClick={openModal}>
           ?
         </button>
-        {isModalOpen && <Modal closeModal={closeModal} />}
+        {isModalOpen && <Modal closeModal={closeModal}/>}
+        <div>
+          <button
+              className="btn rounded-circle p-3 chatbot-button"
+              onClick={openChatBot}
+              style={{backgroundColor: '#4CAF50', color: 'white'}}
+          >
+            <FaComment/>
+          </button>
+          {isChatbotOpen && <ChatbotComponent closeChatbot={closeChatbot}/>}
 
+        </div>
         <QRCodeShare
-          selectedDemographic={selectedDemographic}
-          selectedValues={selectedValues}
-          selectedSecondValues={selectedSecondValues}
-          secondSelectedDemographic={secondSelectedDemographic}
-          graphData={graphData}
-          currUser={currUser}
-          timeframe={timeframe}
+            selectedDemographic={selectedDemographic}
+            selectedValues={selectedValues}
+            selectedSecondValues={selectedSecondValues}
+            secondSelectedDemographic={secondSelectedDemographic}
+            graphData={graphData}
+            currUser={currUser}
+            timeframe={timeframe}
         />
+
 
       </div>
       <div className="upload-buttons">
-        <ControlButtons onDownload={handleDownload} />
+        <ControlButtons onDownload={handleDownload}/>
       </div>
     </div>
   );
