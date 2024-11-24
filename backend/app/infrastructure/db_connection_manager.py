@@ -17,7 +17,7 @@ class DbConnectionManager:
                 "user": os.getenv("DB_USER"),
                 "password": os.getenv("DB_PASSWORD"),
                 "database": os.getenv("DB_DATABASE"),
-                "ssl_disabled": False,  # Change to True if you want to disable SSL
+                "ssl_disabled": True,  # Change to True if you want to disable SSL
             }
             connection = mysql.connector.connect(**DB_CONFIG)
             if connection.is_connected():

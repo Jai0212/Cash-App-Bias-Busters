@@ -115,9 +115,7 @@ def generate():
 
         print("Generating data for: ", demographics, choices, time)
 
-        data_points = Generate(file_repo, db_repo).execute(
-            demographics, choices, time
-        )  # TODO add akshat and armagan function to this
+        data_points = Generate(file_repo, db_repo).execute(demographics, choices, time)
 
         data_points_dict = [
             {
@@ -131,7 +129,7 @@ def generate():
             for dp in data_points
         ]
 
-        return jsonify(data_points_dict)  # TODO this needs to be updated in frontend
+        return jsonify(data_points_dict)
 
     return jsonify({"error": "Missing required data."}), 400
 
@@ -539,7 +537,36 @@ def share(encoded_data):
     try:
         sharer = Share(user_repo, encoded_data)
         data = sharer.execute()
-        return jsonify(data)
+
+        initialize(data.get("currUser"))
+
+        demographics = [
+            data.get("selectedDemographic"),
+            data.get("secondSelectedDemographic"),
+        ]
+        choices = {
+            demographics[0]: data.get("selectedValues"),
+            demographics[1]: data.get("selectedSecondValues"),
+        }
+        time = data.get("timeframe")
+
+        data_points = Generate(file_repo, db_repo).execute(demographics, choices, time)
+
+        data_points_dict = [
+            {
+                "feature1": dp.get_feature1(),
+                "feature2": dp.get_feature2(),
+                "accuracy": dp.get_accuracy(),
+                "falsepositive": dp.get_false_positive_rate(),
+                "falsenegative": dp.get_false_negative_rate(),
+                "combination_label": dp.get_combination_label(),
+            }
+            for dp in data_points
+        ]
+
+        combined_data = {"graph_data": data_points_dict, "other_data": data}
+
+        return jsonify(combined_data)
 
     except Exception as e:
         return (

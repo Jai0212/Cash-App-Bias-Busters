@@ -13,6 +13,7 @@ import QRCodeShare from "../QRCodeShare/QRCodeShare.jsx";
 import ChatbotComponent from "../Chatbot/Chatbot.jsx"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaComment } from 'react-icons/fa';
+import Footer from "../../../Components/Footer/Footer.jsx";
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -476,44 +477,50 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <TourGuide runTour={runTour} />
+      <div className="dashboard-container">
+        <TourGuide runTour={runTour}/>
 
-      <div className="chart-container-container">
-        <div className="timeframe-buttons">
-          <TimeButtons
-              handleTimeframeChange={handleTimeframeChange}
-              timeframe={timeframe}
+        <div className="chart-container-container">
+          <div className="timeframe-buttons">
+            <TimeButtons
+                handleTimeframeChange={handleTimeframeChange}
+                timeframe={timeframe}
+            />
+          </div>
+          {loading && (
+              <div className="loading-container">
+                <img src="/spinner.gif" alt="Loading..." className="loading-gif"/>
+              </div>
+          )}
+          <div className={loading ? "hidden" : ""}>
+            <Slider graphData={graphData} maxValue={maxValue}/>
+          </div>
+
+          <DemographicsSelector
+              demographics={demographics}
+              selectedDemographic={selectedDemographic}
+              handleDemographicChange={handleDemographicChange}
+              selectedValues={selectedValues}
+              handleValueChange={handleValueChange}
+              demographicValues={demographicValues}
+              selectedSecondValues={selectedSecondValues}
+              secondSelectedDemographic={secondSelectedDemographic}
+              handleSecondDemographicChange={handleSecondDemographicChange}
+              secondDemographicValues={secondDemographicValues}
+              handleGenerate={handleGenerate}
           />
+
+          <button className="info-button" onClick={openModal}>
+            ?
+          </button>
+          {isModalOpen && <Modal closeModal={closeModal}/>}
+
         </div>
-        {loading && (
-            <div className="loading-container">
-              <img src="/spinner.gif" alt="Loading..." className="loading-gif"/>
-            </div>
-        )}
-        <div className={loading ? "hidden" : ""}>
-          <Slider graphData={graphData} maxValue={maxValue}/>
+        <div className="upload-buttons">
+          <ControlButtons onDownload={handleDownload}/>
         </div>
 
-        <DemographicsSelector
-            demographics={demographics}
-            selectedDemographic={selectedDemographic}
-            handleDemographicChange={handleDemographicChange}
-            selectedValues={selectedValues}
-            handleValueChange={handleValueChange}
-            demographicValues={demographicValues}
-            selectedSecondValues={selectedSecondValues}
-            secondSelectedDemographic={secondSelectedDemographic}
-            handleSecondDemographicChange={handleSecondDemographicChange}
-            secondDemographicValues={secondDemographicValues}
-            handleGenerate={handleGenerate}
-        />
-
-        <button className="info-button" onClick={openModal}>
-          ?
-        </button>
-        {isModalOpen && <Modal closeModal={closeModal}/>}
-        <div>
+        <div className="chatbot-div">
           <button
               className="btn rounded-circle p-3 chatbot-button"
               onClick={openChatBot}
@@ -535,11 +542,6 @@ const Dashboard = () => {
 
 
       </div>
-      <div className="upload-buttons">
-        <ControlButtons onDownload={handleDownload}/>
-      </div>
-    </div>
-  );
-};
+);};
 
 export default Dashboard;
