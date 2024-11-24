@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import ChartComponent2 from "../ChartComponenet2/ChartComponent2.jsx";
 import ControlButton2 from "../ControlButtons2/ControlButtons2.jsx";
 import "./Dashboard2.css";
@@ -8,13 +8,12 @@ const Dashboard2 = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const [currUser, setCurrUser] = useState("");
-
   const backgroundColours = [
-    "#FF5733", // Vibrant Red
-    "#33FF57", // Vibrant Green
-    "#3357FF", // Vibrant Blue
-    "#F3F33B", // Bright Yellow
-    "#F33BF3", // Bright Purple
+    "rgba(238, 211, 177, 1)",     // Bright yellow
+    'rgb(255, 178, 111, 1)',   // Light yellow
+    'rgba(255, 247, 209, 1)',    // Lemon yellow
+    'rgb(201, 230, 240, 1)',     // Golden yellow
+    'rgb(202, 115, 115, 1)',
   ];
 
   const [graphData, setGraphData] = useState({
@@ -93,13 +92,13 @@ const Dashboard2 = () => {
 
     try {
       const response = await fetch(
-        `${VITE_BACKEND_URL}/api/generate-for-all-models`,
-        {
-          method: "POST",
-          body: new URLSearchParams({
-            curr_user: currUser,
-          }),
-        }
+          `${VITE_BACKEND_URL}/api/generate-for-all-models`,
+          {
+            method: "POST",
+            body: new URLSearchParams({
+              curr_user: currUser,
+            }),
+          }
       );
 
       if (!response.ok) {
@@ -133,64 +132,124 @@ const Dashboard2 = () => {
 
 
   return (
-    <div className="dashboard-main">
-      {/* Pass setUploadedFiles to ControlButton2 */}
-      <div className="button-container">
-        <ControlButton2 setUploadedFiles={setUploadedFiles} />
+      <>
+        {uploadedFiles.length > 0 ? (
 
-        {uploadedFiles.length > 0 && <div className="action-button-container">
-          <button onClick={handleGenerateClick} className="generate-btn">
-            Generate
-          </button>
-        </div>}
-      </div>
+            <div className="dashboard-main">
+              <div className="left-container">
+                <div className="chart-section">
+                  {Object.keys(graphData).length > 0 && (
+                      <ChartComponent2
+                          chartData={graphData}
+                          generationalResults={generationResults}
+                      />
+                  )}
 
-      {generationResults.length > 0 && (
-        <div className="result-section">
-          {generationResults.map((result, index) => (
-            <ul key={index}>
-              <li className="result-item">
-                <div className="result-details">
-                  <strong className="output-name">File:</strong>
-                  <span className="output-value">{uploadedFiles[index]}</span>
+                  {generationResults.length > 0 && (
+                      <div className="result-section">
+                        {generationResults.map((result, index) => (
+                            <ul key={index}>
+                              <li
+                                  className="result-item"
+                                  style={{
+                                    backgroundColor: backgroundColours[index % backgroundColours.length], // Apply color dynamically
+                                  }}
+                              >
+                                <div className="result-details">
+                                  <strong className="output-name">File:</strong>
+                                  <span className="output-value">{uploadedFiles[index]}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Race:</strong>
+                                  <span className="output-value">{result.race}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Gender:</strong>
+                                  <span className="output-value">{result.gender}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Age:</strong>
+                                  <span className="output-value">{result.age_groups}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">State:</strong>
+                                  <span className="output-value">{result.state}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Variance:</strong>
+                                  <span className="output-value">{result.variance}</span>
+                                </div>
+                                <div className="result-details">
+                                  <strong className="output-name">Bias:</strong>
+                                  <span className="output-value">{1 - result.mean}</span>
+                                </div>
+                              </li>
+                            </ul>
+                        ))}
+                      </div>
+                  )}
                 </div>
-                <div className="result-details">
-                  <strong className="output-name">Race:</strong>
-                  <span className="output-value">{result.race}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Gender:</strong>
-                  <span className="output-value">{result.gender}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Age:</strong>
-                  <span className="output-value">{result.age_groups}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">State:</strong>
-                  <span className="output-value">{result.state}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Variance:</strong>
-                  <span className="output-value">{result.variance}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Bias:</strong>
-                  <span className="output-value">{1 - result.mean}</span>
-                </div>
-              </li>
-            </ul>
-          ))}
-        </div>
-      )}
+              </div>
+              <div className="right-container">
+                {/* Pass setUploadedFiles to ControlButton2 */}
+                <div className="button-container">
+                  <ControlButton2 setUploadedFiles={setUploadedFiles}/>
 
-      <div className="chart-section">
-        {Object.keys(graphData).length > 0 && (
-          <ChartComponent2 chartData={graphData} generationalResults={generationResults} />
-        )}
-      </div>
-    </div>
+                  {uploadedFiles.length > 0 && (
+                      <div className="action-button-container">
+                        <button onClick={handleGenerateClick} className="generate-btn">
+                          Generate
+                        </button>
+                      </div>
+                  )}
+                </div>
+              </div>
+            </div>
+        ) : (
+            <div className="pre-upload-dashboard">
+              <div className="button-container-pre">
+                <ControlButton2 setUploadedFiles={setUploadedFiles}/>
+
+                {uploadedFiles.length > 0 && (
+                    <div className="action-button-container">
+                      <button onClick={handleGenerateClick} className="generate-btn">
+                        Generate
+                      </button>
+                    </div>
+                )}
+              </div>
+              <img
+                  src="/bg-bottom-left-desktop.webp"
+                  alt="Cashapp illustration"
+                  className="illustration"/>
+              <img
+                  src="/bg-bottom-right-desktop.webp"
+                  alt="Cashapp illustration"
+                  className="illustration3"/>
+              <img
+                  src="/bg-top-right-desktop.webp"
+                  alt="Cashapp illustration"
+                  className="illustration2"/>
+              <img
+                  src="/star.png"
+                  alt="Cashapp illustration"
+                  className="illustration4"/>
+              <img
+                  src="/flower.png"
+                  alt="Cashapp illustration"
+                  className="illustration5"/>
+              <img
+                  src="/star2.png"
+                  alt="Cashapp illustration"
+                  className="illustration6"/>
+              <img
+                  src="/bg-bottom-left-desktop copy.webp"
+                  alt="Cashapp illustration"
+                  className="illustration7"/>
+            </div>)}
+      </>
   );
 };
 
 export default Dashboard2;
+
