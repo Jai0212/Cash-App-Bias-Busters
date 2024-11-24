@@ -1,22 +1,37 @@
 .dashboard-main {
-  margin-top: 30px;
-  padding: 20px;
+  height: 100vh;
+  width: 100vw;
   font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px; /* Space between sections */
+  background-color: #47663B;
 }
 
+
+.left-container {
+  width: 60%;
+  height: 100%;
+  position: absolute;
+}
+
+.right-container {
+  width: 40%;
+  height: 100%;
+  position: absolute;
+  right: 0;
+}
 .button-container {
+  position: relative;
+  top: 0;
+  left: 50%; /* Centers the button-container horizontally */
+  transform: translateX(-50%); /* Adjusts for the width of the container */
   display: flex;
-  flex-direction: row; /* Align buttons horizontally */
-  justify-content: center; /* Center the buttons */
+  flex-direction: column; /* Align buttons horizontally */
   gap: 20px; /* Space between buttons */
   width: 100%;
+  padding: 10%;
+  height: 100%;
 }
 
-.upload-button,
+.upload-button-pre,
 .generate-btn {
   padding: 15px 30px;
   font-size: 16px; /* Slightly smaller font size for balance */
@@ -28,27 +43,40 @@
   transition: all 0.3s ease; /* Smooth transition */
 }
 
-.upload-button {
-  background-color: #0088cc;
+.upload-button-pre{
+  background-color: rgba(255,255,255,0.1);
   color: #fafafa;
   margin-bottom: 20px;
+  font-size: 40px;
+  border: none;
+  height: 100px;
+  width: 350px;
+  border-radius: 120px; /* Rounds the edges */
 }
 
-.upload-button:hover {
-  background-color: #005f88; /* Darker shade for hover */
-  color: #fff;
+.upload-button-pre:hover {
+  background-color: #ffffff; /* Darker shade for hover */
+  color: #04CF22;
   font-weight: bold;
 }
 
 .generate-btn {
-  background-color: #4caf50;
-  color: #fff;
+  background-color: #47663B; /* Purple background */
+  color: #E8ECD7; /* Text color */
+  border: 2px solid #E8ECD7; /* White border */
+  border-radius: 25px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  font-weight: bold; /* Bold text */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+  position: relative;
+  right: -30%;
 }
 
 .generate-btn:hover {
-  background-color: #45a049;
-  transform: scale(1.05); /* Slightly enlarge */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+  background-color: #E8ECD7; /* Invert background color */
+  color: #47663B; /* Purple text color */
+  border: 2px solid #47663B; /* Invert border color */
 }
 
 .model-name,
@@ -58,55 +86,44 @@
 }
 
 .chart-section {
-  width: 80%;
-  background-color: #f6f2eb;
+  width: 100%;
+  background-color: #47663B;
   border-radius: 8px;
   padding: 20px;
-  margin-top: 20px;
+  position: relative;
+  left: 3%;
+  top: 1.4%;
 }
 
 body,
 html {
-  background-color: #f6f2eb;
+  background-color: #E8ECD7;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* Prevent scrolling */
+  margin: 0; /* Remove default margin */
 }
 
-.uploaded-files-list {
-  align-items: center;
-  justify-content: center;
-  background-color: #2e2e2e; /* Slightly more opaque */
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for better separation */
-  max-height: 300px;
-  overflow-y: auto; /* Allow vertical scrolling */
-  width: 200px; /* Match the width of the upload button */
+.uploaded-files-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  gap: 16px; /* Space between the boxes */
 }
 
-.uploaded-files-list ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.uploaded-file-item {
+.uploaded-file-box {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Space between file name and delete button */
-  /* padding: 10px 15px; */
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 14px;
-  color: #333;
-  font-family: "Roboto", Arial, sans-serif;
-  gap: 10px; /* Add a gap between file name and delete button */
-  padding: 15px;
-}
-
-.uploaded-file-item:last-child {
-  border-bottom: none;
+  gap: 8px; /* Space between the icon and file name */
+  padding: 16px;
+  border-radius: 8px;
+  background-color: rgba(255,255,255,0);
+  border: 1px solid #E8ECD7;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
 }
 
 .file-name {
-  color: #fafafa;
+  color: #E8ECD7;
+  font-weight: bold;
   flex-grow: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -114,8 +131,8 @@ html {
 }
 
 .delete-file-btn {
-  color: #fff;
-  background-color: #2e2e2e; /* Set a background color for the button */
+  color: #E8ECD7;
+  background-color: rgba(0,0,0,0); /* Set a background color for the button */
   border: none;
   border-radius: 50%; /* Keep the circle shape */
   width: 30px; /* Adjusted to better fit the "X" */
@@ -143,21 +160,32 @@ html {
   transform: scale(1.05); /* Slightly shrink on click */
 }
 
+.action-button-container {
+  align-items: center;
+  margin-top: 30px;
+}
+
 .result-section {
-  width: 80%;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
+  width: 90vw;
+  margin-left: 2%;
+  background-color: rgba(0,0,0,0);
   border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
+  margin-top: 5px;
+  height: 10%;
 }
 
 .result-item {
   display: flex;
   flex-wrap: nowrap; /* Prevent wrapping to new lines */
   justify-content: space-between;
-  gap: 8px; /* Reduce the gap for more room */
+  gap: 7px; /* Reduce the gap for more room */
+}
+
+.result-section ul {
+  padding: 0; /* Remove padding inside the <ul> */
+  margin: 0;  /* Remove margin around the <ul> */
+  position: relative;
+  height: 7vh;
 }
 
 .result-details {
@@ -178,4 +206,129 @@ html {
   white-space: nowrap; /* Prevents the text from wrapping */
   overflow: hidden; /* Hides any overflowed content */
   text-overflow: ellipsis; /* Adds "..." if the text overflows */
+}
+
+.pre-upload-dashboard {
+  display: flex;
+  justify-content: space-between; /* Adjusts content alignment */
+  align-items: center; /* Centers content horizontally */
+  height: 90vh; /* Full height of the viewport */
+  width: 100vw; /* Full width of the viewport */
+  overflow: hidden; /* Prevent any accidental overflow */
+  position: relative;
+  background-color: #00D72E; /* Your green background color */
+  box-sizing: border-box; /* Includes padding in width/height calculations */
+  margin: 0;
+}
+
+.illustration {
+  position: absolute;
+  bottom: 0; /* Place it at the bottom */
+  right: -150px;
+  max-width: 100%; /* Ensure it scales within the container */
+  height: 400px;
+  width: 40%;
+  transform: scaleX(-1); /* Flip the element horizontally */
+  display: inline-block;
+}
+
+.illustration2 {
+  position: absolute;
+  left: 0;
+  max-width: 100%; /* Ensure it scales within the container */
+  height: 100vh;
+  transform: scaleX(-1); /* Flip the element horizontally */
+  display: inline-block;
+}
+
+.illustration3 {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 300px;
+  width: auto;
+  transform: scale(-1, -1); /* Flip horizontally and vertically */
+  display: inline-block;
+}
+
+.illustration4 {
+  position: absolute;
+  right: 30%;
+  width: 12%;
+  max-width: 100%; /* Ensure it scales within the container */
+  height: 24%;
+  rotate: 20deg;
+  bottom: 10%;
+}
+
+.illustration5 {
+  position: absolute;
+  top: -120px;
+  width: 20%;
+  max-width: 100%; /* Ensure it scales within the container */
+
+  height: 40%;
+  right: 40%
+}
+
+.illustration6 {
+  position: absolute;
+  top: 5%;
+  width: 12%;
+  max-width: 100%; /* Ensure it scales within the container */
+  height: 24%;
+  left: 25%;
+  rotate: -20deg;
+}
+
+.illustration7 {
+  position: absolute;
+  bottom: -100px; /* Place it at the bottom */
+  left: 20%;
+  rotate: 20deg;
+  max-width: 100%; /* Ensure it scales within the container */
+  height: 400px;
+  width: 40%;
+  display: inline-block;
+}
+
+.button-container-pre {
+  top: 50%;
+  display: flex;
+  flex-direction: row; /* Align buttons horizontally */
+  justify-content: center; /* Center the buttons */
+  gap: 20px; /* Space between buttons */
+  width: 100%;
+}
+
+.upload-model-container {
+  position: relative;
+  top: 3%;
+}
+
+.delete-icon {
+  position: relative;
+  height: 60%;
+  width: 60%;
+}
+
+.result-item {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.result-details {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.output-name {
+  font-weight: bold;
+}
+
+.output-value {
+  font-style: italic;
 }
