@@ -7,6 +7,7 @@ backend/app/__pycache__
 backend/app/controllers/__pycache__
 backend/__pycache__
 backend/app/__pycache__
+backend/ml_model/model_with_score.pkl
 
 # Frontend
 # Logs
@@ -35,6 +36,9 @@ frontend/*.njsproj
 frontend/*.sln
 frontend/*.sw?
 
+database/full_single_transaction.csv
+database/test.csv
+
 # Python cache files
 **/__pycache__/
 **/*.py[cod]
@@ -62,3 +66,6 @@ env/
 
 # Pytest cache
 *.pytest_cache/
+
+
+

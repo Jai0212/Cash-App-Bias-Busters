@@ -10,13 +10,13 @@ from app.use_cases import (
     GetLastLoginData,
     GetValuesUnderHeader,
     UploadData,
+    RegisterUserInteractor,
+    LoginUserInteractor,
+    ChangePasswordInteractor,
+    Share,
 )
-from app.repositories import SqliteDbRepo, CsvFileRepo
-from app.use_cases.user_interactor import (
-    register_user_interactor,
-    login_user_interactor,
-    change_password_interactor,
-)
+from app.repositories import SqliteDbRepo, CsvFileRepo, UserRepository
+
 from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
 load_dotenv()
@@ -254,7 +254,9 @@ def generate_for_all_models():
             models[i] = os.path.join(UPLOAD_FOLDER, curr_user, models[i])
         print("Multiple Models Paths:", models)
 
-        evaluator = EvaluateModelsUseCase(models)
+        new_file_repo = CsvFileRepo(User("SECRET_KEY"), file_path)
+
+        evaluator = EvaluateModelsUseCase(new_file_repo, models)
         output = evaluator.execute()
 
         print("Multiple Models Output", output)
@@ -266,51 +268,6 @@ def generate_for_all_models():
 
         print("Filtered Multiple Models Output", output_filtered)
 
-        temporary_output = [
-            [
-                {
-                    "race": 0.33,
-                    "gender": 0.55,
-                    "age": 0.62,
-                    "state": 0.2,
-                    "variance": 0.2,
-                    "mean": 0.4,
-                },
-                {
-                    "race": 0.45,
-                    "gender": 0.60,
-                    "age": 0.72,
-                    "state": 0.3,
-                    "variance": 0.25,
-                    "mean": 0.45,
-                },
-                {
-                    "race": 0.29,
-                    "gender": 0.53,
-                    "age": 0.68,
-                    "state": 0.25,
-                    "variance": 0.15,
-                    "mean": 0.35,
-                },
-                {
-                    "race": 0.50,
-                    "gender": 0.48,
-                    "age": 0.70,
-                    "state": 0.18,
-                    "variance": 0.22,
-                    "mean": 0.42,
-                },
-                {
-                    "race": 0.40,
-                    "gender": 0.58,
-                    "age": 0.65,
-                    "state": 0.22,
-                    "variance": 0.18,
-                    "mean": 0.38,
-                },
-            ]
-        ]
-
         return jsonify(output_filtered)
 
     except Exception as e:
@@ -318,8 +275,6 @@ def generate_for_all_models():
             jsonify({"error": str(e)}),
             500,
         )  # Handle any unexpected errors and return 500
-
-    # TODO add akshat and armagan function to this and return the output
 
 
 @app.route("/api/delete-model", methods=["POST"])
@@ -382,6 +337,10 @@ def delete_files_except_model(user_folder: str):
     """
     Delete all files in the user's folder except the file named "model.pkl" if it exists.
     """
+    if not user_folder:
+        print("No user provided in delete_files_except_model.")
+        return
+
     print(f"Deleting files in folder: {UPLOAD_FOLDER + user_folder}")
     path = os.path.join(UPLOAD_FOLDER, user_folder)
 
@@ -425,17 +384,21 @@ def home():
     return "Welcome to the Backend!"
 
 
+user_repo = UserRepository(table_name="users")
+
+
 @app.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
     print("Received data:", data)
+
     firstname = data.get("firstname")
     lastname = data.get("lastname")
     email = data.get("email")
     password = data.get("password")
     confirm_password = data.get("confirmPassword")
-    print(email)
 
+    # Validate required fields and password confirmation
     if password != confirm_password:
         return (
             jsonify({"code": 2, "error": True, "message": "Passwords do not match"}),
@@ -455,7 +418,10 @@ def signup():
         )
 
     try:
-        response = register_user_interactor(firstname, lastname, email, password)
+
+        # Use the `RegisterUserInteractor` with the repository
+        register_interactor = RegisterUserInteractor(user_repo)
+        response = register_interactor.execute(firstname, lastname, email, password)
         return jsonify({"code": 3, "error": False, "message": response["message"]}), 201
 
     except ValueError as e:
@@ -470,22 +436,36 @@ current_user_email = None
 
 @app.route("/login", methods=["POST"])
 def login():
+    global current_user_email
+
     data = request.get_json()
-    print(data)
+    print("Received data:", data)
+
     email = data.get("email")
     password = data.get("password")
 
+    if not email or not password:
+        return (
+            jsonify(
+                {"code": 2, "error": True, "message": "Email and Password are required"}
+            ),
+            400,
+        )
+
     try:
-        response = login_user_interactor(email, password)
-        if not response.get("error"):
-            # Store the email in the global variable only if login is successful
-            global current_user_email
-            current_user_email = email
-            print(current_user_email)
+        # Use the LoginUserInteractor with the UserRepository
+        login_interactor = LoginUserInteractor(user_repo)
+        response = login_interactor.execute(email, password)
+
+        # Store the email globally if login is successful
+        current_user_email = email
+        print(f"Current logged-in user: {current_user_email}")
 
         return jsonify({"code": 3, "error": False, "message": response["message"]}), 200
+
     except ValueError as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 401
+
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
 
@@ -512,6 +492,8 @@ def get_email():
 
 @app.route("/change_password", methods=["POST"])
 def change_password():
+    global current_user_email
+
     data = request.get_json()
     print("Received data:", data)
 
@@ -539,12 +521,31 @@ def change_password():
         )
 
     try:
-        response = change_password_interactor(email, old_password, new_password)
+        # Use the ChangePasswordInteractor with the UserRepository
+        change_password_interactor = ChangePasswordInteractor(user_repo)
+        response = change_password_interactor.execute(email, old_password, new_password)
+
         return jsonify({"code": 3, "error": False, "message": response["message"]}), 200
+
     except ValueError as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 400
+
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
+
+
+@app.route("/share/<encoded_data>", methods=["GET"])
+def share(encoded_data):
+    try:
+        sharer = Share(user_repo, encoded_data)
+        data = sharer.execute()
+        return jsonify(data)
+
+    except Exception as e:
+        return (
+            jsonify({"error": "Failed to decode or parse data", "message": str(e)}),
+            400,
+        )
 
 
 if __name__ == "__main__":

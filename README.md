@@ -1,4 +1,4 @@
-# Bias Detection and Visualization Tool - CashApp 
+# Bias Detection and Visualization Tool - CashApp
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9d9acd0b-6a91-4ec6-9320-88890ccc00eb/deploy-status?color=brightgreen)](https://app.netlify.com/sites/cash-app-bias-busters/deploys)
 [![Python](https://img.shields.io/badge/Python-blueviolet)](https://www.python.org/)
@@ -26,12 +26,16 @@ As part of the 2024 cohort of the Technology Leadership Initiative, we developed
 ## Index
 
 1. [Title](#bias-detection-and-visualization-tool)
-2. [Description](#short-description)
+2. [Problem Statement](#problem-statement)
 3. [Motivation](#motivation)
 4. [Features](#features)
 5. [Technical Implementation Details](#technical-implementation-details)
 6. [How to Run](#how-to-runuse)
 7. [Acknowledgements/Credits](#acknowledgementscredits)
+
+## Problem Statement
+
+Ensuring fairness in AI systems is a critical challenge for organizations like Cash App, especially when decisions impact individuals based on sensitive demographic factors such as age, gender, and race. Without intuitive tools, identifying and addressing biases in transaction approval models becomes a complex and time-intensive task for machine learning engineers, potentially leading to unfair or discriminatory outcomes.
 
 ## Motivation
 

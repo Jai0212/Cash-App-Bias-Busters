@@ -111,7 +111,7 @@ const Dashboard2 = () => {
       setGenerationResults(data);
       console.log("Model Tester Generation Results:", data);
 
-      const meanData = data.map(result => result.mean);
+      const meanData = data.map(result => 1 - result.mean);
 
       setGraphData({
         labels: uploadedFiles,

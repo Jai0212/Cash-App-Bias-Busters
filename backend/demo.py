@@ -14,10 +14,22 @@ from app.repositories import SqliteDbRepo, CsvFileRepo
 curr_dir = os.path.dirname(__file__)
 file_path = os.path.join(curr_dir, "../database/output.csv")
 
-user = User("ff@gmail.com")
+user = User("jj@gmail.com")
 
 db_repo = SqliteDbRepo(user)
 file_repo = CsvFileRepo(user, file_path)
+
+# ------------------------ SECRET KEY ------------------------
+# new_path = os.path.join(curr_dir, "../database/full_single_transaction.csv")
+# secret_file_repo = CsvFileRepo(User("SECRET_KEY"), file_path)
+# secret_file_repo.import_csv_to_db(new_path)
+
+# secret_db_repo = SqliteDbRepo(User("SECRET_KEY"))
+# secret_db_repo.fetch_data(True)
+
+# secret_file_repo.save_data_to_csv()
+# secret_file_repo.delete_csv_data()
+# ------------------------------------------------------------
 
 # get_headers_use_case = GetHeaders(file_repo)
 # print("Table headers:", get_headers_use_case.execute())
@@ -29,9 +41,11 @@ file_repo = CsvFileRepo(user, file_path)
 
 # get_values_under_header = GetValuesUnderHeader(file_repo)
 # print(get_values_under_header.execute("race"))
-evaluator = EvaluateModelsUseCase([os.path.join(curr_dir, "uploads/jj@gmail.com/model.pkl")])
-eval_results = evaluator.execute()
-print(eval_results)
+# evaluator = EvaluateModelsUseCase(
+#     [os.path.join(curr_dir, "uploads/jj@gmail.com/model.pkl")]
+# )
+# eval_results = evaluator.execute()
+# print(eval_results)
 # get_last_login_data = GetLastLoginData(db_repo)
 # print(get_last_login_data.execute())
 
@@ -47,8 +61,8 @@ choices = {
 time = "year"
 # file_repo.update_comparison_csv(demographics, choices, time)
 
-# generate = Generate(file_repo, db_repo)
-# result = generate.execute(demographics, choices, time)
+generate = Generate(file_repo, db_repo)
+result = generate.execute(demographics, choices, time)
 # print(len(result))
 # for i in result:
 #     print(
