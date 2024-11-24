@@ -1,5 +1,6 @@
 import React from "react";
 
+
 const DemographicsSelector = ({
     demographics,
     selectedDemographic,
@@ -13,6 +14,12 @@ const DemographicsSelector = ({
     secondDemographicValues,
     handleGenerate,
 }) => {
+    const handleKeyDown = (event, action) => {
+        if (event.key === "Enter") {
+            action(); 
+        }
+    };
+
     return (
         <div className="select-demographics-2">
             <div className="demog-clas">
@@ -41,24 +48,26 @@ const DemographicsSelector = ({
                             </h3>
                             {[...Array(4)].map((_, idx) => (
                                 <select
-                                tabIndex={7}
+                                    tabIndex={7}
                                     key={idx}
-                                    onChange={(event) => handleValueChange(event, idx)}
+                                    onChange={(event) =>
+                                        handleValueChange(event, idx)
+                                    }
                                     value={selectedValues[idx] || ""}
                                 >
                                     <option value="">Select</option>
                                     {demographicValues
-                                        .filter((val) => !selectedSecondValues.includes(val))
+                                        .filter(
+                                            (val) =>
+                                                !selectedSecondValues.includes(val)
+                                        )
                                         .map((val, index) => (
                                             <option key={index} value={val}>
                                                 {val}
                                             </option>
                                         ))}
-                                    
                                 </select>
-                                
                             ))}
-                            
                         </div>
                     )}
                 </div>
@@ -66,13 +75,15 @@ const DemographicsSelector = ({
                 {selectedDemographic && (
                     <div className="select-container2">
                         <select
-                        tabIndex={8}
+                            tabIndex={8}
                             onChange={handleSecondDemographicChange}
                             value={secondSelectedDemographic}
                         >
                             <option value="">Select</option>
                             {demographics
-                                .filter((demo) => demo !== selectedDemographic)
+                                .filter(
+                                    (demo) => demo !== selectedDemographic
+                                )
                                 .map((demo, index) => (
                                     <option key={index} value={demo}>
                                         {demo}
@@ -96,13 +107,18 @@ const DemographicsSelector = ({
                                     >
                                         <option value="">Select</option>
                                         {secondDemographicValues
-                                            .filter((val) => !selectedValues.includes(val))
+                                            .filter(
+                                                (val) =>
+                                                    !selectedValues.includes(val)
+                                            )
                                             .map((val, index) => (
-                                                <option key={index} value={val}>
+                                                <option
+                                                    key={index}
+                                                    value={val}
+                                                >
                                                     {val}
                                                 </option>
                                             ))}
-                                            
                                     </select>
                                 ))}
                             </div>
@@ -110,12 +126,20 @@ const DemographicsSelector = ({
                     </div>
                 )}
             </div>
-            {selectedDemographic && <div className="generate-btn-container">
-                <button className="generate-button" onClick={handleGenerate}
-                tabIndex={10}>
-                    Generate
-                </button>
-            </div>}
+            {selectedDemographic && (
+                <div className="generate-btn-container">
+                    <button
+                        className="generate-button"
+                        onClick={handleGenerate}
+                        tabIndex={10}
+                        onKeyDown={(event) =>
+                            handleKeyDown(event, handleGenerate)
+                        }
+                    >
+                        Generate
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
