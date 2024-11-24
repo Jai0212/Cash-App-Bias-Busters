@@ -9,11 +9,11 @@ const Dashboard2 = () => {
 
   const [currUser, setCurrUser] = useState("");
   const backgroundColours = [
-    "#FF5733", // Vibrant Red
-    "#33FF57", // Vibrant Green
-    "#3357FF", // Vibrant Blue
-    "#F3F33B", // Bright Yellow
-    "#F33BF3", // Bright Purple
+    "rgba(238, 211, 177, 1)",     // Bright yellow
+    'rgb(255, 178, 111, 1)',   // Light yellow
+    'rgba(255, 247, 209, 1)',    // Lemon yellow
+    'rgb(201, 230, 240, 1)',     // Golden yellow
+    'rgb(202, 115, 115, 1)',
   ];
 
   const [graphData, setGraphData] = useState({
@@ -134,6 +134,7 @@ const Dashboard2 = () => {
   return (
       <>
         {uploadedFiles.length > 0 ? (
+
             <div className="dashboard-main">
               <div className="left-container">
                 <div className="chart-section">
@@ -148,7 +149,12 @@ const Dashboard2 = () => {
                       <div className="result-section">
                         {generationResults.map((result, index) => (
                             <ul key={index}>
-                              <li className="result-item">
+                              <li
+                                  className="result-item"
+                                  style={{
+                                    backgroundColor: backgroundColours[index % backgroundColours.length], // Apply color dynamically
+                                  }}
+                              >
                                 <div className="result-details">
                                   <strong className="output-name">File:</strong>
                                   <span className="output-value">{uploadedFiles[index]}</span>

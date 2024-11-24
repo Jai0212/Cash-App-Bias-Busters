@@ -207,31 +207,39 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             />
 
             {/* Button for importing models */}
-            <button className={`upload-button${uploadedFiles.length > 0 ? '-post' : '-pre'}`} // Conditional class name
-                    onClick={handleModelUploadClick}>Upload Models</button>
+
+            {uploadedFiles.length === 0 && (
+                <button
+                    className="upload-button-pre"
+                    onClick={handleModelUploadClick}
+                >
+                    Upload Models
+                </button>
+            )}
 
             {/* Display the uploaded files below */}
             {uploadedFiles.length > 0 && (
-                <div className="uploaded-files-list">
-                    <ul>
-                        {uploadedFiles.map((fileName, index) => (
-                            <li key={index} className="uploaded-file-item">
-                                <span role="img" aria-label="file-icon" className="file-icon">📂</span>
-                                <span className="file-name">{fileName}</span>
-                                <button
-                                    className="delete-file-btn"
-                                    onClick={() => handleDeleteFile(index)} // Handle file deletion
-                                >
-                                    ❌
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="uploaded-files-grid">
+                    {uploadedFiles.map((fileName, index) => (
+                        <div key={index} className="uploaded-file-box">
+                            <span role="img" aria-label="file-icon" className="file-icon">📂</span>
+                            <span className="file-name">{fileName}</span>
+                            <button
+                                className="delete-file-btn"
+                                onClick={() => handleDeleteFile(index)} // Handle file deletion
+                            >
+                                <img
+                                    src="/cancel-16.png"
+                                    alt="cross-mark"
+                                    className="delete-icon"/>
+                            </button>
+                        </div>
+                    ))}
                 </div>
             )}
 
             {showModal && (
-                <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
+                <div className="modal show" style={{display: "block", backdropFilter: "blur(5px)"}}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
                             <div className="modal-header">
