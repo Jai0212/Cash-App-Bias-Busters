@@ -2,6 +2,9 @@ from app.repositories.interfaces import UserRepositoryInterface
 from app.infrastructure.db_connection_manager import DbConnectionManager
 from mysql.connector import Error
 from typing import Optional
+import json
+import base64
+
 
 class UserRepository(UserRepositoryInterface):
     def __init__(self, table_name: str):
@@ -34,7 +37,9 @@ class UserRepository(UserRepositoryInterface):
             print(f"Error: {e}")
             return None
 
-    def create_user(self, firstname: str, lastname: str, email: str, password: str) -> None:
+    def create_user(
+        self, firstname: str, lastname: str, email: str, password: str
+    ) -> None:
         """Inserts a new user into the users table."""
         self.connect()
 
@@ -49,7 +54,7 @@ class UserRepository(UserRepositoryInterface):
                 INSERT INTO users (firstname, lastname, email, password)
                 VALUES (%s, %s, %s, %s)
                 """,
-                (firstname, lastname, email, password)
+                (firstname, lastname, email, password),
             )
             self.connection.commit()
             print("User created successfully.")
@@ -58,7 +63,9 @@ class UserRepository(UserRepositoryInterface):
         except Error as e:
             print(f"Error: {e}")
 
-    def get_user_by_email_and_password(self, email: str, password: str) -> Optional[dict]:
+    def get_user_by_email_and_password(
+        self, email: str, password: str
+    ) -> Optional[dict]:
         """Fetches a user by their email and password."""
         self.connect()
 
@@ -68,7 +75,10 @@ class UserRepository(UserRepositoryInterface):
                 return None
 
             cursor = self.connection.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email, password))
+            cursor.execute(
+                "SELECT * FROM users WHERE email = %s AND password = %s",
+                (email, password),
+            )
             user = cursor.fetchone()
 
             cursor.close()
@@ -94,7 +104,7 @@ class UserRepository(UserRepositoryInterface):
                 SET password = %s
                 WHERE email = %s
                 """,
-                (new_password, email)
+                (new_password, email),
             )
             self.connection.commit()
             print(f"Password for {email} updated successfully.")
@@ -102,3 +112,20 @@ class UserRepository(UserRepositoryInterface):
 
         except Error as e:
             print(f"Error: {e}")
+
+    def process_shared_data(self, encoded_data: str) -> dict:
+        """
+        Decodes and processes the shared data.
+        """
+        try:
+            # Decode the Base64 encoded string
+            decoded_data = base64.b64decode(encoded_data).decode("utf-8")
+
+            # Parse the JSON string to a Python dictionary
+            data = json.loads(decoded_data)
+
+            # Return the processed data
+            return data
+
+        except (base64.binascii.Error, json.JSONDecodeError) as e:
+            raise ValueError(f"Invalid encoded data: {e}")

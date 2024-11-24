@@ -5,6 +5,13 @@ import './ChartComponent2.css';
 const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => {
     const chartRef = useRef(null);
     const myChartRef = useRef(null);
+    const staticColors = [
+        'rgb(255, 153, 128)',     // Bright yellow
+        'rgb(255, 178, 111)',   // Light yellow
+        'rgb(255, 247, 209)',    // Lemon yellow
+        'rgb(201, 230, 240)',     // Golden yellow
+        'rgb(202, 115, 115)',
+    ];
 
     console.log("ChartData Model Tester", chartData);
 
@@ -20,29 +27,52 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
         // Initialize the chart with a bar graph
         myChartRef.current = new Chart(ctx, {
             type: "bar", // Bar chart type
-            data: chartData,
+            data: {
+                ...chartData,
+                datasets: chartData.datasets.map((dataset, index) => ({
+                    ...dataset,
+                    backgroundColor: staticColors.slice(0, dataset.data.length), // Apply static colors to each bar
+                }))
+            },
             options: {
                 scales: {
                     x: {
                         ticks: {
+                            color: "white", // Set x-axis labels to white
                             autoSkip: false, // Ensure all x-axis labels are shown
+                            padding: 15, // Add padding between x-axis labels and axis
+                        },
+                        grid: {
+                            color: "rgba(255, 255, 255, 0.5)",
                         },
                         title: {
                             display: true,   // Show the title
+                            color: "white", // Set x-axis title color to white
                             text: 'Model Name', // Set the x-axis title
                             font: {
                                 size: 15,   // Increase the font size
                                 weight: 'bold',
                             },
-                        }
+                        },
                     },
                     y: {
                         min: 0,
                         max: 1,
                         beginAtZero: true, // Ensure y-axis starts at zero
+                        ticks: {
+                            color: "white", // Set y-axis labels to white
+                            padding: 15, // Add padding between x-axis labels and axis
+                            font: {
+                                size: 12,
+                            },
+                        }, // <-- This closing bracket for ticks was missing
+                        grid: {
+                            color: "rgba(255, 255, 255, 0.5)", // Set y-axis grid lines to translucent white
+                        },
                         title: {
                             display: true,   // Show the title
                             text: 'Bias',     // Set the y-axis title
+                            color: "white", // Set y-axis title color to white
                             font: {
                                 size: 15,   // Increase the font size
                                 weight: 'bold', // Make the text bold
@@ -71,9 +101,13 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
                             },
                         },
                     },
+                    legend: {
+                        display: false
+                    },
                 },
             },
         });
+
 
         return () => {
             if (myChartRef.current) {
@@ -92,8 +126,10 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
     }));
 
     return (
-        <div className="chart-container">
-            <canvas ref={chartRef} />
+        <div className="chart-component-wrapper">
+            <div className="chart-container">
+                <canvas className="chart-2-canvas" ref={chartRef}/>
+            </div>
         </div>
     );
 });

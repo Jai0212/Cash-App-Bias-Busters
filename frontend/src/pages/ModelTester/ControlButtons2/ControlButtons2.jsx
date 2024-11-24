@@ -77,8 +77,8 @@ const ControlButton2 = ({ setUploadedFiles }) => {
 
         if (!files.length) return; // If no files are selected, exit
 
-        if (uploadedFiles.length === 5 || uploadedFiles.length + files.length > 5) {
-            alert("You can only upload 5 models.");
+        if (uploadedFiles.length === 4 || uploadedFiles.length + files.length > 4) {
+            alert("You can only upload 4 models.");
             return;
         }
 
@@ -207,25 +207,31 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             />
 
             {/* Button for importing models */}
-            <button className="upload-button" onClick={handleModelUploadClick}>Upload Model(s)</button>
+
+            {uploadedFiles.length === 0 && (
+                <button
+                    className="upload-button-pre"
+                    onClick={handleModelUploadClick}
+                >
+                    Upload Models
+                </button>
+            )}
 
             {/* Display the uploaded files below */}
             {uploadedFiles.length > 0 && (
-                <div className="uploaded-files-list">
-                    <ul>
-                        {uploadedFiles.map((fileName, index) => (
-                            <li key={index} className="uploaded-file-item">
-                                <span role="img" aria-label="file-icon" className="file-icon">📂</span>
-                                <span className="file-name">{fileName}</span>
-                                <button
-                                    className="delete-file-btn"
-                                    onClick={() => handleDeleteFile(index)} // Handle file deletion
-                                >
-                                    ❌
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="uploaded-files-grid">
+                    {uploadedFiles.map((fileName, index) => (
+                        <div key={index} className="uploaded-file-box">
+                            <span role="img" aria-label="file-icon" className="file-icon">📂</span>
+                            <span className="file-name">{fileName}</span>
+                            <button
+                                className="delete-file-btn"
+                                onClick={() => handleDeleteFile(index)} // Handle file deletion
+                            >
+                                ❌
+                            </button>
+                        </div>
+                    ))}
                 </div>
             )}
 

@@ -8,21 +8,20 @@ const Dashboard2 = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const [currUser, setCurrUser] = useState("");
-
   const backgroundColours = [
-    "#FF5733", // Vibrant Red
-    "#33FF57", // Vibrant Green
-    "#3357FF", // Vibrant Blue
-    "#F3F33B", // Bright Yellow
-    "#F33BF3", // Bright Purple
+    "rgb(255, 153, 128)",     // Bright yellow
+    'rgb(255, 178, 111, 1)',   // Light yellow
+    'rgba(255, 247, 209, 1)',    // Lemon yellow
+    'rgb(201, 230, 240, 1)',     // Golden yellow
+    'rgb(202, 115, 115, 1)',
   ];
 
   const [graphData, setGraphData] = useState({
-    labels: ["Model 1", "Model 2", "Model 3", "Model 4", "Model 5"],
+    labels: ["Model 1", "Model 2", "Model 3", "Model 4"],
     datasets: [
       {
         label: "Bias",
-        data: [0, 0, 0, 0, 0],
+        data: [0, 0, 0, 0],
         backgroundColor: backgroundColours,
       },
     ],
@@ -32,50 +31,49 @@ const Dashboard2 = () => {
 
   const [generationResults, setGenerationResults] = useState([]);
 
-  const fetchEmailAndDemographics = async () => {
-    const url = `${VITE_BACKEND_URL}/get-email`;
+  useEffect(() => {
+    const fetchEmailAndDemographics = async () => {
+      const url = `${VITE_BACKEND_URL}/get-email`;
 
-    try {
-      const emailResponse = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      try {
+        const emailResponse = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      const emailData = await emailResponse.json();
-      console.log(emailData);
+        const emailData = await emailResponse.json();
+        console.log(emailData);
 
-      if (emailData && emailData.email) {
-        setCurrUser(emailData.email); // Set the user email if it exists
-      } else {
-        setCurrUser("");
+        if (emailData && emailData.email) {
+          setCurrUser(emailData.email); // Set the user email if it exists
+        } else {
+          setCurrUser("");
 
+          swal.fire({
+            icon: "error",
+            title: "Please log in first",
+            text: "You need to log in to access this page.",
+            confirmButtonText: "Go to Login",
+            timer: 5000,
+            timerProgressBar: true,
+          }).then(() => {
+            window.location.href = "/";
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching email:", error);
+
+        // If there is any error fetching email, show the same alert
         swal.fire({
           icon: "error",
-          title: "Please log in first",
-          text: "You need to log in to access this page.",
-          confirmButtonText: "Go to Login",
-          timer: 5000,
-          timerProgressBar: true,
-        }).then(() => {
-
-          window.location.href = "/";
+          title: "Error",
+          text: "An error occurred while fetching your email. Please try again later.",
         });
       }
-    } catch (error) {
-      console.error("Error fetching email:", error);
+    };
 
-      // If there is any error fetching email, show the same alert
-      swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An error occurred while fetching your email. Please try again later.",
-      });
-    }
-  };
-
-  useEffect(() => {
     fetchEmailAndDemographics();
 
     // Load uploaded files from localStorage
@@ -83,7 +81,15 @@ const Dashboard2 = () => {
     if (storedFiles) {
       setUploadedFiles(storedFiles); // Update the state with uploaded files
     }
-  }, []);
+  }, []); // Runs once on component mount
+
+  useEffect(() => {
+    // Trigger handleGenerateClick only after currUser is initialized and there are uploaded files
+    if (currUser && uploadedFiles.length > 0) {
+      handleGenerateClick(); // Generate results for the uploaded files
+    }
+  }, [currUser, uploadedFiles]); // Runs whenever currUser or uploadedFiles changes
+
 
   const handleGenerateClick = async () => {
     if (!currUser) {
@@ -109,10 +115,14 @@ const Dashboard2 = () => {
       }
 
       const data = await response.json();
-      setGenerationResults(data);
-      console.log("Model Tester Generation Results:", data);
 
-      const meanData = data.map(result => 1 - result.mean);
+      const validResults = data.filter(item => !(item.error || item.includes && item.includes("Error:")));
+
+      setGenerationResults(validResults);
+      
+      console.log("Model Tester Generation Results:", validResults);
+
+      const meanData = validResults.map(result => 1 - result.mean);
 
       setGraphData({
         labels: uploadedFiles,
@@ -133,64 +143,124 @@ const Dashboard2 = () => {
 
 
   return (
-    <div className="dashboard-main">
-      {/* Pass setUploadedFiles to ControlButton2 */}
-      <div className="button-container">
-        <ControlButton2 setUploadedFiles={setUploadedFiles} />
+    <>
+      {uploadedFiles.length > 0 ? (
 
-        {uploadedFiles.length > 0 && <div className="action-button-container">
-          <button onClick={handleGenerateClick} className="generate-btn">
-            Generate
-          </button>
-        </div>}
-      </div>
+        <div className="dashboard-main">
+          <div className="left-container">
+            <div className="chart-section">
+              {Object.keys(graphData).length > 0 && (
+                <ChartComponent2
+                  chartData={graphData}
+                  generationalResults={generationResults}
+                />
+              )}
 
-      {generationResults.length > 0 && (
-        <div className="result-section">
-          {generationResults.map((result, index) => (
-            <ul key={index}>
-              <li className="result-item">
-                <div className="result-details">
-                  <strong className="output-name">File:</strong>
-                  <span className="output-value">{uploadedFiles[index]}</span>
+              {generationResults.length > 0 && (
+                <div className="result-section">
+                  {generationResults.map((result, index) => uploadedFiles[index] && result.mean && (
+                    <ul key={index}>
+                      <li
+                        className="result-item"
+                        style={{
+                          backgroundColor: backgroundColours[index % backgroundColours.length], // Apply color dynamically
+                        }}
+                      >
+                        <div className="result-details">
+                          <strong className="output-name">File:</strong>
+                          <span className="output-value">{uploadedFiles[index]}</span>
+                        </div>
+                        <div className="result-details">
+                          <strong className="output-name">Race:</strong>
+                          <span className="output-value">{result.race}</span>
+                        </div>
+                        <div className="result-details">
+                          <strong className="output-name">Gender:</strong>
+                          <span className="output-value">{result.gender}</span>
+                        </div>
+                        <div className="result-details">
+                          <strong className="output-name">Age:</strong>
+                          <span className="output-value">{result.age_groups}</span>
+                        </div>
+                        <div className="result-details">
+                          <strong className="output-name">State:</strong>
+                          <span className="output-value">{result.state}</span>
+                        </div>
+                        <div className="result-details">
+                          <strong className="output-name">Variance:</strong>
+                          <span className="output-value">{result.variance}</span>
+                        </div>
+                        <div className="result-details">
+                          <strong className="output-name">Bias:</strong>
+                          <span className="output-value">{1 - result.mean}</span>
+                        </div>
+                      </li>
+                    </ul>
+                  ))}
                 </div>
-                <div className="result-details">
-                  <strong className="output-name">Race:</strong>
-                  <span className="output-value">{result.race}</span>
+              )}
+            </div>
+          </div>
+          <div className="right-container">
+            {/* Pass setUploadedFiles to ControlButton2 */}
+            <div className="button-container">
+              <ControlButton2 setUploadedFiles={setUploadedFiles} />
+
+              {uploadedFiles.length > 0 && (
+                <div className="action-button-container">
+                  <button onClick={handleGenerateClick} className="generate-btn">
+                    Generate
+                  </button>
                 </div>
-                <div className="result-details">
-                  <strong className="output-name">Gender:</strong>
-                  <span className="output-value">{result.gender}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Age:</strong>
-                  <span className="output-value">{result.age_groups}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">State:</strong>
-                  <span className="output-value">{result.state}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Variance:</strong>
-                  <span className="output-value">{result.variance}</span>
-                </div>
-                <div className="result-details">
-                  <strong className="output-name">Bias:</strong>
-                  <span className="output-value">{1 - result.mean}</span>
-                </div>
-              </li>
-            </ul>
-          ))}
+              )}
+            </div>
+          </div>
         </div>
-      )}
+      ) : (
+        <div className="pre-upload-dashboard">
+          <div className="button-container-pre">
+            <ControlButton2 setUploadedFiles={setUploadedFiles} />
 
-      <div className="chart-section">
-        {Object.keys(graphData).length > 0 && (
-          <ChartComponent2 chartData={graphData} generationalResults={generationResults} />
-        )}
-      </div>
-    </div>
+            {uploadedFiles.length > 0 && (
+              <div className="action-button-container">
+                <button onClick={handleGenerateClick} className="generate-btn">
+                  Generate
+                </button>
+              </div>
+            )}
+          </div>
+          <img
+            src="/bg-bottom-left-desktop.webp"
+            alt="Cashapp illustration"
+            className="illustration" />
+          <img
+            src="/bg-bottom-right-desktop.webp"
+            alt="Cashapp illustration"
+            className="illustration3" />
+          <img
+            src="/bg-top-right-desktop.webp"
+            alt="Cashapp illustration"
+            className="illustration2" />
+          <img
+            src="/star.png"
+            alt="Cashapp illustration"
+            className="illustration4" />
+          <img
+            src="/flower.png"
+            alt="Cashapp illustration"
+            className="illustration5" />
+          <img
+            src="/star2.png"
+            alt="Cashapp illustration"
+            className="illustration6" />
+          <img
+            src="/bg-bottom-left-desktop copy.webp"
+            alt="Cashapp illustration"
+            className="illustration7" />
+        </div>)}
+    </>
   );
 };
 
 export default Dashboard2;
+

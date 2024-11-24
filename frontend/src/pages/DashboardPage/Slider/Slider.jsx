@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import ChartComponent from '../ChartComponenet/ChartComponent.jsx'; // Adjust the import path as needed
+import ChartComponent from '../ChartComponenet/ChartComponent.jsx';
 
 const Slider = ({ graphData, maxValue }) => {
     const [sliderValue, setSliderValue] = useState(0.5);

@@ -8,6 +8,8 @@ import Dashboard from "../pages/DashboardPage/Dashboard/Dashboard.jsx";
 import Dashboard2 from "../pages/ModelTester/Dashboard2/Dashboard2.jsx";
 import ChangePassword from "../pages/ChangePassword/ChangePassword.jsx";
 import AboutPage from "../pages/AboutPage/AboutPage.jsx";
+import QRCodeShare from "../pages/DashboardPage/QRCodeShare/QRCodeShare.jsx";
+import SharePage from "../pages/SharePage/SharePage.jsx";
 
 // Importing Layouts
 import PublicLayout from "../Layout/PublicLayout.jsx";
@@ -41,6 +43,7 @@ const App = () => {
         <Route path="/about" element={<UserLayout />}>
           <Route path="" element={<AboutPage />} />
         </Route>
+        <Route path="/share/:encodedData" element={<SharePage />} />
       </Routes>
     </BrowserRouter>
   );

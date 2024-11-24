@@ -1,0 +1,262 @@
+/* Shared container styles */
+.share-page-container {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Wrapper for Centering */
+.center-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Full viewport height for vertical centering */
+    width: 100%;
+}
+
+/* Centered Overall Bias */
+.overall-bias {
+    font-size: 1.2rem;
+    color: #555;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 210px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+/* Centered Title */
+.page-title {
+    font-size: 2.4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+    /* Centering the title */
+    letter-spacing: 1px;
+    /* Slight spacing for a modern touch */
+    text-transform: uppercase;
+}
+
+/* Graph Container */
+.graph-container {
+    width: 100%;
+    overflow-x: auto;
+    text-align: center;
+    /* Center the content inside */
+}
+
+/* Graph Section */
+.graph-section {
+    width: 1000px;
+    /* Or your desired width */
+    height: 50vh;
+    /* Or your desired height */
+    margin: 0 auto;
+    /* Center the graph horizontally */
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+/* Loading Text */
+.loading-text {
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
+}
+
+/* Error Message */
+.error-message {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Data Container */
+.data-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+/* Demographics Container */
+.demographics-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap;
+    flex: 1;
+    justify-content: space-between;
+}
+
+/* Demographic Item */
+.demographic-item {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    font-size: 1.23rem;
+    color: #444;
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.demographic-item:hover {
+    background-color: #fff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Demographic Title */
+.demographic-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    /* Center the demographic titles */
+}
+
+.demographic-title::after {
+    content: "";
+    display: block;
+    width: 25vw;
+    height: 3px;
+    background-color: #8B8000;
+    margin: 8px auto 0;
+    /* Center the line below */
+}
+
+.demographic-value {
+    display: block;
+    font-size: 1.1rem;
+    color: #013220;
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+}
+
+/* Demographics List */
+.demographics-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #555;
+}
+
+.demographics-list li {
+    margin-bottom: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+    /* Data Container */
+    .data-container {
+        flex-direction: column;
+        /* Stack items vertically */
+        gap: 10px;
+    }
+
+    /* Demographics Container */
+    .demographics-container {
+        flex-direction: column;
+        /* Stack items vertically */
+        margin-left: 0;
+        /* Adjust margin for smaller screens */
+    }
+
+    /* Demographic Item */
+    .demographic-item {
+        font-size: 1.1rem;
+        /* Smaller font size */
+        padding: 15px;
+        /* Reduced padding */
+        max-width: 100%;
+        /* Full width on small screens */
+    }
+
+    /* Demographic Title */
+    .demographic-title {
+        font-size: 1.2rem;
+        /* Slightly smaller font */
+        text-align: left;
+        /* Align titles to the left */
+    }
+
+    /* Graph Section */
+    .graph-section {
+        height: 60vh;
+        /* Reduce height for smaller screens */
+        margin-left: -80px;
+        /* Remove extra margin */
+        margin-right: 0;
+    }
+
+    /* Graph Container */
+    .graph-container {
+        justify-content: flex-start;
+        /* Align graph to the left */
+        width: 100%;
+        /* Full width */
+    }
+
+    /* Centered Overall Bias */
+    .overall-bias {
+        font-size: 1rem;
+        /* Smaller text */
+        padding: 8px 15px;
+        /* Adjust padding */
+        max-width: 90%;
+        /* More responsive width */
+    }
+
+    /* Title */
+    .page-title {
+        font-size: 1.8rem;
+        /* Slightly smaller title font */
+        margin-bottom: 15px;
+        /* Reduced margin */
+        letter-spacing: 0.5px;
+        /* Slightly reduced letter-spacing */
+    }
+
+    /* Center Wrapper */
+    .center-wrapper {
+        padding: 10px 0;
+        /* Adjust padding */
+    }
+
+    /* Loading Text */
+    .loading-text {
+        font-size: 1rem;
+        /* Smaller loading text */
+    }
+
+    /* Error Message */
+    .error-message {
+        font-size: 1rem;
+        /* Slightly smaller font for error messages */
+    }
+}
