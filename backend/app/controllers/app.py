@@ -10,12 +10,12 @@ from app.use_cases import (
     GetLastLoginData,
     GetValuesUnderHeader,
     UploadData,
+    RegisterUserInteractor,
+    LoginUserInteractor,
+    ChangePasswordInteractor,
+    Share,
 )
-from app.repositories import SqliteDbRepo, CsvFileRepo
-from app.use_cases.register_user_interactor import RegisterUserInteractor
-from app.use_cases.login_user_interactor import LoginUserInteractor
-from app.use_cases.change_password_interactor import ChangePasswordInteractor
-from app.repositories.user_repository import UserRepository
+from app.repositories import SqliteDbRepo, CsvFileRepo, UserRepository
 
 from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
@@ -340,7 +340,7 @@ def delete_files_except_model(user_folder: str):
     if not user_folder:
         print("No user provided in delete_files_except_model.")
         return
-    
+
     print(f"Deleting files in folder: {UPLOAD_FOLDER + user_folder}")
     path = os.path.join(UPLOAD_FOLDER, user_folder)
 
@@ -532,6 +532,20 @@ def change_password():
 
     except Exception as e:
         return jsonify({"code": 2, "error": True, "message": str(e)}), 500
+
+
+@app.route("/share/<encoded_data>", methods=["GET"])
+def share(encoded_data):
+    try:
+        sharer = Share(user_repo, encoded_data)
+        data = sharer.execute()
+        return jsonify(data)
+
+    except Exception as e:
+        return (
+            jsonify({"error": "Failed to decode or parse data", "message": str(e)}),
+            400,
+        )
 
 
 if __name__ == "__main__":
