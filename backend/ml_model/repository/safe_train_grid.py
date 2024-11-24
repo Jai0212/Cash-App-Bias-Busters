@@ -12,8 +12,6 @@ def safe_train_test_split(inputs, target, test_size=0.2, random_state=48):
         if "With n_samples=" in str(e):
             print("Not enough samples to split. Returning None.")
             return None  # Returning None when there aren't enough samples
-        else:
-            raise e  # Re-raise any other ValueErrors
 
 
 def safe_grid_search(x_train, y_train):
@@ -32,5 +30,3 @@ def safe_grid_search(x_train, y_train):
         if "Cannot have number of splits n_splits" in str(e):
             print("Not enough samples for cross-validation. Returning None.")
             return None  # Returning None when there aren't enough samples
-        else:
-            raise e  # Re-raise other ValueErrors

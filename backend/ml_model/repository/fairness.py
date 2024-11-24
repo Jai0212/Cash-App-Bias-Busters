@@ -29,6 +29,7 @@ class FairnessEvaluator:
             MetricFrame: A MetricFrame object containing accuracy,
             false positive rate, and false negative rate metrics.
         """
+
         metric_frame = MetricFrame(
             metrics={
                 "accuracy": lambda y_true, y_pred: np.mean(y_true == y_pred),
