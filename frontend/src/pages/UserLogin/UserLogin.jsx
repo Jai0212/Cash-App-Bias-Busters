@@ -89,11 +89,12 @@ const UserLogin = () => {
       <div className="alert alert-primary">
         <form onSubmit={handleSubmit(handleForm)} id={"form"}>
           <div className="mb-3">
-            <label htmlFor="email">Email</label>
+            <label for="email" htmlFor="email">Email</label>
             <input
               {...register("email", { required: "This field is required" })}
               type="email"
               className={"form-control"}
+              aria-label="email"
             />
             <ErrorMessage
               errors={errors}
@@ -105,11 +106,12 @@ const UserLogin = () => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="password">Password</label>
+            <label for="password" htmlFor="password">Password</label>
             <input
               {...register("password", { required: "This field is required" })}
               type="password"
               className={"form-control"}
+              aria-label="password"
             />
             <ErrorMessage
               errors={errors}

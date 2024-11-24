@@ -511,14 +511,15 @@ const Dashboard = () => {
             handleGenerate={handleGenerate}
         />
 
-        <button className="info-button" onClick={openModal}>
-          ?
+        <button className="info-button" onClick={openModal}
+                      aria-label="Activate info button">
         </button>
         {isModalOpen && <Modal closeModal={closeModal}/>}
         <div>
           <button
               className="btn rounded-circle p-3 chatbot-button"
               onClick={openChatBot}
+              aria-label="Activate chatbot"
               tabIndex={11}
           >
             <FaComment/>

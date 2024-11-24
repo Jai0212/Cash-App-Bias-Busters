@@ -16,7 +16,7 @@ function Footer() {
         >
             <MDBContainer className="custom-footer-container">
                 {/* Social Media Links and About Us Section */}
-                <section className="mb-4 d-flex justify-content-center align-items-center">
+                <section aria-label='github link' className="mb-4 d-flex justify-content-center align-items-center">
                     {/* About Us Link */}
                     <Link
                         to="/about"
@@ -38,6 +38,7 @@ function Footer() {
                         className="m-1"
                         href="https://github.com/Jai0212/Cash-App-Bias-Busters"
                         role="button"
+                        aria-label='github link'
                     >
                         <FontAwesomeIcon icon={faGithub} />
                     </MDBBtn>

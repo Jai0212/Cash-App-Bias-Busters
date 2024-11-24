@@ -25,6 +25,7 @@ const Slider = ({ graphData, maxValue }) => {
                     value={sliderValue}
                     onChange={handleSliderChange}
                     tabIndex={1}
+                    aria-label='threshold'
                 />
             </div>
             <div>
