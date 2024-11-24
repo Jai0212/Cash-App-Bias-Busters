@@ -38,7 +38,6 @@ class FairnessEvaluator:
             },
             y_true=self.y_true,
             y_pred=self.y_pred,
-            sensitive_features=self.sensitive_features,
-        )
+            sensitive_features=self.sensitive_features,)
 
         return metric_frame
