@@ -517,7 +517,6 @@ const Dashboard = () => {
           <button
               className="btn rounded-circle p-3 chatbot-button"
               onClick={openChatBot}
-              style={{backgroundColor: '#4CAF50', color: 'white'}}
           >
             <FaComment/>
           </button>

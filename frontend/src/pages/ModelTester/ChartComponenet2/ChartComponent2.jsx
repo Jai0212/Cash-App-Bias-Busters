@@ -6,7 +6,7 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
     const chartRef = useRef(null);
     const myChartRef = useRef(null);
     const staticColors = [
-        "rgba(238, 211, 177, 1)",     // Bright yellow
+        'rgb(255, 153, 128)',     // Bright yellow
         'rgb(255, 178, 111)',   // Light yellow
         'rgb(255, 247, 209)',    // Lemon yellow
         'rgb(201, 230, 240)',     // Golden yellow
@@ -128,7 +128,7 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
     return (
         <div className="chart-component-wrapper">
             <div className="chart-container">
-                <canvas ref={chartRef}/>
+                <canvas className="chart-2-canvas" ref={chartRef}/>
             </div>
         </div>
     );

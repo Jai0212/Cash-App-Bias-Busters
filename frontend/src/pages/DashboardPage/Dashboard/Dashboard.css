@@ -509,3 +509,16 @@ button:focus-visible {
   visibility: hidden; /* Keeps the element in place but hides it */
 }
 
+/* Normal button style */
+.chatbot-button {
+  background-color: #4CAF50;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.chatbot-button:hover {
+  background-color: #357a38; /* Change to a darker shade or any color you want */
+  color: #e0e0e0;
+  transform: scale(1.03); /* Slightly enlarge the button */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}

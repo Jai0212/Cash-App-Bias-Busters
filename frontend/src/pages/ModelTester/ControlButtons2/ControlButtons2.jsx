@@ -77,8 +77,8 @@ const ControlButton2 = ({ setUploadedFiles }) => {
 
         if (!files.length) return; // If no files are selected, exit
 
-        if (uploadedFiles.length === 5 || uploadedFiles.length + files.length > 5) {
-            alert("You can only upload 5 models.");
+        if (uploadedFiles.length === 4 || uploadedFiles.length + files.length > 4) {
+            alert("You can only upload 4 models.");
             return;
         }
 
@@ -228,10 +228,7 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                                 className="delete-file-btn"
                                 onClick={() => handleDeleteFile(index)} // Handle file deletion
                             >
-                                <img
-                                    src="/cancel-16.png"
-                                    alt="cross-mark"
-                                    className="delete-icon"/>
+                                ❌
                             </button>
                         </div>
                     ))}
@@ -239,7 +236,7 @@ const ControlButton2 = ({ setUploadedFiles }) => {
             )}
 
             {showModal && (
-                <div className="modal show" style={{display: "block", backdropFilter: "blur(5px)"}}>
+                <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
                             <div className="modal-header">

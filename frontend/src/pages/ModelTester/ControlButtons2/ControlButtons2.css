@@ -1,0 +1,80 @@
+.upload-model-container {
+    overflow-x: hidden;
+}
+
+.uploaded-files-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Two equal columns */
+    gap: 16px;
+    /* Space between the boxes */
+}
+
+.uploaded-file-box {
+    max-width: 15vw;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Space between the icon and file name */
+    padding: 16px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid #0A0A0A;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Optional: subtle shadow */
+}
+
+.file-name {
+    color: #333333;
+    font-weight: bold;
+    max-width: 20vh;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* Prevent text wrapping */
+}
+
+.file-icon {
+    font-size: 20px;
+}
+
+.delete-file-btn {
+    color: #E8ECD7;
+    background-color: rgba(0, 0, 0, 0);
+    /* Set a background color for the button */
+    border: none;
+    border-radius: 50%;
+    /* Keep the circle shape */
+    width: 30px;
+    /* Adjusted to better fit the "X" */
+    height: 30px;
+    /* Adjusted to match width */
+    cursor: pointer;
+    font-size: 18px;
+    /* Adjusted to match the size of the "X" */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    padding: 0;
+    /* Ensure there's no extra padding */
+    text-align: center;
+    /* Center the "X" */
+    line-height: 1;
+    /* Prevent any vertical spacing issues */
+}
+
+.delete-file-btn:hover {
+    transform: scale(1.15);
+    /* Slightly enlarge the button */
+}
+
+.delete-file-btn:focus {
+    outline: none;
+}
+
+.delete-file-btn:active {
+    transform: scale(1.05);
+    /* Slightly shrink on click */
+}
