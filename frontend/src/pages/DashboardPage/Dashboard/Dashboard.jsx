@@ -12,7 +12,120 @@ const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
 
-  const [graphData, setGraphData] = useState({});
+  const [graphData, setGraphData] = useState([
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+    {
+      feature1: "Demographic 1",
+      feature2: "Demographic 2",
+      accuracy: 0,
+      falsepositive: 0,
+      falsenegative: 0,
+      combination_label: "Demographic 1 Demographic 2",
+    },
+  ]);
 
   const [currUser, setCurrUser] = useState("");
 
@@ -160,6 +273,7 @@ const Dashboard = () => {
         "Second selected values:",
         selectedSecondValues
       );
+      console.log("Fetched Data and calling generate data");
       handleGenerate();
     }
   }, [hasFetchedInitialData]);
@@ -397,13 +511,16 @@ const Dashboard = () => {
   const handleGenerate = () => {
     if (
       !currUser ||
-      !selectedDemographic ||
-      !timeframe ||
-      selectedValues[0] === ""
+      !timeframe
     ) {
       console.warn(
         "currUser or selectedDemographic is missing. Cannot generate data."
       );
+      return;
+    }
+
+    if (!selectedDemographic || selectedValues[0] === "") {
+      alert("Upload data and model and the select a demographic and values to generate data.");
       return;
     }
 
@@ -418,7 +535,11 @@ const Dashboard = () => {
         time: timeframe,
       })
       .then((response) => {
-        console.log("Data generated:", response.data); // TODO Display data on chart
+        console.log("Data generated:", response.data);
+        if (response.data.length === 0) {
+          alert("No data found for the selected demographics and values. Choose a different combination.");
+          return;
+        }
         setGraphData(response.data);
       })
       .catch((err) => {
@@ -443,157 +564,129 @@ const Dashboard = () => {
     console.log("Slider Value:", event.target.value); // For debugging
   };
 
-  // Check if graphData is empty and set all y values to 0 if true
-  const modifiedGraphData =
-    Object.keys(graphData).length === 0
-      ? {
-        labels: ["Default Label 1", "Default Label 2", "Default Label 3"], // Default labels
-        datasets: [
-          {
-            label: "Default Data",
-            data: [0, 0, 0], // Default y values set to 0
-            borderColor: "rgba(75, 192, 192, 1)",
-          },
-        ],
-      }
-      : graphData;
+  // useEffect(() => {
+  //   setGraphData([
+  //     {
+  //       feature1: "Black",
+  //       feature2: "Female",
+  //       accuracy: 0.25,
+  //       falsepositive: 0.75,
+  //       falsenegative: 0.0,
+  //       combination_label: "Black Female",
+  //     },
+  //     {
+  //       feature1: "Black",
+  //       feature2: "Male",
+  //       accuracy: 0.2,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "Black Male",
+  //     },
+  //     {
+  //       feature1: "Black",
+  //       feature2: "Non-binary",
+  //       accuracy: 0.5,
+  //       falsepositive: 0.0,
+  //       falsenegative: 0.5,
+  //       combination_label: "Black Non-binary",
+  //     },
+  //     {
+  //       feature1: "Hispanic",
+  //       feature2: "Female",
+  //       accuracy: 0.33,
+  //       falsepositive: 0.67,
+  //       falsenegative: 0.0,
+  //       combination_label: "Hispanic Female",
+  //     },
+  //     {
+  //       feature1: "Hispanic",
+  //       feature2: "Male",
+  //       accuracy: 0.5,
+  //       falsepositive: 0.0,
+  //       falsenegative: 0.5,
+  //       combination_label: "Hispanic Male",
+  //     },
+  //     {
+  //       feature1: "Hispanic",
+  //       feature2: "Non-binary",
+  //       accuracy: 1.0,
+  //       falsepositive: 0.0,
+  //       falsenegative: 0.0,
+  //       combination_label: "Hispanic Non-binary",
+  //     },
+  //     {
+  //       feature1: "Other",
+  //       feature2: "Female",
+  //       accuracy: 0.67,
+  //       falsepositive: 0.0,
+  //       falsenegative: 0.33,
+  //       combination_label: "Other Female",
+  //     },
+  //     {
+  //       feature1: "Other",
+  //       feature2: "Male",
+  //       accuracy: 0.75,
+  //       falsepositive: 0.25,
+  //       falsenegative: 0.0,
+  //       combination_label: "Other Male",
+  //     },
+  //     {
+  //       feature1: "Other",
+  //       feature2: "Non-binary",
+  //       accuracy: 0.7,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "Other Non-binary",
+  //     },
+  //     {
+  //       feature1: "Black",
+  //       feature2: "Other",
+  //       accuracy: 0.56,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "Black Other",
+  //     },
+  //     {
+  //       feature1: "Hispanic",
+  //       feature2: "Other",
+  //       accuracy: 0.42,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "Hispanic Other",
+  //     },
+  //     {
+  //       feature1: "White",
+  //       feature2: "Male",
+  //       accuracy: 0.2,
+  //       falsepositive: 0.25,
+  //       falsenegative: 0.0,
+  //       combination_label: "Wite Male",
+  //     },
+  //     {
+  //       feature1: "White",
+  //       feature2: "Non-binary",
+  //       accuracy: 0.5,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "White Non-binary",
+  //     },
+  //     {
+  //       feature1: "White",
+  //       feature2: "Other",
+  //       accuracy: 0.64,
+  //       falsepositive: 0.0,
+  //       falsenegative: 1.0,
+  //       combination_label: "White Other",
+  //     },
+  //   ]);
+  // }, []);
 
-  useEffect(() => {
-    setGraphData([
-      {
-        feature1: "Black",
-        feature2: "Female",
-        accuracy: 0.25,
-        falsepositive: 0.75,
-        falsenegative: 0.0,
-        combination_label: "Black Female",
-      },
-      {
-        feature1: "Black",
-        feature2: "Male",
-        accuracy: 0.2,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "Black Male",
-      },
-      {
-        feature1: "Black",
-        feature2: "Non-binary",
-        accuracy: 0.5,
-        falsepositive: 0.0,
-        falsenegative: 0.5,
-        combination_label: "Black Non-binary",
-      },
-      {
-        feature1: "Hispanic",
-        feature2: "Female",
-        accuracy: 0.33,
-        falsepositive: 0.67,
-        falsenegative: 0.0,
-        combination_label: "Hispanic Female",
-      },
-      {
-        feature1: "Hispanic",
-        feature2: "Male",
-        accuracy: 0.5,
-        falsepositive: 0.0,
-        falsenegative: 0.5,
-        combination_label: "Hispanic Male",
-      },
-      {
-        feature1: "Hispanic",
-        feature2: "Non-binary",
-        accuracy: 1.0,
-        falsepositive: 0.0,
-        falsenegative: 0.0,
-        combination_label: "Hispanic Non-binary",
-      },
-      {
-        feature1: "Other",
-        feature2: "Female",
-        accuracy: 0.67,
-        falsepositive: 0.0,
-        falsenegative: 0.33,
-        combination_label: "Other Female",
-      },
-      {
-        feature1: "Other",
-        feature2: "Male",
-        accuracy: 0.75,
-        falsepositive: 0.25,
-        falsenegative: 0.0,
-        combination_label: "Other Male",
-      },
-      {
-        feature1: "Other",
-        feature2: "Non-binary",
-        accuracy: 0.7,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "Other Non-binary",
-      },
-      {
-        feature1: "Black",
-        feature2: "Other",
-        accuracy: 0.56,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "Black Other",
-      },
-      {
-        feature1: "Hispanic",
-        feature2: "Other",
-        accuracy: 0.42,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "Hispanic Other",
-      },
-      {
-        feature1: "White",
-        feature2: "Male",
-        accuracy: 0.2,
-        falsepositive: 0.25,
-        falsenegative: 0.0,
-        combination_label: "Wite Male",
-      },
-      {
-        feature1: "White",
-        feature2: "Non-binary",
-        accuracy: 0.5,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "White Non-binary",
-      },
-      {
-        feature1: "White",
-        feature2: "Other",
-        accuracy: 0.64,
-        falsepositive: 0.0,
-        falsenegative: 1.0,
-        combination_label: "White Other",
-      },
-    ]);
-  }, []);
-
-  useEffect(() => {
-    console.log("Graph data updated:", graphData);
-  }, [graphData]);
+  // useEffect(() => {
+  //   console.log("Graph data updated:", graphData);
+  // }, [graphData]);
 
   return (
     <div className="dashboard-container">
-      {/* <div className="text-container">
-        - Click **Import Model** to upload the model file you want to use for
-        analysis.
-        <br />- Click **Import Dataset** to upload your data file for
-        processing.
-        <br />- Select a primary **demographic category** (e.g., race, gender,
-        age) from the dropdown.
-        <br />- Select a **second demographic category** for deeper
-        segmentation.
-        <br />- Click **Generate** to display the graph showing insights across
-        the selected demographics.
-      </div> */}
-
       <div className="chart-container-container">
         <div className="timeframe-buttons">
           <button
@@ -650,7 +743,7 @@ const Dashboard = () => {
 
         <div className="select-demographics-2">
           <div className="demog-clas">
-            <h1>Demographics</h1>
+            <h2>Demographics</h2>
           </div>
           <div className="select-demographics">
             <div className="title"></div>
@@ -669,9 +762,9 @@ const Dashboard = () => {
 
               {selectedDemographic && (
                 <div className="select-options">
-                  <h2 className="demographic-heading">
+                  <h3 className="demographic-heading">
                     Values for 1st Demographic
-                  </h2>
+                  </h3>
                   {[...Array(4)].map((_, idx) => (
                     <select
                       key={idx}

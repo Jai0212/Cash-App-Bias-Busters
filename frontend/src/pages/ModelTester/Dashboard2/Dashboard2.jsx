@@ -9,25 +9,30 @@ const Dashboard2 = () => {
 
   const [currUser, setCurrUser] = useState("");
 
+  const backgroundColours = [
+    "#00CC00", // Darker bright green 1
+    "#66CC66", // Darker bright green 2
+    "#66FF66", // Bright green 3 (unchanged)
+    "#99CC99", // Darker bright green 4
+    "#99FF99", // Bright green 5 (unchanged)
+  ];
+
   const [graphData, setGraphData] = useState({
     labels: ["Model 1", "Model 2", "Model 3", "Model 4", "Model 5"],
     datasets: [
       {
-        label: "Generated Data",
-        data: [0.3, 0.8, 0.7],
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        label: "Models",
+        data: [0, 0, 0, 0, 0],
+        backgroundColor: backgroundColours,
       },
     ],
   });
 
-  const [isChartVisible, setIsChartVisible] = useState(true);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const tempUploadedFiles = ['model1', 'model2', 'model3', 'model4', 'model5'];
 
   const [generationResults, setGenerationResults] = useState([]);
-
-  const chartRef = useRef(null);
 
   const fetchEmailAndDemographics = async () => {
     const url = `${VITE_BACKEND_URL}/get-email`;
@@ -74,6 +79,12 @@ const Dashboard2 = () => {
 
   useEffect(() => {
     fetchEmailAndDemographics();
+
+    // Load uploaded files from localStorage
+    const storedFiles = JSON.parse(localStorage.getItem("uploadedFiles"));
+    if (storedFiles) {
+      setUploadedFiles(storedFiles); // Update the state with uploaded files
+    }
   }, []);
 
   const handleGenerateClick = async () => {
@@ -112,11 +123,11 @@ const Dashboard2 = () => {
           {
             label: "Generated Data",
             data: meanData,
-            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+            backgroundColor: backgroundColours,
           },
         ],
       });
-      
+
     } catch (error) {
       console.error("Error during model generation:", error);
       alert("Error during model generation: " + error.message);
@@ -179,7 +190,7 @@ const Dashboard2 = () => {
       )}
 
       <div className="chart-section">
-        {isChartVisible && Object.keys(graphData).length > 0 && (
+        {Object.keys(graphData).length > 0 && (
           <ChartComponent2 chartData={graphData} />
         )}
       </div>

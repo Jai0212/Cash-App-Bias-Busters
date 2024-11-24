@@ -279,7 +279,14 @@ html {
   justify-content: center;
 }
 
-.select-options {
+.select-options1 {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  margin-top: 1vh;
+}
+
+.select-options2 {
   display: flex;
   flex-direction: column;
   gap: 1vh;
@@ -293,7 +300,51 @@ html {
 }
 
 /* Style for the select dropdown */
-.select-container select {
+.select-container1 select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #2e2e2e;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect for the select element */
+.select-container1 select:hover {
+  border-color: #007bff; /* Change border color on hover */
+  background-color: #474747; /* Light background on hover */
+  cursor: pointer;
+}
+
+/* Focus effect for the select element */
+.select-container1 select:focus {
+  border-color: #0056b3; /* Darker border color on focus */
+  outline: none; /* Remove the default focus outline */
+  background-color: #474747; /* Slightly darker background on focus */
+}
+
+/* Style for the option elements inside the select dropdown */
+.select-container1 select option {
+  padding: 10px;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+}
+
+/* Hover effect for the option elements */
+.select-container1 select option:hover {
+  background-color: #f1f9ff; /* Background color when hovering over options */
+  color: #007bff; /* Text color on hover */
+}
+
+/* Focus effect for the option elements (focus will apply if the option is selected) */
+.select-container1 select option:focus {
+  background-color: #e6f7ff; /* Slightly darker background when option is focused */
+  color: #0056b3; /* Text color on option focus */
+}
+
+/* Style for the select dropdown */
+.select-container2 select {
   padding: 8px 12px;
   font-size: 14px;
   border-radius: 5px;
@@ -317,7 +368,7 @@ html {
 }
 
 /* Style for the option elements inside the select dropdown */
-.select-container select option {
+.select-container2 select option {
   padding: 10px;
   font-size: 14px;
   background-color: white;
@@ -325,13 +376,13 @@ html {
 }
 
 /* Hover effect for the option elements */
-.select-container select option:hover {
+.select-container2 select option:hover {
   background-color: #f1f9ff; /* Background color when hovering over options */
   color: #007bff; /* Text color on hover */
 }
 
 /* Focus effect for the option elements (focus will apply if the option is selected) */
-.select-container select option:focus {
+.select-container2 select option:focus {
   background-color: #e6f7ff; /* Slightly darker background when option is focused */
   color: #0056b3; /* Text color on option focus */
 }
