@@ -13,6 +13,7 @@ import QRCodeShare from "../QRCodeShare/QRCodeShare.jsx";
 import ChatbotComponent from "../Chatbot/Chatbot.jsx"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaComment } from 'react-icons/fa';
+import Footer from "../../../Components/Footer/Footer.jsx";
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -538,8 +539,10 @@ const Dashboard = () => {
       <div className="upload-buttons">
         <ControlButtons onDownload={handleDownload}/>
       </div>
+      <Footer />
     </div>
-  );
+
+);
 };
 
 export default Dashboard;

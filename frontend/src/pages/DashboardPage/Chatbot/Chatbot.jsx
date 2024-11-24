@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import { Chatbot } from "react-chatbot-kit";
 import { ThemeProvider } from "styled-components";
 import "react-chatbot-kit/build/main.css"; // Ensure this is imported
+import { createChatBotMessage } from "react-chatbot-kit";
 
 // Define the config object
 const config = {
     botName: "SupportBot",
     initialMessages: [
-        {
-            message: "Hi! How can I help you today?",
-            trigger: "options",
-        },
+        createChatBotMessage("Hi! How can I help you today?"),
     ],
+    customStyles: {
+        botMessageBox: {
+            backgroundColor: "#4caf50",
+        },
+        chatButton: {
+            backgroundColor: "#4caf50",
+        },
+    },
     state: {},
     renderChatHeader: () => (
         <div
@@ -28,8 +34,8 @@ const config = {
             Support Chat
         </div>
     ),
-    botAvatar: "https://link-to-your-bot-avatar.png", // Optional: Add a bot avatar
-    userAvatar: "https://link-to-your-user-avatar.png", // Optional: Add a user avatar
+    botAvatar: "https://link-to-your-bot-avatar.png",
+    userAvatar: "https://link-to-your-user-avatar.png",
 };
 
 
@@ -42,10 +48,11 @@ class MessageParser {
     parse(message) {
         const lowerMessage = message.toLowerCase();
         const keywordAnswers = [
+            { keyword: "  ", answer: "Hi! How can I help you today?" },
+            { keyword: "started", answer: "To get started, you can see a red point blinking on the screen near 'Import Model.' It will guide you through a walkthrough. If you have any questions, feel free to ask!" },
             { keyword: "time", answer: "You can change the timeframe by selecting one of the buttons (1 Day, 1 Week, 1 Month, 1 Year) at the top of the chart." },
             { keyword: "chart", answer: "Make sure you've selected a demographic and values. If data is still missing, try choosing a different demographic or combination of values." },
             { keyword: "error", answer: "If you're seeing an error, please check if your data input is correct or try refreshing the page." },
-            { keyword: "help", answer: "I can assist you with general questions, charts, or errors. Just ask me!" },
             { keyword: "report", answer: "If you'd like to report an issue, please describe it, and I’ll assist you further." },
             { keyword: "data", answer: "If you're missing data, please make sure the correct demographic and values are selected. You may need to update or upload new data." },
             { keyword: "demographic", answer: "Demographics refer to categories such as age, gender, location, and other similar data points. Please choose the relevant demographic for your chart." },
@@ -62,7 +69,10 @@ class MessageParser {
             { keyword: "feature", answer: "We are constantly improving our platform. If you have a feature request, feel free to share it with us!" },
             { keyword: "settings", answer: "You can update your account settings by clicking on your profile icon and selecting 'Settings'." },
             { keyword: "performance", answer: "If you're experiencing performance issues, try clearing your browser cache or using a different browser." },
-            { keyword: "issues", answer: "If you're encountering issues, please describe the problem, and I'll help troubleshoot or escalate it to support." }
+            { keyword: "issues", answer: "If you're encountering issues, please describe the problem, and I'll help troubleshoot or escalate it to support." },
+            { keyword: "thank", answer: "Come on, Navnoor! You only created me. Rather, I should thank you for making me part of the Bias Busters project!" },
+            { keyword: "nice", answer: "Now, can you please focus on your presentation and show your MVP? We can talk later. All the best!" },
+            { keyword: "share", answer: "You can click on the share button at the bottom right of the page and scan the QR code!" }
         ];
 
         const matchedKeyword = keywordAnswers.find((qa) => lowerMessage.includes(qa.keyword));
@@ -83,12 +93,26 @@ class ActionProvider {
         this.createClientMessage = createClientMessage;
     }
 
+    speakMessage(message) {
+        if ('speechSynthesis' in window) {
+            console.log('SpeechSynthesis');
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.lang = 'en-US'; // Set the language
+            utterance.rate = 1; // Set the speech rate
+            utterance.pitch = 1; // Set the pitch
+            speechSynthesis.speak(utterance);
+        } else {
+            console.warn('Speech Synthesis is not supported in this browser.');
+        }
+    }
+
     addMessageToBot(message) {
         const botMessage = this.createChatBotMessage(message);
         this.setState((prevState) => ({
             ...prevState,
             messages: [...prevState.messages, botMessage],
         }));
+        this.speakMessage(message);
     }
 
     handleUnknown() {
@@ -97,6 +121,7 @@ class ActionProvider {
             ...prevState,
             messages: [...prevState.messages, message],
         }));
+        this.speakMessage(message);
     }
 }
 
