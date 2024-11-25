@@ -31,10 +31,3 @@ class DataPointCreator(ABC):
             List: A list of DataPoint entities.
         """
         pass
-
-    @abstractmethod
-    def datapoint_creator(self) -> List:
-        """
-        Abstract method to create a DataPoint
-        """
-        pass

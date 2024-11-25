@@ -1,5 +1,4 @@
 from typing import Tuple
-import os
 import pandas as pd
 import numpy as np
 import sys
@@ -8,7 +7,6 @@ import os
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
-from utility import model_util
 from interfaces.file_reader_interface import FileReaderInterface
 
 
@@ -38,6 +36,9 @@ class FileReader(FileReaderInterface):
         Reads the CSV file, processes it, and returns the cleaned dataframe,
         inputs, and target action_status.
         """
+
+        from utility import model_util
+
         df = pd.read_csv(self.csv_file_path)
         df_cleaned = df.drop(["timestamp", "id"], axis=1, errors="ignore")
 

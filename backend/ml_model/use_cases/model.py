@@ -7,20 +7,18 @@ import pandas as pd
 import sys
 import os
 
-
-# Add the root directory of the project to the sys.path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_root)
 
-# Now import the modules
 from ml_model.repository.file_reader import FileReader
 from ml_model.entities.datapoint_entity import DataPoint
 from ml_model.repository.model_saver import save_model
 from ml_model.repository.data_preprocessing import DataProcessor
 from ml_model.repository.fairness import FairnessEvaluator
-from ml_model.repository.safe_train_grid import (safe_train_test_split,
-                                                 safe_grid_search)
+from ml_model.repository.safe_train_grid import (safe_train_test_split,safe_grid_search)
 from ml_model.utility import model_util
+from ml_model.repository.data_point_creator_single import SingleFeatureDataPointCreator
+from ml_model.repository.data_point_creator_multiple import MultiFeatureDataPointCreator
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")
@@ -72,115 +70,12 @@ def model():
 
     # Create, clean, and sort bias dictionary
     if file_reader.single_column_check:
-        data_point_list = create_bias_data_points_single(feature1, mappings, metric_frame)
+        dp_processor = SingleFeatureDataPointCreator(feature1, mappings, metric_frame)
+        data_point_list = dp_processor.data_point_list()
     else:
-        data_point_list = create_bias_data_points_multiple(feature1, inputs_n, mappings, metric_frame)
+        dp_processor = MultiFeatureDataPointCreator(feature1, mappings, metric_frame, inputs_n)
+        data_point_list = dp_processor.data_point_list()
 
-    data_point_list = clean_datapoints(file_reader, data_point_list)
-
-    print(data_point_list)
+    data_point_list = model_util.clean_datapoints(file_reader, data_point_list)
 
     return data_point_list
-
-
-def grid_search(x_train, y_train) -> object:
-    """
-    Performs a grid search to tune hyperparameters for the decision tree classifier.
-    Returns the best classifier after grid search.
-    """
-    clf = DecisionTreeClassifier()
-    param_grid = {
-        "criterion": ["gini", "entropy"],
-        "max_depth": [None] + list(range(1, 11)),
-        "min_samples_split": [2, 5, 10],
-    }
-
-    grid_search = GridSearchCV(clf, param_grid, cv=5, scoring="accuracy")
-    grid_search.fit(x_train, y_train)
-
-    return grid_search.best_estimator_
-
-
-def clean_datapoints(filereader: FileReader, data_point_list: list[DataPoint]) -> list[DataPoint]:
-    """
-    Cleans the list of DataPoint objects from instances with NaN in them.
-    """
-    if filereader.single_column_check:
-        return [x for x in data_point_list if
-                x.feature1 != "NaN"]
-
-    return [x for x in data_point_list if x.feature1 != "NaN" and  x.feature2 != "NaN"]
-
-
-def is_nan_in_datapoint(data_point) -> bool:
-    """
-    Checks if any attribute of a data point contains NaN.
-    """
-    return any(pd.isna(value) for value in data_point.__dict__.values())
-
-
-def create_bias_data_points_single(
-        feature1: str,
-        mappings: dict,
-        metric_frame: MetricFrame,
-        ) -> list:
-    """
-    Creates a list of DataPoint entities with metrics by feature group,
-    discarding any DataPoints with NaN values.
-    """
-    data_points = []
-
-    for feature1_code, metrics in metric_frame.by_group.iterrows():
-
-        f1_label = model_util.get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
-        data_point = single_column_datapoint(metrics, mappings, f1_label)
-
-        if not is_nan_in_datapoint(data_point):
-            data_points.append(data_point)
-
-    return data_points
-
-
-def create_bias_data_points_multiple(
-        feature1: str,
-        inputs: pd.DataFrame,
-        mappings: dict,
-        metric_frame: MetricFrame
-        ) -> list:
-    """
-    Creates a list of DataPoint entities with metrics by feature group,
-    discarding any DataPoints with NaN values.
-    """
-    data_points = []
-
-    for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
-        f1_label = model_util.get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
-
-        data_point = multiple_column_datapoint(metrics, f1_label, mappings, feature2_code, inputs)
-
-        # Only append if there are no NaN values in the DataPoint
-        if not is_nan_in_datapoint(data_point):
-            data_points.append(data_point)
-
-    return data_points
-
-
-def single_column_datapoint(metrics: pd.Series, mappings: dict, f1_label: str) -> DataPoint:
-    """
-    Creates a DataPoint for a single feature column.
-    """
-    rounded_metrics = model_util.get_rounded_metrics(metrics)
-    data_point = DataPoint(f1_label, "", rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
-    return data_point
-
-
-def multiple_column_datapoint(metrics: pd.Series, f1_label: str, mappings: dict, feature2_code: any,
-                              inputs: pd.DataFrame) -> DataPoint:
-    """
-    Creates a DataPoint for multiple feature columns.
-    """
-    feature2 = inputs.columns[1]
-    f2_label = model_util.get_mapped_label(mappings, str(feature2)[:-2], feature2_code)
-    rounded_metrics = model_util.get_rounded_metrics(metrics)
-    data_point = DataPoint(f1_label, f2_label, rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
-    return data_point

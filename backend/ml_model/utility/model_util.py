@@ -2,8 +2,13 @@
 
 from typing import Tuple
 import os
+import sys
 import pandas as pd
 import numpy as np
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(project_root)
+from ml_model.entities.datapoint_entity import DataPoint
+from ml_model.repository.file_reader import FileReader
 
 
 def get_target(df: pd.DataFrame) -> pd.Series:
@@ -64,3 +69,22 @@ def get_rounded_metrics(metrics: pd.Series) -> tuple:
     false_negative_rate = round(metrics.get("false_negative_rate", 0), 2)
 
     return accuracy, false_positive_rate, false_negative_rate
+
+
+def is_nan_in_datapoint(data_point) -> bool:
+    """
+    Checks if any attribute of a data point contains NaN.
+    """
+    return any(pd.isna(value) for value in data_point.__dict__.values())
+
+
+def clean_datapoints(filereader: FileReader, data_point_list: list[DataPoint]) -> list[DataPoint]:
+    """
+    Cleans the list of DataPoint objects from instances with NaN in them.
+    """
+
+    if filereader.single_column_check:
+        return [x for x in data_point_list if
+                x.feature1 != "NaN"]
+
+    return [x for x in data_point_list if x.feature1 != "NaN" and  x.feature2 != "NaN"]
