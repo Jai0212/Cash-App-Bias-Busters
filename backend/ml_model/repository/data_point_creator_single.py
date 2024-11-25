@@ -1,12 +1,12 @@
 import sys
 import os
 import pandas as pd
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_root)
 print(project_root)
-from utility import model_util
-from interfaces.data_point_creator_interface import DataPointCreator
-from entities.datapoint_entity import DataPoint
+from ml_model.utility import model_util
+from ml_model.interfaces.data_point_creator_interface import DataPointCreator
+from ml_model.entities.datapoint_entity import DataPoint
 from fairlearn.metrics import MetricFrame
 
 

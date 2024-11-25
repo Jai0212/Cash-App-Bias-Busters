@@ -78,5 +78,4 @@ def test_multiple_column_datapoint():
     inputs = pd.DataFrame({'feature1': [1, 2], 'feature2': [3, 4]})
 
     data_point = data_point_creator_multiple.datapoint_creator(metrics, f1_label, mappings, feature2_code, inputs)
-    print(data_point)
     assert isinstance(data_point, DataPoint), "Expected DataPoint object."
