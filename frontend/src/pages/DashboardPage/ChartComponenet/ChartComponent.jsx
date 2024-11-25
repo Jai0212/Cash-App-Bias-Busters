@@ -17,10 +17,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       new Set(chartData.map((item) => item.feature1))
     );
     const colorPalette = [
-      "#bdb2ff",
-      "#fdffb6",
-      "#fbe0e0",
-      "#e5c185",
+      "rgba(189, 178, 255, 0.9)",
+      "rgba(253, 255, 182, 0.9)",
+      "rgba(251, 224, 224, 0.9)",
+      "rgba(229, 193, 133, 0.9)"
     ];
     const feature1Colors = uniqueFeature1Groups.reduce((acc, group, index) => {
       acc[group] = colorPalette[index % colorPalette.length];

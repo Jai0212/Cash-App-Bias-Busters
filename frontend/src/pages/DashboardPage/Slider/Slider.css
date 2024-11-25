@@ -42,3 +42,7 @@
 .slider-value {
     margin-left: 5px;
 }
+
+.chart {
+    z-index: 1;
+}
