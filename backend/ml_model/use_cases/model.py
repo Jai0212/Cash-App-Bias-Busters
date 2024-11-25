@@ -20,6 +20,7 @@ from ml_model.repository.data_preprocessing import DataProcessor
 from ml_model.repository.fairness import FairnessEvaluator
 from ml_model.repository.safe_train_grid import (safe_train_test_split,
                                                  safe_grid_search)
+from ml_model.utility import model_util
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")
@@ -131,7 +132,7 @@ def create_bias_data_points_single(
 
     for feature1_code, metrics in metric_frame.by_group.iterrows():
 
-        f1_label = get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
+        f1_label = model_util.get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
         data_point = single_column_datapoint(metrics, mappings, f1_label)
 
         if not is_nan_in_datapoint(data_point):
@@ -153,7 +154,7 @@ def create_bias_data_points_multiple(
     data_points = []
 
     for (feature1_code, feature2_code), metrics in metric_frame.by_group.iterrows():
-        f1_label = get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
+        f1_label = model_util.get_mapped_label(mappings, str(feature1)[:-2], feature1_code)
 
         data_point = multiple_column_datapoint(metrics, f1_label, mappings, feature2_code, inputs)
 
@@ -168,7 +169,7 @@ def single_column_datapoint(metrics: pd.Series, mappings: dict, f1_label: str) -
     """
     Creates a DataPoint for a single feature column.
     """
-    rounded_metrics = get_rounded_metrics(metrics)
+    rounded_metrics = model_util.get_rounded_metrics(metrics)
     data_point = DataPoint(f1_label, "", rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
     return data_point
 
@@ -179,40 +180,7 @@ def multiple_column_datapoint(metrics: pd.Series, f1_label: str, mappings: dict,
     Creates a DataPoint for multiple feature columns.
     """
     feature2 = inputs.columns[1]
-    f2_label = get_mapped_label(mappings, str(feature2)[:-2], feature2_code)
-    rounded_metrics = get_rounded_metrics(metrics)
+    f2_label = model_util.get_mapped_label(mappings, str(feature2)[:-2], feature2_code)
+    rounded_metrics = model_util.get_rounded_metrics(metrics)
     data_point = DataPoint(f1_label, f2_label, rounded_metrics[0], rounded_metrics[1], rounded_metrics[2])
     return data_point
-
-
-def get_mapped_label(mappings: dict, feature: str, code: any) -> str:
-    """
-    Gets the mapped label for a given feature code.
-
-    Args:
-        mappings (dict): Dictionary containing the mappings for categorical values.
-        feature (str): The name of the feature.
-        code (any): The code for which to find the mapped label.
-
-    Returns:
-        str: The mapped label for the feature code, or the code itself if no mapping is found.
-    """
-    feature_mapping = mappings.get(feature, {})
-    return feature_mapping.get(code, str(code))
-
-
-def get_rounded_metrics(metrics: pd.Series) -> tuple:
-    """
-    Rounds the metrics in the series to two decimal places.
-
-    Args:
-        metrics (pd.Series): Series containing metrics like accuracy, false positive rate, and false negative rate.
-
-    Returns:
-        tuple: Rounded values of the metrics (accuracy, false positive rate, false negative rate).
-    """
-    accuracy = round(metrics.get("accuracy", 0), 2)
-    false_positive_rate = round(metrics.get("false_positive_rate", 0), 2)
-    false_negative_rate = round(metrics.get("false_negative_rate", 0), 2)
-
-    return accuracy, false_positive_rate, false_negative_rate
