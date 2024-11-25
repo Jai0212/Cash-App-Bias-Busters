@@ -15,11 +15,11 @@ const Slider = ({ graphData, maxValue }) => {
     const updateSliderStyle = (slider, value) => {
         let color;
         if (value <= 0.3) {
-            color = "red";
+            color = "green";
         } else if (value > 0.3 && value <= 0.66) {
             color = "yellow";
         } else {
-            color = "green";
+            color = "red";
         }
 
         slider.style.background = `linear-gradient(to right, ${color} ${value * 100}%, white ${value * 100}%)`;
