@@ -7,6 +7,7 @@ print(project_root)
 from utility import model_util
 from interfaces.data_point_creator_interface import DataPointCreator
 from entities.datapoint_entity import DataPoint
+from fairlearn.metrics import MetricFrame
 
 
 class SingleFeatureDataPointCreator(DataPointCreator):
