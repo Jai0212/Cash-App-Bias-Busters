@@ -14,6 +14,17 @@ class SingleFeatureDataPointCreator(DataPointCreator):
     Concrete implementation for creating DataPoints using a single feature.
     """
 
+    def __init__(self, feature1: str, mappings: dict, metric_frame: MetricFrame):
+        """
+        Initializes the SingleFeatureDataPointCreator.
+
+        Args:
+            feature1 (str): The primary feature for grouping metrics.
+            mappings (Dict): Mapping dictionary for feature labels.
+            metric_frame (MetricFrame): MetricFrame containing metrics grouped by features.
+        """
+        super().__init__(feature1, mappings, metric_frame)
+
     def data_point_list(self) -> list:
         """
         Creates a list of DataPoint entities with metrics by feature group

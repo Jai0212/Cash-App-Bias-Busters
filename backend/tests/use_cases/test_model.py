@@ -57,10 +57,10 @@ def test_single_column_datapoint():
         'false_positive_rate': 0.1,
         'false_negative_rate': 0.1
     })
-    mappings = {}
+
     f1_label = "Feature 1 Label"
 
-    data_point = data_point_creator_single.datapoint_creator(metrics, mappings, f1_label)
+    data_point = data_point_creator_single.datapoint_creator(metrics, f1_label)
     assert isinstance(data_point, DataPoint), "Expected DataPoint object."
 
 
@@ -78,4 +78,5 @@ def test_multiple_column_datapoint():
     inputs = pd.DataFrame({'feature1': [1, 2], 'feature2': [3, 4]})
 
     data_point = data_point_creator_multiple.datapoint_creator(metrics, f1_label, mappings, feature2_code, inputs)
+    print(data_point)
     assert isinstance(data_point, DataPoint), "Expected DataPoint object."
