@@ -11,6 +11,9 @@
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
     gap: 8px; /* Adds space between icon and text */
+    left: 2%;
+    position: absolute;
+    bottom: 0;
 }
 
 .share-button i {

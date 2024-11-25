@@ -6,11 +6,10 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
     const chartRef = useRef(null);
     const myChartRef = useRef(null);
     const staticColors = [
-        'rgb(255, 153, 128)',     // Bright yellow
-        'rgb(255, 178, 111)',   // Light yellow
-        'rgb(255, 247, 209)',    // Lemon yellow
-        'rgb(201, 230, 240)',     // Golden yellow
-        'rgb(202, 115, 115)',
+        '#008585',     // Bright yellow
+        '#c7522a',   // Light yellow
+        '#893f71',    // Lemon yellow
+        '#ffa600',     // Golden yellow
     ];
 
     console.log("ChartData Model Tester", chartData);
@@ -38,16 +37,16 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
                 scales: {
                     x: {
                         ticks: {
-                            color: "white", // Set x-axis labels to white
+                            color: "#007CFF", // Set x-axis labels to white
                             autoSkip: false, // Ensure all x-axis labels are shown
                             padding: 15, // Add padding between x-axis labels and axis
                         },
                         grid: {
-                            color: "rgba(255, 255, 255, 0.5)",
+                            color: "rgba(0, 124, 255, 0.5)",
                         },
                         title: {
                             display: true,   // Show the title
-                            color: "white", // Set x-axis title color to white
+                            color: "#007CFF", // Set x-axis title color to white
                             text: 'Model Name', // Set the x-axis title
                             font: {
                                 size: 15,   // Increase the font size
@@ -60,19 +59,19 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
                         max: 1,
                         beginAtZero: true, // Ensure y-axis starts at zero
                         ticks: {
-                            color: "white", // Set y-axis labels to white
+                            color: "#007CFF", // Set y-axis labels to white
                             padding: 15, // Add padding between x-axis labels and axis
                             font: {
                                 size: 12,
                             },
                         }, // <-- This closing bracket for ticks was missing
                         grid: {
-                            color: "rgba(255, 255, 255, 0.5)", // Set y-axis grid lines to translucent white
+                            color: "rgba(0, 124, 255, 0.5)", // Set y-axis grid lines to translucent white
                         },
                         title: {
                             display: true,   // Show the title
                             text: 'Bias',     // Set the y-axis title
-                            color: "white", // Set y-axis title color to white
+                            color: "#007CFF", // Set y-axis title color to white
                             font: {
                                 size: 15,   // Increase the font size
                                 weight: 'bold', // Make the text bold

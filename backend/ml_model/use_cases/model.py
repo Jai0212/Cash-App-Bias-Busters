@@ -100,24 +100,6 @@ def grid_search(x_train, y_train) -> object:
     return grid_search.best_estimator_
 
 
-def evaluate_fairness(y_true, y_pred, sensitive_features) -> MetricFrame:
-    """
-    Evaluates fairness of the model's predictions based on sensitive features.
-    Returns a MetricFrame object with fairness metrics.
-    """
-    metric_frame = MetricFrame(
-        metrics={
-            "accuracy": lambda y_true, y_pred: np.mean(y_true == y_pred),
-            "false_positive_rate": lambda y_true, y_pred: np.mean((y_true == 0) & (y_pred == 1)),
-            "false_negative_rate": lambda y_true, y_pred: np.mean((y_true == 1) & (y_pred == 0)),
-        },
-        y_true=y_true,
-        y_pred=y_pred,
-        sensitive_features=sensitive_features,
-    )
-    return metric_frame
-
-
 def clean_datapoints(filereader: FileReader, data_point_list: list[DataPoint]) -> list[DataPoint]:
     """
     Cleans the list of DataPoint objects from instances with NaN in them.
@@ -234,8 +216,3 @@ def get_rounded_metrics(metrics: pd.Series) -> tuple:
     false_negative_rate = round(metrics.get("false_negative_rate", 0), 2)
 
     return accuracy, false_positive_rate, false_negative_rate
-
-
-if __name__ == "__main__":
-    # Execute the model function and print the score
-    print(model())

@@ -9,12 +9,12 @@ const Dashboard2 = () => {
 
   const [currUser, setCurrUser] = useState("");
   const backgroundColours = [
-    "rgb(255, 153, 128)",     // Bright yellow
-    'rgb(255, 178, 111, 1)',   // Light yellow
-    'rgba(255, 247, 209, 1)',    // Lemon yellow
-    'rgb(201, 230, 240, 1)',     // Golden yellow
-    'rgb(202, 115, 115, 1)',
+    '#008585',     // Bright yellow
+    '#c7522a',   // Light yellow
+    '#893f71',    // Lemon yellow
+    '#ffa600',     // Golden yellow
   ];
+
 
   const [graphData, setGraphData] = useState({
     labels: ["Model 1", "Model 2", "Model 3", "Model 4"],
@@ -161,11 +161,14 @@ const Dashboard2 = () => {
                   {generationResults.map((result, index) => uploadedFiles[index] && result.mean && (
                     <ul key={index}>
                       <li
-                        className="result-item"
-                        style={{
-                          backgroundColor: backgroundColours[index % backgroundColours.length], // Apply color dynamically
-                        }}
+                          className="result-item"
                       >
+                        <div
+                            className="result-tag"
+                            style={{
+                              backgroundColor: backgroundColours[index % backgroundColours.length],
+                            }}
+                        ></div>
                         <div className="result-details">
                           <strong className="output-name">File:</strong>
                           <span className="output-value">{uploadedFiles[index]}</span>
@@ -202,17 +205,9 @@ const Dashboard2 = () => {
             </div>
           </div>
           <div className="right-container">
-            {/* Pass setUploadedFiles to ControlButton2 */}
+          {/* Pass setUploadedFiles to ControlButton2 */}
             <div className="button-container">
               <ControlButton2 setUploadedFiles={setUploadedFiles} />
-
-              {uploadedFiles.length > 0 && (
-                <div className="action-button-container">
-                  <button onClick={handleGenerateClick} className="generate-btn">
-                    Generate
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </div>

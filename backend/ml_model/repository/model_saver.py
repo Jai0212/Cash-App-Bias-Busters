@@ -19,3 +19,5 @@ def save_model(best_clf: GridSearchCV,
     # Save the model and its score
     with open(model_path, "wb") as f:
         pickle.dump({"model": best_clf, "score": score}, f)
+
+    return
