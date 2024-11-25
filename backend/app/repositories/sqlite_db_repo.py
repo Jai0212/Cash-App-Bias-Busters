@@ -104,7 +104,7 @@ class SqliteDbRepo(DatabaseRepository):
         try:
             if self.connection is None:
                 print("Not connected to the database.")
-                return
+                return [], []
 
             cursor = self.connection.cursor()
 
@@ -128,6 +128,7 @@ class SqliteDbRepo(DatabaseRepository):
 
         except Error as e:
             print(f"Error: {e}")
+            return [], []
 
     def update_db_for_user(
         self,
@@ -199,6 +200,8 @@ class SqliteDbRepo(DatabaseRepository):
             WHERE {where_clause}
             """
 
+            set(sql_query)
+
             # Execute the update query
             cursor.execute(sql_query, tuple(parameters))
             self.connection.commit()
@@ -220,7 +223,7 @@ class SqliteDbRepo(DatabaseRepository):
         try:
             if self.connection is None:
                 print("Not connected to the database.")
-                return
+                return None, None, None
 
             cursor = self.connection.cursor()
 

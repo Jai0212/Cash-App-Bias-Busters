@@ -79,7 +79,11 @@ class CsvFileRepo(FileRepository):
             return False
 
         except Error as e:
-            print(f"Error: {e}")
+            print(f"MySQL Error: {e}")
+            return False
+
+        except Exception as e:
+            print(f"General Error: {e}")
             return False
 
     def save_data_to_csv(self) -> None:
@@ -87,13 +91,12 @@ class CsvFileRepo(FileRepository):
 
         self.connect()
 
-        # Call to delete existing data in the CSV file
-        self.delete_csv_data()  # Pass the file path to the delete function
-
         try:
             if self.connection is None:
                 print("No database connection available.")
                 return
+
+            self.delete_csv_data()
 
             cursor = self.connection.cursor()
             headers, data = self.db_repo.fetch_data()  # Fetch headers and data
@@ -113,7 +116,12 @@ class CsvFileRepo(FileRepository):
             cursor.close()  # Close the cursor
 
         except Error as e:
-            print(f"Error: {e}")
+            print(f"MySQL Error: {e}")
+            raise
+
+        except Exception as e:
+            print(f"General Error: {e}")
+            raise
 
     def delete_csv_data(self) -> None:
         """Delete all data from the specified CSV file."""
@@ -159,7 +167,11 @@ class CsvFileRepo(FileRepository):
                 return headers
 
         except Error as e:
-            print(f"Error: {e}")
+            print(f"MySQL Error: {e}")
+            return []
+
+        except Exception as e:
+            print(f"General Error: {e}")
             return []
 
     def get_data_for_time(self, time: str) -> None:

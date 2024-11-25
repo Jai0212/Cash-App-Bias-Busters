@@ -1,5 +1,3 @@
-# /app/use_cases/get_table_headers.py
-
 from app.repositories.interfaces import FileRepository
 
 
