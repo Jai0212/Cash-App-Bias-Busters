@@ -87,4 +87,4 @@ def clean_datapoints(filereader: FileReader, data_point_list: list[DataPoint]) -
         return [x for x in data_point_list if
                 x.feature1 != "NaN"]
 
-    return [x for x in data_point_list if x.feature1 != "NaN" and  x.feature2 != "NaN"]
+    return [x for x in data_point_list if x.feature1 != "NaN" and x.feature2 != "NaN"]
