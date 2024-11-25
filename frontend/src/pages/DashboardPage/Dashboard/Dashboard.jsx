@@ -525,7 +525,8 @@ const Dashboard = () => {
               className="btn rounded-circle p-3 chatbot-button"
               onClick={openChatBot}
           >
-            <FaComment/>
+            <FaComment
+              className="chat-icon"/>
           </button>
           {isChatbotOpen && <ChatbotComponent closeChatbot={closeChatbot}/>}
 
@@ -538,6 +539,7 @@ const Dashboard = () => {
             graphData={graphData}
             currUser={currUser}
             timeframe={timeframe}
+            className="qr-code"
         />
 
 
