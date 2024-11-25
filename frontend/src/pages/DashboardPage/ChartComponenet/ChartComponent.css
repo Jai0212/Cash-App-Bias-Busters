@@ -19,13 +19,13 @@
   
   /* Optional: Add a border or shadow for better visibility */
   .chart-container {
-    border: 1px solid #F6F2EB;
+    border: 1px solid transparent;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
   
   /* Optional: Set the background color for the chart */
   .chart-container {
-    background-color: #F6F2EB;
+    background-color: #003f5c;
   }
   

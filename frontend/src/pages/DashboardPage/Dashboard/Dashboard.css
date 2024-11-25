@@ -9,46 +9,7 @@
   position: relative;
   background-color: #003f5c;
   /* border: 2px solid black; */
-}
-
-/* Container for buttons (timeframe selection) */
-.timeframe-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: auto;
-  margin-bottom: auto;
-  height: 100%;
-  justify-content: center;
-  /* border: 1px solid red; */
-}
-
-.timeframe-buttons button {
-  width: 90%;
-  padding: 15px 20px;
-  font-size: 17px;
-  cursor: pointer;
-  border-radius: 10px 10px 10px 10px;
-  background-color: #2e2e2e;
-  color: #fafafa;
-  transition: background-color 0.3s, border 0.3s;
-  margin-inline: auto;
-  font-family: "Roboto", Arial, sans-serif;
-}
-
-/* Hover state */
-.timeframe-buttons button:hover {
-  background-color: #fafafa;
-  color: #2e2e2e;
-  font-weight: bold;
-}
-
-/* Focus state (for when tabbing into buttons) */
-.timeframe-buttons button:focus {
-  outline: 3px solid #0088cc; /* Blue outline for focus */
-  background-color: #0088cc;
-  color: #fafafa;
-  font-weight: bold;
+  height: 90vh;
 }
 
 /* Container for slider */
@@ -58,10 +19,13 @@
   margin-bottom: 2vh;
   width: 30%;
   margin-inline: auto;
+  color: white;
+  height: 8.5vh;
 }
 
 .slider-input {
   width: 20%;
+  color: white;
 }
 
 .slider-label-cont {
@@ -69,13 +33,17 @@
   font-family: "Roboto", Arial, sans-serif;
   text-align: center;
   font-weight: bold;
+  color: white;
+  width: 110%;
+  top: 0;
+  margin-bottom: 15px;
 }
 
 .slider-container input[type="range"] {
-  width: 100%;
+  width: 110%;
+  color: white;
 }
 
-/* Container for demographics selection */
 .select-container {
   margin-left: auto;
   margin-right: auto;
@@ -84,7 +52,6 @@
   color: #fafafa;
 }
 
-/* Styling for demographics select section */
 .select-demographics {
   color: #fafafa;
   display: flex;
@@ -106,7 +73,7 @@
   color: #fafafa;
   margin-inline: auto;
   outline: 1px solid darkgreen; /* Set a single solid outline color */
-  outline-offset: -1; /* Prevent offset issues */
+  outline-offset: -1px; /* Prevent offset issues */
   box-shadow: none; /* Remove any shadows that might blend */
 }
 
@@ -115,7 +82,7 @@
   font-family: "Roboto", Arial, sans-serif;
   text-align: center;
   margin-top: 1vh;
-  color: #2e2e2e;
+  color: white;
   font-weight: bold; /* Makes the text bold */
   letter-spacing: 1px; /* Increases letter spacing for a modern look */
 }
@@ -129,22 +96,26 @@
   margin-inline: auto;
   cursor: pointer;
   border-radius: 10px 10px 10px 10px;
-  background-color: #4caf50;
-  color: white;
+  background-color: #003f5c;
+  border: 2px solid #00D64F;
+  font-weight: bold;
+  color: #00D64F;
   transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; /* Add transition for transform and shadow */
   margin-top: 1vh;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 .generate-button:hover {
-  background-color: #45a049;
-  transform: scale(1.03); /* Slightly enlarge the button */
+  background-color: #00D64F;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+  color: white;
+  border: 2px solid #00D64F;
 }
 
 .generate-button:focus {
   outline: 3px solid #0088cc;
-  background-color: #45a049;
+  background-color: #00D64F;
+  border: 1px solid #00D64F;
 }
 
 /* Styling for Chart component container */
@@ -172,7 +143,7 @@
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
-  background-color: #0088cc;
+  background-color: white;
   color: #fafafa;
   margin-right: 10px;
   transition: background-color 0.3s;
@@ -187,8 +158,9 @@
 
 /* Highlighted button */
 .active-button {
-  background-color: #0088cc !important;
-  color: #fafafa !important;
+  background-color: #a3b7ca !important;
+  color: #003f5c !important;
+  font-weight: bold;
   transform: scale(1.11);
   transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
@@ -229,6 +201,7 @@
   font-family: "Roboto", Arial, sans-serif;
   font-size: 2rem;
   margin-bottom: 5vh;
+  color: white;
 }
 
 body,
@@ -262,13 +235,14 @@ html {
   margin-inline: auto;
 } */
 
+
 .demographic-heading {
   margin-top: 3px;
   margin-bottom: 1px;
   font-size: 18px;
   text-align: center;
-  color: #2e2e2e;
   font-family: "Roboto", Arial, sans-serif;
+  color: white;
 }
 
 .info-button {
@@ -307,7 +281,7 @@ html {
 .upload-buttons {
   margin-bottom: 2vh;
   margin-right: 20%;
-  margin-top: 0%;
+  margin-top: 0;
 }
 
 /* Style for the select dropdown */
@@ -315,28 +289,29 @@ html {
   padding: 8px 12px;
   font-size: 14px;
   border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: #2e2e2e;
+  border: 2px solid #ccc;
+  background-color: #003f5c;
   transition: all 0.3s ease;
-  color: #fafafa;
+  color: white;
+  font-weight: bold;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Hover effect for the select element */
 .select-container1 select:hover {
-  border-color: #007bff; /* Change border color on hover */
-  background-color: #474747; /* Light background on hover */
+  border-color: #003f5c; /* Change border color on hover */
+  background-color: white; /* Light background on hover */
   cursor: pointer;
-  color: #fafafa;
+  color: #003f5c;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Focus effect for the select element */
 .select-container1 select:focus {
-  border-color: #0056b3; /* Darker border color on focus */
+  border-color: #003f5c; /* Darker border color on focus */
   outline: none; /* Remove the default focus outline */
-  background-color: #474747; /* Slightly darker background on focus */
-  color: #fafafa;
+  background-color: white; /* Slightly darker background on focus */
+  color: #003f5c;
   font-family: "Roboto", Arial, sans-serif;
 }
 
@@ -345,21 +320,21 @@ html {
   padding: 10px;
   font-size: 14px;
   background-color: white;
-  color: #333;
+  color: #003f5c;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Hover effect for the option elements */
 .select-container1 select option:hover {
   background-color: #f1f9ff; /* Background color when hovering over options */
-  color: #007bff; /* Text color on hover */
+  color: #003f5c; /* Text color on hover */
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Focus effect for the option elements (focus will apply if the option is selected) */
 .select-container1 select option:focus {
   background-color: #e6f7ff; /* Slightly darker background when option is focused */
-  color: #0056b3; /* Text color on option focus */
+  color: #003f5c; /* Text color on option focus */
   font-family: "Roboto", Arial, sans-serif;
 }
 
@@ -368,28 +343,29 @@ html {
   padding: 8px 12px;
   font-size: 14px;
   border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: #2e2e2e;
+  border: 2px solid #ccc;
+  background-color: #003f5c;
   transition: all 0.3s ease;
-  color: #fafafa;
+  color: white;
+  font-weight: bold;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Hover effect for the select element */
 .select-container2 select:hover { 
-  border-color: #4caf50; /* Change border color on hover */
-  color: #fafafa;
-  background-color: #474747; /* Light background on hover */
+  border-color: white; /* Change border color on hover */
+  color: #003f5c;
+  background-color: white; /* Light background on hover */
   cursor: pointer;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Focus effect for the select element */
 .select-container2 select:focus {
-  border-color: #4caf50; /* Darker border color on focus */
-  color: #fafafa;
+  border-color: white; /* Darker border color on focus */
+  color: #003f5c;
   outline: none; /* Remove the default focus outline */
-  background-color: #474747; /* Slightly darker background on focus */
+  background-color: white; /* Slightly darker background on focus */
   font-family: "Roboto", Arial, sans-serif;
 }
 
@@ -398,21 +374,21 @@ html {
   padding: 10px;
   font-size: 14px;
   background-color: white;
-  color: #333;
+  color: #003f5c;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Hover effect for the option elements */
 .select-container2 select option:hover {
   background-color: #f1f9ff; /* Background color when hovering over options */
-  color: #007bff; /* Text color on hover */
+  color: #003f5c; /* Text color on hover */
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Focus effect for the option elements (focus will apply if the option is selected) */
 .select-container2 select option:focus {
   background-color: #e6f7ff; /* Slightly darker background when option is focused */
-  color: #0056b3; /* Text color on option focus */
+  color: #003f5c; /* Text color on option focus */
   font-family: "Roboto", Arial, sans-serif;
 }
 
@@ -458,8 +434,6 @@ html {
   cursor: pointer;
 }
 
-.timeframe-buttons button:focus,
-.control-buttons button:focus,
 .generate-button:focus {
   outline: none;
   box-shadow: 0 0 3px 2px #4caf50;
@@ -512,22 +486,31 @@ button:focus-visible {
 
 /* Normal button style */
 .chatbot-button {
-  background-color: #4CAF50;
+  background-color: transparent;
   color: white;
-  transition: all 0.3s ease;
-  height: 10%;
-  width: auto;
+  border: 2px solid white;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  height: 3vw;
+  border-radius: 50px;
+  width: 3vw;
 }
 
 .chatbot-button:hover {
-  background-color: #357a38; /* Change to a darker shade or any color you want */
+  background-color: #4CAF50; /* Change to a darker shade or any color you want */
   color: #e0e0e0;
-  transform: scale(1.03); /* Slightly enlarge the button */
+  border: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
 }
 
 .chatbot-div {
   right: 2%;
-  bottom: 0;
+  bottom: 3%;
   position: absolute;
 }
+
+.chat-icon {
+  position: absolute;
+  left: 32%;
+  top: 32%;
+}
+
