@@ -1,0 +1,48 @@
+.slider-input {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 100%; /* Full width */
+    height: 10px; /* Track height */
+    border-radius: 5px; /* Rounded track */
+    outline: none; /* Remove focus outline */
+    cursor: pointer;
+    background: linear-gradient(to right, yellow 50%, white 50%); /* Initial gradient */
+    transition: background 0.2s ease; /* Smooth color change */
+}
+
+.slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 20px; /* Thumb width */
+    height: 20px; /* Thumb height */
+    background: white; /* Default thumb color */
+    border-radius: 50%; /* Make thumb circular */
+    cursor: pointer;
+    position: relative;
+    z-index: 1; /* Keep thumb above track */
+}
+
+.slider-input::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider-input::-ms-thumb {
+    width: 20px;
+    height: 20px;
+    background: #333;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider-value {
+    margin-left: 5px;
+}
+
+.chart {
+    z-index: 1;
+}

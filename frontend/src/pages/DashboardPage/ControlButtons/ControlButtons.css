@@ -17,9 +17,9 @@ input[type="file"] {
   padding: 15px 20px;
   font-size: 18px;
   cursor: pointer;
-  border: 1px solid #2e2e2e;
+  border: 2px solid white;
   border-radius: 10px;
-  background-color: #2e2e2e;
+  background-color: #003f5c;
   color: #fafafa;
   transition: background-color 0.3s, border 0.3s;
   text-align: center;
@@ -29,7 +29,7 @@ input[type="file"] {
 /* Hover effect for all buttons */
 .file-import-container button:hover {
   background-color: #fafafa;
-  color: #2e2e2e;
+  color: #003f5c;
   font-weight: bold;
 }
 
@@ -41,55 +41,23 @@ input[type="file"] {
   font-weight: bold;
 }
 
-/* Style for the Import Models button */
-.file-import-container button:nth-child(1) {
-  background-color: #0088cc;
-  color: #fafafa;
-}
-
-.file-import-container button:nth-child(1):hover {
-  background-color: #0088cc;
-  color: #fafafa;
-}
-
-.file-import-container button:nth-child(1):focus {
-  outline: 3px solid #0088cc;
-  background-color: #0088cc;
-  color: #fafafa;
-}
-
-/* Style for the Import Dataset button */
-.file-import-container button:nth-child(2) {
-  background-color: #0088cc;
-  color: #fafafa;
-}
-
-.file-import-container button:nth-child(2):hover {
-  background-color: #0088cc;
-  color: #fafafa;
-}
-
-.file-import-container button:nth-child(2):focus {
-  outline: 3px solid #0088cc;
-  background-color: #0088cc;
-  color: #fafafa;
-}
-
-/* Style for the Download Graph button */
 .file-import-container button:nth-child(3) {
   background-color: #0088cc;
   color: #fafafa;
+  border: 2px solid #0088cc;
 }
 
 .file-import-container button:nth-child(3):hover {
   background-color: #fafafa;
-  color: #2e2e2e;
+  color: #003f5c;
+  border: 2px solid #fafafa;
   font-weight: bold;
 }
 
 .file-import-container button:nth-child(3):focus {
-  outline: 3px solid #0088cc;
+  outline: 3px solid white;
   background-color: #fafafa;
-  color: #2e2e2e;
+  color: #003f5c;
   font-weight: bold;
 }
+

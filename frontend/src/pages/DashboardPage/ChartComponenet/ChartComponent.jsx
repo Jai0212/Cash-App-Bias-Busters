@@ -17,10 +17,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       new Set(chartData.map((item) => item.feature1))
     );
     const colorPalette = [
-      "rgba(54, 162, 235, 0.7)",
-      "rgba(75, 192, 192, 0.7)",
-      "rgba(255, 206, 86, 0.7)",
-      "rgba(153, 102, 255, 0.7)",
+      "rgba(189, 178, 255, 0.9)",
+      "rgba(253, 255, 182, 0.9)",
+      "rgba(251, 224, 224, 0.9)",
+      "rgba(229, 193, 133, 0.9)"
     ];
     const feature1Colors = uniqueFeature1Groups.reduce((acc, group, index) => {
       acc[group] = colorPalette[index % colorPalette.length];
@@ -63,10 +63,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     const lineData = {
       label: "Threshold",
       data: labels.map((label) => ({ x: label, y: sliderValue })),
-      borderColor: "rgba(0, 0, 255, 1)",
+      borderColor: "rgba(255, 0, 0, 1)",
       backgroundColor: "rgba(0, 0, 0, 0)",
       fill: false,
-      borderWidth: 2,
+      borderWidth: 3,
       type: "line",
       pointRadius: 0,
     };
@@ -90,13 +90,16 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
           x: {
             offset: true,
             ticks: {
+              color: "rgba(255, 255, 255, 1)",
               autoSkip: false,
             },
             grid: {
               offset: true,
               display: false,
+              color: "rgba(255, 255, 255, 0.4)",
             },
             title: {
+              color: "rgba(255, 255, 255, 1)",
               display: true,   // Display the x-axis title
               text: 'Demographics', // Set the x-axis label
               font: {
@@ -112,9 +115,19 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             min: 0,
             max: 1,
             beginAtZero: true,
+            ticks: {
+              color: "rgba(255, 255, 255, 1)",
+              autoSkip: false,
+            },
+            grid: {
+              offset: true,
+              display: true,
+              color: "rgba(255, 255, 255, 0.4)",
+            },
             title: {
               display: true,   // Display the y-axis title
               text: 'Bias', // Set the y-axis label
+              color: "rgba(255, 255, 255, 1)",
               font: {
                 size: 16,   // Font size for the title
                 weight: 'bold', // Make the title bold
@@ -133,6 +146,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
               generateLabels: () => {
                 return uniqueFeature1Groups.map((feature1, i) => ({
                   text: feature1,
+                  fontColor: "white",
                   fillStyle: feature1Colors[feature1],
                   strokeStyle: feature1Colors[feature1],
                   lineWidth: 1,
