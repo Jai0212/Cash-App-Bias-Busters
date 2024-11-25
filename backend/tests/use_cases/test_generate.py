@@ -30,7 +30,6 @@ def test_generate(mock_file_repo, mock_db_repo):
     # Act
     use_case = Generate(mock_file_repo, mock_db_repo)
     result = use_case.execute(demographics, choices, time)
-
     # Assert
     assert isinstance(result, list)  # Check that result is a list
     assert len(result) == len(
