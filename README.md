@@ -129,6 +129,28 @@ npm run dev
 <img src="https://contrib.rocks/image?repo=Jai0212/Cash-App-Bias-Busters"/>
 </a>
 
+
+## Feedback and Contributions
+
+We welcome your feedback and contributions! Here's how you can contribute:  
+
+1. **Report Issues**: Found a bug? Open an issue [here](https://github.com/Jai0212/Cash-App-Bias-Busters/issues).  
+2. **Suggest Enhancements**: Propose new features or improvements via issues or discussions.  
+3. **Fork and Contribute**:  
+   - Fork this repository.  
+   - Create a new branch: `git checkout -b feature-branch-name`.  
+   - Commit your changes: `git commit -m "Description of changes"`.  
+   - Push the branch: `git push origin feature-branch-name`.  
+   - Open a pull request.
+
+
+## System Requirements
+
+- **Operating System**: Windows/Linux/MacOS  
+- **Python**: Version 3.7 or above  
+- **Node.js**: Version 14 or above  
+- **MySQL**: Any compatible version
+
 ## Repository Structure
 
 ```plaintext
