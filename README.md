@@ -11,6 +11,8 @@
   <img src="frontend/public/cash-app-logo.png" alt="CashApp Logo" width="100"/>
 </div>
 
+## Short Description
+
 As part of the 2024 cohort of the Technology Leadership Initiative, we developed a platform in collaboration with **Cash App** to assist machine learning engineers in identifying and visualizing biases in their models.
 
 - Users can upload their transaction data and approval models, which are processed by a Flask-based backend utilizing the Fairlearn library to detect biases.
@@ -23,20 +25,28 @@ As part of the 2024 cohort of the Technology Leadership Initiative, we developed
   <img src="frontend/public/img_dashboard.png" alt="Dashboard Logo"/>
 </div>
 
+## Authors/Contributors
+
+- **Navnoor Singh Mahal**
+- **Jai Joshi**
+- **Virat Talan**
+- **Akshat Oza**
+- **Armagan Gul**
+- **Batuhan Hidiroglu**
+
 ## Index
 
-1. [Title](#bias-detection-and-visualization-tool)  
-2. [Problem Statement](#problem-statement)  
-3. [Motivation](#motivation)  
-4. [Features](#features)  
-5. [Technical Implementation Details](#technical-implementation-details)  
-6. [How to Run](#how-to-runuse)  
-7. [Contributors](#contributors)  
-8. [Feedback and Contributions](#feedback-and-contributions)  
-9. [System Requirements](#system-requirements)  
-10. [Repository Structure](#repository-structure)  
+1. [Title](#bias-detection-and-visualization-tool-cashapp)
+2. [Authors/Contributors](#authorscontributors)
+3. [Problem Statement](#problem-statement)
+4. [Motivation](#motivation)
+5. [Features](#features)
+6. [Technical Implementation Details](#technical-implementation-details)
+7. [Directory Structure](#repository-structure)
+8. [How to Use](#how-to-use)
+9. [How to Install](#how-to-install)
+10. [How to Contribute](#how-to-contribute)
 11. [Acknowledgements/Credits](#acknowledgementscredits)
-
 
 ## Problem Statement
 
@@ -91,106 +101,161 @@ Our backend analyzes the bias in the selected demographic categories using the F
   - **Testing**:  
     We use **pytest** for unit and integration testing. Pytest helps ensure the correctness of the application’s logic by automating tests for backend functionality, database interactions, and model processing.
 
-## How to run/use
+## Repository Structure
+
+Below is an overview of the folder structure for this repository to help you navigate and contribute effectively:
+
+```plaintext
+Cash-App-Bias-Busters/
+├── backend/                # Backend API built with Flask
+│   ├── app/                # Application code and logic
+│   ├── requirements.txt    # Backend dependencies
+│   ├── config.py           # Configuration files
+│   ├── tests/              # Unit and integration tests
+│   └── README.md           # Backend-specific instructions
+├── frontend/               # Frontend application built with React and Vite
+│   ├── src/                # Source code for React components
+│   │   ├── components/     # Reusable UI components
+│   │   ├── pages/          # Application pages
+│   │   ├── assets/         # Static assets (CSS, images, etc.)
+│   │   └── App.jsx         # Main application entry point
+│   ├── package.json        # Frontend dependencies
+│   └── README.md           # Frontend-specific instructions
+├── .github/                # GitHub-specific configuration files
+│   ├── workflows/          # CI/CD pipelines
+├── LICENSE                 # Project license (MIT)
+├── README.md               # Main project documentation
+```
+
+## How to use
 
 If you want to use the project, simply visit the publicly hosted website: [https://cash-app-bias-busters.netlify.app](https://cash-app-bias-busters.netlify.app).
 
 The backend is hosted on render and can be accessed through the publicly available link [https://cash-app-bias-busters.onrender.com](https://cash-app-bias-busters.onrender.com)
 
 **NOTE:** the backend may take up to a minute to start up on the first visit.
-.
+
+## How to Install
+
+### Sysytem Requirements
+
+Before setting up the project, ensure your system meets the following requirements:
+
+- **Operating System**: Windows 10/11, macOS 11+, or Linux (Ubuntu 20.04+ recommended)
+- **Node.js**: Version 16.x or higher
+- **Python**: Version 3.9 or higher
+- **MySQL**: Version 8.0 or higher (for local database setup)
+- **Browser**: Latest versions of Chrome, Firefox, or Edge
+- **Package Manager**: npm or yarn
+
+Optional:
+
+- **Vite CLI**: Recommended for efficient frontend development
 
 If you'd like to run it locally instead, follow these steps:
 
-### Clone the repository:
+### Installation Steps:
+
+1. Clone the repository:
 
 ```
+
 git clone https://github.com/Jai0212/Cash-App-Bias-Busters.git
-```
-
-### Backend:
 
 ```
+
+2. Backend:
+
+```
+
 pip install -r requirements.txt
 cd backend
 python3 -m app.controllers.app
-```
-
-### Frontend
 
 ```
-cd frontend
+
+3. Frontend
+
+```
+
+cd ../frontend
 npm run dev
+
 ```
 
+## Contributing & Feedback
 
-## System Requirements
+We value your feedback and contributions to improve this project! Below are the ways you can provide feedback or contribute:
 
-- **Operating System**: Windows/Linux/MacOS  
-- **Python**: Version 3.7 or above  
-- **Node.js**: Version 14 or above  
-- **MySQL**: Any compatible version
+### Providing Feedback
 
-## Repository Structure
+- **Issues**: Found a bug or have a feature request? Feel free to create an issue [here](https://github.com/Jai0212/Cash-App-Bias-Busters/issues).
 
-```plaintext
-Bias-Detection-and-Visualization-Tool/
-├── .github/
-│   └── workflows/          # CI/CD pipeline configuration
-├── .idea/                  # IDE project files (e.g., for IntelliJ or PyCharm)
-├── backend/                # Backend implementation (Flask)
-├── database/               # Database schema and SQL scripts
-├── frontend/               # Frontend implementation (React)
-│   └── assets/             # (Images, CSS, etc.)
-├── node_modules/           # Node.js dependencies
-├── .DS_Store               # MacOS specific file for folder structure cache
-├── .gitignore              # Git ignore file
-├── LICENSE.txt             # License file
-├── README.md               # Project documentation
-├── armagan-TLI07-DB1-CSS/  # CSS for frontend (dashboard styling)
-├── file.csv                # Sample data for testing
-├── invalid_file.txt        # Sample invalid data for testing
-├── model.pkl               # Saved model for predictions
-├── package-lock.json       # Locks dependencies for Node.js
-├── package.json            # Node.js dependencies and scripts
-└── test_model.pkl          # Test model for validation
-```
+### How to contribute
 
-## Contributors
-<a href="https://github.com/Jai0212/Cash-App-Bias-Busters/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=Jai0212/Cash-App-Bias-Busters"/>
-</a>
+We welcome contributions from the community! Follow the steps below to get started:
 
-## Feedback and Contributions
+1. **Fork the Repository**:
 
-We welcome your feedback and contributions! Here's how you can contribute:  
+   - Click the **Fork** button in the top-right corner of the repository on GitHub.
+   - Clone your fork locally:
+     ```bash
+     git clone https://github.com/your-username/Cash-App-Bias-Busters.git
+     cd Cash-App-Bias-Busters
+     ```
 
-1. **Report Issues**: Found a bug? Open an issue [here](https://github.com/Jai0212/Cash-App-Bias-Busters/issues).  
-2. **Suggest Enhancements**: Propose new features or improvements via issues or discussions.  
-3. **Fork and Contribute**:  
-   - Fork this repository.  
-   - Create a new branch: `git checkout -b feature-branch-name`.  
-   - Commit your changes: `git commit -m "Description of changes"`.  
-   - Push the branch: `git push origin feature-branch-name`.  
-   - Open a pull request.
+2. **Create a New Branch**:
 
+   - Create a branch for your feature or fix:
+     ```bash
+     git checkout -b feature/your-feature-name
+     ```
+
+3. **Make Your Changes**:
+
+   - Write clear, concise, and well-documented code.
+   - Follow the existing project structure and conventions.
+
+4. **Submit a Pull Request (PR)**:
+   - Push your branch to your fork:
+     ```bash
+     git push origin feature/your-feature-name
+     ```
+   - Open a pull request on the original repository with a clear description of your changes and their purpose.
+
+### Contribution Guidelines
+
+- **Merge Request Quality**:
+
+  - Ensure your PR includes detailed commit messages and a description of what problem it solves or feature it adds.
+  - Include tests where applicable and ensure your code does not break existing functionality.
+
+- **Review Process**:
+  - After submitting your PR, it will be reviewed by our team.
+  - We follow a collaborative review process and may request changes before merging.
+
+Your contributions make a difference, and we appreciate your time and effort in improving the project!
 
 ## Acknowledgements/Credits
 
 1. This project makes use of the Fairlearn library for bias detection and fairness assessments.
 
-```
+````
+
 @misc{weerts2023fairlearn,
-      title={Fairlearn: Assessing and Improving Fairness of AI Systems},
-      author={Hilde Weerts and Miroslav Dudík and Richard Edgar and Adrin Jalali and Roman Lutz and Michael Madaio},
-      journal={Journal of Machine Learning Research},
-      year={2023},
-      volume={24},
-      number={257},
-      pages={1--8},
-      url={http://jmlr.org/papers/v24/23-0389.html}
+title={Fairlearn: Assessing and Improving Fairness of AI Systems},
+author={Hilde Weerts and Miroslav Dudík and Richard Edgar and Adrin Jalali and Roman Lutz and Michael Madaio},
+journal={Journal of Machine Learning Research},
+year={2023},
+volume={24},
+number={257},
+pages={1--8},
+url={http://jmlr.org/papers/v24/23-0389.html}
 }
+
 ```
 
 2. Special thanks to [Cash App](https://www.cash.app)
    for their collaboration and support in this initiative.
+```
+````
