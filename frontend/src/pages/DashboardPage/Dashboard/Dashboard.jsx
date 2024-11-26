@@ -521,13 +521,15 @@ const Dashboard = () => {
         </div>
 
         <div className="chatbot-div">
-          <button
-              className="btn rounded-circle p-3 chatbot-button"
-              onClick={openChatBot}
-          >
-            <FaComment
-              className="chat-icon"/>
-          </button>
+        <button
+          id="chatbot-button"
+          aria-label="Open Chatbot"
+          className="btn rounded-circle p-3 chatbot-button"
+          onClick={openChatBot}
+        >
+          <FaComment className="chat-icon" aria-hidden="true" />
+        </button>
+
           {isChatbotOpen && <ChatbotComponent closeChatbot={closeChatbot}/>}
 
         </div>

@@ -170,20 +170,20 @@ const ControlButtons = ({ onDownload }) => {
         <button
             className="upload-model-button"
             onClick={handleImportModels}
-            tabIndex={12}
+            tabIndex={-1}
         >
           Import Models
         </button>
         <button
             className="upload-dataset-button"
             onClick={handleImportDataset}
-            tabIndex={13}
+            tabIndex={-2}
         >
           Import Dataset
         </button>
         <button
             onClick={onDownload}
-            tabIndex={14}
+            tabIndex={-3}
         >
           Download Graph
         </button>

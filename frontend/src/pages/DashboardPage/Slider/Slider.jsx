@@ -28,19 +28,20 @@ const Slider = ({ graphData, maxValue }) => {
     return (
         <div>
             <div className="slider-container">
-                <label className="slider-label-cont">
-                    BIAS THRESHOLD: <span className="slider-value">{Math.round(sliderValue * 100)}%</span>
-                </label>
-                <input
-                    className="slider-input"
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value={sliderValue}
-                    onChange={handleSliderChange}
-                    tabIndex={1}
-                />
+            <label className="slider-label-cont" for="threshold">
+                BIAS THRESHOLD: <span className="slider-value">{Math.round(sliderValue * 100)}%</span>
+            </label>
+            <input
+                id="threshold"
+                className="slider-input"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={sliderValue}
+                onChange={handleSliderChange}
+                tabIndex={1}
+            />
             </div>
             <div>
                 {Object.keys(graphData).length > 0 && (
