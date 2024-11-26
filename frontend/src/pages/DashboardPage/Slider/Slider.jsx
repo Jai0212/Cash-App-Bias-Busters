@@ -40,7 +40,7 @@ const Slider = ({ graphData, maxValue }) => {
                 step="0.01"
                 value={sliderValue}
                 onChange={handleSliderChange}
-                tabIndex={1}
+                tabIndex={-1}
             />
             </div>
             <div>
