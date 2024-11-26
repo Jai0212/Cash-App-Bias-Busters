@@ -23,7 +23,7 @@ def test_single_column_file(single_column_file):
     df_dropped, inputs, target = reader.read_file()
 
     # Assert that the single_column_check flag is set to True when only one column remains
-    assert reader.single_column_check is False, "Single column check should be flagged as True."
+    assert reader.single_column_check is False
 
 
 def test_empty_file(tmp_path):
