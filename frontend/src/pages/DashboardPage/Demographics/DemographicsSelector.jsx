@@ -24,6 +24,7 @@ const DemographicsSelector = ({
                     <select
                         onChange={handleDemographicChange}
                         value={selectedDemographic}
+                        tabIndex={6}
                     >
                         <option value="">Select</option>
                         {demographics.map((demo, index) => (
