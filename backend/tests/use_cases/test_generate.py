@@ -16,15 +16,15 @@ def test_generate(mock_file_repo, mock_db_repo):
 
     # Create a list of mock DataPoint objects to simulate the return value
     mock_data_points = [
-        DataPoint("Female", "Black", 0.25, 0.75, 0.0),
-        DataPoint("Female", "Hispanic", 0.33, 0.67, 0.0),
-        DataPoint("Female", "Other", 0.67, 0.0, 0.33),
-        DataPoint("Male", "Black", 0.0, 0.0, 1.0),
-        DataPoint("Male", "Hispanic", 0.5, 0.0, 0.5),
-        DataPoint("Male", "Other", 0.75, 0.25, 0.0),
-        DataPoint("Non-binary", "Black", 0.5, 0.0, 0.5),
-        DataPoint("Non-binary", "Hispanic", 1.0, 0.0, 0.0),
-        DataPoint("Non-binary", "Other", 0.0, 0.0, 1.0),
+        DataPoint("gender_0", "race_0", 0.25, 0.75, 0.0),
+        DataPoint("gender_0", "race_1", 0.33, 0.67, 0.0),
+        DataPoint("gender_0", "race_2", 0.67, 0.0, 0.33),
+        DataPoint("gender_1", "race_0", 0.0, 0.0, 1.0),
+        DataPoint("gender_1", "race_1", 0.5, 0.0, 0.5),
+        DataPoint("gender_1", "race_2", 0.75, 0.25, 0.0),
+        DataPoint("gender_2", "race_0", 0.5, 0.0, 0.5),
+        DataPoint("gender_2", "race_1", 1.0, 0.0, 0.0),
+        DataPoint("gender_2", "race_2", 0.0, 0.0, 1.0),
     ]
 
     # Act
@@ -38,7 +38,16 @@ def test_generate(mock_file_repo, mock_db_repo):
     assert all(
         isinstance(item, DataPoint) for item in result
     )  # Ensure each item is a DataPoint instance
-
+    print("JJ DEBUG")
+    for i in result:
+        print(
+            i.get_feature1(),
+            i.get_feature2(),
+            i.get_accuracy(),
+            i.get_false_positive_rate(),
+            i.get_false_negative_rate(),
+            i.get_combination_label(),
+        )
     # Compare each individual DataPoint value
     for i, item in enumerate(result):
         # Assert feature1 and feature2 are correct
