@@ -70,6 +70,9 @@ env/
 cov_html/
 htmlcov/
 
+cov_html/
+htmlcov/
+
 invalid_file.txt
 test_file.csv
 uploads/
