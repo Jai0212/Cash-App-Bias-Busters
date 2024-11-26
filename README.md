@@ -25,13 +25,18 @@ As part of the 2024 cohort of the Technology Leadership Initiative, we developed
 
 ## Index
 
-1. [Title](#bias-detection-and-visualization-tool)
-2. [Problem Statement](#problem-statement)
-3. [Motivation](#motivation)
-4. [Features](#features)
-5. [Technical Implementation Details](#technical-implementation-details)
-6. [How to Run](#how-to-runuse)
-7. [Acknowledgements/Credits](#acknowledgementscredits)
+1. [Title](#bias-detection-and-visualization-tool)  
+2. [Problem Statement](#problem-statement)  
+3. [Motivation](#motivation)  
+4. [Features](#features)  
+5. [Technical Implementation Details](#technical-implementation-details)  
+6. [How to Run](#how-to-runuse)  
+7. [Contributors](#contributors)  
+8. [Feedback and Contributions](#feedback-and-contributions)  
+9. [System Requirements](#system-requirements)  
+10. [Repository Structure](#repository-structure)  
+11. [Acknowledgements/Credits](#acknowledgementscredits)
+
 
 ## Problem Statement
 
@@ -117,6 +122,13 @@ python3 -m app.controllers.app
 cd frontend
 npm run dev
 ```
+
+
+## Contributors
+<a href="https://github.com/Jai0212/Cash-App-Bias-Busters/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=Jai0212/Cash-App-Bias-Busters"/>
+</a>
+
 
 ## Acknowledgements/Credits
 
