@@ -129,6 +129,30 @@ npm run dev
 <img src="https://contrib.rocks/image?repo=Jai0212/Cash-App-Bias-Busters"/>
 </a>
 
+## Repository Structure
+
+```plaintext
+Bias-Detection-and-Visualization-Tool/
+├── .github/
+│   └── workflows/          # CI/CD pipeline configuration
+├── .idea/                  # IDE project files (e.g., for IntelliJ or PyCharm)
+├── backend/                # Backend implementation (Flask)
+├── database/               # Database schema and SQL scripts
+├── frontend/               # Frontend implementation (React)
+│   └── assets/             # (Images, CSS, etc.)
+├── node_modules/           # Node.js dependencies
+├── .DS_Store               # MacOS specific file for folder structure cache
+├── .gitignore              # Git ignore file
+├── LICENSE.txt             # License file
+├── README.md               # Project documentation
+├── armagan-TLI07-DB1-CSS/  # CSS for frontend (dashboard styling)
+├── file.csv                # Sample data for testing
+├── invalid_file.txt        # Sample invalid data for testing
+├── model.pkl               # Saved model for predictions
+├── package-lock.json       # Locks dependencies for Node.js
+├── package.json            # Node.js dependencies and scripts
+└── test_model.pkl          # Test model for validation
+```
 
 ## Acknowledgements/Credits
 
