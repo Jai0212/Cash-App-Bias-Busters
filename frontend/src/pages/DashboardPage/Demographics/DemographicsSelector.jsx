@@ -21,9 +21,11 @@ const DemographicsSelector = ({
             <div className="select-demographics">
                 <div className="title"></div>
                 <div className="select-container1">
+                <label htmlFor="demographic-select">Select Demographic</label>
                     <select
                         onChange={handleDemographicChange}
                         value={selectedDemographic}
+                        tabIndex={4}
                     >
                         <option value="">Select</option>
                         {demographics.map((demo, index) => (
@@ -43,6 +45,7 @@ const DemographicsSelector = ({
                                     key={idx}
                                     onChange={(event) => handleValueChange(event, idx)}
                                     value={selectedValues[idx] || ""}
+                                    tabIndex={idx + 4}
                                 >
                                     <option value="">Select</option>
                                     {demographicValues
@@ -60,9 +63,13 @@ const DemographicsSelector = ({
 
                 {selectedDemographic && (
                     <div className="select-container2">
+                        <label htmlFor="second-demographic-select">Select 2nd Demographic</label>
+
                         <select
+                            id="second-demographic-select"
                             onChange={handleSecondDemographicChange}
                             value={secondSelectedDemographic}
+                            tabIndex={7}
                         >
                             <option value="">Select</option>
                             {demographics
@@ -86,7 +93,11 @@ const DemographicsSelector = ({
                                             handleValueChange(event, idx, true)
                                         }
                                         value={selectedSecondValues[idx] || ""}
+                                        tabIndex={idx + 7}
                                     >
+                                        <label htmlFor={`second-value-select-${idx}`}>
+                                            Select Value {idx + 1}
+                                        </label>
                                         <option value="">Select</option>
                                         {secondDemographicValues
                                             .filter((val) => !selectedValues.includes(val))
@@ -103,7 +114,7 @@ const DemographicsSelector = ({
                 )}
             </div>
             {selectedDemographic && <div className="generate-btn-container">
-                <button className="generate-button" onClick={handleGenerate}>
+                <button className="generate-button" onClick={handleGenerate} tabIndex={12}>
                     Generate
                 </button>
             </div>}
