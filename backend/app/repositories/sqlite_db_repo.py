@@ -26,6 +26,7 @@ class SqliteDbRepo(DatabaseRepository):
         try:
             if self.connection is None:
                 print("Not connected to the database.")
+                return
 
             cursor = self.connection.cursor()
             cursor.execute("SHOW TABLES")

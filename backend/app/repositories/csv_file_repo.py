@@ -78,10 +78,6 @@ class CsvFileRepo(FileRepository):
             cursor.close()
             return False
 
-        except Error as e:
-            print(f"MySQL Error: {e}")
-            return False
-
         except Exception as e:
             print(f"General Error: {e}")
             return False
@@ -114,10 +110,6 @@ class CsvFileRepo(FileRepository):
             print(f"Data saved to {csv_file_path}")
 
             cursor.close()  # Close the cursor
-
-        except Error as e:
-            print(f"MySQL Error: {e}")
-            raise
 
         except Exception as e:
             print(f"General Error: {e}")

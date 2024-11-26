@@ -94,9 +94,50 @@ class TestSqliteDbRepo(unittest.TestCase):
             "age": ["18-26", "27-35", "35-43", "44-52"],
         }
         time = "year"
-        email = "ff@gmail.com"  # Ensure this matches your actual test data
 
         # Call the method
+        self.repo.update_db_for_user(demographics, choices, time)
+
+        # Check if the correct query is executed
+        mock_cursor.execute.assert_called_once_with(
+            """
+            UPDATE users
+            SET demographic_1 = %s, choice_1_demographic_1 = %s, choice_2_demographic_1 = %s, choice_3_demographic_1 = %s, choice_4_demographic_1 = %s, demographic_2 = %s, choice_1_demographic_2 = %s, choice_2_demographic_2 = %s, choice_3_demographic_2 = %s, choice_4_demographic_2 = %s, time = %s
+            WHERE email = %s
+            """,
+            (
+                "gender",  # demographic_1
+                "male",  # choice_1_demographic_1
+                "female",  # choice_2_demographic_1
+                "non-binary",  # choice_3_demographic_1
+                "other",  # choice_4_demographic_1
+                "age",  # demographic_2
+                "18-26",  # choice_1_demographic_2
+                "27-35",  # choice_2_demographic_2
+                "35-43",  # choice_3_demographic_2
+                "44-52",  # choice_4_demographic_2
+                "year",  # time
+                "ff@gmail.com",  # email
+            ),
+        )
+        mock_cursor.close.assert_called_once()
+
+    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    def test_update_db_for_user_2(self, mock_get_connection):
+        # Test updating user data in the database
+        mock_connection = MagicMock()
+        mock_get_connection.return_value = mock_connection
+
+        mock_cursor = MagicMock()
+        mock_connection.cursor.return_value = mock_cursor
+
+        demographics = ["gender", "age"]
+        choices = {
+            "gender": ["male", "female", "non-binary", "other"],
+            "age": ["18-26", "27-35", "35-43", "44-52"],
+        }
+        time = ""
+
         self.repo.update_db_for_user(demographics, choices, time)
 
         # Check if the correct query is executed
@@ -285,6 +326,33 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.assertIsNone(demographics)
             self.assertIsNone(choices)
             self.assertIsNone(time)
+
+    @patch("app.repositories.sqlite_db_repo.SqliteDbRepo.connect")
+    def test_see_all_tables_no_connection(self, mock_connect):
+        """Test when there is no database connection."""
+        # Simulate no connection by setting self.connection to None
+        self.repo.connection = None
+
+        with patch("builtins.print") as mock_print:
+            self.repo.see_all_tables()
+
+            # Ensure that the print statement for 'Not connected to the database.' is called
+            mock_print.assert_any_call("Not connected to the database.")
+
+    @patch("app.repositories.sqlite_db_repo.SqliteDbRepo.connect")
+    def test_see_all_tables_db_error(self, mock_connect):
+        """Test when a database error occurs."""
+        # Simulate a connection error (like a MySQL Error)
+        mock_cursor = MagicMock()
+        mock_cursor.execute.side_effect = Error("Database connection failed")
+        self.repo.connection = MagicMock()
+        self.repo.connection.cursor.return_value = mock_cursor
+
+        with patch("builtins.print") as mock_print:
+            self.repo.see_all_tables()
+
+            # Ensure that the print statement for the error is called
+            mock_print.assert_any_call("Error: Database connection failed")
 
 
 if __name__ == "__main__":

@@ -130,6 +130,36 @@ class TestCsvFileRepo(unittest.TestCase):
         self.assertEqual(len(mock_df), 2)
 
     @patch("pandas.read_csv")
+    def test_get_data_for_time_2(self, mock_read_csv):
+        """Test retrieving data for a specific time period."""
+        mock_df = pd.DataFrame(
+            {
+                "timestamp": ["2024-11-24", "2024-11-23"],
+                "action_status": ["0", "1"],
+            }
+        )
+        mock_read_csv.return_value = mock_df
+
+        self.repo.get_data_for_time("week")
+        # Check that the CSV was updated to only include the most recent day
+        self.assertEqual(len(mock_df), 2)
+
+    @patch("pandas.read_csv")
+    def test_get_data_for_time_3(self, mock_read_csv):
+        """Test retrieving data for a specific time period."""
+        mock_df = pd.DataFrame(
+            {
+                "timestamp": ["2024-11-24", "2024-11-23"],
+                "action_status": ["0", "1"],
+            }
+        )
+        mock_read_csv.return_value = mock_df
+
+        self.repo.get_data_for_time("month")
+        # Check that the CSV was updated to only include the most recent day
+        self.assertEqual(len(mock_df), 2)
+
+    @patch("pandas.read_csv")
     def test_update_comparison_csv(self, mock_read_csv):
         """Test updating the comparison CSV file based on user selection."""
         mock_df = pd.DataFrame(
@@ -148,6 +178,29 @@ class TestCsvFileRepo(unittest.TestCase):
         choices = {"gender": ["male"], "age": ["27-35"]}
 
         self.repo.update_comparison_csv(demographics, choices, time="day")
+
+        # Ensure the data was filtered correctly
+        self.assertEqual(len(mock_df), 2)
+
+    @patch("pandas.read_csv")
+    def test_update_comparison_csv_2(self, mock_read_csv):
+        """Test updating the comparison CSV file based on user selection."""
+        mock_df = pd.DataFrame(
+            {
+                "gender": ["male", "femlae"],
+                "age": [25, 30],
+                "race": ["Whites", "Asian"],
+                "state": ["CA", "NY"],
+                "timestamp": ["2024-11-24", "2024-11-23"],
+                "action_status": ["0", "1"],
+            }
+        )
+        mock_read_csv.return_value = mock_df
+
+        demographics = ["gender", "age"]
+        choices = {"gender": ["male"], "age": ["27-35"]}
+
+        self.repo.update_comparison_csv(demographics, choices, "")
 
         # Ensure the data was filtered correctly
         self.assertEqual(len(mock_df), 2)
@@ -261,6 +314,45 @@ class TestCsvFileRepo(unittest.TestCase):
 
         with self.assertRaises(IOError):
             self.repo.update_comparison_csv(["age"], {"age": ["20-30"]}, "day")
+
+    @patch("app.repositories.csv_file_repo.CsvFileRepo.connect")
+    @patch("builtins.print")  # Mocking the print function to capture output
+    def test_get_headers_mysql_error(self, mock_print, mock_connect):
+        """Test get_headers when a MySQL Error occurs."""
+
+        # Simulate a database connection and cursor setup
+        mock_connection = MagicMock()
+        self.repo.connection = mock_connection
+
+        # Simulate a MySQL Error during cursor execution
+        mock_cursor = MagicMock()
+        mock_cursor.execute.side_effect = Error("Database connection failed")
+        mock_connection.cursor.return_value = mock_cursor
+
+        # Call the method and ensure the error is caught
+        result = self.repo.get_headers()
+
+        # Assert that the result is an empty list as per the error handling
+        self.assertEqual(result, [])
+
+        # Ensure the error message was printed
+        mock_print.assert_any_call("MySQL Error: Database connection failed")
+
+    @patch("builtins.open")
+    @patch("builtins.print")  # Mock print to capture the output
+    def test_delete_csv_data_exception(self, mock_print, mock_open):
+        """Test delete_csv_data when an exception occurs during file operation."""
+
+        # Simulate an error when opening the file (e.g., file permission error)
+        mock_open.side_effect = Exception("Permission denied")
+
+        # Call the delete_csv_data method
+        self.repo.delete_csv_data()
+
+        # Ensure that the print statement for error handling is called
+        mock_print.assert_any_call(
+            f"Error deleting data from {self.file_path}: Permission denied"
+        )
 
 
 if __name__ == "__main__":

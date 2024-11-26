@@ -1,5 +1,3 @@
-# /app/repositories/interfaces.py
-
 from abc import ABC, abstractmethod
 from typing import Optional
 from werkzeug.datastructures import FileStorage

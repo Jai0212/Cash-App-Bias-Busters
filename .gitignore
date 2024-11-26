@@ -67,5 +67,9 @@ env/
 # Pytest cache
 *.pytest_cache/
 
+cov_html/
+htmlcov/
 
-
+invalid_file.txt
+test_file.csv
+uploads/

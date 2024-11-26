@@ -25,13 +25,18 @@ As part of the 2024 cohort of the Technology Leadership Initiative, we developed
 
 ## Index
 
-1. [Title](#bias-detection-and-visualization-tool)
-2. [Problem Statement](#problem-statement)
-3. [Motivation](#motivation)
-4. [Features](#features)
-5. [Technical Implementation Details](#technical-implementation-details)
-6. [How to Run](#how-to-runuse)
-7. [Acknowledgements/Credits](#acknowledgementscredits)
+1. [Title](#bias-detection-and-visualization-tool)  
+2. [Problem Statement](#problem-statement)  
+3. [Motivation](#motivation)  
+4. [Features](#features)  
+5. [Technical Implementation Details](#technical-implementation-details)  
+6. [How to Run](#how-to-runuse)  
+7. [Contributors](#contributors)  
+8. [Feedback and Contributions](#feedback-and-contributions)  
+9. [System Requirements](#system-requirements)  
+10. [Repository Structure](#repository-structure)  
+11. [Acknowledgements/Credits](#acknowledgementscredits)
+
 
 ## Problem Statement
 
@@ -117,6 +122,58 @@ python3 -m app.controllers.app
 cd frontend
 npm run dev
 ```
+
+
+## System Requirements
+
+- **Operating System**: Windows/Linux/MacOS  
+- **Python**: Version 3.7 or above  
+- **Node.js**: Version 14 or above  
+- **MySQL**: Any compatible version
+
+## Repository Structure
+
+```plaintext
+Bias-Detection-and-Visualization-Tool/
+├── .github/
+│   └── workflows/          # CI/CD pipeline configuration
+├── .idea/                  # IDE project files (e.g., for IntelliJ or PyCharm)
+├── backend/                # Backend implementation (Flask)
+├── database/               # Database schema and SQL scripts
+├── frontend/               # Frontend implementation (React)
+│   └── assets/             # (Images, CSS, etc.)
+├── node_modules/           # Node.js dependencies
+├── .DS_Store               # MacOS specific file for folder structure cache
+├── .gitignore              # Git ignore file
+├── LICENSE.txt             # License file
+├── README.md               # Project documentation
+├── armagan-TLI07-DB1-CSS/  # CSS for frontend (dashboard styling)
+├── file.csv                # Sample data for testing
+├── invalid_file.txt        # Sample invalid data for testing
+├── model.pkl               # Saved model for predictions
+├── package-lock.json       # Locks dependencies for Node.js
+├── package.json            # Node.js dependencies and scripts
+└── test_model.pkl          # Test model for validation
+```
+
+## Contributors
+<a href="https://github.com/Jai0212/Cash-App-Bias-Busters/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=Jai0212/Cash-App-Bias-Busters"/>
+</a>
+
+## Feedback and Contributions
+
+We welcome your feedback and contributions! Here's how you can contribute:  
+
+1. **Report Issues**: Found a bug? Open an issue [here](https://github.com/Jai0212/Cash-App-Bias-Busters/issues).  
+2. **Suggest Enhancements**: Propose new features or improvements via issues or discussions.  
+3. **Fork and Contribute**:  
+   - Fork this repository.  
+   - Create a new branch: `git checkout -b feature-branch-name`.  
+   - Commit your changes: `git commit -m "Description of changes"`.  
+   - Push the branch: `git push origin feature-branch-name`.  
+   - Open a pull request.
+
 
 ## Acknowledgements/Credits
 
