@@ -170,7 +170,7 @@ const ControlButtons = ({ onDownload }) => {
         <button
             className="upload-model-button"
             onClick={handleImportModels}
-            tabIndex={13}
+            tabIndex={0}
         >
           Import Models
         </button>

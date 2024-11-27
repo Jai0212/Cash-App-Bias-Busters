@@ -205,34 +205,42 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     const handleKeyDown = (event) => {
       if (event.key === 'Tab') {
         event.preventDefault(); 
-
+  
         const nextIndex = hoveredIndex === null
           ? 0
-          : (hoveredIndex + 1) % accuracyData.length;
-
-        setHoveredIndex(nextIndex); 
-        
-       
-        if (myChartRef.current) {
-          const chart = myChartRef.current;
-          const activeElement = chart.getDatasetMeta(0).data[nextIndex];
-          chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
-          chart.update(); 
+          : (hoveredIndex + 1);
+  
+        if (nextIndex < accuracyData.length) {
           
-      
-          chart.tooltip.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
-          chart.tooltip.update();
-          chart.draw(); 
+          setHoveredIndex(nextIndex); 
+          if (myChartRef.current) {
+            const chart = myChartRef.current;
+            const activeElement = chart.getDatasetMeta(0).data[nextIndex];
+            chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
+            chart.update(); 
+            
+            chart.tooltip.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
+            chart.tooltip.update();
+            chart.draw();
+          }
+        } else {
+          
+          const nextFocusableElement = document.querySelector('[tabindex="1"]');
+          if (nextFocusableElement) {
+            nextFocusableElement.focus(); 
+          }
         }
       }
     };
-
+  
     window.addEventListener('keydown', handleKeyDown);
-
+  
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [hoveredIndex, accuracyData.length]); 
+  }, [hoveredIndex, accuracyData.length]);
+  
+  
 
   useImperativeHandle(ref, () => ({
     downloadChart() {
@@ -245,7 +253,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
   return (
     <div className="chart-container">
-      <canvas ref={chartRef} tabIndex="0" /> 
+      <canvas ref={chartRef} /> 
     </div>
   );
 });
