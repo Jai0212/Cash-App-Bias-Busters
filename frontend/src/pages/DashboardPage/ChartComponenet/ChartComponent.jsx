@@ -214,6 +214,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
           : (hoveredIndex + 1) % accuracyData.length;
 
         setHoveredIndex(nextIndex); 
+
+        if (myChartRef.current) {
+          ...
+        }
       }
     };
 
