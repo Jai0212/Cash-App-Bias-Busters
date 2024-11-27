@@ -11,7 +11,7 @@
   <img src="frontend/public/cash-app-logo.png" alt="CashApp Logo" width="100"/>
 </div>
 
-## Short Description
+## Overview
 
 As part of the 2024 cohort of the Technology Leadership Initiative, we developed a platform in collaboration with **Cash App** to assist machine learning engineers in identifying and visualizing biases in their models.
 
@@ -22,31 +22,21 @@ As part of the 2024 cohort of the Technology Leadership Initiative, we developed
 - Built with a focus on clean architecture, the platform ensures a modular and maintainable design with extensive testing coverage.
 
 <div style="text-align: center;">
-  <img src="frontend/public/img_dashboard.png" alt="Dashboard Logo"/>
+  <img width="1468" alt="Main Dashboard" src="https://github.com/user-attachments/assets/89cd04a9-bfed-4cfd-bf40-3f90cbc70e2d">
 </div>
-
-## Authors/Contributors
-
-- **Navnoor Singh Mahal**
-- **Jai Joshi**
-- **Virat Talan**
-- **Akshat Oza**
-- **Armagan Gul**
-- **Batuhan Hidiroglu**
 
 ## Index
 
-1. [Title](#bias-detection-and-visualization-tool-cashapp)
-2. [Authors/Contributors](#authorscontributors)
-3. [Problem Statement](#problem-statement)
-4. [Motivation](#motivation)
-5. [Features](#features)
-6. [Technical Implementation Details](#technical-implementation-details)
-7. [Directory Structure](#repository-structure)
-8. [How to Use](#how-to-use)
-9. [How to Install](#how-to-install)
-10. [How to Contribute](#how-to-contribute)
-11. [Acknowledgements/Credits](#acknowledgementscredits)
+1. [Problem Statement](#problem-statement)
+2. [Motivation](#motivation)
+3. [Features](#features)
+4. [Technical Implementation Details](#technical-implementation-details)
+5. [Repository Structure](#repository-structure)
+6. [How to Use](#how-to-use)
+7. [How to Install](#how-to-install)
+8. [Contributing & Feedback](#contributing--feedback)
+9. [Acknowledgements/Credits](#acknowledgementscredits)
+
 
 ## Problem Statement
 
@@ -96,10 +86,14 @@ Our backend analyzes the bias in the selected demographic categories using the F
 - **Chart.js**: Used to render dynamic and interactive graphs and charts to visualize bias metrics.
 
 - **Clean Architecture**:  
-  The project follows a **Clean Architecture** approach, organizing the system into separate layers such as presentation, business logic, and data access. This ensures modularity, maintainability, and scalability of the application.
+  The project follows a **Clean Architecture** approach, organizing the system into separate layers such as presentation, business logic, and data access. This ensures the application's modularity, maintainability, and scalability.
 
   - **Testing**:  
-    We use **pytest** for unit and integration testing. Pytest helps ensure the correctness of the application’s logic by automating tests for backend functionality, database interactions, and model processing.
+    We used **pytest** and **unittest** for unit and integration testing. Pytest helps ensure the correctness of the application’s logic by automating tests for backend functionality, database interactions, and model processing.
+
+<img width="1006" alt="Tech Stack" src="https://github.com/user-attachments/assets/5bf302d0-cac9-484a-bfc6-5e9845c0b7b9">
+
+<img width="987" alt="Fairlearn Explanation" src="https://github.com/user-attachments/assets/3ad68c6e-422c-45e0-bf43-0368db7438fb">
 
 ## Repository Structure
 
@@ -133,11 +127,11 @@ If you want to use the project, simply visit the publicly hosted website: [https
 
 The backend is hosted on render and can be accessed through the publicly available link [https://cash-app-bias-busters.onrender.com](https://cash-app-bias-busters.onrender.com)
 
-**NOTE:** the backend may take up to a minute to start up on the first visit.
+**NOTE:** The backend may take up to a minute to start up on the first visit.
 
 ## How to Install
 
-### Sysytem Requirements
+### System Requirements
 
 Before setting up the project, ensure your system meets the following requirements:
 
