@@ -1,6 +1,6 @@
 # /app/repositories/sqlite_db_repo.py
 
-from app.repositories.interfaces import DatabaseRepository
+from app.repositories.interfaces import DatabaseRepositoryInterface
 from app.infrastructure.db_connection_manager import DbConnectionManager
 from app.entities.user import User
 import mysql.connector
@@ -8,7 +8,7 @@ from mysql.connector import Error
 from typing import Optional
 
 
-class SqliteDbRepo(DatabaseRepository):
+class SqliteDbRepo(DatabaseRepositoryInterface):
     def __init__(self, user: User):
         self.connection = None
         

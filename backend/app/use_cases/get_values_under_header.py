@@ -1,9 +1,25 @@
-from app.repositories.interfaces import FileRepository
+from app.repositories.interfaces import FileRepositoryInterface
 import pandas as pd
 
 
 class GetValuesUnderHeader:
-    def __init__(self, file_repo: FileRepository):
+    """
+    GetValuesUnderHeader is a use case class that fetches unique values under a specified header from a CSV file.
+
+    Attributes:
+        file_repo (FileRepositoryInterface): An interface for file repository operations.
+
+    Methods:
+        __init__(file_repo: FileRepositoryInterface):
+            Initializes the GetValuesUnderHeader with a file repository interface.
+
+        execute(header: str) -> list[str]:
+            Fetches unique values under the specified header from the CSV file.
+            If the header is "age", it categorizes the values into age ranges.
+            Returns a list of unique values or age ranges.
+    """
+
+    def __init__(self, file_repo: FileRepositoryInterface):
         self.file_repo = file_repo
 
     def execute(self, header: str) -> list[str]:

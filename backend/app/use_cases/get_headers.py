@@ -1,8 +1,22 @@
-from app.repositories.interfaces import FileRepository
+from app.repositories.interfaces import FileRepositoryInterface
 
 
 class GetHeaders:
-    def __init__(self, file_repo: FileRepository):
+    """GetHeaders is a use case class responsible for fetching and returning the headers (column names) of a database table,
+    excluding critical columns such as 'timestamp' and 'action_status'.
+
+    Attributes:
+        file_repo (FileRepositoryInterface): An interface for the file repository to interact with the data source.
+
+    Methods:
+        __init__(file_repo: FileRepositoryInterface):
+            Initializes the GetHeaders use case with the provided file repository interface.
+
+        execute() -> list[str]:
+            Fetches and returns the headers of the database table, excluding critical columns.
+            Returns an empty list if no headers are found or if an error occurs."""
+
+    def __init__(self, file_repo: FileRepositoryInterface):
         self.file_repo = file_repo
 
     def execute(self) -> list[str]:

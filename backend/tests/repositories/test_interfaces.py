@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
 from app.repositories.interfaces import (
-    DatabaseRepository,
-    FileRepository,
+    DatabaseRepositoryInterface,
+    FileRepositoryInterface,
     UserRepositoryInterface,
 )
 
@@ -11,7 +11,7 @@ class TestRepositories(unittest.TestCase):
 
     def test_database_repository(self):
         # Mock the DatabaseRepository and its abstract methods
-        db_repo = MagicMock(spec=DatabaseRepository)
+        db_repo = MagicMock(spec=DatabaseRepositoryInterface)
         db_repo.see_all_tables.return_value = None
         db_repo.create_table.return_value = None
         db_repo.delete_table.return_value = None
@@ -40,7 +40,7 @@ class TestRepositories(unittest.TestCase):
 
     def test_file_repository(self):
         # Mock the FileRepository and its abstract methods
-        file_repo = MagicMock(spec=FileRepository)
+        file_repo = MagicMock(spec=FileRepositoryInterface)
         file_repo.import_csv_to_db.return_value = True
         file_repo.save_data_to_csv.return_value = None
         file_repo.delete_csv_data.return_value = None
@@ -91,7 +91,7 @@ class TestRepositories(unittest.TestCase):
 class TestDatabaseRepository(unittest.TestCase):
     def setUp(self):
         """Set up the test case with mock data."""
-        self.repo = MagicMock(spec=DatabaseRepository)
+        self.repo = MagicMock(spec=DatabaseRepositoryInterface)
 
     def test_see_all_tables(self):
         """Test see_all_tables method."""
@@ -146,7 +146,7 @@ class TestDatabaseRepository(unittest.TestCase):
 class TestFileRepository(unittest.TestCase):
     def setUp(self):
         """Set up the test case with mock data."""
-        self.repo = MagicMock(spec=FileRepository)
+        self.repo = MagicMock(spec=FileRepositoryInterface)
 
     def test_import_csv_to_db(self):
         """Test import_csv_to_db method."""

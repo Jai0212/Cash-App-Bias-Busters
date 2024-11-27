@@ -1,6 +1,6 @@
 import os
 import sys
-from app.repositories.interfaces import FileRepository
+from app.repositories.interfaces import FileRepositoryInterface
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_root)
@@ -13,7 +13,7 @@ class EvaluateModelsUseCase:
     Use case class for evaluating multiple models for fairness.
     """
 
-    def __init__(self, file_repo: FileRepository, model_files):
+    def __init__(self, file_repo: FileRepositoryInterface, model_files):
         """
         Initializes the use case with the model files and dataset path.
 

@@ -1,6 +1,9 @@
 import os
 import sys
-from app.repositories.interfaces import FileRepository, DatabaseRepository
+from app.repositories.interfaces import (
+    FileRepositoryInterface,
+    DatabaseRepositoryInterface,
+)
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(project_root)
@@ -9,7 +12,22 @@ from ml_model.use_cases.model import model
 
 
 class Generate:
-    def __init__(self, file_repo: FileRepository, db_repo: DatabaseRepository):
+    """
+    A class used to represent the Generate use case.
+
+    Methods
+    -------
+    __init__(file_repo: FileRepositoryInterface, db_repo: DatabaseRepositoryInterface)
+        Initializes the Generate use case with file and database repositories.
+
+    execute(demographics: list[str], choices: dict[str, list[str]], time: str) -> None
+        Executes the generate use case by updating the comparison CSV and database,
+        then processes the output from the model and prints the results.
+    """
+
+    def __init__(
+        self, file_repo: FileRepositoryInterface, db_repo: DatabaseRepositoryInterface
+    ):
         self.file_repo = file_repo
         self.db_repo = db_repo
 

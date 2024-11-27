@@ -11,6 +11,15 @@
   <img src="frontend/public/cash-app-logo.png" alt="CashApp Logo" width="100"/>
 </div>
 
+
+### Links
+
+- [**Frontend**](https://cash-app-bias-busters.netlify.app/)  
+- [**Backend**](https://cash-app-bias-busters.onrender.com/)  
+
+> **Note**: The backend may take up to a minute to start up on the first visit.
+
+
 ## Overview
 
 As part of the 2024 cohort of the Technology Leadership Initiative, we developed a platform in collaboration with **Cash App** to assist machine learning engineers in identifying and visualizing biases in their models.

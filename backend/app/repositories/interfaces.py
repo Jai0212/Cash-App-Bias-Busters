@@ -3,7 +3,41 @@ from typing import Optional
 from werkzeug.datastructures import FileStorage
 
 
-class DatabaseRepository(ABC):
+class DatabaseRepositoryInterface(ABC):
+    """
+    Abstract base class for database repository operations.
+
+    Methods
+    -------
+    see_all_tables() -> None
+        Abstract method to see all tables in the database.
+
+    create_table() -> None
+        Abstract method to create a new table in the database.
+
+    delete_table() -> None
+        Abstract method to delete a table from the database.
+
+    fetch_data(p: bool = False) -> tuple[list[str], tuple[str, ...]]
+        Abstract method to fetch data from the database.
+        Parameters:
+            p (bool): Optional parameter to specify a condition for fetching data.
+        Returns:
+            tuple: A tuple containing a list of strings and a tuple of strings.
+
+    update_db_for_user(demographics: list[str], choices: dict[str, list[str]], time: str) -> None
+        Abstract method to update the database for a user.
+        Parameters:
+            demographics (list[str]): List of demographic information.
+            choices (dict[str, list[str]]): Dictionary of user choices.
+            time (str): Timestamp of the update.
+
+    get_last_login_data() -> tuple[Optional[list[str]], Optional[dict[str, list[str]]], Optional[str]]
+        Abstract method to get the last login data.
+        Returns:
+            tuple: A tuple containing optional list of strings, optional dictionary of user choices, and optional timestamp.
+    """
+
     @abstractmethod
     def see_all_tables(self) -> None:
         pass
@@ -36,7 +70,30 @@ class DatabaseRepository(ABC):
         pass
 
 
-class FileRepository(ABC):
+class FileRepositoryInterface(ABC):
+    """
+    FileRepository is an abstract base class that defines the interface for file repository operations.
+
+    Methods:
+        import_csv_to_db(csv_file: FileStorage) -> bool:
+            Abstract method to import data from a CSV file into the database.
+
+        save_data_to_csv() -> None:
+            Abstract method to save data from the database to a CSV file.
+
+        delete_csv_data() -> None:
+            Abstract method to delete data from the CSV file.
+
+        get_headers() -> list[str]:
+            Abstract method to retrieve the headers from the CSV file.
+
+        update_comparison_csv(demographics: list[str], choices: dict[str, list[str]], time: str) -> None:
+            Abstract method to update the comparison CSV file with the given demographics, choices, and time.
+
+        get_data_for_time(time: str) -> None:
+            Abstract method to retrieve data for a specific time.
+    """
+
     @abstractmethod
     def import_csv_to_db(self, csv_file: FileStorage) -> bool:
         pass

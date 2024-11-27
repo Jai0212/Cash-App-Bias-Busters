@@ -1,5 +1,5 @@
 from app.infrastructure.db_connection_manager import DbConnectionManager
-from app.repositories.interfaces import FileRepository
+from app.repositories.interfaces import FileRepositoryInterface
 from app.repositories import SqliteDbRepo
 from app.entities.user import User
 from mysql.connector import Error
@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from werkzeug.datastructures import FileStorage
 
 
-class CsvFileRepo(FileRepository):
+class CsvFileRepo(FileRepositoryInterface):
     def __init__(self, user: User, file_path: str):
         """Initialize the file path and database connection."""
         self.connection = None
