@@ -56,7 +56,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
           (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) // Red border if above threshold, else use the same color as fill
         ),
         borderWidth: newAccuracyData.map(
-          (d) => (d.accuracy > sliderValue ? 3 : 1) // Increased border width if above threshold, else default
+          (d) => (d.accuracy > sliderValue ? 3 : 1) 
         ),
         borderCapStyle: "round",
         borderJoinStyle: "round",
