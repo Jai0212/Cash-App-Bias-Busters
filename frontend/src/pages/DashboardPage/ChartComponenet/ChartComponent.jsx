@@ -36,7 +36,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     const labels = sortedChartData.map((item) => item.feature2); // Only feature2 labels
 
     const newAccuracyData = sortedChartData.map((item) => ({
-      label: item.feature2, // Use only feature2 as label
+      label: item.feature2, 
       accuracy: item.accuracy,
       falsePositive: item.falsepositive,
       falseNegative: item.falsenegative,
