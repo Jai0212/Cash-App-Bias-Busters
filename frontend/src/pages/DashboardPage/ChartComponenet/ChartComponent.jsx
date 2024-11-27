@@ -220,7 +220,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     // Attach event listener for keydown
     window.addEventListener('keydown', handleKeyDown);
 
-    // Clean up the event listener on component unmount
+    
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
