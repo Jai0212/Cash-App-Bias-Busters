@@ -206,6 +206,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       const nextIndex = hoveredIndex === null
           ? 0
           : (hoveredIndex + 1) % accuracyData.length;
+          setHoveredIndex(nextIndex); 
+      }
+    };
   
 
   useImperativeHandle(ref, () => ({
