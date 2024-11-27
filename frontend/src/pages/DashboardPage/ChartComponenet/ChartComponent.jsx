@@ -205,7 +205,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     });
   }, [chartData, sliderValue]);
 
-  // Step 2: Add keyboard navigation logic (now uses the state variable)
+  
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Tab') {
@@ -213,11 +213,11 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
           ? 0
           : (hoveredIndex + 1) % accuracyData.length;
 
-        setHoveredIndex(nextIndex); // Set the next hovered index based on Tab key
+        setHoveredIndex(nextIndex); 
       }
     };
 
-    // Attach event listener for keydown
+    
     window.addEventListener('keydown', handleKeyDown);
 
     
