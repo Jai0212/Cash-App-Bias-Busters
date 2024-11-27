@@ -202,6 +202,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   }, [chartData, sliderValue]); // Removed hoveredIndex dependency
 
   useEffect(() => {
+    if (event.key === 'Tab') {
   
 
   useImperativeHandle(ref, () => ({
