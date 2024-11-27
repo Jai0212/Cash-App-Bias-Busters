@@ -217,8 +217,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
         if (myChartRef.current) {
           const chart = myChartRef.current;
-          const bar = chart.getDatasetMeta(0).data[nextIndex];
-          chart.hover({native: true, index: nextIndex});
+          const activeElement = chart.getDatasetMeta(0).data[nextIndex];
+          chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
+          chart.update();
         }
       }
     };
