@@ -203,6 +203,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
   useEffect(() => {
     if (event.key === 'Tab') {
+      const nextIndex = hoveredIndex === null
+          ? 0
+          : (hoveredIndex + 1) % accuracyData.length;
   
 
   useImperativeHandle(ref, () => ({
