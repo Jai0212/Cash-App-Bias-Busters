@@ -6,6 +6,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   const chartRef = useRef(null);
   const myChartRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [accuracyData, setAccuracyData] = useState([]);  // Store accuracyData in state
 
   useEffect(() => {
     if (!chartData) return;
@@ -34,7 +35,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
     const labels = sortedChartData.map((item) => item.feature2); // Only feature2 labels
 
-    const accuracyData = sortedChartData.map((item) => ({
+    const newAccuracyData = sortedChartData.map((item) => ({
       label: item.feature2, // Use only feature2 as label
       accuracy: item.accuracy,
       falsePositive: item.falsepositive,
@@ -42,16 +43,19 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       color: feature1Colors[item.feature1] || "rgba(200, 200, 200, 0.7)", // Default gray if missing
     }));
 
+    // Store accuracyData in state
+    setAccuracyData(newAccuracyData);
+
     // Configure datasets with accuracy data and colors by group
     const datasets = [
       {
         label: "Accuracy",
-        data: accuracyData.map((d) => ({ x: d.label, y: d.accuracy })),
-        backgroundColor: accuracyData.map((d) => d.color), // Bars are filled with the color for each feature1 group
-        borderColor: accuracyData.map(
+        data: newAccuracyData.map((d) => ({ x: d.label, y: d.accuracy })),
+        backgroundColor: newAccuracyData.map((d) => d.color), // Bars are filled with the color for each feature1 group
+        borderColor: newAccuracyData.map(
           (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) // Red border if above threshold, else use the same color as fill
         ),
-        borderWidth: accuracyData.map(
+        borderWidth: newAccuracyData.map(
           (d) => (d.accuracy > sliderValue ? 3 : 1) // Increased border width if above threshold, else default
         ),
         borderCapStyle: "round",
@@ -100,14 +104,14 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             },
             title: {
               color: "rgba(255, 255, 255, 1)",
-              display: true,   // Display the x-axis title
-              text: 'Demographics', // Set the x-axis label
+              display: true,
+              text: 'Demographics',
               font: {
-                size: 16,   // Font size for the title
-                weight: 'bold', // Make the title bold
+                size: 16,
+                weight: 'bold',
               },
               padding: {
-                top: 8, // Space above the title
+                top: 8,
               },
             },
           },
@@ -125,15 +129,15 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
               color: "rgba(255, 255, 255, 0.4)",
             },
             title: {
-              display: true,   // Display the y-axis title
-              text: 'Bias', // Set the y-axis label
+              display: true,
+              text: 'Bias',
               color: "rgba(255, 255, 255, 1)",
               font: {
-                size: 16,   // Font size for the title
-                weight: 'bold', // Make the title bold
+                size: 16,
+                weight: 'bold',
               },
               padding: {
-                bottom: 8, // Space below the title
+                bottom: 8,
               },
             },
           },
@@ -157,7 +161,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
           tooltip: {
             callbacks: {
               label: (tooltipItem) => {
-                const item = accuracyData[tooltipItem.dataIndex];
+                const item = newAccuracyData[tooltipItem.dataIndex];
                 return [
                   `Bias: ${item.accuracy}`,
                   `False Positive: ${item.falsePositive}`,
@@ -199,8 +203,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
         },
       ],
     });
-  }, [chartData, sliderValue]); // Removed hoveredIndex dependency
+  }, [chartData, sliderValue]);
 
+  // Step 2: Add keyboard navigation logic (now uses the state variable)
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Tab') {
@@ -208,17 +213,18 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
           ? 0
           : (hoveredIndex + 1) % accuracyData.length;
 
-        setHoveredIndex(nextIndex); 
+        setHoveredIndex(nextIndex); // Set the next hovered index based on Tab key
       }
     };
 
+    // Attach event listener for keydown
     window.addEventListener('keydown', handleKeyDown);
 
+    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [hoveredIndex, accuracyData.length]);
-  
+  }, [hoveredIndex, accuracyData.length]); // Dependency on hoveredIndex and accuracyData.length
 
   useImperativeHandle(ref, () => ({
     downloadChart() {
@@ -231,7 +237,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
   return (
     <div className="chart-container">
-      <canvas ref={chartRef} tabIndex="0" />
+      <canvas ref={chartRef} tabIndex="0" /> 
     </div>
   );
 });
