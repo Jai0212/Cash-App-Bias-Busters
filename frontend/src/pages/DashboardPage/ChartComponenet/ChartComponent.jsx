@@ -46,7 +46,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     // Store accuracyData in state
     setAccuracyData(newAccuracyData);
 
-    // Configure datasets with accuracy data and colors by group
+    
     const datasets = [
       {
         label: "Accuracy",
