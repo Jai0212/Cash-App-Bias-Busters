@@ -8,30 +8,29 @@
 }
 
 .left-container {
-  width: 60%;
+  width: 65%;
   height: 100%;
   position: absolute;
 }
 
 .right-container {
-  width: 40%;
+  width: 35%;
   height: 100%;
   position: absolute;
   right: 0;
 }
 
 .button-container {
-  position: absolute;
-  top: 0;
+  position: relative;
+  top: 7%;
   left: 45%;
   /* Centers the button-container horizontally */
   transform: translateX(-50%);
   /* Adjusts for the width of the container */
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding: 10%;
-  height: 100%;
+  width: 80%;
+  height: 62%;
 }
 
 .upload-button-pre {
@@ -80,6 +79,7 @@
   position: relative;
   left: 3%;
   top: 1.4%;
+  height: 90vh;
 }
 
 .pre-upload-dashboard {
@@ -194,41 +194,41 @@
 }
 
 .result-section {
-  width: 90vw;
-  margin-left: 2%;
+  width: 90.5vw;
   background-color: rgba(0, 0, 0, 0);
-  border-radius: 8px;
-  margin-top: 8px;
+  border-radius: 0.8vh;
+  margin-top: 3vh;
   height: auto;
 }
 
 .result-section ul {
-  padding: 0;
-  margin: 0;
   position: relative;
-  height: auto;
+  height: 7vh;
 }
 
 .result-item {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  border: 1px solid #ccc;
+  border: 0.1vh solid #ccc;
   background-color: #a3b7ca;
-  padding: 10px 30px;
-  border-radius: 8px;
+  padding: 0.3vh 0.6vh;
+  height: 7vh;
+  width: 103.5%;
+  left: -2vw;
+  border-radius: 0.8vh;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 7px;
+  margin-bottom: 1vh;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative; /* Needed to allow positioning of the tag */
 }
 
 .result-tag {
   position: absolute; /* Position the tag absolutely to avoid gap influence */
-  border-radius: 8px;
-  left: -1px; /* Align the tag to the left edge of the parent */
-  width: 40px; /* Narrow width for the tag */
-  height: 103%; /* Full height of the result item */
+  border-radius: 0.8vh;
+  left: -0.09vh; /* Align the tag to the left edge of the parent */
+  width: 4vh; /* Narrow width for the tag */
+  height: 105%; /* Full height of the result item */
 }
 
 .result-details {
@@ -237,7 +237,8 @@
   display: flex;
   align-items: center;
   padding: 5px 0;
-  gap: 5px;
+  gap: 0.5vw;
+  font-size: 1.2vw;
   min-width: 7.2%;
 }
 
@@ -253,6 +254,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 0.2s ease;
+  min-width: 20%;
   color: black;
 }
 

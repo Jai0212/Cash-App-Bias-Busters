@@ -1,22 +1,23 @@
 .upload-model-container {
     overflow: hidden;
-    top: -1%;
-    height: 61%;
+    top: 0;
+    height: 50vh;
     position: relative;
+    width: 100%;
 }
 
 .uploaded-files-grid {
     display: grid;
     grid-template-columns: 1fr; /* 1 column */
     grid-template-rows: repeat(4, auto); /* 4 rows */
-    gap: 10%; /* Adjust the gap between rows if needed */
+    gap: 12%; /* Adjust the gap between rows if needed */
     height: 100%;
 }
 
 .uploaded-file-box {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 8vh;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -36,11 +37,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 1.3vw;
     /* Prevent text wrapping */
 }
 
 .file-icon {
-    font-size: 20px;
+    font-size: 1.5vw;
+    margin-right: 0.8vw;
 }
 
 .delete-file-btn {
@@ -50,23 +53,21 @@
     border: none;
     border-radius: 50%;
     /* Keep the circle shape */
-    width: 30px;
+    width: 2vw;
     /* Adjusted to better fit the "X" */
-    height: 30px;
+    height: 2vw;
+    font-size: 1vw;
     /* Adjusted to match width */
     cursor: pointer;
-    font-size: 18px;
     /* Adjusted to match the size of the "X" */
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    padding: 0;
     /* Ensure there's no extra padding */
     /* Center the "X" */
     line-height: 1;
     /* Prevent any vertical spacing issues */
-    right: 0;
 }
 
 .delete-file-btn:hover {

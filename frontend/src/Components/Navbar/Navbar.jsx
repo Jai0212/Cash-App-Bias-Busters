@@ -6,7 +6,7 @@ function Navbar() {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <div>
+          <div className="logo-container">
             <img
               className="cash-logo"
               src="/cash-app-logo.png"

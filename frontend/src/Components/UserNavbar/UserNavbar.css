@@ -18,7 +18,8 @@
 }
 
 .navbar-nav .nav-item {
-  margin-right: 20px; /* Adjust spacing between navbar items */
+  margin-right: 2vw; /* Adjust spacing between navbar items */
+  height: 3vw;
 }
 
 /* Adjust logo's position and ensure it doesn't push the content too much */
@@ -47,7 +48,9 @@
 
 .logout-btn {
   font-family: "Roboto", Arial, sans-serif;
-  font-size: 18px;
+  font-size: 1vw;
+  height: 5vh;
+  width: 5vw;
 }
 
 /* Logo hover effect */

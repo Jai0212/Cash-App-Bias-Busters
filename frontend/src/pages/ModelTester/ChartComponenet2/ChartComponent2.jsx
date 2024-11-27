@@ -12,7 +12,29 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
         '#ffa600',     // Golden yellow
     ];
 
+    const getResponsiveFontSize = (baseSize) => {
+        const scaleFactor = Math.min(window.innerWidth, window.innerHeight) / 1000; // Scale based on screen dimensions
+        return Math.max(baseSize * scaleFactor, 10); // Minimum font size of 10px
+    };
+
     console.log("ChartData Model Tester", chartData);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (myChartRef.current) {
+                myChartRef.current.options.scales.x.ticks.font.size = getResponsiveFontSize(14);
+                myChartRef.current.options.scales.y.ticks.font.size = getResponsiveFontSize(14);
+                myChartRef.current.options.scales.x.title.font.size = getResponsiveFontSize(18);
+                myChartRef.current.options.scales.y.title.font.size = getResponsiveFontSize(18);
+                myChartRef.current.update();
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         if (!chartData) return;
@@ -22,6 +44,8 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
         if (myChartRef.current) {
             myChartRef.current.destroy(); // Destroy previous chart instance if it exists
         }
+
+        const responsiveFontSize = getResponsiveFontSize(14); // Base font size is 14px
 
         // Initialize the chart with a bar graph
         myChartRef.current = new Chart(ctx, {
@@ -40,6 +64,10 @@ const ChartComponent2 = forwardRef(({ chartData, generationalResults }, ref) => 
                             color: "#007CFF", // Set x-axis labels to white
                             autoSkip: false, // Ensure all x-axis labels are shown
                             padding: 15, // Add padding between x-axis labels and axis
+                            font: {
+                                size: responsiveFontSize, // Responsive font size
+                                weight: 'bold',
+                            },
                         },
                         grid: {
                             color: "rgba(0, 124, 255, 0.5)",
