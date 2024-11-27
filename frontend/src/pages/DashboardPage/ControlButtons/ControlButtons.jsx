@@ -12,6 +12,10 @@ const ControlButtons = ({ onDownload }) => {
   const fileInputRef1 = useRef(null); // For model import
   const fileInputRef2 = useRef(null); // For dataset import
 
+  const modalRef = useRef(null); // Reference to modal element
+  const importModelButtonRef = useRef(null);
+  const importDatasetButtonRef = useRef(null);
+
   const fetchEmailAndDemographics = async () => {
     const url = `${VITE_BACKEND_URL}/get-email`;
 
@@ -30,7 +34,6 @@ const ControlButtons = ({ onDownload }) => {
         setCurrUser(emailData.email); // Set the user email if it exists
       } else {
         setCurrUser("");
-
         swal.fire({
           icon: "error",
           title: "Please log in first",
@@ -39,13 +42,12 @@ const ControlButtons = ({ onDownload }) => {
           timer: 5000,
           timerProgressBar: true,
         }).then(() => {
-          window.location.href = "/";
+          window.location.href = "/";  // Redirect to login if no email
         });
       }
     } catch (error) {
       console.error("Error fetching email:", error);
 
-      // If there is any error fetching email, show the same alert
       swal.fire({
         icon: "error",
         title: "Error",
@@ -76,14 +78,12 @@ const ControlButtons = ({ onDownload }) => {
       return;
     }
 
-    // Create FormData object
     const formData = new FormData();
     formData.append("curr_user", currUser);
     formData.append("model_file", file);
     formData.append("dashboard", "secret_token");
 
     try {
-      // Make a POST request to upload model
       const response = await fetch(`${VITE_BACKEND_URL}/api/upload-model`, {
         method: "POST",
         body: formData,
@@ -110,19 +110,16 @@ const ControlButtons = ({ onDownload }) => {
 
     if (!file) return; // If no file is selected, exit
 
-    // Check if the file format is CSV
     if (!file.name.endsWith(".csv")) {
       alert("Please upload a file in CSV format.");
       return;
     }
 
-    // Create FormData object
     const formData = new FormData();
     formData.append("curr_user", currUser);
-    formData.append("csv_to_read", file); // Use csv_to_read for dataset uploads
+    formData.append("csv_to_read", file); 
 
     try {
-      // Make a POST request to upload dataset
       const response = await fetch(`${VITE_BACKEND_URL}/api/upload-data`, {
         method: "POST",
         body: formData,
@@ -145,154 +142,163 @@ const ControlButtons = ({ onDownload }) => {
   };
 
   const closeModal = () => {
-    setShowModal(false); // Close the modal
-
+    setShowModal(false);
   };
+
   const closeModal2 = () => {
-    setshowModaldataset(false) // Close the modal
+    setshowModaldataset(false);
   };
 
+  useEffect(() => {
+    if (showModal === false) {
+      // Focus on Import Dataset button after closing model modal
+      importDatasetButtonRef.current.focus();
+    }
+  }, [showModal]);
+
+  useEffect(() => {
+    if (showModaldataset === false) {
+      // Focus on Import Models button after closing dataset modal
+      importModelButtonRef.current.focus();
+    }
+  }, [showModaldataset]);
+
+  // Trap focus inside modal when modal is open
+  useEffect(() => {
+    if (showModal || showModaldataset) {
+      const focusableElements = modalRef.current.querySelectorAll("button, input, select, textarea");
+      const firstFocusableElement = focusableElements[0];  
+      const lastFocusableElement = focusableElements[focusableElements.length - 1];
+
+      firstFocusableElement.focus();
+
+      const handleTab = (e) => {
+        if (e.key === "Tab") {
+          if (e.shiftKey) { // Shift + Tab
+            if (document.activeElement === firstFocusableElement) {
+              lastFocusableElement.focus();
+              e.preventDefault();
+            }
+          } else { // Tab
+            if (document.activeElement === lastFocusableElement) {
+              firstFocusableElement.focus();
+              e.preventDefault();
+            }
+          }
+        }
+      };
+
+      document.addEventListener("keydown", handleTab);
+
+      return () => {
+        document.removeEventListener("keydown", handleTab);
+      };
+    }
+  }, [showModal, showModaldataset]);
 
   return (
-      <div className="file-import-container">
-        <input
-            type="file"
-            ref={fileInputRef1}
-            onChange={handleModelFileChange}
-            style={{ display: 'none' }} // Hide the file input
-        />
-        <input
-            type="file"
-            ref={fileInputRef2}
-            onChange={handleDatasetFileChange}
-            style={{ display: 'none' }} // Hide the file input
-        />
-        <button
-            className="upload-model-button"
-            onClick={handleImportModels}
-            tabIndex={13}
-        >
-          Import Models
-        </button>
-        <button
-            className="upload-dataset-button"
-            onClick={handleImportDataset}
-            tabIndex={14}
-        >
-          Import Dataset
-        </button>
-        <button
-            onClick={onDownload}
-            tabIndex={15}
-        >
-          Download Graph
-        </button>
+    <div className="file-import-container">
+      <input
+        type="file"
+        ref={fileInputRef1}
+        onChange={handleModelFileChange}
+        style={{ display: 'none' }}
+      />
+      <input
+        type="file"
+        ref={fileInputRef2}
+        onChange={handleDatasetFileChange}
+        style={{ display: 'none' }}
+      />
+      <button
+        ref={importModelButtonRef}
+        className="upload-model-button"
+        onClick={handleImportModels}
+        tabIndex={1}
+      >
+        Import Models
+      </button>
+      <button
+        ref={importDatasetButtonRef}
+        className="upload-dataset-button"
+        onClick={handleImportDataset}
+        tabIndex={2}
+      >
+        Import Dataset
+      </button>
+      <button
+        onClick={onDownload}
+        tabIndex={15}
+      >
+        Download Graph
+      </button>
 
-        {/* Bootstrap Modal for model upload instructions */}
-        {showModal && (
-            <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
-              <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Model Upload Instructions</h5>
-                    <button
-                        type="button"
-                        className="close"
-                        style={{
-                          backgroundColor: "#45a049",
-                          borderColor: "#45a049",
-                          fontSize: "0.875rem",
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: "0.2rem",
-                        }}
-                        onClick={closeModal}
-                    >
-                      &times;
-                    </button>
-                  </div>
-                  <div className="modal-body">
-                    <p>
-                      <strong>File format:</strong> The file must be in <code>.pkl</code> format.
-                    </p>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        style={{
-                          backgroundColor: "#45a049",
-                          borderColor: "#45a049",
-                          fontSize: "0.875rem",
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: "0.2rem",
-                        }}
-                        onClick={() => {
-                          fileInputRef1.current.click(); // Trigger file input inside modal
-                          closeModal(); // Close the modal after triggering file input
-                        }}
-                    >
-                      Upload Model
-                    </button>
-                  </div>
-                </div>
+      {/* Modal for model upload instructions */}
+      {showModal && (
+        <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content" ref={modalRef}>
+              <div className="modal-header">
+                <h5 className="modal-title">Model Upload Instructions</h5>
+                <button
+                  type="button"
+                  className="close"
+                  style={{ backgroundColor: "#45a049", borderColor: "#45a049", fontSize: "0.875rem", padding: "0.25rem 0.5rem", borderRadius: "0.2rem" }}
+                  onClick={closeModal}
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="modal-body">
+                <p><strong>File format:</strong> The file must be in <code>.pkl</code> format.</p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => fileInputRef1.current.click()}
+                >
+                  Choose File
+                </button>
               </div>
             </div>
-        )}
+          </div>
+        </div>
+      )}
 
-
-        {showModaldataset && (
-            <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
-              <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Dataset Upload Instructions</h5>
-                    <button
-                        type="button"
-                        className="close"
-                        style={{
-                          backgroundColor: "#45a049",
-                          borderColor: "#45a049",
-                          fontSize: "0.875rem",
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: "0.2rem",
-                        }}
-                        onClick={closeModal2}
-                    >
-                      &times;
-                    </button>
-                  </div>
-                  <div className="modal-body">
-                    <p>
-                      <strong>File format:</strong> The file must be in <code>.csv</code> format.
-                    </p>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        style={{
-                          backgroundColor: "#45a049",
-                          borderColor: "#45a049",
-                          fontSize: "0.875rem",
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: "0.2rem",
-                        }}
-                        onClick={() => {
-                          fileInputRef2.current.click(); // Trigger file input inside modal
-                          closeModal2(); // Close the modal after triggering file input
-                        }}
-                    >
-                      Upload Dataset
-                    </button>
-                  </div>
-                </div>
+      {/* Modal for dataset upload instructions */}
+      {showModaldataset && (
+        <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content" ref={modalRef}>
+              <div className="modal-header">
+                <h5 className="modal-title">Dataset Upload Instructions</h5>
+                <button
+                  type="button"
+                  className="close"
+                  style={{ backgroundColor: "#45a049", borderColor: "#45a049", fontSize: "0.875rem", padding: "0.25rem 0.5rem", borderRadius: "0.2rem" }}
+                  onClick={closeModal2}
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="modal-body">
+                <p><strong>File format:</strong> The file must be in <code>.csv</code> format.</p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => fileInputRef2.current.click()}
+                >
+                  Choose File
+                </button>
               </div>
             </div>
-        )}
-
-
-
-      </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
