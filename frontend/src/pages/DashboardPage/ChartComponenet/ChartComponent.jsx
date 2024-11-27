@@ -28,7 +28,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       return acc;
     }, {});
 
-    // Step 2: Sort and prepare data for the chart
+    
     const sortedChartData = [...chartData].sort((a, b) =>
       a.feature1.localeCompare(b.feature1)
     );
