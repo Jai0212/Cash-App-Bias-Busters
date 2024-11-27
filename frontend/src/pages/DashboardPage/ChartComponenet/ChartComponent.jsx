@@ -63,7 +63,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       },
     ];
 
-    // Threshold line
+    
     const lineData = {
       label: "Threshold",
       data: labels.map((label) => ({ x: label, y: sliderValue })),
