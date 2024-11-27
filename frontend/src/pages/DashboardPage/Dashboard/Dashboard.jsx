@@ -514,7 +514,6 @@ const Dashboard = () => {
             ?
           </button>
           {isModalOpen && <Modal closeModal={closeModal}/>}
-
         </div>
         <div className="upload-buttons">
           <ControlButtons onDownload={handleDownload}/>
