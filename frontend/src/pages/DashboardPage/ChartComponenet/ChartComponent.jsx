@@ -202,15 +202,22 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   }, [chartData, sliderValue]); // Removed hoveredIndex dependency
 
   useEffect(() => {
-    if (event.key === 'Tab') {
-      const nextIndex = hoveredIndex === null
+    const handleKeyDown = (event) => {
+      if (event.key === 'Tab') {
+        const nextIndex = hoveredIndex === null
           ? 0
           : (hoveredIndex + 1) % accuracyData.length;
-          setHoveredIndex(nextIndex); 
+
+        setHoveredIndex(nextIndex); 
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [hoveredIndex, accuracyData.length]);
   
 
   useImperativeHandle(ref, () => ({
