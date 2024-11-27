@@ -51,9 +51,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       {
         label: "Accuracy",
         data: newAccuracyData.map((d) => ({ x: d.label, y: d.accuracy })),
-        backgroundColor: newAccuracyData.map((d) => d.color), // Bars are filled with the color for each feature1 group
+        backgroundColor: newAccuracyData.map((d) => d.color), 
         borderColor: newAccuracyData.map(
-          (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) // Red border if above threshold, else use the same color as fill
+          (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) 
         ),
         borderWidth: newAccuracyData.map(
           (d) => (d.accuracy > sliderValue ? 3 : 1) 
