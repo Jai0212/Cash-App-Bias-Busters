@@ -201,6 +201,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     });
   }, [chartData, sliderValue]); // Removed hoveredIndex dependency
 
+  useEffect(() => {
+  
+
   useImperativeHandle(ref, () => ({
     downloadChart() {
       const link = document.createElement("a");
