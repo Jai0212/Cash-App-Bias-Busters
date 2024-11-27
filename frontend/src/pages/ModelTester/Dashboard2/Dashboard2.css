@@ -34,13 +34,14 @@
 }
 
 .upload-button-pre {
-  padding: 15px 30px;
-  font-size: 16px;
+  position: relative;
+  font-size: 1vh;
   /* Slightly smaller font size for balance */
   border-radius: 10px;
   border: 1px solid #2e2e2e;
   cursor: pointer;
-  width: 200px;
+  left: 37%;
+  top: 30%;
   text-align: center;
   transition: all 0.3s ease;
   /* Smooth transition */
@@ -49,12 +50,12 @@
 .upload-button-pre {
   background-color: rgba(255, 255, 255, 0.1);
   color: #fafafa;
-  margin-bottom: 20px;
-  font-size: 40px;
+  margin-bottom: 3vh;
+  font-size: 3vw;
   border: none;
-  height: 100px;
-  width: 350px;
-  border-radius: 120px;
+  height: 15vh;
+  width: 27vw;
+  border-radius: 30vh;
   /* Rounds the edges */
 }
 
@@ -106,20 +107,20 @@
   position: absolute;
   bottom: 0;
   /* Place it at the bottom */
-  right: -150px;
+  right: -8vw;
   max-width: 100%;
   /* Ensure it scales within the container */
-  height: 400px;
-  width: 40%;
+  height: 60vh;
+  width: 50%;
   transform: scaleX(-1);
   /* Flip the element horizontally */
   display: inline-block;
 }
 
 .illustration2 {
+  width: 30vw;
   position: absolute;
   left: 0;
-  max-width: 100%;
   /* Ensure it scales within the container */
   height: 100vh;
   transform: scaleX(-1);
@@ -131,7 +132,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  height: 300px;
+  height: 32vh;
   width: auto;
   transform: scale(-1, -1);
   /* Flip horizontally and vertically */
@@ -140,18 +141,18 @@
 
 .illustration4 {
   position: absolute;
-  right: 30%;
+  right: 25%;
   width: 12%;
   max-width: 100%;
   /* Ensure it scales within the container */
   height: 24%;
   rotate: 20deg;
-  bottom: 10%;
+  top: 17%;
 }
 
 .illustration5 {
   position: absolute;
-  top: -120px;
+  top: -15vh;
   width: 20%;
   max-width: 100%;
   /* Ensure it scales within the container */
@@ -173,13 +174,13 @@
 
 .illustration7 {
   position: absolute;
-  bottom: -100px;
+  bottom: -10vh;
   /* Place it at the bottom */
   left: 20%;
   rotate: 20deg;
   max-width: 100%;
   /* Ensure it scales within the container */
-  height: 400px;
+  height: 45vh;
   width: 40%;
   display: inline-block;
 }
