@@ -43,7 +43,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       color: feature1Colors[item.feature1] || "rgba(200, 200, 200, 0.7)", // Default gray if missing
     }));
 
-    // Store accuracyData in state
+    
     setAccuracyData(newAccuracyData);
 
     
