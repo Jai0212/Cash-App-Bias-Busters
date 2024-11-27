@@ -6,13 +6,13 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   const chartRef = useRef(null);
   const myChartRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [accuracyData, setAccuracyData] = useState([]);  
 
   useEffect(() => {
     if (!chartData) return;
 
     console.log("Rendering chart with data:", chartData);
 
+    // Step 1: Identify unique feature1 values and assign colors dynamically
     const uniqueFeature1Groups = Array.from(
       new Set(chartData.map((item) => item.feature1))
     );
@@ -27,38 +27,39 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       return acc;
     }, {});
 
+    // Step 2: Sort and prepare data for the chart
     const sortedChartData = [...chartData].sort((a, b) =>
       a.feature1.localeCompare(b.feature1)
     );
 
-    const labels = sortedChartData.map((item) => item.feature2); 
+    const labels = sortedChartData.map((item) => item.feature2); // Only feature2 labels
 
-    const newAccuracyData = sortedChartData.map((item) => ({
-      label: item.feature2, 
+    const accuracyData = sortedChartData.map((item) => ({
+      label: item.feature2, // Use only feature2 as label
       accuracy: item.accuracy,
       falsePositive: item.falsepositive,
       falseNegative: item.falsenegative,
-      color: feature1Colors[item.feature1] || "rgba(200, 200, 200, 0.7)", 
+      color: feature1Colors[item.feature1] || "rgba(200, 200, 200, 0.7)", // Default gray if missing
     }));
 
-    setAccuracyData(newAccuracyData);
-
+    // Configure datasets with accuracy data and colors by group
     const datasets = [
       {
         label: "Accuracy",
-        data: newAccuracyData.map((d) => ({ x: d.label, y: d.accuracy })),
-        backgroundColor: newAccuracyData.map((d) => d.color), 
-        borderColor: newAccuracyData.map(
-          (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) 
+        data: accuracyData.map((d) => ({ x: d.label, y: d.accuracy })),
+        backgroundColor: accuracyData.map((d) => d.color), // Bars are filled with the color for each feature1 group
+        borderColor: accuracyData.map(
+          (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) // Red border if above threshold, else use the same color as fill
         ),
-        borderWidth: newAccuracyData.map(
-          (d) => (d.accuracy > sliderValue ? 3 : 1) 
+        borderWidth: accuracyData.map(
+          (d) => (d.accuracy > sliderValue ? 3 : 1) // Increased border width if above threshold, else default
         ),
         borderCapStyle: "round",
         borderJoinStyle: "round",
       },
     ];
 
+    // Threshold line
     const lineData = {
       label: "Threshold",
       data: labels.map((label) => ({ x: label, y: sliderValue })),
@@ -99,14 +100,14 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             },
             title: {
               color: "rgba(255, 255, 255, 1)",
-              display: true,
-              text: 'Demographics',
+              display: true,   // Display the x-axis title
+              text: 'Demographics', // Set the x-axis label
               font: {
-                size: 16,
-                weight: 'bold',
+                size: 16,   // Font size for the title
+                weight: 'bold', // Make the title bold
               },
               padding: {
-                top: 8,
+                top: 8, // Space above the title
               },
             },
           },
@@ -124,15 +125,15 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
               color: "rgba(255, 255, 255, 0.4)",
             },
             title: {
-              display: true,
-              text: 'Bias',
+              display: true,   // Display the y-axis title
+              text: 'Bias', // Set the y-axis label
               color: "rgba(255, 255, 255, 1)",
               font: {
-                size: 16,
-                weight: 'bold',
+                size: 16,   // Font size for the title
+                weight: 'bold', // Make the title bold
               },
               padding: {
-                bottom: 8,
+                bottom: 8, // Space below the title
               },
             },
           },
@@ -154,10 +155,9 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             },
           },
           tooltip: {
-            enabled: true,
             callbacks: {
               label: (tooltipItem) => {
-                const item = newAccuracyData[tooltipItem.dataIndex];
+                const item = accuracyData[tooltipItem.dataIndex];
                 return [
                   `Bias: ${item.accuracy}`,
                   `False Positive: ${item.falsePositive}`,
@@ -199,48 +199,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
         },
       ],
     });
-  }, [chartData, sliderValue]);
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Tab') {
-        event.preventDefault(); 
-  
-        const nextIndex = hoveredIndex === null
-          ? 0
-          : (hoveredIndex + 1);
-  
-        if (nextIndex < accuracyData.length) {
-          
-          setHoveredIndex(nextIndex); 
-          if (myChartRef.current) {
-            const chart = myChartRef.current;
-            const activeElement = chart.getDatasetMeta(0).data[nextIndex];
-            chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
-            chart.update(); 
-            
-            chart.tooltip.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
-            chart.tooltip.update();
-            chart.draw();
-          }
-        } else {
-          
-          const nextFocusableElement = document.querySelector('[tabindex="1"]');
-          if (nextFocusableElement) {
-            nextFocusableElement.focus(); 
-          }
-        }
-      }
-    };
-  
-    window.addEventListener('keydown', handleKeyDown);
-  
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [hoveredIndex, accuracyData.length]);
-  
-  
+  }, [chartData, sliderValue]); // Removed hoveredIndex dependency
 
   useImperativeHandle(ref, () => ({
     downloadChart() {
@@ -253,7 +212,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
   return (
     <div className="chart-container">
-      <canvas ref={chartRef} /> 
+      <canvas ref={chartRef} />
     </div>
   );
 });
