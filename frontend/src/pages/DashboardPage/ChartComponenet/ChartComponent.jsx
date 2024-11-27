@@ -13,7 +13,6 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
     console.log("Rendering chart with data:", chartData);
 
-    
     const uniqueFeature1Groups = Array.from(
       new Set(chartData.map((item) => item.feature1))
     );
@@ -28,7 +27,6 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       return acc;
     }, {});
 
-    
     const sortedChartData = [...chartData].sort((a, b) =>
       a.feature1.localeCompare(b.feature1)
     );
@@ -43,10 +41,8 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       color: feature1Colors[item.feature1] || "rgba(200, 200, 200, 0.7)", 
     }));
 
-    
     setAccuracyData(newAccuracyData);
 
-    
     const datasets = [
       {
         label: "Accuracy",
@@ -63,7 +59,6 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       },
     ];
 
-    
     const lineData = {
       label: "Threshold",
       data: labels.map((label) => ({ x: label, y: sliderValue })),
@@ -159,6 +154,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             },
           },
           tooltip: {
+            enabled: true,
             callbacks: {
               label: (tooltipItem) => {
                 const item = newAccuracyData[tooltipItem.dataIndex];
@@ -205,29 +201,34 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     });
   }, [chartData, sliderValue]);
 
-  
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Tab') {
+        event.preventDefault(); 
+
         const nextIndex = hoveredIndex === null
           ? 0
           : (hoveredIndex + 1) % accuracyData.length;
 
         setHoveredIndex(nextIndex); 
-
+        
+       
         if (myChartRef.current) {
           const chart = myChartRef.current;
           const activeElement = chart.getDatasetMeta(0).data[nextIndex];
           chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
-          chart.update();
+          chart.update(); 
+          
+      
+          chart.tooltip.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
+          chart.tooltip.update();
+          chart.draw(); 
         }
       }
     };
 
-    
     window.addEventListener('keydown', handleKeyDown);
 
-    
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
