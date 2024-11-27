@@ -33,7 +33,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       a.feature1.localeCompare(b.feature1)
     );
 
-    const labels = sortedChartData.map((item) => item.feature2); // Only feature2 labels
+    const labels = sortedChartData.map((item) => item.feature2); 
 
     const newAccuracyData = sortedChartData.map((item) => ({
       label: item.feature2, 
