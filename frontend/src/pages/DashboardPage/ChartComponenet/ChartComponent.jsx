@@ -224,7 +224,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [hoveredIndex, accuracyData.length]); // Dependency on hoveredIndex and accuracyData.length
+  }, [hoveredIndex, accuracyData.length]); 
 
   useImperativeHandle(ref, () => ({
     downloadChart() {
