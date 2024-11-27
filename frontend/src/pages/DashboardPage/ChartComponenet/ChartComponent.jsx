@@ -217,6 +217,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
         if (myChartRef.current) {
           const chart = myChartRef.current;
+          const bar = chart.getDatasetMeta(0).data[nextIndex];
         }
       }
     };
