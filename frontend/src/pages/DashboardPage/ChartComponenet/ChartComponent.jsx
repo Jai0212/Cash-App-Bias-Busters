@@ -209,6 +209,8 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
           setHoveredIndex(nextIndex); 
       }
     };
+
+    window.addEventListener('keydown', handleKeyDown);
   
 
   useImperativeHandle(ref, () => ({
