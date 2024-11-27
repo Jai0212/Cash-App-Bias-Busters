@@ -212,7 +212,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
   return (
     <div className="chart-container">
-      <canvas ref={chartRef} />
+      <canvas ref={chartRef} tabIndex="0" />
     </div>
   );
 });
