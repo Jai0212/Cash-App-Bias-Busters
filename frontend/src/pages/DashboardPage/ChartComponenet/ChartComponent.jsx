@@ -216,7 +216,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
         setHoveredIndex(nextIndex); 
 
         if (myChartRef.current) {
-          ...
+          const chart = myChartRef.current;
         }
       }
     };
