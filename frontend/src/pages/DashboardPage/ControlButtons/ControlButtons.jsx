@@ -228,7 +228,7 @@ const ControlButtons = ({ onDownload }) => {
       </button>
       <button
         onClick={onDownload}
-        tabIndex={15}
+        tabIndex={3}
       >
         Download Graph
       </button>

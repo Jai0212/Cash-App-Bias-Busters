@@ -67,7 +67,8 @@ const QRCodeShare = ({
             <button
                 className="share-button"
                 onClick={handleShare}
-                tabIndex={12}>
+                tabIndex={21}
+                >
                 <svg
                     className="icon-share"
                     xmlns="http://www.w3.org/2000/svg"

@@ -481,10 +481,11 @@ const Dashboard = () => {
         <TourGuide runTour={runTour}/>
 
         <div className="chart-container-container">
-          <div className="timeframe-buttons">
+          <div className="timeframe-buttons" >
             <TimeButtons
                 handleTimeframeChange={handleTimeframeChange}
                 timeframe={timeframe}
+                lastTabIndex={15}
             />
           </div>
           {loading && (
@@ -495,31 +496,31 @@ const Dashboard = () => {
           <div className={loading ? "hidden" : ""}>
             <Slider graphData={graphData} maxValue={maxValue}/>
           </div>
+            <DemographicsSelector
+                demographics={demographics}
+                selectedDemographic={selectedDemographic}
+                handleDemographicChange={handleDemographicChange}
+                selectedValues={selectedValues}
+                handleValueChange={handleValueChange}
+                demographicValues={demographicValues}
+                selectedSecondValues={selectedSecondValues}
+                secondSelectedDemographic={secondSelectedDemographic}
+                handleSecondDemographicChange={handleSecondDemographicChange}
+                secondDemographicValues={secondDemographicValues}
+                handleGenerate={handleGenerate}
+                tabIndex={4}
+            />
 
-          <DemographicsSelector
-              demographics={demographics}
-              selectedDemographic={selectedDemographic}
-              handleDemographicChange={handleDemographicChange}
-              selectedValues={selectedValues}
-              handleValueChange={handleValueChange}
-              demographicValues={demographicValues}
-              selectedSecondValues={selectedSecondValues}
-              secondSelectedDemographic={secondSelectedDemographic}
-              handleSecondDemographicChange={handleSecondDemographicChange}
-              secondDemographicValues={secondDemographicValues}
-              handleGenerate={handleGenerate}
-          />
-
-          <button className="info-button" onClick={openModal}>
+          <button className="info-button" onClick={openModal} tabIndex={23}>
             ?
           </button>
           {isModalOpen && <Modal closeModal={closeModal}/>}
         </div>
-        <div className="upload-buttons">
+        <div className="upload-buttons" tabIndex={-1}>
           <ControlButtons onDownload={handleDownload}/>
         </div>
 
-        <div className="chatbot-div">
+        <div className="chatbot-div" tabIndex={22}>
         <button
           id="chatbot-button"
           aria-label="Open Chatbot"

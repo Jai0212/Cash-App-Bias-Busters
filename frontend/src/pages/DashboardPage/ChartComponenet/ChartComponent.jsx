@@ -6,13 +6,14 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   const chartRef = useRef(null);
   const myChartRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [accuracyData, setAccuracyData] = useState([]);  
+  const [lastTabIndex, setLastTabIndex] = useState(20);
 
   useEffect(() => {
     if (!chartData) return;
 
     console.log("Rendering chart with data:", chartData);
 
-    // Step 1: Identify unique feature1 values and assign colors dynamically
     const uniqueFeature1Groups = Array.from(
       new Set(chartData.map((item) => item.feature1))
     );
@@ -27,39 +28,38 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       return acc;
     }, {});
 
-    // Step 2: Sort and prepare data for the chart
     const sortedChartData = [...chartData].sort((a, b) =>
       a.feature1.localeCompare(b.feature1)
     );
 
-    const labels = sortedChartData.map((item) => item.feature2); // Only feature2 labels
+    const labels = sortedChartData.map((item) => item.feature2); 
 
-    const accuracyData = sortedChartData.map((item) => ({
-      label: item.feature2, // Use only feature2 as label
+    const newAccuracyData = sortedChartData.map((item) => ({
+      label: item.feature2, 
       accuracy: item.accuracy,
       falsePositive: item.falsepositive,
       falseNegative: item.falsenegative,
-      color: feature1Colors[item.feature1] || "rgba(200, 200, 200, 0.7)", // Default gray if missing
+      color: feature1Colors[item.feature1] || "rgba(200, 200, 200, 0.7)", 
     }));
 
-    // Configure datasets with accuracy data and colors by group
+    setAccuracyData(newAccuracyData);
+
     const datasets = [
       {
         label: "Accuracy",
-        data: accuracyData.map((d) => ({ x: d.label, y: d.accuracy })),
-        backgroundColor: accuracyData.map((d) => d.color), // Bars are filled with the color for each feature1 group
-        borderColor: accuracyData.map(
-          (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) // Red border if above threshold, else use the same color as fill
+        data: newAccuracyData.map((d) => ({ x: d.label, y: d.accuracy })),
+        backgroundColor: newAccuracyData.map((d) => d.color), 
+        borderColor: newAccuracyData.map(
+          (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) 
         ),
-        borderWidth: accuracyData.map(
-          (d) => (d.accuracy > sliderValue ? 3 : 1) // Increased border width if above threshold, else default
+        borderWidth: newAccuracyData.map(
+          (d) => (d.accuracy > sliderValue ? 3 : 1) 
         ),
         borderCapStyle: "round",
         borderJoinStyle: "round",
       },
     ];
 
-    // Threshold line
     const lineData = {
       label: "Threshold",
       data: labels.map((label) => ({ x: label, y: sliderValue })),
@@ -100,14 +100,14 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             },
             title: {
               color: "rgba(255, 255, 255, 1)",
-              display: true,   // Display the x-axis title
-              text: 'Demographics', // Set the x-axis label
+              display: true,
+              text: 'Demographics',
               font: {
-                size: 16,   // Font size for the title
-                weight: 'bold', // Make the title bold
+                size: 16,
+                weight: 'bold',
               },
               padding: {
-                top: 8, // Space above the title
+                top: 8,
               },
             },
           },
@@ -125,15 +125,15 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
               color: "rgba(255, 255, 255, 0.4)",
             },
             title: {
-              display: true,   // Display the y-axis title
-              text: 'Bias', // Set the y-axis label
+              display: true,
+              text: 'Bias',
               color: "rgba(255, 255, 255, 1)",
               font: {
-                size: 16,   // Font size for the title
-                weight: 'bold', // Make the title bold
+                size: 16,
+                weight: 'bold',
               },
               padding: {
-                bottom: 8, // Space below the title
+                bottom: 8,
               },
             },
           },
@@ -155,9 +155,10 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
             },
           },
           tooltip: {
+            enabled: true,
             callbacks: {
               label: (tooltipItem) => {
-                const item = accuracyData[tooltipItem.dataIndex];
+                const item = newAccuracyData[tooltipItem.dataIndex];
                 return [
                   `Bias: ${item.accuracy}`,
                   `False Positive: ${item.falsePositive}`,
@@ -199,7 +200,70 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
         },
       ],
     });
-  }, [chartData, sliderValue]); // Removed hoveredIndex dependency
+  }, [chartData, sliderValue]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      console.log("current acitve:", document.activeElement.tabIndex)
+      if (document.activeElement.tabIndex != 19) {
+        return;
+      }
+
+      if (event.key === 'Tab') {
+        event.preventDefault(); // Prevent default tab behavior during chart navigation
+  
+        const nextIndex = hoveredIndex === null
+          ? 0
+          : (hoveredIndex + 1);
+  
+        if (nextIndex < accuracyData.length) {
+          setHoveredIndex(nextIndex); 
+          if (myChartRef.current) {
+            const chart = myChartRef.current;
+            // const activeElement = chart.getDatasetMeta(0).data[nextIndex];
+            chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
+            chart.update(); 
+            
+            chart.tooltip.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
+            chart.tooltip.update();
+            chart.draw();
+          }
+        } else {
+          // After the last accuracy item, allow normal tab flow
+          event.stopImmediatePropagation();  // Stop custom tabbing, allow native behavior
+  
+          // Focus on the next focusable element (like buttons or other controls)
+          if (lastTabIndex == 19) {
+            setHoveredIndex(nextIndex); 
+            if (myChartRef.current) {
+              const chart = myChartRef.current;
+              chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
+              chart.update(); 
+              
+              chart.tooltip.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
+              chart.tooltip.update();
+              chart.draw();
+            }
+          }
+
+          const qs = `[tabindex="${lastTabIndex}"]`
+          const nextFocusableElement = document.querySelector(qs);
+          if (nextFocusableElement) {
+            nextFocusableElement.focus();  // Move focus to the element with tabindex="1"
+            setLastTabIndex(lti => lti + 1);
+          }
+        }
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+  
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [hoveredIndex, accuracyData.length, lastTabIndex]);
+  
+
 
   useImperativeHandle(ref, () => ({
     downloadChart() {
@@ -212,7 +276,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
   return (
     <div className="chart-container">
-      <canvas ref={chartRef} />
+      <canvas ref={chartRef}/> 
     </div>
   );
 });

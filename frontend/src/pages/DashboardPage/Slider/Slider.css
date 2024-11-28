@@ -4,10 +4,8 @@
     width: 100%; /* Full width */
     height: 10px; /* Track height */
     border-radius: 5px; /* Rounded track */
-    outline: none; /* Remove focus outline */
     cursor: pointer;
     background: linear-gradient(to right, yellow 50%, white 50%); /* Initial gradient */
-    transition: background 0.2s ease; /* Smooth color change */
 }
 
 .slider-input::-webkit-slider-thumb {
