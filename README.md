@@ -38,11 +38,12 @@ As part of the 2024 cohort of the Technology Leadership Initiative, we developed
 2. [Motivation](#motivation)
 3. [Features](#features)
 4. [Technical Implementation Details](#technical-implementation-details)
-5. [Repository Structure](#repository-structure)
-6. [How to Use](#how-to-use)
-7. [How to Install](#how-to-install)
-8. [Contributing & Feedback](#contributing--feedback)
-9. [Acknowledgements/Credits](#acknowledgementscredits)
+5. [API Endpoints](#api-endpoints)
+6. [Directory Structure](#repository-structure)
+7. [How to Use](#how-to-use)
+8. [How to Install](#how-to-install)
+9. [Contributing & Feedback](#contributing--feedback)
+10. [Acknowledgements/Credits](#acknowledgementscredits)
 
 ## Problem Statement
 
@@ -100,6 +101,23 @@ Our backend analyzes the bias in the selected demographic categories using the F
 <img width="1006" alt="Tech Stack" src="https://github.com/user-attachments/assets/5bf302d0-cac9-484a-bfc6-5e9845c0b7b9">
 
 <img width="987" alt="Fairlearn Explanation" src="https://github.com/user-attachments/assets/3ad68c6e-422c-45e0-bf43-0368db7438fb">
+
+## API Endpoints
+
+- **`/api/headers`**: Fetches demographic categories from the database.
+- **`/api/values-under-header`**: Retrieves subcategories within a demographic category.
+- **`/api/generate`**: Generates bias graph data for selected inputs.
+- **`/api/get-prev-data`**: Retrieves previously saved data for the user.
+- **`/api/upload-data`**: Handles transaction data uploads.
+- **`/api/upload-model`**: Uploads a transaction approval model.
+- **`/api/generate-for-all-models`**: Generates bias data for all uploaded models.
+- **`/api/delete-model`**: Deletes a specified model.
+- **`/signup`**: Registers a new user.
+- **`/login`**: Authenticates and logs in a user.
+- **`/logout`**: Logs out the current user.
+- **`/get-email`**: Retrieves the logged-in user's email.
+- **`/change_password`**: Updates the account password.
+- **`/share/<encoded_data>`**: Generates a shareable link for collaboration.
 
 ## Repository Structure
 
