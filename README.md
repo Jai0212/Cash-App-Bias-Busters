@@ -142,6 +142,7 @@ backend/
 ├── uploads/                 # Folder for storing data uploads
 ├── tests/                   # Unit and integration test scripts
 └── requirements.txt         # Backend dependencies
+```
 
 ### Frontend:
 ```plaintext
