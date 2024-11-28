@@ -123,26 +123,39 @@ Our backend analyzes the bias in the selected demographic categories using the F
 
 Below is an overview of the folder structure for this repository to help you navigate and contribute effectively:
 
+### Backend:
+
+````plaintext
+backend/
+├── app/                     # Core application code and logic
+│   ├── controllers/         # Handle incoming requests and responses
+│   ├── entities/            # Core business objects and domain logic
+│   ├── infrastructure/      # Frameworks and tools for external integrations
+│   ├── repositories/        # Interfaces for data storage and retrieval
+│   └── use_cases/           # Application-specific business logic
+├── ml_model/                # Codebase for the scikit-learn ML model
+│   ├── entities/            # Core objects for model logic
+│   ├── interfaces/          # Interfaces for model operations
+│   ├── repository/          # Data storage and interaction logic for the model
+│   ├── use_cases/           # Model-specific business logic
+│   └── utility/             # Helper functions and utilities for ML tasks
+├── uploads/                 # Folder for storing data uploads
+├── tests/                   # Unit and integration test scripts
+└── requirements.txt         # Backend dependencies
+
+### Frontend:
 ```plaintext
-Cash-App-Bias-Busters/
-├── backend/                # Backend API built with Flask
-│   ├── app/                # Application code and logic
-│   ├── requirements.txt    # Backend dependencies
-│   ├── config.py           # Configuration files
-│   ├── tests/              # Unit and integration tests
-│   └── README.md           # Backend-specific instructions
-├── frontend/               # Frontend application built with React and Vite
-│   ├── src/                # Source code for React components
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Application pages
-│   │   ├── assets/         # Static assets (CSS, images, etc.)
-│   │   └── App.jsx         # Main application entry point
-│   ├── package.json        # Frontend dependencies
-│   └── README.md           # Frontend-specific instructions
-├── .github/                # GitHub-specific configuration files
-│   ├── workflows/          # CI/CD pipelines
-├── LICENSE                 # Project license (MIT)
-├── README.md               # Main project documentation
+frontend/
+├── public/                  # Public assets (e.g., index.html, icons)
+├── src/                     # Source code for the React application
+│   ├── app/                 # Core application logic and configurations
+│   ├── components/          # Reusable UI components
+│   ├── layout/              # Layout-related components (e.g., header, footer)
+│   ├── pages/               # Application pages
+├── tests/                   # Frontend test scripts (using RTL and Jest)
+├── .env                     # Environment variables
+├── package.json             # Dependencies for the frontend
+└── README.md                # Frontend-specific documentation
 ```
 
 ## How to use
@@ -176,7 +189,7 @@ If you'd like to run it locally instead, follow these steps:
 
 1. Clone the repository:
 
-```
+````
 
 git clone https://github.com/Jai0212/Cash-App-Bias-Busters.git
 
@@ -199,7 +212,7 @@ python3 -m app.controllers.app
 cd ../frontend
 npm run dev
 
-```
+````
 
 ## Contributing & Feedback
 
@@ -276,4 +289,7 @@ url={http://jmlr.org/papers/v24/23-0389.html}
 2. Special thanks to [Cash App](https://www.cash.app)
    for their collaboration and support in this initiative.
 ```
-````
+
+```
+
+```
