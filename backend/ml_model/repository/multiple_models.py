@@ -92,7 +92,7 @@ def evaluate_multiple_models(model_files):
 
             if fairness_values:
                 model_results['variance'] = round(pd.Series(fairness_values).
-                                                  var(), 3)
+                                                  var(), 7)
                 model_results['mean'] = round(sum(fairness_values)
                                               / len(fairness_values), 3)
             # Store results for the model
