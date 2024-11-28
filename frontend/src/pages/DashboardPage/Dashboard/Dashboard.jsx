@@ -13,7 +13,6 @@ import QRCodeShare from "../QRCodeShare/QRCodeShare.jsx";
 import ChatbotComponent from "../Chatbot/Chatbot.jsx"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaComment } from 'react-icons/fa';
-import Footer from "../../../Components/Footer/Footer.jsx";
 
 const Dashboard = () => {
   const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -477,50 +476,50 @@ const Dashboard = () => {
   };
 
   return (
-      <div className="dashboard-container">
-        <TourGuide runTour={runTour}/>
+    <div className="dashboard-container">
+      <TourGuide runTour={runTour} />
 
-        <div className="chart-container-container">
-          <div className="timeframe-buttons" >
-            <TimeButtons
-                handleTimeframeChange={handleTimeframeChange}
-                timeframe={timeframe}
-                lastTabIndex={15}
-            />
-          </div>
-          {loading && (
-              <div className="loading-container">
-                <img src="/spinner.gif" alt="Loading..." className="loading-gif"/>
-              </div>
-          )}
-          <div className={loading ? "hidden" : ""}>
-            <Slider graphData={graphData} maxValue={maxValue}/>
-          </div>
-            <DemographicsSelector
-                demographics={demographics}
-                selectedDemographic={selectedDemographic}
-                handleDemographicChange={handleDemographicChange}
-                selectedValues={selectedValues}
-                handleValueChange={handleValueChange}
-                demographicValues={demographicValues}
-                selectedSecondValues={selectedSecondValues}
-                secondSelectedDemographic={secondSelectedDemographic}
-                handleSecondDemographicChange={handleSecondDemographicChange}
-                secondDemographicValues={secondDemographicValues}
-                handleGenerate={handleGenerate}
-                tabIndex={4}
-            />
-
-          <button className="info-button" onClick={openModal} tabIndex={23}>
-            ?
-          </button>
-          {isModalOpen && <Modal closeModal={closeModal}/>}
+      <div className="chart-container-container">
+        <div className="timeframe-buttons" >
+          <TimeButtons
+            handleTimeframeChange={handleTimeframeChange}
+            timeframe={timeframe}
+            lastTabIndex={15}
+          />
         </div>
-        <div className="upload-buttons" tabIndex={-1}>
-          <ControlButtons onDownload={handleDownload}/>
+        {loading && (
+          <div className="loading-container">
+            <img src="/spinner.gif" alt="Loading..." className="loading-gif" />
+          </div>
+        )}
+        <div className={loading ? "hidden" : ""}>
+          <Slider graphData={graphData} maxValue={maxValue} />
         </div>
+        <DemographicsSelector
+          demographics={demographics}
+          selectedDemographic={selectedDemographic}
+          handleDemographicChange={handleDemographicChange}
+          selectedValues={selectedValues}
+          handleValueChange={handleValueChange}
+          demographicValues={demographicValues}
+          selectedSecondValues={selectedSecondValues}
+          secondSelectedDemographic={secondSelectedDemographic}
+          handleSecondDemographicChange={handleSecondDemographicChange}
+          secondDemographicValues={secondDemographicValues}
+          handleGenerate={handleGenerate}
+          tabIndex={4}
+        />
 
-        <div className="chatbot-div" tabIndex={22}>
+        <button className="info-button" onClick={openModal} tabIndex={23}>
+          ?
+        </button>
+        {isModalOpen && <Modal closeModal={closeModal} />}
+      </div>
+      <div className="upload-buttons" tabIndex={-1}>
+        <ControlButtons onDownload={handleDownload} />
+      </div>
+
+      <div className="chatbot-div" tabIndex={22}>
         <button
           id="chatbot-button"
           aria-label="Open Chatbot"
@@ -530,22 +529,23 @@ const Dashboard = () => {
           <FaComment className="chat-icon" aria-hidden="true" />
         </button>
 
-          {isChatbotOpen && <ChatbotComponent closeChatbot={closeChatbot}/>}
-
-        </div>
-        <QRCodeShare
-            selectedDemographic={selectedDemographic}
-            selectedValues={selectedValues}
-            selectedSecondValues={selectedSecondValues}
-            secondSelectedDemographic={secondSelectedDemographic}
-            graphData={graphData}
-            currUser={currUser}
-            timeframe={timeframe}
-            className="qr-code"
-        />
-
-
+        {isChatbotOpen && <ChatbotComponent closeChatbot={closeChatbot} />}
       </div>
-);};
+
+      <QRCodeShare
+        selectedDemographic={selectedDemographic}
+        selectedValues={selectedValues}
+        selectedSecondValues={selectedSecondValues}
+        secondSelectedDemographic={secondSelectedDemographic}
+        graphData={graphData}
+        currUser={currUser}
+        timeframe={timeframe}
+        className="qr-code"
+      />
+
+
+    </div>
+  );
+};
 
 export default Dashboard;

@@ -190,10 +190,6 @@ const Dashboard2 = () => {
                           <span className="output-value">{result.state}</span>
                         </div>
                         <div className="result-details">
-                          <strong className="output-name">Variance:</strong>
-                          <span className="output-value">{result.variance}</span>
-                        </div>
-                        <div className="result-details">
                           <strong className="output-name">Bias:</strong>
                           <span className="output-value">{1 - result.mean}</span>
                         </div>

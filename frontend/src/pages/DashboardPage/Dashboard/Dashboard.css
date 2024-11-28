@@ -72,9 +72,12 @@
   background-color: #2e2e2ef9;
   color: #fafafa;
   margin-inline: auto;
-  outline: 1px solid darkgreen; /* Set a single solid outline color */
-  outline-offset: -1px; /* Prevent offset issues */
-  box-shadow: none; /* Remove any shadows that might blend */
+  outline: 1px solid darkgreen;
+  /* Set a single solid outline color */
+  outline-offset: -1px;
+  /* Prevent offset issues */
+  box-shadow: none;
+  /* Remove any shadows that might blend */
 }
 
 .slider-value {
@@ -83,8 +86,10 @@
   text-align: center;
   margin-top: 1vh;
   color: white;
-  font-weight: bold; /* Makes the text bold */
-  letter-spacing: 1px; /* Increases letter spacing for a modern look */
+  font-weight: bold;
+  /* Makes the text bold */
+  letter-spacing: 1px;
+  /* Increases letter spacing for a modern look */
 }
 
 /* Style for the "Generate" button */
@@ -100,14 +105,16 @@
   border: 2px solid #00D64F;
   font-weight: bold;
   color: #00D64F;
-  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s; /* Add transition for transform and shadow */
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  /* Add transition for transform and shadow */
   margin-top: 1vh;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 .generate-button:hover {
   background-color: #00D64F;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Add shadow on hover */
   color: white;
   border: 2px solid #00D64F;
 }
@@ -162,7 +169,8 @@
   color: #003f5c !important;
   font-weight: bold;
   transform: scale(1.11);
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  /* Smooth transition */
 }
 
 .active-button:hover {
@@ -188,7 +196,8 @@
 }
 
 .chart-container {
-  flex: 2; /* Take up twice as much space as .select-demographics */
+  flex: 2;
+  /* Take up twice as much space as .select-demographics */
   /* border: 2px solid green; */
 }
 
@@ -197,7 +206,7 @@
   /* border: 2px solid red; */
 }
 
-.demog-clas > h2 {
+.demog-clas>h2 {
   font-family: "Roboto", Arial, sans-serif;
   font-size: 2rem;
   margin-bottom: 5vh;
@@ -247,13 +256,18 @@ html {
 
 .info-button {
   position: absolute;
-  top: -4%; /* Distance from the top edge */
-  right: 10px; /* Distance from the right edge */
-  background: #24a0ed; /* Blue background for button */
-  color: white; /* White text */
+  top: -4%;
+  /* Distance from the top edge */
+  right: 10px;
+  /* Distance from the right edge */
+  background: #24a0ed;
+  /* Blue background for button */
+  color: white;
+  /* White text */
   font-size: 16px;
   border: none;
-  border-radius: 50%; /* Circular button */
+  border-radius: 50%;
+  /* Circular button */
   width: 30px;
   height: 30px;
   cursor: pointer;
@@ -305,8 +319,10 @@ html {
 
 /* Hover effect for the select element */
 .select-container1 select:hover {
-  border-color: #003f5c; /* Change border color on hover */
-  background-color: white; /* Light background on hover */
+  border-color: #003f5c;
+  /* Change border color on hover */
+  background-color: white;
+  /* Light background on hover */
   cursor: pointer;
   color: #003f5c;
   font-family: "Roboto", Arial, sans-serif;
@@ -314,9 +330,12 @@ html {
 
 /* Focus effect for the select element */
 .select-container1 select:focus {
-  border-color: #003f5c; /* Darker border color on focus */
-  outline: none; /* Remove the default focus outline */
-  background-color: white; /* Slightly darker background on focus */
+  border-color: #003f5c;
+  /* Darker border color on focus */
+  outline: none;
+  /* Remove the default focus outline */
+  background-color: white;
+  /* Slightly darker background on focus */
   color: #003f5c;
   font-family: "Roboto", Arial, sans-serif;
 }
@@ -332,15 +351,19 @@ html {
 
 /* Hover effect for the option elements */
 .select-container1 select option:hover {
-  background-color: #f1f9ff; /* Background color when hovering over options */
-  color: #003f5c; /* Text color on hover */
+  background-color: #f1f9ff;
+  /* Background color when hovering over options */
+  color: #003f5c;
+  /* Text color on hover */
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Focus effect for the option elements (focus will apply if the option is selected) */
 .select-container1 select option:focus {
-  background-color: #e6f7ff; /* Slightly darker background when option is focused */
-  color: #003f5c; /* Text color on option focus */
+  background-color: #e6f7ff;
+  /* Slightly darker background when option is focused */
+  color: #003f5c;
+  /* Text color on option focus */
   font-family: "Roboto", Arial, sans-serif;
 }
 
@@ -358,20 +381,25 @@ html {
 }
 
 /* Hover effect for the select element */
-.select-container2 select:hover { 
-  border-color: white; /* Change border color on hover */
+.select-container2 select:hover {
+  border-color: white;
+  /* Change border color on hover */
   color: #003f5c;
-  background-color: white; /* Light background on hover */
+  background-color: white;
+  /* Light background on hover */
   cursor: pointer;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Focus effect for the select element */
 .select-container2 select:focus {
-  border-color: white; /* Darker border color on focus */
+  border-color: white;
+  /* Darker border color on focus */
   color: #003f5c;
-  outline: none; /* Remove the default focus outline */
-  background-color: white; /* Slightly darker background on focus */
+  outline: none;
+  /* Remove the default focus outline */
+  background-color: white;
+  /* Slightly darker background on focus */
   font-family: "Roboto", Arial, sans-serif;
 }
 
@@ -386,27 +414,35 @@ html {
 
 /* Hover effect for the option elements */
 .select-container2 select option:hover {
-  background-color: #f1f9ff; /* Background color when hovering over options */
-  color: #003f5c; /* Text color on hover */
+  background-color: #f1f9ff;
+  /* Background color when hovering over options */
+  color: #003f5c;
+  /* Text color on hover */
   font-family: "Roboto", Arial, sans-serif;
 }
 
 /* Focus effect for the option elements (focus will apply if the option is selected) */
 .select-container2 select option:focus {
-  background-color: #e6f7ff; /* Slightly darker background when option is focused */
-  color: #003f5c; /* Text color on option focus */
+  background-color: #e6f7ff;
+  /* Slightly darker background when option is focused */
+  color: #003f5c;
+  /* Text color on option focus */
   font-family: "Roboto", Arial, sans-serif;
 }
 
 .modal {
-  display: flex; /* Ensure modal is visible */
-  position: fixed; /* Fix the modal to the screen */
-  z-index: 1000; /* Ensure it sits on top of everything else */
+  display: flex;
+  /* Ensure modal is visible */
+  position: fixed;
+  /* Fix the modal to the screen */
+  z-index: 1000;
+  /* Ensure it sits on top of everything else */
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent dark background */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Semi-transparent dark background */
 }
 
 .modal-content {
@@ -415,12 +451,16 @@ html {
   padding: 20px;
   border: 1px solid #888;
   top: -25px;
-  width: 80%; /* Adjust the width */
+  width: 80%;
+  /* Adjust the width */
   height: 100%;
-  max-width: 1000px; /* Prevent it from growing too wide */
+  max-width: 1000px;
+  /* Prevent it from growing too wide */
   max-height: 480px;
-  border-radius: 8px; /* Optional: rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow */
+  border-radius: 8px;
+  /* Optional: rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Optional: subtle shadow */
 }
 
 .close {
@@ -458,11 +498,11 @@ button:focus-visible {
   outline: none;
 }
 
-.select-container1 > select {
+.select-container1>select {
   width: 100%;
 }
 
-.select-container2 > select {
+.select-container2>select {
   width: 100%;
 }
 
@@ -471,23 +511,32 @@ button:focus-visible {
 }
 
 .loading-container {
-  position: absolute;        /* Overlay on top of the chart-placeholder */
-  top: 53%;                  /* Vertically center the spinner */
-  left: 24%;                 /* Adjust this value to move the spinner to the left */
-  transform: translateY(-50%); /* Ensure the spinner is vertically centered */
-  z-index: 10;              /* Ensures it sits on top of the chart */
+  position: absolute;
+  /* Overlay on top of the chart-placeholder */
+  top: 53%;
+  /* Vertically center the spinner */
+  left: 24%;
+  /* Adjust this value to move the spinner to the left */
+  transform: translateY(-50%);
+  /* Ensure the spinner is vertically centered */
+  z-index: 10;
+  /* Ensures it sits on top of the chart */
   display: flex;
-  justify-content: flex-start; /* Align the spinner to the left */
+  justify-content: flex-start;
+  /* Align the spinner to the left */
 }
 
 .loading-gif {
-  width: 500px; /* Adjust width of the gif if necessary */
-  height: 600px; /* Adjust height of the gif if necessary */
+  width: 500px;
+  /* Adjust width of the gif if necessary */
+  height: 600px;
+  /* Adjust height of the gif if necessary */
   opacity: 79%;
 }
 
 .hidden {
-  visibility: hidden; /* Keeps the element in place but hides it */
+  visibility: hidden;
+  /* Keeps the element in place but hides it */
 }
 
 /* Normal button style */
@@ -495,17 +544,18 @@ button:focus-visible {
   background-color: transparent;
   color: white;
   border: 2px solid white;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  height: 3vw;
-  border-radius: 50px;
-  width: 3vw;
-}
-
-.chatbot-button:hover {
-  background-color: #4CAF50; /* Change to a darker shade or any color you want */
-  color: #e0e0e0;
-  border: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+  height: 3.6vw;
+  /* Scale with the viewport width */
+  width: 3.6vw;
+  /* Scale with the viewport width */
+  border-radius: 50%;
+  display: flex;
+  /* Center the icon */
+  align-items: center;
+  /* Vertically center the icon */
+  justify-content: center;
+  /* Horizontally center the icon */
 }
 
 .chatbot-div {
@@ -515,8 +565,15 @@ button:focus-visible {
 }
 
 .chat-icon {
-  position: absolute;
-  left: 32%;
-  top: 32%;
+  font-size: 1.1vw;
+  /* Scale the icon with the viewport width */
 }
 
+.chatbot-button:hover {
+  background-color: white;
+  /* Background changes on hover */
+  color: #007bff;
+  /* Icon and border change to a color (blue in this case) */
+  transform: scale(1.1);
+  /* Slightly enlarge the button */
+}

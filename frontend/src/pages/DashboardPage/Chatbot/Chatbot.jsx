@@ -148,63 +148,63 @@ const ChatbotComponent = ({ closeChatbot }) => {
 
     return (
         // isChatbotOpen && (
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+            <div
+                style={{
+                    position: "fixed",
+                    top: "20px", // Adjusted to be slightly lower from the top
+                    left: "20px", // Adjusted to be slightly from the left
+                    right: "0",
+                    bottom: "0",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    backdropFilter: "blur(10px)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: "9999",
+
+                }}
+            >
                 <div
                     style={{
-                        position: "fixed",
-                        top: "20px", // Adjusted to be slightly lower from the top
-                        left: "20px", // Adjusted to be slightly from the left
-                        right: "0",
-                        bottom: "0",
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                        backdropFilter: "blur(10px)",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        zIndex: "9999",
-
+                        width: "275px",
+                        height: "500px",
+                        borderRadius: "8px",
+                        backgroundColor: "#fff",
+                        overflow: "hidden",
+                        position: "relative",
                     }}
                 >
-                    <div
+                    <button
+                        onClick={handleClose}
                         style={{
-                            width: "275px",
-                            height: "500px",
-                            borderRadius: "8px",
-                            backgroundColor: "#fff",
-                            overflow: "hidden",
-                            position: "relative",
+                            position: "absolute",
+                            top: "1px", // Adjusted button position
+                            left: "250px", // Changed to left instead of right
+                            backgroundColor: "transparent",
+                            border: "none",
+                            fontSize: "25px", // Increased button size
+                            color: "#4caf50",
+                            cursor: "pointer",
+                            zIndex: "10000", // Ensure it is on top
                         }}
                     >
-                        <button
-                            onClick={handleClose}
-                            style={{
-                                position: "absolute",
-                                top: "1px", // Adjusted button position
-                                left: "250px", // Changed to left instead of right
-                                backgroundColor: "transparent",
-                                border: "none",
-                                fontSize: "25px", // Increased button size
-                                color: "#4caf50",
-                                cursor: "pointer",
-                                zIndex: "10000", // Ensure it is on top
-                            }}
-                        >
-                            &times;
-                        </button>
-                        <Chatbot
-                            config={config}
-                            messageParser={MessageParser}
-                            actionProvider={ActionProvider}
-                            floating={false}
-                            botDelay={300}
-                            userDelay={200}
-                            headerTitle="Support Bot"
-                            width="100%"
-                            height="100%"
-                        />
-                    </div>
+                        &times;
+                    </button>
+                    <Chatbot
+                        config={config}
+                        messageParser={MessageParser}
+                        actionProvider={ActionProvider}
+                        floating={false}
+                        botDelay={300}
+                        userDelay={200}
+                        headerTitle="Support Bot"
+                        width="100%"
+                        height="100%"
+                    />
                 </div>
-            </ThemeProvider>
+            </div>
+        </ThemeProvider>
         // )
     );
 };
