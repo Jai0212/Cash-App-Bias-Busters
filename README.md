@@ -11,14 +11,12 @@
   <img src="frontend/public/cash-app-logo.png" alt="CashApp Logo" width="100"/>
 </div>
 
-
 ### Links
 
-- [**Frontend**](https://cash-app-bias-busters.netlify.app/)  
-- [**Backend**](https://cash-app-bias-busters.onrender.com/)  
+- [**Frontend**](https://cash-app-bias-busters.netlify.app/)
+- [**Backend**](https://cash-app-bias-busters.onrender.com/)
 
 > **Note**: The backend may take up to a minute to start up on the first visit.
-
 
 ## Overview
 
@@ -45,7 +43,6 @@ As part of the 2024 cohort of the Technology Leadership Initiative, we developed
 7. [How to Install](#how-to-install)
 8. [Contributing & Feedback](#contributing--feedback)
 9. [Acknowledgements/Credits](#acknowledgementscredits)
-
 
 ## Problem Statement
 
@@ -97,8 +94,8 @@ Our backend analyzes the bias in the selected demographic categories using the F
 - **Clean Architecture**:  
   The project follows a **Clean Architecture** approach, organizing the system into separate layers such as presentation, business logic, and data access. This ensures the application's modularity, maintainability, and scalability.
 
-  - **Testing**:  
-    We used **pytest** and **unittest** for unit and integration testing. Pytest helps ensure the correctness of the application’s logic by automating tests for backend functionality, database interactions, and model processing.
+- **Testing:**  
+  We used **pytest** and **unittest** for unit and integration testing. Pytest ensures the correctness of the application’s logic by automating tests for backend functionality, database interactions, and model processing. Additionally, we used **React Testing Library (RTL)** and **Jest** for frontend testing by mocking data to simulate user interactions and validate component behavior.
 
 <img width="1006" alt="Tech Stack" src="https://github.com/user-attachments/assets/5bf302d0-cac9-484a-bfc6-5e9845c0b7b9">
 
