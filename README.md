@@ -125,7 +125,7 @@ Below is an overview of the folder structure for this repository to help you nav
 
 ### Backend:
 
-````plaintext
+```plaintext
 backend/
 ├── app/                     # Core application code and logic
 │   ├── controllers/         # Handle incoming requests and responses
@@ -145,6 +145,7 @@ backend/
 ```
 
 ### Frontend:
+
 ```plaintext
 frontend/
 ├── public/                  # Public assets (e.g., index.html, icons)
@@ -294,3 +295,4 @@ url={http://jmlr.org/papers/v24/23-0389.html}
 ```
 
 ```
+````
