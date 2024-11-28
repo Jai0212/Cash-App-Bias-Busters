@@ -12,6 +12,7 @@ module.exports = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleNameMapper: {
     "\\.(css|less)$": "identity-obj-proxy",
+    "\\.less$": "identity-obj-proxy",
   },
   testTimeout: 30000, // 30 seconds timeout
   maxWorkers: "50%", // Use 50% of the available CPUs
