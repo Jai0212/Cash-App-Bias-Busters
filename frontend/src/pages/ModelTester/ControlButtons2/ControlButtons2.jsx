@@ -212,7 +212,6 @@ const ControlButton2 = ({ setUploadedFiles }) => {
                 <button
                     className="upload-button-pre"
                     onClick={handleModelUploadClick}
-                    tabIndex={13}
                 >
                     Upload Models
                 </button>

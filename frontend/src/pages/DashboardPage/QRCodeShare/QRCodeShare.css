@@ -26,6 +26,12 @@
     border: 2px solid #009999;
 }
 
+.share-button:focus {
+    outline: none;
+    border-color: white;
+    border: 6px solid white;
+}
+
 .share-button:active {
     transform: scale(0.95); /* Press effect */
 }

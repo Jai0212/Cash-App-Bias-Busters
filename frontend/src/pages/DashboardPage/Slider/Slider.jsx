@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ChartComponent from '../ChartComponenet/ChartComponent.jsx';
 import "./Slider.css"
 
@@ -25,6 +25,14 @@ const Slider = ({ graphData, maxValue }) => {
         slider.style.background = `linear-gradient(to right, ${color} ${value * 100}%, white ${value * 100}%)`;
     };
 
+    useEffect(() => {
+        if (document.activeElement && document.activeElement.className == "slider-input") {
+            document.activeElement.classList.add("slider-input-ring");
+        } else if (document.activeElement && document.activeElement.className != "slider-input") {
+            document.activeElement.classList.remove("slider-input-ring");
+        }
+    }, [document.activeElement])
+
     return (
         <div>
             <div className="slider-container">
@@ -40,7 +48,7 @@ const Slider = ({ graphData, maxValue }) => {
                 step="0.01"
                 value={sliderValue}
                 onChange={handleSliderChange}
-                tabIndex={-1}
+                tabIndex={15}
             />
             </div>
             <div>
