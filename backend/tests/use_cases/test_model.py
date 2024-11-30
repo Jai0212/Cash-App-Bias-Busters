@@ -2,14 +2,14 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 import pytest
-from ml_model.entities.datapoint_entity import (
+from backend.ml_model.entities.datapoint_entity import (
     DataPoint,
 )  # Make sure DataPoint is correctly imported
-from ml_model.repository import data_point_creator_multiple, data_point_creator_single
-from ml_model.repository.data_point_creator_multiple import MultiFeatureDataPointCreator
-from ml_model.repository.data_point_creator_single import SingleFeatureDataPointCreator
-from ml_model.use_cases.model import model
-from ml_model.utility import model_util
+from backend.ml_model.repository import data_point_creator_multiple, data_point_creator_single
+from backend.ml_model.repository.data_point_creator_multiple import MultiFeatureDataPointCreator
+from backend.ml_model.repository.data_point_creator_single import SingleFeatureDataPointCreator
+from backend.ml_model.use_cases.model import model
+from backend.ml_model.utility import model_util
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 

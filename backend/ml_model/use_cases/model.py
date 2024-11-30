@@ -6,14 +6,14 @@ from sklearn import tree
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(project_root)
 
-from ml_model.repository.data_point_creator_multiple import MultiFeatureDataPointCreator
-from ml_model.repository.data_point_creator_single import SingleFeatureDataPointCreator
-from ml_model.repository.data_preprocessing import DataProcessor
-from ml_model.repository.fairness import FairnessEvaluator
-from ml_model.repository.file_reader import FileReader
-from ml_model.repository.model_saver import save_model
-from ml_model.repository.safe_train_grid import safe_grid_search, safe_train_test_split
-from ml_model.utility import model_util
+from backend.ml_model.repository.data_point_creator_multiple import MultiFeatureDataPointCreator
+from backend.ml_model.repository.data_point_creator_single import SingleFeatureDataPointCreator
+from backend.ml_model.repository.data_preprocessing import DataProcessor
+from backend.ml_model.repository.fairness import FairnessEvaluator
+from backend.ml_model.repository.file_reader import FileReader
+from backend.ml_model.repository.model_saver import save_model
+from backend.ml_model.repository.safe_train_grid import safe_grid_search, safe_train_test_split
+from backend.ml_model.utility import model_util
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")

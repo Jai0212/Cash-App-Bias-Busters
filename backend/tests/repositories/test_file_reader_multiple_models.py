@@ -3,8 +3,8 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
-from ml_model.repository.file_reader_multiple_models import FileReaderMultiple
-from ml_model.utility import model_util
+from backend.ml_model.repository.file_reader_multiple_models import FileReaderMultiple
+from backend.ml_model.utility import model_util
 
 
 # Mocked CSV data for testing

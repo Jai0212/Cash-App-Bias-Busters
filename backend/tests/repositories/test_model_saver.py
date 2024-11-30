@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 import pytest
-from ml_model.repository.model_saver import save_model
+from backend.ml_model.repository.model_saver import save_model
 from sklearn.model_selection import GridSearchCV
 
 

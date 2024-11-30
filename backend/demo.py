@@ -1,6 +1,6 @@
 import os
 
-from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
+from backend.ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
 from backend.app.entities import User
 from backend.app.repositories import CsvFileRepo, SqliteDbRepo

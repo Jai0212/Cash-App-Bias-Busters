@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple
 import mysql.connector
 import pandas as pd
 from dotenv import load_dotenv
-from ml_model.use_cases.model import model
+from backend.ml_model.use_cases.model import model
 from mysql.connector import Error
 from werkzeug.datastructures import FileStorage
 

@@ -1,5 +1,5 @@
 import pytest
-from ml_model.entities.datapoint_entity import DataPoint
+from backend.ml_model.entities.datapoint_entity import DataPoint
 
 
 def test_get_feature1():

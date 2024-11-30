@@ -7,8 +7,8 @@ import pandas as pd
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(project_root)
-from ml_model.entities.datapoint_entity import DataPoint
-from ml_model.repository.file_reader import FileReader
+from backend.ml_model.entities.datapoint_entity import DataPoint
+from backend.ml_model.repository.file_reader import FileReader
 
 
 def get_target(df: pd.DataFrame) -> pd.Series:

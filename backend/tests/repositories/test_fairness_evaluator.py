@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 from fairlearn.metrics import MetricFrame
-from ml_model.repository.fairness import FairnessEvaluator
+from backend.ml_model.repository.fairness import FairnessEvaluator
 
 
 @pytest.fixture

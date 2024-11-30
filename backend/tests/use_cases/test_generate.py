@@ -1,5 +1,5 @@
 # tests/use_cases/test_generate.py
-from ml_model.entities.datapoint_entity import (
+from backend.ml_model.entities.datapoint_entity import (
     DataPoint,
 )  # Ensure this import is correct based on your structure
 

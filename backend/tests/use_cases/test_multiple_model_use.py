@@ -1,8 +1,8 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from ml_model.repository.multiple_models import evaluate_multiple_models
-from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
+from backend.ml_model.repository.multiple_models import evaluate_multiple_models
+from backend.ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
 
 @pytest.fixture

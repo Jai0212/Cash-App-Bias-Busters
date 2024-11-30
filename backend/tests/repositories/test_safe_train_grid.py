@@ -3,10 +3,10 @@ from unittest.mock import patch
 import numpy as np
 import pandas as pd
 import pytest
-from ml_model.repository.safe_train_grid import (
+from backend.ml_model.repository.safe_train_grid import (
     safe_grid_search,
 )  # Adjust import based on your project structure
-from ml_model.repository.safe_train_grid import safe_train_test_split
+from backend.ml_model.repository.safe_train_grid import safe_train_test_split
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.tree import DecisionTreeClassifier
 

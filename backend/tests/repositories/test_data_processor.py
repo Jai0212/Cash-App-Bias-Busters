@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from ml_model.repository.data_preprocessing import DataProcessor
+from backend.ml_model.repository.data_preprocessing import DataProcessor
 from sklearn.preprocessing import LabelEncoder
 
 # Sample data for testing

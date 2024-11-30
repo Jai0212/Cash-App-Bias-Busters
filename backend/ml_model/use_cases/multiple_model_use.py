@@ -6,7 +6,7 @@ from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterfac
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(project_root)
 
-from ml_model.repository.multiple_models import evaluate_multiple_models
+from backend.ml_model.repository.multiple_models import evaluate_multiple_models
 
 
 class EvaluateModelsUseCase:

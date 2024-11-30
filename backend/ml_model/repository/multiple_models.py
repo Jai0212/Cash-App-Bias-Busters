@@ -9,10 +9,10 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..
 sys.path.append(project_root)
 
 
-from ml_model.repository.data_preprocessing_multiple_models import DataProcessorMultiple
-from ml_model.repository.fairness import FairnessEvaluator
-from ml_model.repository.file_reader_multiple_models import FileReaderMultiple
-from ml_model.repository.safe_train_grid import safe_train_test_split
+from backend.ml_model.repository.data_preprocessing_multiple_models import DataProcessorMultiple
+from backend.ml_model.repository.fairness import FairnessEvaluator
+from backend.ml_model.repository.file_reader_multiple_models import FileReaderMultiple
+from backend.ml_model.repository.safe_train_grid import safe_train_test_split
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")

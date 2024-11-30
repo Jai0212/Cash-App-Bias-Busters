@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import pytest
 from fairlearn.metrics import MetricFrame
-from ml_model.entities.datapoint_entity import DataPoint
-from ml_model.repository.data_point_creator_multiple import MultiFeatureDataPointCreator
-from ml_model.utility import model_util
+from backend.ml_model.entities.datapoint_entity import DataPoint
+from backend.ml_model.repository.data_point_creator_multiple import MultiFeatureDataPointCreator
+from backend.ml_model.utility import model_util
 
 
 # Mock for model_util methods used in the class

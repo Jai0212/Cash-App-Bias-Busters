@@ -42,8 +42,9 @@ As part of the 2024 cohort of the Technology Leadership Initiative, we developed
 6. [Directory Structure](#repository-structure)
 7. [How to Use](#how-to-use)
 8. [How to Install](#how-to-install)
-9. [Contributing & Feedback](#contributing--feedback)
-10. [Acknowledgements/Credits](#acknowledgementscredits)
+9. [Contributors](#contributors)  
+10. [Contributing & Feedback](#contributing--feedback)
+11. [Acknowledgements/Credits](#acknowledgementscredits)
 
 ## Problem Statement
 
@@ -215,6 +216,11 @@ cd ../frontend
 npm run dev
 
 ````
+
+## Contributors
+<a href="https://github.com/Jai0212/Cash-App-Bias-Busters/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Jai0212/Cash-App-Bias-Busters"/>
+</a>
 
 ## Contributing & Feedback
 

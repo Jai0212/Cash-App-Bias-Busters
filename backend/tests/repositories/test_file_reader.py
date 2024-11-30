@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from ml_model.repository.file_reader import FileReader
+from backend.ml_model.repository.file_reader import FileReader
 
 
 @pytest.fixture

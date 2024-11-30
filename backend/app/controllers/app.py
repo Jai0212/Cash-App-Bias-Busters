@@ -4,7 +4,7 @@ import pickle
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
+from backend.ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
 from backend.app.entities import User
 from backend.app.repositories import CsvFileRepo, SqliteDbRepo, UserRepo
