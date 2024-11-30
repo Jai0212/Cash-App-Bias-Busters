@@ -1,5 +1,6 @@
-from app.repositories.interfaces import FileRepositoryInterface
 import pandas as pd
+
+from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterface
 
 
 class GetValuesUnderHeader:

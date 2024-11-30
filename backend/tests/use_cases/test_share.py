@@ -1,14 +1,16 @@
-import pytest
 import base64
 import json
 from unittest.mock import MagicMock
-from app.use_cases.share import Share
-from app.repositories.user_repository import UserRepository
+
+import pytest
+
+from backend.app.repositories.user_repo import UserRepo
+from backend.app.use_cases.share import Share
 
 
 @pytest.fixture
 def mock_user_repo():
-    return MagicMock(spec=UserRepository)
+    return MagicMock(spec=UserRepo)
 
 
 def test_share_success(mock_user_repo):

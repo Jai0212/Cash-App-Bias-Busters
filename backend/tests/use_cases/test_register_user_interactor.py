@@ -1,14 +1,15 @@
 import unittest
 from unittest.mock import MagicMock
-from app.repositories.user_repository import UserRepository
-from app.use_cases.register_user_interactor import RegisterUserInteractor
+
+from backend.app.repositories.user_repo import UserRepo
+from backend.app.use_cases.register_user_interactor import RegisterUserInteractor
 
 
 class TestRegisterUserInteractor(unittest.TestCase):
 
     def setUp(self):
         # Create a mock of UserRepository
-        self.mock_user_repo = MagicMock(spec=UserRepository)
+        self.mock_user_repo = MagicMock(spec=UserRepo)
         # Create an instance of RegisterUserInteractor with the mocked repository
         self.register_user_interactor = RegisterUserInteractor(self.mock_user_repo)
 

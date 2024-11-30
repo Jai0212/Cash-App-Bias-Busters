@@ -1,7 +1,8 @@
-import pytest
-import pandas as pd
-from unittest.mock import patch
 from io import StringIO
+from unittest.mock import patch
+
+import pandas as pd
+import pytest
 from ml_model.repository.file_reader_multiple_models import FileReaderMultiple
 from ml_model.utility import model_util
 
@@ -35,7 +36,9 @@ def test_read_file(mock_csv_data):
         assert "id" not in df_dropped.columns
 
         # Check if the age column was binned correctly
-        assert "age_groups" in df_dropped.columns  # Age should be binned into age_groups
+        assert (
+            "age_groups" in df_dropped.columns
+        )  # Age should be binned into age_groups
 
         # Check if inputs and target were correctly extracted
         assert isinstance(inputs, pd.DataFrame)
@@ -57,20 +60,31 @@ def test_single_column_check(mock_csv_data):
         df_dropped, inputs, target = reader.read_file()
 
         # Check if single_column_check was set to True
-        assert reader.single_column_check is True  # Only two columns left, so single_column_check should be True
+        assert (
+            reader.single_column_check is True
+        )  # Only two columns left, so single_column_check should be True
 
         # Ensure the DataFrame is properly cleaned (only 'action_status' left)
         assert "customer_id" not in df_dropped.columns
         assert "action_status" in df_dropped.columns
 
 
-@patch.object(model_util, 'age_check', return_value=pd.DataFrame({
-    'gender': ['male', 'female'],
-    'age_groups': ['18-26', '27-35'],  # Update this to reflect the correct binning
-    'race': ['asian', 'black'],
-    'state': ['NY', 'CA'],
-    'action_status': [1, 0]
-}))
+@patch.object(
+    model_util,
+    "age_check",
+    return_value=pd.DataFrame(
+        {
+            "gender": ["male", "female"],
+            "age_groups": [
+                "18-26",
+                "27-35",
+            ],  # Update this to reflect the correct binning
+            "race": ["asian", "black"],
+            "state": ["NY", "CA"],
+            "action_status": [1, 0],
+        }
+    ),
+)
 def test_age_bin(mock_age_check):
     csv_data = """
     customer_id,gender,age,race,state,zip_code,timestamp,action_status

@@ -1,15 +1,16 @@
 import os
-from app.entities import User
+
 from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
-from app.use_cases import (
+
+from backend.app.entities import User
+from backend.app.repositories import CsvFileRepo, SqliteDbRepo
+from backend.app.use_cases import (
     Generate,
     GetHeaders,
     GetLastLoginData,
     GetValuesUnderHeader,
     UploadData,
 )
-from app.repositories import SqliteDbRepo, CsvFileRepo
-
 
 curr_dir = os.path.dirname(__file__)
 file_path = os.path.join(curr_dir, "../database/output.csv")

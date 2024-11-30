@@ -1,6 +1,8 @@
-import pytest
-from app.use_cases import GetLastLoginData
 from unittest.mock import MagicMock
+
+import pytest
+
+from backend.app.use_cases import GetLastLoginData
 
 
 @pytest.fixture

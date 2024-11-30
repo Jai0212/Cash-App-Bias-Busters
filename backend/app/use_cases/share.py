@@ -1,4 +1,4 @@
-from app.repositories.user_repository import UserRepository
+from backend.app.repositories.user_repo import UserRepo
 
 
 class Share:
@@ -16,7 +16,7 @@ class Share:
     execute(self) -> dict
         Decodes the data and returns the processed result for the share page."""
 
-    def __init__(self, user_repo: UserRepository, encoded_data: str):
+    def __init__(self, user_repo: UserRepo, encoded_data: str):
         self.encoded_data = encoded_data
         self.user_repo = user_repo
 

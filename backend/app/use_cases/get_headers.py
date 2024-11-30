@@ -1,4 +1,4 @@
-from app.repositories.interfaces import FileRepositoryInterface
+from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterface
 
 
 class GetHeaders:

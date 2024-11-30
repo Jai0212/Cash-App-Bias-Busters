@@ -1,5 +1,5 @@
-import pytest
 import pandas as pd
+import pytest
 from ml_model.repository.data_preprocessing_multiple_models import DataProcessorMultiple
 
 
@@ -7,12 +7,14 @@ from ml_model.repository.data_preprocessing_multiple_models import DataProcessor
 @pytest.fixture
 def mock_data():
     # Creating a simple DataFrame to mock input data
-    return pd.DataFrame({
-        "gender": ["male", "female", "female", "male"],
-        "age_groups": ["young", "middle", "old", "middle"],
-        "race": ["asian", "black", "white", "asian"],
-        "state": ["NY", "CA", "TX", "FL"]
-    })
+    return pd.DataFrame(
+        {
+            "gender": ["male", "female", "female", "male"],
+            "age_groups": ["young", "middle", "old", "middle"],
+            "race": ["asian", "black", "white", "asian"],
+            "state": ["NY", "CA", "TX", "FL"],
+        }
+    )
 
 
 # Test for encoding categorical columns
@@ -28,7 +30,11 @@ def test_encode_categorical_columns(mock_data):
 
     # Check that the encoding applied to 'gender' column is correct
     assert encoded_df["gender_N"].iloc[0] in [0, 1]  # encoded values should be integers
-    assert encoded_df["age_groups_N"].iloc[0] in [0, 1, 2]  # encoded values should be integers
+    assert encoded_df["age_groups_N"].iloc[0] in [
+        0,
+        1,
+        2,
+    ]  # encoded values should be integers
 
 
 # Test for getting mappings from categorical columns
@@ -45,7 +51,9 @@ def test_get_mappings(mock_data):
 
     # Check if mappings are correct
     assert isinstance(mappings["gender"], dict)
-    assert all(isinstance(value, str) for value in mappings["gender"].values())  # The mapped values should be strings
+    assert all(
+        isinstance(value, str) for value in mappings["gender"].values()
+    )  # The mapped values should be strings
 
 
 # Test for dropping the original categorical columns

@@ -1,10 +1,13 @@
+from typing import List
+
+import numpy as np
 import pytest
-from abc import ABC, abstractmethod
-from typing import List, Dict
 from fairlearn.metrics import MetricFrame
 from sklearn.metrics import accuracy_score
-import numpy as np
-from ml_model.interfaces.data_point_creator_interface import DataPointCreator  # Replace with the actual module name
+
+from backend.ml_model.infrastructure.DataPointCreator import (
+    DataPointCreator,
+)  # Replace with the actual module name
 
 
 # Mock subclass to allow instantiation for testing
@@ -24,13 +27,15 @@ def mock_metric_frame():
         metrics={"accuracy": accuracy_score},
         y_true=y_true,
         y_pred=y_pred,
-        sensitive_features=sensitive_features
+        sensitive_features=sensitive_features,
     )
 
 
 # Test Initialization
 def test_initialization(mock_metric_frame):
-    creator = MockDataPointCreator("feature1", {"label_1": "mapped_1"}, mock_metric_frame)
+    creator = MockDataPointCreator(
+        "feature1", {"label_1": "mapped_1"}, mock_metric_frame
+    )
     assert creator.feature1 == "feature1"
     assert creator.mappings == {"label_1": "mapped_1"}
     assert creator.metric_frame == mock_metric_frame
@@ -64,4 +69,3 @@ def test_pass_statement_coverage():
         creator.data_point_list()  # Calls the parent method with `pass`
     except NotImplementedError:
         pass  # Expected since `data_point_list` is abstract
-

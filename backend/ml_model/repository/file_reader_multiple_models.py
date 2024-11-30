@@ -1,25 +1,28 @@
-from typing import Tuple
 import os
-import pandas as pd
-import numpy as np
 import sys
+from typing import Tuple
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+import numpy as np
+import pandas as pd
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(project_root)
 
 from utility import model_util
-from interfaces.file_reader_interface import FileReaderInterface
+
+from backend.ml_model.use_cases.FileReaderInterface import FileReaderInterface
 
 
 class FileReaderMultiple(FileReaderInterface):
     """
-            A utility class for reading and preprocessing multiple CSV files for machine learning purposes.
+    A utility class for reading and preprocessing multiple CSV files for machine learning purposes.
 
-            The class initializes with the path to a CSV file and processes it to:
-            - Drop unnecessary columns like `timestamp` and `id`.
-            - Bin the `age` column into groups (if present).
-            - Separate the dataframe into inputs and the target column (`action_status`).
+    The class initializes with the path to a CSV file and processes it to:
+    - Drop unnecessary columns like `timestamp` and `id`.
+    - Bin the `age` column into groups (if present).
+    - Separate the dataframe into inputs and the target column (`action_status`).
     """
+
     def __init__(self, csv_file_path: str):
         """
         Initialize the FileReader class with file path and categorical columns.
@@ -39,7 +42,12 @@ class FileReaderMultiple(FileReaderInterface):
         df = pd.read_csv(self.csv_file_path)
 
         # Drop any columns that are not needed, e.g., 'customer_id', 'zip_code', etc.
-        columns_to_drop = ["customer_id", "zip_code", "timestamp", "id"]  # Add any other columns you don't need
+        columns_to_drop = [
+            "customer_id",
+            "zip_code",
+            "timestamp",
+            "id",
+        ]  # Add any other columns you don't need
         df_cleaned = df.drop(columns=columns_to_drop, axis=1, errors="ignore")
 
         # Check if the dataframe has only one column after dropping

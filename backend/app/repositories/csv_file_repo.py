@@ -1,15 +1,52 @@
-from app.infrastructure.db_connection_manager import DbConnectionManager
-from app.repositories.interfaces import FileRepositoryInterface
-from app.repositories import SqliteDbRepo
-from app.entities.user import User
-from mysql.connector import Error
 import csv
+from datetime import timedelta
+
 import pandas as pd
-from datetime import datetime, timedelta
+from mysql.connector import Error
 from werkzeug.datastructures import FileStorage
+
+from backend.app.entities.user import User
+from backend.app.infrastructure.db_connection_manager import DbConnectionManager
+from backend.app.repositories.sqlite_db_repo import SqliteDbRepo
+from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterface
 
 
 class CsvFileRepo(FileRepositoryInterface):
+    """
+    A repository class for handling CSV file operations and importing data into a database.
+
+    Attributes:
+        user (User): The user associated with the repository.
+        file_path (str): The file path for the CSV file.
+        connection: The database connection object.
+        table_name (str): The name of the table associated with the user.
+        db_repo (SqliteDbRepo): The database repository instance.
+
+    Methods:
+        __init__(user: User, file_path: str):
+            Initialize the file path and database connection.
+
+        connect():
+            Establish a database connection.
+
+        import_csv_to_db(csv_file: FileStorage) -> bool:
+            Read the CSV file and import relevant data into the database.
+
+        save_data_to_csv() -> None:
+            Save data from the specified table to a CSV file, including headers.
+
+        delete_csv_data() -> None:
+            Delete all data from the specified CSV file.
+
+        get_headers() -> list[str]:
+            Get the headers of the table.
+
+        get_data_for_time(time: str) -> None:
+            Get the data for the specified time period.
+
+        update_comparison_csv(demographics: list[str], choices: dict[str, list[str]], time: str) -> None:
+            Update the comparison CSV file with the user's selections.
+    """
     def __init__(self, user: User, file_path: str):
         """Initialize the file path and database connection."""
         self.connection = None

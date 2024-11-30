@@ -1,7 +1,9 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
-from app.infrastructure.db_connection_manager import DbConnectionManager
 from mysql.connector import Error
+
+from backend.app.infrastructure.db_connection_manager import DbConnectionManager
 
 
 @pytest.fixture(autouse=True)

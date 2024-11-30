@@ -1,23 +1,24 @@
-from typing import Tuple
-import pandas as pd
-import numpy as np
-import sys
 import os
+import sys
+from typing import Tuple
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+import numpy as np
+import pandas as pd
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(project_root)
 
-from interfaces.file_reader_interface import FileReaderInterface
+from backend.ml_model.use_cases.FileReaderInterface import FileReaderInterface
 
 
 class FileReader(FileReaderInterface):
     """
-        A utility class for reading and preprocessing a CSV file for machine learning purposes.
+    A utility class for reading and preprocessing a CSV file for machine learning purposes.
 
-        The class initializes with the path to a CSV file and processes it to:
-        - Drop unnecessary columns like `timestamp` and `id`.
-        - Bin the `age` column into groups (if present).
-        - Separate the dataframe into inputs and the target column (`action_status`).
+    The class initializes with the path to a CSV file and processes it to:
+    - Drop unnecessary columns like `timestamp` and `id`.
+    - Bin the `age` column into groups (if present).
+    - Separate the dataframe into inputs and the target column (`action_status`).
     """
 
     def __init__(self, csv_file_path: str):
@@ -42,7 +43,9 @@ class FileReader(FileReaderInterface):
         df = pd.read_csv(self.csv_file_path)
         df_cleaned = df.drop(["timestamp", "id"], axis=1, errors="ignore")
 
-        if df_cleaned.shape[1] == 2:  # Check if the DataFrame has only one column after dropping
+        if (
+            df_cleaned.shape[1] == 2
+        ):  # Check if the DataFrame has only one column after dropping
             self.single_column_check = True
 
         df_dropped = model_util.age_check(df_cleaned)

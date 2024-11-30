@@ -1,15 +1,17 @@
-import pytest
-from unittest.mock import MagicMock, patch
-from app.repositories.user_repository import UserRepository
-from mysql.connector import Error
 import base64
+from unittest.mock import MagicMock, patch
+
+import pytest
+from mysql.connector import Error
+
+from backend.app.repositories.user_repo import UserRepo
 
 
 @pytest.fixture
 def mock_db_connection():
     # Mock the DbConnectionManager's get_connection method
     with patch(
-        "app.infrastructure.db_connection_manager.DbConnectionManager.get_connection"
+        "backend.app.infrastructure.db_connection_manager.DbConnectionManager.get_connection"
     ) as mock_get_conn:
         mock_connection = MagicMock()
         mock_get_conn.return_value = mock_connection
@@ -18,7 +20,7 @@ def mock_db_connection():
 
 @pytest.fixture
 def user_repository(mock_db_connection):
-    return UserRepository(table_name="users")
+    return UserRepo(table_name="users")
 
 
 def test_get_user_by_email_success(user_repository, mock_db_connection):
@@ -141,7 +143,7 @@ def test_process_shared_data_invalid(user_repository):
 def test_get_user_by_email_connection_failure(user_repository):
 
     with patch(
-        "app.infrastructure.db_connection_manager.DbConnectionManager.get_connection",
+        "backend.app.infrastructure.db_connection_manager.DbConnectionManager.get_connection",
         return_value=None,
     ):
 
@@ -155,7 +157,7 @@ def test_get_user_by_email_and_password_connection_failure_with_output(
 ):
 
     with patch(
-        "app.infrastructure.db_connection_manager.DbConnectionManager.get_connection",
+        "backend.app.infrastructure.db_connection_manager.DbConnectionManager.get_connection",
         return_value=None,
     ):
         result = user_repository.get_user_by_email_and_password(
@@ -172,7 +174,7 @@ def test_get_user_by_email_and_password_connection_failure_with_output(
 def test_update_password_connection_failure(user_repository):
 
     with patch(
-        "app.infrastructure.db_connection_manager.DbConnectionManager.get_connection",
+        "backend.app.infrastructure.db_connection_manager.DbConnectionManager.get_connection",
         return_value=None,
     ):
         with patch("builtins.print") as mock_print:
@@ -184,7 +186,7 @@ def test_update_password_connection_failure(user_repository):
 def test_create_user_connection_failure(user_repository):
 
     with patch(
-        "app.infrastructure.db_connection_manager.DbConnectionManager.get_connection",
+        "backend.app.infrastructure.db_connection_manager.DbConnectionManager.get_connection",
         return_value=None,
     ):
 

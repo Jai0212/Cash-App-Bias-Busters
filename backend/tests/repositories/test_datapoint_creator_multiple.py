@@ -1,10 +1,10 @@
-import pytest
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pytest
 from fairlearn.metrics import MetricFrame
-from ml_model.utility import model_util
 from ml_model.entities.datapoint_entity import DataPoint
 from ml_model.repository.data_point_creator_multiple import MultiFeatureDataPointCreator
+from ml_model.utility import model_util
 
 
 # Mock for model_util methods used in the class
@@ -31,10 +31,7 @@ model_util.is_nan_in_datapoint = MockModelUtil.is_nan_in_datapoint
 # Fixtures for DataFrame and MetricFrame
 @pytest.fixture
 def mock_inputs():
-    return pd.DataFrame({
-        'feature1': [1, 2],
-        'feature2': [3, 4]
-    })
+    return pd.DataFrame({"feature1": [1, 2], "feature2": [3, 4]})
 
 
 @pytest.fixture
@@ -46,9 +43,11 @@ def mock_metric_frame():
 
     # Define metric functions
     metrics = {
-        'accuracy': lambda y_true, y_pred: np.mean(y_true == y_pred),
-        'falsepositive': lambda y_true, y_pred: np.sum((y_pred == 1) & (y_true == 0)) / np.sum(y_true == 0),
-        'falsenegative': lambda y_true, y_pred: np.sum((y_pred == 0) & (y_true == 1)) / np.sum(y_true == 1),
+        "accuracy": lambda y_true, y_pred: np.mean(y_true == y_pred),
+        "falsepositive": lambda y_true, y_pred: np.sum((y_pred == 1) & (y_true == 0))
+        / np.sum(y_true == 0),
+        "falsenegative": lambda y_true, y_pred: np.sum((y_pred == 0) & (y_true == 1))
+        / np.sum(y_true == 1),
     }
 
     # Construct the MetricFrame object
@@ -56,14 +55,15 @@ def mock_metric_frame():
         metrics=metrics,
         y_true=y_true,
         y_pred=y_pred,
-        sensitive_features=sensitive_features
+        sensitive_features=sensitive_features,
     )
 
 
 # Test Initialization
 def test_initialization(mock_inputs, mock_metric_frame):
-    creator = MultiFeatureDataPointCreator("feature1", {"label_1": "mapped_1"},
-                                           mock_metric_frame, mock_inputs)
+    creator = MultiFeatureDataPointCreator(
+        "feature1", {"label_1": "mapped_1"}, mock_metric_frame, mock_inputs
+    )
     assert creator.feature1 == "feature1"
     assert creator.mappings == {"label_1": "mapped_1"}
     assert creator.metric_frame == mock_metric_frame

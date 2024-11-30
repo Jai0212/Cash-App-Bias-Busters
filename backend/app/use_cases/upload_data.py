@@ -1,5 +1,6 @@
-from app.repositories.interfaces import FileRepositoryInterface
 from werkzeug.datastructures import FileStorage
+
+from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterface
 
 
 class UploadData:

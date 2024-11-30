@@ -1,13 +1,14 @@
+import os
+import sys
 from typing import Dict, Tuple
+
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-import sys
-import os
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(project_root)
 
-from interfaces.data_processor_interface import DataProcessorInterface
+from backend.ml_model.use_cases.DataProcessorInterface import DataProcessorInterface
 
 
 class DataProcessor(DataProcessorInterface):
@@ -18,6 +19,7 @@ class DataProcessor(DataProcessorInterface):
     mappings for these encodings, and drop the original categorical columns
     from the DataFrame.
     """
+
     def __init__(self, inputs: pd.DataFrame):
         self.inputs = inputs
         self.categorical_columns = ["gender", "age_groups", "race", "state"]
@@ -50,5 +52,4 @@ class DataProcessor(DataProcessorInterface):
         Drops the original categorical columns and returns the
         updated DataFrame.
         """
-        return self.inputs.drop(columns=self.categorical_columns,
-                                errors="ignore")
+        return self.inputs.drop(columns=self.categorical_columns, errors="ignore")

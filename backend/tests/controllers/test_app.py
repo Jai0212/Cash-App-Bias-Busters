@@ -1,14 +1,15 @@
-import pytest
-import unittest
-from app.controllers.app import app
-from flask import jsonify
-from unittest.mock import patch, MagicMock
 import os
-from app.controllers.app import (
+import unittest
+from unittest.mock import MagicMock, patch
+
+import pytest
+
+from backend.app.controllers.app import (  # Adjust this import according to your actual file structure
+    app,
     initialize,
-)  # Adjust this import according to your actual file structure
-from app.entities.user import User
-from app.repositories import SqliteDbRepo
+)
+from backend.app.entities.user import User
+from backend.app.repositories import SqliteDbRepo
 
 UPLOAD_FOLDER = "uploads/"  # Directory to save uploaded models
 
@@ -21,7 +22,7 @@ class FlaskAppTestCase(unittest.TestCase):
     def setUp(self):
         self.headers = {"Content-Type": "application/json"}
 
-    @patch("app.controllers.app.initialize")
+    @patch("backend.app.controllers.app.initialize")
     def test_headers_missing_curr_user(self, mock_initialize):
         data = {}
         mock_initialize.return_value = None
@@ -30,11 +31,11 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertIn("error", response.json)
         self.assertEqual(response.json["error"], "Missing required data.")
 
-    @patch("app.controllers.app.initialize")
+    @patch("backend.app.controllers.app.initialize")
     def test_headers_missing_table(self, mock_initialize):
         data = {"curr_user": "test_user"}
         mock_initialize.return_value = None
-        with patch("app.controllers.app.user.table_name", None):
+        with patch("backend.app.controllers.app.user.table_name", None):
             response = self.client.post("/api/headers", json=data, headers=self.headers)
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.json)
@@ -52,7 +53,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("message", response.json)
 
-    @patch("app.controllers.app.RegisterUserInteractor")
+    @patch("backend.app.controllers.app.RegisterUserInteractor")
     def test_signup_success(self, mock_register_interactor):
         data = {
             "firstname": "Test",
@@ -74,7 +75,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertFalse(response.json["error"])
         self.assertEqual(response.json["code"], 3)
 
-    @patch("app.controllers.app.RegisterUserInteractor")
+    @patch("backend.app.controllers.app.RegisterUserInteractor")
     def test_signup_value_error(self, mock_register_interactor):
         data = {
             "firstname": "Test",
@@ -96,7 +97,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertTrue(response.json["error"])
         self.assertEqual(response.json["code"], 2)
 
-    @patch("app.controllers.app.RegisterUserInteractor")
+    @patch("backend.app.controllers.app.RegisterUserInteractor")
     def test_signup_generic_exception(self, mock_register_interactor):
         data = {
             "firstname": "Test",
@@ -147,8 +148,8 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("message", response.json)
 
-    @patch("app.controllers.app.initialize")
-    @patch("app.controllers.app.UploadData")
+    @patch("backend.app.controllers.app.initialize")
+    @patch("backend.app.controllers.app.UploadData")
     def test_upload_data_missing_csv(self, mock_upload_data, mock_initialize):
         data = {"curr_user": "test_user"}
         mock_initialize.return_value = None
@@ -157,8 +158,8 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertIn("error", response.json)
         self.assertEqual(response.json["error"], "Missing required data.")
 
-    @patch("app.controllers.app.initialize")
-    @patch("app.controllers.app.UploadData")
+    @patch("backend.app.controllers.app.initialize")
+    @patch("backend.app.controllers.app.UploadData")
     def test_upload_data_missing_curr_user(self, mock_upload_data, mock_initialize):
         data = {"csv_to_read": "file.csv"}
         mock_initialize.return_value = None
@@ -167,7 +168,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertIn("error", response.json)
         self.assertEqual(response.json["error"], "Missing required data.")
 
-    @patch("app.controllers.app.initialize")
+    @patch("backend.app.controllers.app.initialize")
     def test_upload_model_missing_data(self, mock_initialize):
         data = {"curr_user": "test_user", "dashboard": "test_dashboard"}
         mock_initialize.return_value = None
@@ -178,7 +179,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertIn("error", response.json)
         self.assertEqual(response.json["error"], "Missing required data.")
 
-    @patch("app.controllers.app.initialize")
+    @patch("backend.app.controllers.app.initialize")
     def test_upload_model_invalid_file_format(self, mock_initialize):
         data = {"curr_user": "test_user", "dashboard": "test_dashboard"}
         with open("invalid_file.txt", "w") as f:
@@ -199,7 +200,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertIn("error", response.json)
         self.assertEqual(response.json["error"], "Missing required data.")
 
-    @patch("app.controllers.app.initialize")
+    @patch("backend.app.controllers.app.initialize")
     def test_upload_model_missing_file(self, mock_initialize):
         data = {"curr_user": "test_user", "dashboard": "test_dashboard"}
         mock_initialize.return_value = None
@@ -210,7 +211,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertIn("error", response.json)
         self.assertEqual(response.json["error"], "Missing required data.")
 
-    @patch("app.controllers.app.ChangePasswordInteractor")
+    @patch("backend.app.controllers.app.ChangePasswordInteractor")
     def test_change_password_missing_fields(self, mock_change_password_interactor):
         data = {
             "old_password": "old_password123",
@@ -249,9 +250,9 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(response.json["message"], "All fields are required")
 
     @patch(
-        "app.controllers.app.current_user_email", "test@example.com"
+        "backend.app.controllers.app.current_user_email", "test@example.com"
     )  # Mocking the global variable
-    @patch("app.controllers.app.ChangePasswordInteractor")
+    @patch("backend.app.controllers.app.ChangePasswordInteractor")
     def test_change_password_mismatched_passwords(
         self, mock_change_password_interactor
     ):
@@ -277,9 +278,9 @@ class FlaskAppTestCase(unittest.TestCase):
         )
 
     @patch(
-        "app.controllers.app.current_user_email", "test@example.com"
+        "backend.app.controllers.app.current_user_email", "test@example.com"
     )  # Mocking global variable
-    @patch("app.controllers.app.ChangePasswordInteractor")
+    @patch("backend.app.controllers.app.ChangePasswordInteractor")
     def test_change_password_success(self, mock_change_password_interactor):
         data = {
             "old_password": "oldpassword123",
@@ -299,9 +300,9 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(response.json["message"], "Password changed successfully")
 
     @patch(
-        "app.controllers.app.current_user_email", "test@example.com"
+        "backend.app.controllers.app.current_user_email", "test@example.com"
     )  # Mocking the global variable
-    @patch("app.controllers.app.ChangePasswordInteractor")
+    @patch("backend.app.controllers.app.ChangePasswordInteractor")
     def test_change_password_failure(self, mock_change_password_interactor):
         data = {
             "old_password": "wrong_old_password",
@@ -323,9 +324,9 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(response.json["message"], "Invalid old password")
 
     @patch(
-        "app.controllers.app.current_user_email", "testuser@example.com"
+        "backend.app.controllers.app.current_user_email", "testuser@example.com"
     )  # Mocking the global variable
-    @patch("app.controllers.app.ChangePasswordInteractor")
+    @patch("backend.app.controllers.app.ChangePasswordInteractor")
     def test_change_password_exception(self, mock_change_password_interactor):
         # Simulating an unexpected exception
         data = {
@@ -347,9 +348,9 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertIn("message", response.json)
         self.assertEqual(response.json["message"], "Something went wrong")
 
-    @patch("app.controllers.app.Share")
-    @patch("app.controllers.app.Generate")
-    @patch("app.controllers.app.initialize")
+    @patch("backend.app.controllers.app.Share")
+    @patch("backend.app.controllers.app.Generate")
+    @patch("backend.app.controllers.app.initialize")
     def test_share_success(self, mock_initialize, mock_generate, mock_share):
         # Mock data for Share
         mock_share.return_value.execute.return_value = {
@@ -391,7 +392,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(graph_data[0]["falsenegative"], 0.02)
         self.assertEqual(graph_data[0]["combination_label"], "Age: 20-30, Gender: Male")
 
-    @patch("app.controllers.app.Share")
+    @patch("backend.app.controllers.app.Share")
     def test_share_failure_invalid_data(self, mock_share):
         # Simulating an exception during Share execution
         mock_share.side_effect = Exception("Failed to decode encoded data")
@@ -405,7 +406,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(response.json["message"], "Failed to decode encoded data")
 
     class MainBlockTestCase(unittest.TestCase):
-        @patch("app.controllers.app.app.run")
+        @patch("backend.app.controllers.app.app.run")
         def test_main_block(self, mock_run):
             with patch("sys.argv", ["app/controllers/app.py"]):
                 import app.controllers.app
@@ -417,7 +418,9 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.decode("utf-8"), "Welcome to the Backend!")
 
-    @patch("app.controllers.app.current_user_email", None)  # Simulate no user logged in
+    @patch(
+        "backend.app.controllers.app.current_user_email", None
+    )  # Simulate no user logged in
     def test_get_email_no_user(self):
         response = self.client.get("/get-email")
 
@@ -428,7 +431,7 @@ class FlaskAppTestCase(unittest.TestCase):
         self.assertEqual(response_data["message"], "No user is logged in.")
 
     @patch(
-        "app.controllers.app.current_user_email", "testuser@example.com"
+        "backend.app.controllers.app.current_user_email", "testuser@example.com"
     )  # Simulate a user logged in
     def test_get_email_with_user(self):
         response = self.client.get("/get-email")
@@ -441,9 +444,9 @@ class FlaskAppTestCase(unittest.TestCase):
 
 class TestInitializeFunction(unittest.TestCase):
 
-    @patch("app.controllers.app.db_repo")  # Mocking db_repo
-    @patch("app.controllers.app.file_repo")  # Mocking file_repo
-    @patch("app.entities.user.User")  # Mocking User class
+    @patch("backend.app.controllers.app.db_repo")  # Mocking db_repo
+    @patch("backend.app.controllers.app.file_repo")  # Mocking file_repo
+    @patch("backend.app.entities.user.User")  # Mocking User class
     def test_initialize(self, MockUser, mock_file_repo, mock_db_repo):
         # Arrange
         mock_user = MagicMock()  # Creating a mock user object
@@ -503,8 +506,10 @@ def test_values_under_header(mock_app):
     input_data = {"curr_user": "user123", "header": "header1"}
 
     # Mock the external classes and functions using patch
-    with patch("app.repositories.CsvFileRepo", MockCsvFileRepo):
-        with patch("app.use_cases.GetValuesUnderHeader", MockGetValuesUnderHeader):
+    with patch("backend.app.repositories.CsvFileRepo", MockCsvFileRepo):
+        with patch(
+            "backend.app.use_cases.GetValuesUnderHeader", MockGetValuesUnderHeader
+        ):
             # Send the POST request to your route
             response = mock_app.post("/api/values-under-header", json=input_data)
 
@@ -584,7 +589,7 @@ def test_generate_valid(mock_app):
     }
 
     # Mock the Generate class and its execute method
-    with patch("app.use_cases.Generate", MockGenerate):
+    with patch("backend.app.use_cases.Generate", MockGenerate):
         # Send the POST request to your route
         response = mock_app.post("/api/generate", json=input_data)
 
@@ -681,7 +686,7 @@ def test_get_prev_data_valid(mock_app):
     }
 
     # Mock the GetLastLoginData class and its execute method
-    with patch("app.use_cases.GetLastLoginData", MockGetLastLoginData):
+    with patch("backend.app.use_cases.GetLastLoginData", MockGetLastLoginData):
         # Send the POST request to your route
         response = mock_app.post("/api/get-prev-data", json=input_data)
 
@@ -731,7 +736,7 @@ def test_get_prev_data_missing_table_name(mock_app):
     }
 
     # Mock user with no table_name
-    with patch("app.controllers.app.initialize") as mock_initialize:
+    with patch("backend.app.controllers.app.initialize") as mock_initialize:
         mock_initialize.return_value = None
         response = mock_app.post("/api/get-prev-data", json=input_data)
 
@@ -915,16 +920,16 @@ def test_upload_model_missing_user(mock_app):
 #     }
 
 #     # Mocking the functions used in the route
-#     with patch("app.controllers.app.get_files_in_folder", return_value=["model1.pkl", "model2.pkl"]), \
-#          patch("app.controllers.app.EvaluateModelsUseCase") as mock_evaluator, \
-#          patch("app.controllers.app.initialize"):
-    
+#     with patch("backend.app.controllers.app.get_files_in_folder", return_value=["model1.pkl", "model2.pkl"]), \
+#          patch("backend.app.controllers.app.EvaluateModelsUseCase") as mock_evaluator, \
+#          patch("backend.app.controllers.app.initialize"):
+
 #         # Mock output from evaluator
 #         mock_evaluator.return_value.execute.return_value = {"model1": "result1", "model2": "result2"}
 
 #         # Send the POST request
 #         response = mock_app.post(
-#             "/api/generate-for-all-models", 
+#             "/api/generate-for-all-models",
 #             data=input_data,
 #             content_type="multipart/form-data"
 #         )
@@ -938,9 +943,7 @@ def test_upload_model_missing_user(mock_app):
 def test_generate_for_all_models_missing_user(mock_app):
     # Send POST request with missing curr_user
     response = mock_app.post(
-        "/api/generate-for-all-models", 
-        data={},
-        content_type="multipart/form-data"
+        "/api/generate-for-all-models", data={}, content_type="multipart/form-data"
     )
 
     # Assert status code and error message
@@ -955,15 +958,17 @@ def test_generate_for_all_models_no_models(mock_app):
     }
 
     # Mock the get_files_in_folder to return an empty list
-    with patch("app.controllers.app.get_files_in_folder", return_value=[]), \
-         patch("app.controllers.app.EvaluateModelsUseCase"), \
-         patch("app.controllers.app.initialize"):
-        
+    with patch(
+        "backend.app.controllers.app.get_files_in_folder", return_value=[]
+    ), patch("backend.app.controllers.app.EvaluateModelsUseCase"), patch(
+        "backend.app.controllers.app.initialize"
+    ):
+
         # Send POST request
         response = mock_app.post(
-            "/api/generate-for-all-models", 
+            "/api/generate-for-all-models",
             data=input_data,
-            content_type="multipart/form-data"
+            content_type="multipart/form-data",
         )
 
     # Assert status code and error message
@@ -978,15 +983,20 @@ def test_generate_for_all_models_unexpected_error(mock_app):
     }
 
     # Mock the initialize and evaluator to raise an exception
-    with patch("app.controllers.app.get_files_in_folder", return_value=["model1.pkl"]), \
-         patch("app.controllers.app.EvaluateModelsUseCase", side_effect=Exception("Unexpected error")), \
-         patch("app.controllers.app.initialize"):
-        
+    with patch(
+        "backend.app.controllers.app.get_files_in_folder", return_value=["model1.pkl"]
+    ), patch(
+        "backend.app.controllers.app.EvaluateModelsUseCase",
+        side_effect=Exception("Unexpected error"),
+    ), patch(
+        "backend.app.controllers.app.initialize"
+    ):
+
         # Send POST request
         response = mock_app.post(
-            "/api/generate-for-all-models", 
+            "/api/generate-for-all-models",
             data=input_data,
-            content_type="multipart/form-data"
+            content_type="multipart/form-data",
         )
 
     # Assert status code and error message
@@ -997,9 +1007,10 @@ def test_generate_for_all_models_unexpected_error(mock_app):
 
 @pytest.fixture
 def mock_app():
-    app.config['TESTING'] = True
+    app.config["TESTING"] = True
     app.debug = False
     return app.test_client()
+
 
 # def test_delete_model_valid(mock_app):
 #     input_data = {
@@ -1008,13 +1019,13 @@ def mock_app():
 #     }
 
 #     # Mock user initialization
-#     with patch("app.controllers.app.initialize"), \
+#     with patch("backend.app.controllers.app.initialize"), \
 #          patch("os.path.exists", return_value=True), \
 #          patch("os.remove") as mock_remove:
-        
+
 #         # Send the POST request to delete the model
 #         response = mock_app.post(
-#             "/api/delete-model", 
+#             "/api/delete-model",
 #             json=input_data
 #         )
 
@@ -1023,6 +1034,7 @@ def mock_app():
 #     assert response.json == {"message": "Successfully deleted model_to_delete.pkl"}
 #     mock_remove.assert_called_once_with(os.path.join("uploads", "ff@gmail.com", "model_to_delete.pkl"))
 
+
 def test_delete_model_file_not_found(mock_app):
     input_data = {
         "curr_user": "ff@gmail.com",
@@ -1030,18 +1042,17 @@ def test_delete_model_file_not_found(mock_app):
     }
 
     # Mock user initialization
-    with patch("app.controllers.app.initialize"), \
-         patch("os.path.exists", return_value=False):
-        
+    with patch("backend.app.controllers.app.initialize"), patch(
+        "os.path.exists", return_value=False
+    ):
+
         # Send the POST request to delete the model
-        response = mock_app.post(
-            "/api/delete-model", 
-            json=input_data
-        )
+        response = mock_app.post("/api/delete-model", json=input_data)
 
     # Assert status code and response content
     assert response.status_code == 400
     assert response.json == {"error": "No current user found"}
+
 
 def test_delete_model_missing_fields(mock_app):
     input_data_missing_user = {
@@ -1053,20 +1064,19 @@ def test_delete_model_missing_fields(mock_app):
     }
 
     # Test missing curr_user
-    response_user = mock_app.post(
-        "/api/delete-model", 
-        json=input_data_missing_user
-    )
+    response_user = mock_app.post("/api/delete-model", json=input_data_missing_user)
     assert response_user.status_code == 400
-    assert response_user.json == {"error": "Missing required fields: curr_user or file_name"}
+    assert response_user.json == {
+        "error": "Missing required fields: curr_user or file_name"
+    }
 
     # Test missing file_name
-    response_file = mock_app.post(
-        "/api/delete-model", 
-        json=input_data_missing_file
-    )
+    response_file = mock_app.post("/api/delete-model", json=input_data_missing_file)
     assert response_file.status_code == 400
-    assert response_file.json == {"error": "Missing required fields: curr_user or file_name"}
+    assert response_file.json == {
+        "error": "Missing required fields: curr_user or file_name"
+    }
+
 
 def test_delete_model_no_current_user(mock_app):
     input_data = {
@@ -1075,18 +1085,17 @@ def test_delete_model_no_current_user(mock_app):
     }
 
     # Mock initialization where no user is found
-    with patch("app.controllers.app.initialize"), \
-         patch("app.controllers.app.user.table_name", None):
-        
+    with patch("backend.app.controllers.app.initialize"), patch(
+        "backend.app.controllers.app.user.table_name", None
+    ):
+
         # Send the POST request to delete the model
-        response = mock_app.post(
-            "/api/delete-model", 
-            json=input_data
-        )
+        response = mock_app.post("/api/delete-model", json=input_data)
 
     # Assert status code and response content
     assert response.status_code == 400
     assert response.json == {"error": "No current user found"}
+
 
 def test_delete_model_exception(mock_app):
     input_data = {
@@ -1095,27 +1104,27 @@ def test_delete_model_exception(mock_app):
     }
 
     # Mock user initialization and file existence check
-    with patch("app.controllers.app.initialize"), \
-         patch("os.path.exists", return_value=True), \
-         patch("os.remove", side_effect=Exception("Unexpected error")):
-        
+    with patch("backend.app.controllers.app.initialize"), patch(
+        "os.path.exists", return_value=True
+    ), patch("os.remove", side_effect=Exception("Unexpected error")):
+
         # Send the POST request to delete the model
-        response = mock_app.post(
-            "/api/delete-model", 
-            json=input_data
-        )
+        response = mock_app.post("/api/delete-model", json=input_data)
 
     # Assert status code and response content
     assert response.status_code == 400
     assert response.json == {"error": "No current user found"}
 
-from app.controllers.app import get_files_in_folder, delete_files_except_model
+
+from backend.app.controllers.app import delete_files_except_model, get_files_in_folder
+
 
 @pytest.fixture
 def mock_files():
     """Fixture to mock the os.listdir and os.path.exists"""
     with patch("os.path.exists") as mock_exists, patch("os.listdir") as mock_listdir:
         yield mock_exists, mock_listdir
+
 
 def test_get_files_in_folder_valid(mock_files):
     # Prepare the mock return values
@@ -1131,6 +1140,7 @@ def test_get_files_in_folder_valid(mock_files):
     assert result == ["file1.txt", "file2.txt"]
     mock_listdir.assert_called_once_with(os.path.join("uploads", user_folder))
 
+
 def test_get_files_in_folder_only_model(mock_files):
     # Prepare the mock return values
     mock_exists, mock_listdir = mock_files
@@ -1145,6 +1155,7 @@ def test_get_files_in_folder_only_model(mock_files):
     assert result == []
     mock_listdir.assert_called_once_with(os.path.join("uploads", user_folder))
 
+
 def test_get_files_in_folder_folder_not_exist(mock_files):
     # Prepare the mock return values
     mock_exists, mock_listdir = mock_files
@@ -1157,6 +1168,7 @@ def test_get_files_in_folder_folder_not_exist(mock_files):
     # Assert that an empty list is returned
     assert result == []
     mock_exists.assert_called_once_with(os.path.join("uploads", user_folder))
+
 
 def test_get_files_in_folder_exception(mock_files):
     # Prepare the mock return values and simulate an exception
@@ -1171,6 +1183,7 @@ def test_get_files_in_folder_exception(mock_files):
     # Assert that an empty list is returned and an error message is printed
     assert result == []
     mock_listdir.assert_called_once_with(os.path.join("uploads", user_folder))
+
 
 # @pytest.fixture
 # def mock_files():

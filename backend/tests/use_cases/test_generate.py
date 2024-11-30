@@ -1,8 +1,9 @@
 # tests/use_cases/test_generate.py
-from app.use_cases import Generate
 from ml_model.entities.datapoint_entity import (
     DataPoint,
 )  # Ensure this import is correct based on your structure
+
+from backend.app.use_cases import Generate
 
 
 def test_generate(mock_file_repo, mock_db_repo):

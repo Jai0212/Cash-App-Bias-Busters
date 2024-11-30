@@ -1,14 +1,16 @@
 import os
 import sys
-from app.repositories.interfaces import (
-    FileRepositoryInterface,
-    DatabaseRepositoryInterface,
-)
+
+from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterface
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(project_root)
 
 from ml_model.use_cases.model import model
+
+from backend.app.use_cases.DatabaseRepositoryInterface import (
+    DatabaseRepositoryInterface,
+)
 
 
 class Generate:

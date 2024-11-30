@@ -1,6 +1,4 @@
-import pytest
-from abc import ABC, abstractmethod
-from ml_model.interfaces.data_processor_interface import DataProcessorInterface
+from backend.ml_model.use_cases.DataProcessorInterface import DataProcessorInterface
 
 
 # Mock subclass to allow instantiation and test pass statements

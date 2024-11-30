@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import MagicMock
-from app.repositories.interfaces import (
+
+from backend.app.use_cases.DatabaseRepositoryInterface import (
     DatabaseRepositoryInterface,
-    FileRepositoryInterface,
-    UserRepositoryInterface,
 )
+from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterface
+from backend.app.use_cases.UserRepositoryInterface import UserRepositoryInterface
 
 
 class TestRepositories(unittest.TestCase):
