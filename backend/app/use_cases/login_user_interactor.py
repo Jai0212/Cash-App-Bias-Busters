@@ -12,7 +12,7 @@ class LoginUserInteractor:
        """
         self.user_repo = user_repo
 
-    def execute(self, email, password)-> dict:
+    def execute(self, email: str, password: str) -> dict:
         """
         Authenticates a user by verifying their email and password.
 

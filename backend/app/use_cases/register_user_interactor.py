@@ -11,7 +11,7 @@ class RegisterUserInteractor:
         """
         self.user_repo = user_repo
 
-    def execute(self, firstname, lastname, email, password)-> dict:
+    def execute(self, firstname: str, lastname: str, email: str, password: str) -> dict:
         """
         Registers a new user by checking if the email already exists and then
         creating a new user record in the repository.

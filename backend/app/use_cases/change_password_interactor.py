@@ -12,7 +12,7 @@ class ChangePasswordInteractor:
         """
         self.user_repo = user_repo
 
-    def execute(self, email, old_password, new_password)-> dict:
+    def execute(self, email: str, old_password: str, new_password: str) -> dict:
         """
         Changes the user's password by verifying the old password and updating it to the new one.
 
