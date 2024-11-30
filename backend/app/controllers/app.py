@@ -1,23 +1,24 @@
-import pickle
 import os
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import pickle
+
 from dotenv import load_dotenv
-from app.entities import User
-from app.use_cases import (
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
+
+from backend.app.entities import User
+from backend.app.repositories import CsvFileRepo, SqliteDbRepo, UserRepo
+from backend.app.use_cases import (
+    ChangePasswordInteractor,
     Generate,
     GetHeaders,
     GetLastLoginData,
     GetValuesUnderHeader,
-    UploadData,
-    RegisterUserInteractor,
     LoginUserInteractor,
-    ChangePasswordInteractor,
+    RegisterUserInteractor,
     Share,
+    UploadData,
 )
-from app.repositories import SqliteDbRepo, CsvFileRepo, UserRepository
-
-from ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
 load_dotenv()
 
@@ -382,7 +383,7 @@ def home():
     return "Welcome to the Backend!"
 
 
-user_repo = UserRepository(table_name="users")
+user_repo = UserRepo(table_name="users")
 
 
 @app.route("/signup", methods=["POST"])

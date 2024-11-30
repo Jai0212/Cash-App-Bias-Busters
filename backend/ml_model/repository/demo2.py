@@ -1,9 +1,10 @@
 import os
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split, GridSearchCV
-from file_reader import FileReader
-from data_preprocessing import DataProcessor
 import pickle
+
+from data_preprocessing import DataProcessor
+from file_reader import FileReader
+from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.tree import DecisionTreeClassifier
 
 # Define the dataset path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -24,11 +25,36 @@ def train_and_save_decision_tree_models():
 
     # Define configurations for five models
     model_configs = [
-        {"criterion": "gini", "max_depth": [3, 5], "min_samples_split": [2, 3], "test_size": 0.3},
-        {"criterion": "entropy", "max_depth": [None, 10], "min_samples_split": [2], "test_size": 0.25},
-        {"criterion": "gini", "max_depth": [8, 12], "min_samples_split": [5, 10], "test_size": 0.2},
-        {"criterion": "entropy", "max_depth": [5], "min_samples_split": [3, 4], "test_size": 0.35},
-        {"criterion": "gini", "max_depth": [7, 9], "min_samples_split": [6, 8], "test_size": 0.3},
+        {
+            "criterion": "gini",
+            "max_depth": [3, 5],
+            "min_samples_split": [2, 3],
+            "test_size": 0.3,
+        },
+        {
+            "criterion": "entropy",
+            "max_depth": [None, 10],
+            "min_samples_split": [2],
+            "test_size": 0.25,
+        },
+        {
+            "criterion": "gini",
+            "max_depth": [8, 12],
+            "min_samples_split": [5, 10],
+            "test_size": 0.2,
+        },
+        {
+            "criterion": "entropy",
+            "max_depth": [5],
+            "min_samples_split": [3, 4],
+            "test_size": 0.35,
+        },
+        {
+            "criterion": "gini",
+            "max_depth": [7, 9],
+            "min_samples_split": [6, 8],
+            "test_size": 0.3,
+        },
     ]
 
     for i, config in enumerate(model_configs, start=1):

@@ -1,7 +1,10 @@
 # /app/use_cases/get_table_headers.py
 
-from app.repositories.interfaces import DatabaseRepositoryInterface
 from typing import Optional
+
+from backend.app.use_cases.DatabaseRepositoryInterface import (
+    DatabaseRepositoryInterface,
+)
 
 
 class GetLastLoginData:
@@ -19,8 +22,11 @@ class GetLastLoginData:
                 - A dictionary with string keys and list of strings as values representing additional login data (or None if not available).
                 - A string representing any error message (or None if no error).
     """
+
     def __init__(self, db_repo: DatabaseRepositoryInterface):
         self.db_repo = db_repo
 
-    def execute(self) -> tuple[Optional[list[str]], Optional[dict[str, list[str]]], Optional[str]]:
+    def execute(
+        self,
+    ) -> tuple[Optional[list[str]], Optional[dict[str, list[str]]], Optional[str]]:
         return self.db_repo.get_last_login_data()

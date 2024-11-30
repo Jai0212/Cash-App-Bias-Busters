@@ -1,12 +1,11 @@
-from sklearn.model_selection import GridSearchCV
-import pandas as pd
-import pickle
 import os
+import pickle
+
+import pandas as pd
+from sklearn.model_selection import GridSearchCV
 
 
-def save_model(best_clf: GridSearchCV,
-               x_test: pd.DataFrame,
-               y_test: pd.Series) -> None:
+def save_model(best_clf: GridSearchCV, x_test: pd.DataFrame, y_test: pd.Series) -> None:
     """
     Saves the model as a pkl file
     """

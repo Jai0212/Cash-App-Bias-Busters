@@ -1,7 +1,8 @@
-from app.repositories.user_repository import UserRepository
+from backend.app.repositories.user_repo import UserRepo
+
 
 class ChangePasswordInteractor:
-    def __init__(self, user_repo: UserRepository):
+    def __init__(self, user_repo: UserRepo):
         self.user_repo = user_repo
 
     def execute(self, email, old_password, new_password):

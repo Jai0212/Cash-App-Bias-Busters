@@ -1,14 +1,15 @@
 import unittest
 from unittest.mock import MagicMock
-from app.repositories.user_repository import UserRepository
-from app.use_cases.change_password_interactor import ChangePasswordInteractor
+
+from backend.app.repositories.user_repo import UserRepo
+from backend.app.use_cases.change_password_interactor import ChangePasswordInteractor
 
 
 class TestChangePasswordInteractor(unittest.TestCase):
 
     def setUp(self):
         # Create a mock of UserRepository
-        self.mock_user_repo = MagicMock(spec=UserRepository)
+        self.mock_user_repo = MagicMock(spec=UserRepo)
         # Create an instance of ChangePasswordInteractor with the mocked repository
         self.change_password_interactor = ChangePasswordInteractor(self.mock_user_repo)
 

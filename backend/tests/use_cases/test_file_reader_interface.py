@@ -1,8 +1,8 @@
-import pytest
-from abc import ABC, abstractmethod
 from typing import Tuple
+
 import pandas as pd
-from ml_model.interfaces.file_reader_interface import FileReaderInterface
+
+from backend.ml_model.use_cases.FileReaderInterface import FileReaderInterface
 
 
 # Mock subclass to allow instantiation and test pass statements

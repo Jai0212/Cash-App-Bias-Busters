@@ -1,12 +1,38 @@
-from app.repositories.interfaces import UserRepositoryInterface
-from app.infrastructure.db_connection_manager import DbConnectionManager
-from mysql.connector import Error
-from typing import Optional
-import json
 import base64
+import json
+from typing import Optional
+
+from mysql.connector import Error
+
+from backend.app.infrastructure.db_connection_manager import DbConnectionManager
+from backend.app.use_cases.UserRepositoryInterface import UserRepositoryInterface
 
 
-class UserRepository(UserRepositoryInterface):
+class UserRepo(UserRepositoryInterface):
+    """UserRepo is a repository class that provides methods to interact with the users table in the database.
+
+    Methods
+    -------
+    __init__(table_name: str)
+        Initializes the UserRepo with the specified table name.
+
+    connect()
+        Establishes the database connection using DbConnectionManager.
+
+    get_user_by_email(email: str) -> Optional[dict]
+        Fetches a user by their email.
+
+    create_user(firstname: str, lastname: str, email: str, password: str) -> None
+        Inserts a new user into the users table.
+
+    get_user_by_email_and_password(email: str, password: str) -> Optional[dict]
+        Fetches a user by their email and password.
+
+    update_password(email: str, new_password: str) -> None
+        Updates the password of a user by their email.
+
+    process_shared_data(encoded_data: str) -> dict"""
+
     def __init__(self, table_name: str):
         self.connection = None
         self.table_name = table_name

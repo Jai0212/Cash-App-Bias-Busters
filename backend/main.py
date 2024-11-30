@@ -1,14 +1,15 @@
-import os
-import mysql.connector
-from mysql.connector import Error
-from dotenv import load_dotenv
-import tempfile
-import pandas as pd
 import csv
+import os
+import tempfile
 from datetime import datetime, timedelta
-from typing import Optional, List, Dict, Tuple
-from werkzeug.datastructures import FileStorage
+from typing import Dict, List, Optional, Tuple
+
+import mysql.connector
+import pandas as pd
+from dotenv import load_dotenv
 from ml_model.use_cases.model import model
+from mysql.connector import Error
+from werkzeug.datastructures import FileStorage
 
 curr_dir = os.path.dirname(__file__)
 DATABASE_OUTPUT_PATH = os.path.join(curr_dir, "../database/output.csv")
@@ -595,14 +596,14 @@ if __name__ == "__main__":
     # import_csv_to_db("database/single_transaction.csv", "test_table")
     save_data_to_csv("test_table")
     update_comparison_csv(
-         "jj@gmail.com",
-         ["gender", "age"],
-         {
-             "gender": ["Female", "Male", "Non-binary", "Other"],
-             "age": ["10-20", "20-30", "30-40", "40-50"],
-         },
-         "year",
-     )
+        "jj@gmail.com",
+        ["gender", "age"],
+        {
+            "gender": ["Female", "Male", "Non-binary", "Other"],
+            "age": ["10-20", "20-30", "30-40", "40-50"],
+        },
+        "year",
+    )
     model()
     # update_comparison_csv(
     #     "test_table",

@@ -1,8 +1,10 @@
 import unittest
-from unittest.mock import patch, MagicMock
-from app.repositories.sqlite_db_repo import SqliteDbRepo
-from app.entities.user import User
+from unittest.mock import MagicMock, patch
+
 from mysql.connector import Error
+
+from backend.app.entities.user import User
+from backend.app.repositories.sqlite_db_repo import SqliteDbRepo
 
 
 class TestSqliteDbRepo(unittest.TestCase):
@@ -11,7 +13,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         self.user = User("ff@gmail.com")
         self.repo = SqliteDbRepo(self.user)
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_connect(self, mock_get_connection):
         # Test the connection method
         mock_connection = MagicMock()
@@ -21,7 +23,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         mock_get_connection.assert_called_once()
         self.assertEqual(self.repo.connection, mock_connection)
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_see_all_tables(self, mock_get_connection):
         # Test seeing all tables in the database
         mock_connection = MagicMock()
@@ -36,7 +38,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         mock_cursor.fetchall.assert_called_once()
         mock_cursor.close.assert_called_once()
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_create_table(self, mock_get_connection):
         # Test table creation
         mock_connection = MagicMock()
@@ -49,7 +51,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         mock_cursor.execute.assert_called_once()
         mock_cursor.close.assert_called_once()
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_delete_table(self, mock_get_connection):
         # Test table deletion
         mock_connection = MagicMock()
@@ -64,7 +66,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         )
         mock_cursor.close.assert_called_once()
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_fetch_data(self, mock_get_connection):
         # Test data fetching
         mock_connection = MagicMock()
@@ -79,7 +81,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         self.assertEqual(headers, ["column1", "column2"])
         self.assertEqual(results, [("data1", "data2"), ("data3", "data4")])
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_update_db_for_user(self, mock_get_connection):
         # Test updating user data in the database
         mock_connection = MagicMock()
@@ -122,7 +124,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         )
         mock_cursor.close.assert_called_once()
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_update_db_for_user_2(self, mock_get_connection):
         # Test updating user data in the database
         mock_connection = MagicMock()
@@ -164,7 +166,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         )
         mock_cursor.close.assert_called_once()
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_get_last_login_data(self, mock_get_connection):
         # Test getting last login data
         mock_connection = MagicMock()
@@ -201,7 +203,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         )
         self.assertEqual(time, "year")
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_get_last_login_data_no_data(self, mock_get_connection):
         # Test when no data is found for last login
         mock_connection = MagicMock()
@@ -217,7 +219,7 @@ class TestSqliteDbRepo(unittest.TestCase):
         self.assertIsNone(choices)
         self.assertIsNone(time)
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_create_table_connection_error(self, mock_get_connection):
         """Test create table with connection error"""
         mock_get_connection.return_value = None  # Simulate no connection
@@ -226,7 +228,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.repo.create_table()
             mock_print.assert_called_with("Not connected to the database.")
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_create_table_sql_error(self, mock_get_connection):
         """Test SQL error when creating table"""
         mock_connection = MagicMock()
@@ -237,7 +239,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.repo.create_table()
             mock_print.assert_called_with("Error: SQL error")
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_delete_table_connection_error(self, mock_get_connection):
         """Test delete table with connection error"""
         mock_get_connection.return_value = None  # Simulate no connection
@@ -246,7 +248,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.repo.delete_table()
             mock_print.assert_called_with("Not connected to the database.")
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_delete_table_sql_error(self, mock_get_connection):
         """Test SQL error when deleting table"""
         mock_connection = MagicMock()
@@ -257,7 +259,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.repo.delete_table()
             mock_print.assert_called_with("Error: SQL error")
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_fetch_data_connection_error(self, mock_get_connection):
         """Test fetch data with connection error"""
         mock_get_connection.return_value = None  # Simulate no connection
@@ -268,7 +270,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.assertEqual(headers, [])
             self.assertEqual(results, [])
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_fetch_data_sql_error(self, mock_get_connection):
         """Test SQL error when fetching data"""
         mock_connection = MagicMock()
@@ -281,7 +283,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.assertEqual(headers, [])
             self.assertEqual(results, [])
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_update_db_for_user_connection_error(self, mock_get_connection):
         """Test update DB with connection error"""
         mock_get_connection.return_value = None  # Simulate no connection
@@ -290,7 +292,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.repo.update_db_for_user(["age"], {"age": ["30"]}, "year")
             mock_print.assert_called_with("Not connected to the database.")
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_update_db_for_user_sql_error(self, mock_get_connection):
         """Test SQL error when updating DB for user"""
         mock_connection = MagicMock()
@@ -301,7 +303,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.repo.update_db_for_user(["age"], {"age": ["30"]}, "year")
             mock_print.assert_called_with("Error: SQL error")
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_get_last_login_data_connection_error(self, mock_get_connection):
         """Test get last login data with connection error"""
         mock_get_connection.return_value = None  # Simulate no connection
@@ -313,7 +315,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.assertIsNone(choices)
             self.assertIsNone(time)
 
-    @patch("app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
+    @patch("backend.app.repositories.sqlite_db_repo.DbConnectionManager.get_connection")
     def test_get_last_login_data_sql_error(self, mock_get_connection):
         """Test SQL error when fetching last login data"""
         mock_connection = MagicMock()
@@ -327,7 +329,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             self.assertIsNone(choices)
             self.assertIsNone(time)
 
-    @patch("app.repositories.sqlite_db_repo.SqliteDbRepo.connect")
+    @patch("backend.app.repositories.sqlite_db_repo.SqliteDbRepo.connect")
     def test_see_all_tables_no_connection(self, mock_connect):
         """Test when there is no database connection."""
         # Simulate no connection by setting self.connection to None
@@ -339,7 +341,7 @@ class TestSqliteDbRepo(unittest.TestCase):
             # Ensure that the print statement for 'Not connected to the database.' is called
             mock_print.assert_any_call("Not connected to the database.")
 
-    @patch("app.repositories.sqlite_db_repo.SqliteDbRepo.connect")
+    @patch("backend.app.repositories.sqlite_db_repo.SqliteDbRepo.connect")
     def test_see_all_tables_db_error(self, mock_connect):
         """Test when a database error occurs."""
         # Simulate a connection error (like a MySQL Error)

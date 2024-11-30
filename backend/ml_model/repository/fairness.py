@@ -1,5 +1,5 @@
-from fairlearn.metrics import MetricFrame
 import numpy as np
+from fairlearn.metrics import MetricFrame
 
 
 class FairnessEvaluator:
@@ -33,11 +33,16 @@ class FairnessEvaluator:
         metric_frame = MetricFrame(
             metrics={
                 "accuracy": lambda y_true, y_pred: np.mean(y_true == y_pred),
-                "false_positive_rate": lambda y_true, y_pred: np.mean((y_true == 0) & (y_pred == 1)),
-                "false_negative_rate": lambda y_true, y_pred: np.mean((y_true == 1) & (y_pred == 0)),
+                "false_positive_rate": lambda y_true, y_pred: np.mean(
+                    (y_true == 0) & (y_pred == 1)
+                ),
+                "false_negative_rate": lambda y_true, y_pred: np.mean(
+                    (y_true == 1) & (y_pred == 0)
+                ),
             },
             y_true=self.y_true,
             y_pred=self.y_pred,
-            sensitive_features=self.sensitive_features,)
+            sensitive_features=self.sensitive_features,
+        )
 
         return metric_frame

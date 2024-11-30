@@ -1,13 +1,14 @@
 import os
-from app.entities import User
-from app.use_cases import (
+
+from backend.app.entities import User
+from backend.app.repositories import CsvFileRepo, SqliteDbRepo
+from backend.app.use_cases import (
     Generate,
     GetHeaders,
     GetLastLoginData,
     GetValuesUnderHeader,
     UploadData,
 )
-from app.repositories import SqliteDbRepo, CsvFileRepo
 
 curr_dir = os.path.dirname(__file__)
 file_path = os.path.join(curr_dir, "../database/output.csv")
@@ -32,8 +33,7 @@ file_repo = CsvFileRepo(user, file_path)
 # print(get_last_login_data.execute())
 
 demographics = ["gender"]
-choices = {
-    "gender": ["Non-binary", "", "", ""]},
+choices = ({"gender": ["Non-binary", "", "", ""]},)
 time = "year"
 generate = Generate(file_repo, db_repo)
 result = generate.execute(demographics, choices, time)

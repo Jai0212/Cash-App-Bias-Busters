@@ -1,17 +1,52 @@
 # /app/repositories/sqlite_db_repo.py
 
-from app.repositories.interfaces import DatabaseRepositoryInterface
-from app.infrastructure.db_connection_manager import DbConnectionManager
-from app.entities.user import User
+from typing import Optional
+
 import mysql.connector
 from mysql.connector import Error
-from typing import Optional
+
+from backend.app.entities.user import User
+from backend.app.infrastructure.db_connection_manager import DbConnectionManager
+from backend.app.use_cases.DatabaseRepositoryInterface import (
+    DatabaseRepositoryInterface,
+)
 
 
 class SqliteDbRepo(DatabaseRepositoryInterface):
+    class SqliteDbRepo:
+        """A repository class for interacting with a SQLite database.
+
+        Attributes:
+            user (User): The user object containing user-specific information.
+            connection (sqlite3.Connection): The connection to the SQLite database.
+            table_name (str): The name of the table associated with the user.
+
+        Methods:
+            connect():
+                Establishes a connection to the SQLite database.
+
+            see_all_tables() -> None:
+                Retrieves and prints all tables in the database.
+
+            create_table() -> None:
+                Creates a table in the SQLite database with predefined columns.
+
+            delete_table() -> None:
+                Deletes the table associated with the user from the database.
+
+            fetch_data(p=False) -> tuple[list[str], tuple[str, ...]]:
+                Fetches all data from the user's table and returns the column headers and data.
+
+            update_db_for_user(demographics: list[str], choices: dict[str, list[str]], time: str) -> None:
+                Updates the user's table with the specified demographics and choices.
+
+            get_last_login_data() -> tuple[Optional[list[str]], Optional[dict[str, list[str]]], Optional[str]]:
+                Retrieves the last login demographics and choices for the specified user.
+        """
+
     def __init__(self, user: User):
         self.connection = None
-        
+
         self.user = user
         self.table_name = user.table_name
 
@@ -118,7 +153,7 @@ class SqliteDbRepo(DatabaseRepositoryInterface):
             if results:
                 print(f"Data fetched from {self.table_name}:")
                 print(headers)
-                
+
                 if p:
                     for row in results:
                         print(row)

@@ -1,13 +1,14 @@
+import os
+import sys
 from typing import Dict, Tuple
+
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-import sys
-import os
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(project_root)
 
-from interfaces.data_processor_interface import DataProcessorInterface
+from backend.ml_model.use_cases.DataProcessorInterface import DataProcessorInterface
 
 
 class DataProcessorMultiple(DataProcessorInterface):
@@ -18,6 +19,7 @@ class DataProcessorMultiple(DataProcessorInterface):
     mappings for these encodings, and drop the original categorical columns
     from the DataFrame.
     """
+
     def __init__(self, inputs: pd.DataFrame):
         self.inputs = inputs
         self.categorical_columns = ["gender", "age_groups", "race", "state"]
@@ -29,12 +31,16 @@ class DataProcessorMultiple(DataProcessorInterface):
         encoder in le_dict.
         """
         # Filter the input columns to only include the categorical columns needed
-        self.inputs = self.inputs[self.categorical_columns].copy()  # Make a copy of the slice
+        self.inputs = self.inputs[
+            self.categorical_columns
+        ].copy()  # Make a copy of the slice
 
         for col in self.categorical_columns:
             if col in self.inputs.columns:
                 le = LabelEncoder()
-                self.inputs.loc[:, f"{col}_N"] = le.fit_transform(self.inputs[col])  # Use .loc to avoid the warning
+                self.inputs.loc[:, f"{col}_N"] = le.fit_transform(
+                    self.inputs[col]
+                )  # Use .loc to avoid the warning
                 self.le_dict[col] = le
         return self.inputs
 
@@ -53,5 +59,4 @@ class DataProcessorMultiple(DataProcessorInterface):
         Drops the original categorical columns and returns the
         updated DataFrame.
         """
-        return self.inputs.drop(columns=self.categorical_columns,
-                                errors="ignore")
+        return self.inputs.drop(columns=self.categorical_columns, errors="ignore")

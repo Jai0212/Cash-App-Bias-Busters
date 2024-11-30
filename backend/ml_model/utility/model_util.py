@@ -1,11 +1,11 @@
 """This file will hold the helper functions for the ml-model folder"""
 
-from typing import Tuple
 import os
 import sys
+
 import pandas as pd
-import numpy as np
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(project_root)
 from ml_model.entities.datapoint_entity import DataPoint
 from ml_model.repository.file_reader import FileReader
@@ -15,7 +15,9 @@ def get_target(df: pd.DataFrame) -> pd.Series:
     """
     Returns the target column 'action_status' from the dataframe, if exists.
     """
-    return df.get("action_status", pd.Series())  # Get 'action_status' or an empty Series if it does not exist
+    return df.get(
+        "action_status", pd.Series()
+    )  # Get 'action_status' or an empty Series if it does not exist
 
 
 def get_inputs(df: pd.DataFrame) -> pd.DataFrame:
@@ -78,13 +80,14 @@ def is_nan_in_datapoint(data_point) -> bool:
     return any(pd.isna(value) for value in data_point.__dict__.values())
 
 
-def clean_datapoints(filereader: FileReader, data_point_list: list[DataPoint]) -> list[DataPoint]:
+def clean_datapoints(
+    filereader: FileReader, data_point_list: list[DataPoint]
+) -> list[DataPoint]:
     """
     Cleans the list of DataPoint objects from instances with NaN in them.
     """
 
     if filereader.single_column_check:
-        return [x for x in data_point_list if
-                x.feature1 != "NaN"]
+        return [x for x in data_point_list if x.feature1 != "NaN"]
 
     return [x for x in data_point_list if x.feature1 != "NaN" and x.feature2 != "NaN"]

@@ -1,14 +1,12 @@
-import pytest
 import pandas as pd
+import pytest
 from ml_model.repository.file_reader import FileReader
 
 
 @pytest.fixture
 def single_column_file(tmp_path):
     """Fixture to create a temporary single-column CSV file."""
-    data = pd.DataFrame({
-        "action_status": [1, 0, 1, 0, 1]
-    })
+    data = pd.DataFrame({"action_status": [1, 0, 1, 0, 1]})
     file_path = tmp_path / "single_column_file.csv"
     data.to_csv(file_path, index=False)
     return file_path
@@ -52,5 +50,7 @@ def test_valid_file(tmp_path):
     assert not target.empty, "Target should not be empty."
 
     # Verify age groups were created
-    assert "age_groups" in df_dropped.columns, "Age groups should be created in the dataframe."
+    assert (
+        "age_groups" in df_dropped.columns
+    ), "Age groups should be created in the dataframe."
     assert "age" not in df_dropped.columns, "Original 'age' column should be dropped."

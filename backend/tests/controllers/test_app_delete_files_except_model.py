@@ -1,10 +1,12 @@
-from unittest.mock import patch, MagicMock
 import os
+from unittest.mock import MagicMock, patch
+
 import pytest
-from app.controllers.app import (
+
+from backend.app.controllers.app import (  # Replace with the correct import path
     delete_files_except_model,
     load_model,
-)  # Replace with the correct import path
+)
 
 UPLOAD_FOLDER = "uploads/"
 

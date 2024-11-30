@@ -82,3 +82,5 @@ node_modules/
 
 package-lock.json
 package.json
+
+backend/ml_model/model_with_score.pkl

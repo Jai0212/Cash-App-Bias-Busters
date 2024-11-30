@@ -1,8 +1,9 @@
 import os
 import sys
-from app.repositories.interfaces import FileRepositoryInterface
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterface
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(project_root)
 
 from ml_model.repository.multiple_models import evaluate_multiple_models

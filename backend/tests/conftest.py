@@ -1,8 +1,10 @@
 # conftest.py
-import pytest
 import os
-from app.repositories import SqliteDbRepo, CsvFileRepo
-from app.entities import User
+
+import pytest
+
+from backend.app.entities import User
+from backend.app.repositories import CsvFileRepo, SqliteDbRepo
 
 
 @pytest.fixture
