@@ -1,10 +1,27 @@
 from app.repositories.user_repository import UserRepository
 
 class ChangePasswordInteractor:
+    """
+    This interactor handles the logic for changing a user's password.
+    """
     def __init__(self, user_repo: UserRepository):
+        """
+        Initializes the ChangePasswordInteractor with a user repository.
+
+        :param user_repo: Instance of UserRepository for user data operations.
+        """
         self.user_repo = user_repo
 
-    def execute(self, email, old_password, new_password):
+    def execute(self, email, old_password, new_password)-> dict:
+        """
+        Changes the user's password by verifying the old password and updating it to the new one.
+
+        :param email: The email address of the user.
+        :param old_password: The current password of the user.
+        :param new_password: The new password to set for the user.
+        :return: A dictionary containing a success message.
+        :raises ValueError: If the old password is incorrect or the user does not exist.
+        """
         user = self.user_repo.get_user_by_email_and_password(email, old_password)
         if not user:
             raise ValueError("Old password is incorrect or user does not exist")
