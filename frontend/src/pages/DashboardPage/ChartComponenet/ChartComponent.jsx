@@ -231,15 +231,15 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
         } else {
           // After the last accuracy item, allow normal tab flow
           event.stopImmediatePropagation();  // Stop custom tabbing, allow native behavior
-  
+
           // Focus on the next focusable element (like buttons or other controls)
           if (lastTabIndex == 19) {
-            setHoveredIndex(nextIndex); 
+            setHoveredIndex(nextIndex);
             if (myChartRef.current) {
               const chart = myChartRef.current;
               chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
-              chart.update(); 
-              
+              chart.update();
+
               chart.tooltip.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
               chart.tooltip.update();
               chart.draw();
@@ -275,9 +275,11 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   }));
 
   return (
-    <div className="chart-container">
-      <canvas ref={chartRef}/> 
-    </div>
+      <div className="chart-container">
+        {/* Add data-testid for chart canvas */}
+        <canvas ref={chartRef} data-testid="chart-canvas" />
+
+      </div>
   );
 });
 

@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./UserNavbar.css";
+import { envConfig } from "../../envConfig";
 
 function UserNavbar() {
-  const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const VITE_BACKEND_URL = envConfig();
 
   const navigate = useNavigate();
 

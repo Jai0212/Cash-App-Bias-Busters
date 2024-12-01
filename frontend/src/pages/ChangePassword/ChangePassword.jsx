@@ -54,63 +54,67 @@ const ChangePassword = () => {
 
       <hr />
       <div className="alert alert-primary">
-        <form onSubmit={handleSubmit(handleForm)} id={"form"}>
+        <form onSubmit={handleSubmit(handleForm)} id="form">
           <div className="mb-3">
-            <label htmlFor="">Enter Old Password</label>
+            <label htmlFor="old_password">Enter Old Password</label>
             <input
-              {...register("old_password", {
-                required: "This field is required",
-              })}
-              type="password"
-              className={"form-control"}
+                id="old_password"
+                {...register("old_password", {
+                  required: "This field is required",
+                })}
+                type="password"
+                className="form-control"
             />
             <ErrorMessage
-              errors={errors}
-              name="old_password"
-              render={({ message }) => (
-                <p className={"text-danger"}>{message}</p>
-              )}
+                errors={errors}
+                name="old_password"
+                render={({message}) => (
+                    <p className="text-danger">{message}</p>
+                )}
             />
           </div>
 
           <div className="mb-3">
-            <label htmlFor="">Enter New Password</label>
+            <label htmlFor="new_password">Enter New Password</label>
             <input
-              {...register("new_password", {
-                required: "This field is required",
-              })}
-              type="password"
-              className={"form-control"}
+                id="new_password"
+                {...register("new_password", {
+                  required: "This field is required",
+                })}
+                type="password"
+                className="form-control"
             />
             <ErrorMessage
-              errors={errors}
-              name="new_password"
-              render={({ message }) => (
-                <p className={"text-danger"}>{message}</p>
-              )}
+                errors={errors}
+                name="new_password"
+                render={({message}) => (
+                    <p className="text-danger">{message}</p>
+                )}
             />
           </div>
 
           <div className="mb-3">
-            <label htmlFor="">Confirm Password</label>
+            <label htmlFor="confirm_password">Confirm Password</label>
             <input
-              {...register("confirm_password", {
-                required: "This field is required",
-              })}
-              type="password"
-              className={"form-control"}
+                id="confirm_password"
+                {...register("confirm_password", {
+                  required: "This field is required",
+                })}
+                type="password"
+                className="form-control"
             />
             <ErrorMessage
-              errors={errors}
-              name="confirm_password"
-              render={({ message }) => (
-                <p className={"text-danger"}>{message}</p>
-              )}
+                errors={errors}
+                name="confirm_password"
+                render={({message}) => (
+                    <p className="text-danger">{message}</p>
+                )}
             />
           </div>
 
-          <button className={"btn btn-primary"}>Change Password</button>
+          <button className="btn btn-primary">Change Password</button>
         </form>
+
       </div>
     </>
   );
