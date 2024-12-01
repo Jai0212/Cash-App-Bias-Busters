@@ -1,4 +1,10 @@
 module.exports = {
+  transform: {
+    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
+  },
+  transformIgnorePatterns: [
+    "/node_modules/(?!your-package-to-transform).+\\.js$",
+  ],
   testEnvironment: "jsdom",
   moduleNameMapper: {
     "^.+.svg$": "jest-svg-transformer",
