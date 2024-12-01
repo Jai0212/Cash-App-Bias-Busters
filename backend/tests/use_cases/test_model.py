@@ -127,8 +127,8 @@ def mock_data_processor(mock_data):
 def mock_safe_train_test_split():
     # Mock the train-test split behavior
     with patch(
-        "ml_model.repository.safe_split.SafeSplitter"
-    ) as mock_split.train_test_split:
+        "ml_model.repository.safe_split.SafeSplitter.train_test_split"
+    ) as mock_split:
         mock_split.return_value = (
             pd.DataFrame(),
             pd.DataFrame(),
@@ -141,7 +141,7 @@ def mock_safe_train_test_split():
 @pytest.fixture
 def mock_safe_grid_search():
     # Mock the grid search behavior
-    with patch("ml_model.repository.safe_gird_search.SafeGridSearch") as mock_search.perform_search:
+    with patch("ml_model.repository.safe_gird_search.SafeGridSearch.perform_search") as mock_search:
         clf = MagicMock(spec=DecisionTreeClassifier)
         mock_search.return_value = clf
         yield mock_search
