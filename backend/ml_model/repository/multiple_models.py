@@ -12,95 +12,124 @@ sys.path.append(project_root)
 from backend.ml_model.repository.data_preprocessing_multiple_models import DataProcessorMultiple
 from backend.ml_model.repository.fairness import FairnessEvaluator
 from backend.ml_model.repository.file_reader_multiple_models import FileReaderMultiple
-from backend.ml_model.repository.safe_train_grid import safe_train_test_split
+from backend.ml_model.repository.safe_split import SafeSplitter
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_file_path = os.path.join(current_dir, "../../../database/output.csv")
 
 
-def evaluate_multiple_models(model_files):
-    file_reader = FileReaderMultiple(csv_file_path)
-    df_dropped, inputs, target = file_reader.read_file()
+class MultiModelEvaluator:
+    """
+    A class for evaluating multiple machine learning models on a dataset.
 
-    data_processor = DataProcessorMultiple(inputs)
-    inputs_encoded = data_processor.encode_categorical_columns()
-    inputs_n = data_processor.drop_categorical_columns()
+    This class handles data preprocessing, model loading, and fairness evaluation
+    based on specified sensitive features, producing metrics for each model.
+    """
+    def __init__(self, model_files: list):
+        """
+        Initializes the ModelEvaluator with the file path to the CSV and model files.
 
-    split_data = safe_train_test_split(inputs_n, target)
-    if split_data is None:
-        return {}
+        Parameters:
+        -----------
 
-    x_train, x_test, y_train, y_test = split_data
+        model_files : list
+            List of file paths to the model pickle files to evaluate.
+        """
+        self.model_files = model_files
 
-    # Debug: Print columns of x_test
-    print(f"Columns in x_test: {x_test.columns}")
+    def evaluate_models(self) -> dict:
+        """
+        Evaluates multiple models for fairness and performance metrics.
 
-    # Update sensitive features list to match the actual column names in x_test
-    sensitive_features_list = ["gender_N", "age_groups_N", "race_N", "state_N"]
+        Returns:
+        --------
+        dict
+            A dictionary containing evaluation results for each model file.
+        """
+        # Read and preprocess the data
+        file_reader = FileReaderMultiple(csv_file_path)
+        df_dropped, inputs, target = file_reader.read_file()
 
-    # Dictionary to store results
-    results = {}
+        data_processor = DataProcessorMultiple(inputs)
+        inputs_encoded = data_processor.encode_categorical_columns()
+        inputs_n = data_processor.drop_categorical_columns()
 
-    for model_file in model_files:
-        try:
-            # Load the model
-            with open(model_file, "rb") as f:
-                model_dict = pickle.load(f)
-                model = model_dict["model"]
-                print(f"Loaded object type: {type(model)}")
-                print(f"Loaded object: {model}")
+        data_splitter = SafeSplitter()
+        split_data = data_splitter.train_test_split(inputs_n, target)
+        if split_data is None:
+            return {}
 
-            # Make predictions
-            y_pred = model.predict(x_test)
+        x_train, x_test, y_train, y_test = split_data
 
-            # Debug: Check predictions
-            print(f"True Labels (y_test): {y_test.head()}")
-            print(f"Predicted Labels (y_pred): {y_pred[:10]}")
+        # Debug: Print columns of x_test
+        print(f"Columns in x_test: {x_test.columns}")
 
-            # Dictionary and list to store fairness results for the model
-            model_results = {}
-            fairness_values = []
+        # Update sensitive features list to match the actual column names in x_test
+        sensitive_features_list = ["gender_N", "age_groups_N", "race_N", "state_N"]
 
-            for sensitive_feature in sensitive_features_list:
-                # Select the sensitive feature column for the evaluation
-                if sensitive_feature in x_test.columns:
-                    sensitive_col = x_test[sensitive_feature]
-                    print(
-                        f"Sensitive Feature: {sensitive_feature}, "
-                        f"Column Data: {sensitive_col.head()}"
+        # Dictionary to store results
+        results = {}
+
+        for model_file in self.model_files:
+            try:
+                # Load the model
+                with open(model_file, "rb") as f:
+                    model_dict = pickle.load(f)
+                    model = model_dict["model"]
+                    print(f"Loaded object type: {type(model)}")
+                    print(f"Loaded object: {model}")
+
+                # Make predictions
+                y_pred = model.predict(x_test)
+
+                # Debug: Check predictions
+                print(f"True Labels (y_test): {y_test.head()}")
+                print(f"Predicted Labels (y_pred): {y_pred[:10]}")
+
+                # Dictionary and list to store fairness results for the model
+                model_results = {}
+                fairness_values = []
+
+                for sensitive_feature in sensitive_features_list:
+                    # Select the sensitive feature column for the evaluation
+                    if sensitive_feature in x_test.columns:
+                        sensitive_col = x_test[sensitive_feature]
+                        print(
+                            f"Sensitive Feature: {sensitive_feature}, "
+                            f"Column Data: {sensitive_col.head()}"
+                        )
+
+                        # Evaluate fairness for this specific sensitive feature
+                        fairness_evaluator = FairnessEvaluator(
+                            y_test, y_pred, sensitive_col
+                        )
+                        metric_frame = fairness_evaluator.evaluate_fairness()
+
+                        average = sum(metric_frame.by_group["accuracy"]) / len(
+                            metric_frame.by_group["accuracy"]
+                        )
+                        rounded = round(average, 3)
+
+                        fairness_values.append(average)
+
+                        # Store the metrics for this demographic
+                        demo_name = sensitive_feature.replace("_N", "")
+                        model_results[demo_name] = rounded
+                    else:
+                        print(
+                            f"Sensitive feature '{sensitive_feature}' "
+                            f"not found in x_test."
+                        )
+
+                if fairness_values:
+                    model_results["variance"] = round(pd.Series(fairness_values).var(), 7)
+                    model_results["mean"] = round(
+                        sum(fairness_values) / len(fairness_values), 3
                     )
+                # Store results for the model
+                results[model_file] = model_results
 
-                    # Evaluate fairness for this specific sensitive feature
-                    fairness_evaluator = FairnessEvaluator(
-                        y_test, y_pred, sensitive_col
-                    )
-                    metric_frame = fairness_evaluator.evaluate_fairness()
+            except Exception as e:
+                results[model_file] = f"Error: {e}"
 
-                    average = sum(metric_frame.by_group["accuracy"]) / len(
-                        metric_frame.by_group["accuracy"]
-                    )
-                    rounded = round(average, 3)
-
-                    fairness_values.append(average)
-
-                    # Store the metrics for this demographic
-                    demo_name = sensitive_feature.replace("_N", "")
-                    model_results[demo_name] = rounded
-                else:
-                    print(
-                        f"Sensitive feature '{sensitive_feature}' "
-                        f"not found in x_test."
-                    )
-
-            if fairness_values:
-                model_results["variance"] = round(pd.Series(fairness_values).var(), 7)
-                model_results["mean"] = round(
-                    sum(fairness_values) / len(fairness_values), 3
-                )
-            # Store results for the model
-            results[model_file] = model_results
-
-        except Exception as e:
-            results[model_file] = f"Error: {e}"
-
-    return results
+        return results

@@ -8,7 +8,7 @@ from backend.ml_model.entities.datapoint_entity import (
 from backend.ml_model.repository import data_point_creator_multiple, data_point_creator_single
 from backend.ml_model.repository.data_point_creator_multiple import MultiFeatureDataPointCreator
 from backend.ml_model.repository.data_point_creator_single import SingleFeatureDataPointCreator
-from backend.ml_model.use_cases.model import model
+from backend.ml_model.use_cases.model import ModelTrainer
 from backend.ml_model.utility import model_util
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
@@ -127,8 +127,8 @@ def mock_data_processor(mock_data):
 def mock_safe_train_test_split():
     # Mock the train-test split behavior
     with patch(
-        "ml_model.repository.safe_train_grid.safe_train_test_split"
-    ) as mock_split:
+        "ml_model.repository.safe_split.SafeSplitter"
+    ) as mock_split.train_test_split:
         mock_split.return_value = (
             pd.DataFrame(),
             pd.DataFrame(),
@@ -141,7 +141,7 @@ def mock_safe_train_test_split():
 @pytest.fixture
 def mock_safe_grid_search():
     # Mock the grid search behavior
-    with patch("ml_model.repository.safe_train_grid.safe_grid_search") as mock_search:
+    with patch("ml_model.repository.safe_gird_search.SafeGridSearch") as mock_search.perform_search:
         clf = MagicMock(spec=DecisionTreeClassifier)
         mock_search.return_value = clf
         yield mock_search
@@ -160,8 +160,8 @@ def mock_fairness_evaluator():
 @pytest.fixture
 def mock_save_model():
     # Mock the save_model behavior
-    with patch("ml_model.repository.model_saver.save_model") as mock_save:
-        yield mock_save
+    with patch("ml_model.repository.model_saver.ModelSaver") as mock_save:
+        yield mock_save.save_model
 
 
 @pytest.fixture
@@ -178,10 +178,10 @@ def mock_data_point_creator():
 
 @patch("ml_model.repository.file_reader.FileReader", new_callable=MagicMock)
 @patch("ml_model.repository.data_preprocessing.DataProcessor", new_callable=MagicMock)
-@patch("ml_model.repository.safe_train_grid.safe_train_test_split")
-@patch("ml_model.repository.safe_train_grid.safe_grid_search")
+@patch("ml_model.repository.safe_split.SafeSplitter.train_test_split")
+@patch("ml_model.repository.safe_grid_search.SafeGridSearch.perform_search")
 @patch("ml_model.repository.fairness.FairnessEvaluator", new_callable=MagicMock)
-@patch("ml_model.repository.model_saver.save_model", new_callable=MagicMock)
+@patch("ml_model.repository.model_saver.ModelSaver.save_model", new_callable=MagicMock)
 @patch(
     "ml_model.repository.data_point_creator_multiple.MultiFeatureDataPointCreator",
     new_callable=MagicMock,
@@ -234,7 +234,8 @@ def test_model(
     ]
 
     # Act: Call the model function
-    result = model()
+    model = ModelTrainer()
+    result = model.train_and_evaluate()
 
     # Assert: Ensure the result is as expected
     assert isinstance(result, list)  # We expect a list of data points

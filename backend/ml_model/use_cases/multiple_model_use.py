@@ -6,7 +6,7 @@ from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterfac
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(project_root)
 
-from backend.ml_model.repository.multiple_models import evaluate_multiple_models
+from backend.ml_model.repository.multiple_models import MultiModelEvaluator
 
 
 class EvaluateModelsUseCase:
@@ -35,7 +35,8 @@ class EvaluateModelsUseCase:
         # self.file_repo.import_csv_to_db()
         print("working till here")
         self.file_repo.save_data_to_csv()
-        output = evaluate_multiple_models(self.model_files)
+        model_evaluator = MultiModelEvaluator(self.model_files)
+        output = model_evaluator.evaluate_multiple_models()
         self.file_repo.delete_csv_data()
 
         return output

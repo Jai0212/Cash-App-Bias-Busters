@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from backend.ml_model.repository.multiple_models import evaluate_multiple_models
+from backend.ml_model.repository.multiple_models import MultiModelEvaluator
 from backend.ml_model.use_cases.multiple_model_use import EvaluateModelsUseCase
 
 
@@ -18,7 +18,7 @@ def mock_model_files():
     return ["model1.pkl", "model2.pkl"]
 
 
-@patch("ml_model.repository.multiple_models.evaluate_multiple_models")
+@patch("ml_model.repository.multiple_models.MultiModelEvaluator.evaluate_models")
 def test_execute_with_failure(
     mock_evaluate_multiple_models, mock_file_repo, mock_model_files
 ):

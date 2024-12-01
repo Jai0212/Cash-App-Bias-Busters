@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 import pytest
-from backend.ml_model.repository.model_saver import save_model
+from backend.ml_model.repository.model_saver import ModelSaver
 from sklearn.model_selection import GridSearchCV
 
 
@@ -32,7 +32,8 @@ def test_save_model(mock_pickle_dump, mock_open, mock_model_and_data):
     mock_clf, x_test, y_test = mock_model_and_data
 
     # Call the save_model function
-    result = save_model(mock_clf, x_test, y_test)
+    model_saver = ModelSaver(mock_clf, x_test, y_test)
+    result = model_saver.save_model()
 
     # Check that the function returns None
     assert (

@@ -6,7 +6,7 @@ from backend.app.use_cases.FileRepositoryInterface import FileRepositoryInterfac
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(project_root)
 
-from backend.ml_model.use_cases.model import model
+from backend.ml_model.use_cases.model import ModelTrainer
 
 from backend.app.use_cases.DatabaseRepositoryInterface import (
     DatabaseRepositoryInterface,
@@ -39,7 +39,8 @@ class Generate:
         self.file_repo.update_comparison_csv(demographics, choices, time)
         self.db_repo.update_db_for_user(demographics, choices, time)
         print("GENERATE:", demographics, choices, time)
-        output = model()
+        model_executer = ModelTrainer()
+        output = model_executer.train_and_evaluate()
 
         if output is None:
             output = []
