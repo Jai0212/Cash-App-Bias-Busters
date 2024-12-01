@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./UserSignup.css";
 import axios from "axios";
+import { envConfig } from "../../envConfig";
 
 const UserSignup = () => {
-  const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const VITE_BACKEND_URL = envConfig();
 
   const navigate = useNavigate();
 
@@ -194,7 +195,7 @@ const UserSignup = () => {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary" aria-label="Submit">
             Submit
           </button>
         </form>
