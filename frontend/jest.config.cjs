@@ -11,7 +11,7 @@ module.exports = {
     "^.+.(css|less|scss)$": "identity-obj-proxy",
   },
   setupFilesAfterEnv: ["<rootDir>/setupJest.js"],
-  collectCoverage: false,
+  collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.{js,jsx}",
     "!src/index.js",
