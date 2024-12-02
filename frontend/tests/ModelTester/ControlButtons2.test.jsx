@@ -4,6 +4,10 @@ import ControlButton2 from "../../src/pages/ModelTester/ControlButtons2/ControlB
 import axios from "axios";
 import { Response } from "whatwg-fetch";
 
+jest.mock("../../src/envConfig", () => ({
+  envConfig: () => "test",
+}));
+
 jest.mock("axios");
 jest.mock("sweetalert2", () => ({
   fire: jest.fn(),

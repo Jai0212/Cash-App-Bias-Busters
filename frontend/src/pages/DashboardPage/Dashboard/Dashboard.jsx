@@ -16,7 +16,7 @@ import { FaComment } from "react-icons/fa";
 import { envConfig } from "../../../envConfig.js";
 
 const Dashboard = () => {
-  const VITE_BACKEND_URL = envConfig;
+  const VITE_BACKEND_URL = envConfig();
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [loading, setLoading] = useState(false);
   const [graphData, setGraphData] = useState(graphDataDefault);

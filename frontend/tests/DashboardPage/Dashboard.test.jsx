@@ -5,6 +5,10 @@ import Dashboard from "../../src/pages/DashboardPage/Dashboard/Dashboard";
 import { act } from "react-dom/test-utils";
 import axios from "axios";
 
+jest.mock("../../src/envConfig", () => ({
+  envConfig: () => "test",
+}));
+
 // Mock dependencies
 jest.mock("axios");
 jest.mock("sweetalert2", () => ({

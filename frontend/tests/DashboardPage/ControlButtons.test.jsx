@@ -2,6 +2,10 @@ import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import ControlButtons from "../../src/pages/DashboardPage/ControlButtons/ControlButtons";
 
+jest.mock("../../src/envConfig", () => ({
+  envConfig: () => "test",
+}));
+
 describe("ControlButtons Component", () => {
   let mockOnDownload;
 

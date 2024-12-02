@@ -3,7 +3,7 @@ import "./ControlButtons2.css";
 import { envConfig } from "../../../envConfig";
 
 const ControlButton2 = ({ setUploadedFiles }) => {
-  const VITE_BACKEND_URL = envConfig;
+  const VITE_BACKEND_URL = envConfig();
 
   const [currUser, setCurrUser] = useState(""); // Store current user's email
   const [uploadedFiles, setUploadedFilesState] = useState([]); // Local state for uploaded files
