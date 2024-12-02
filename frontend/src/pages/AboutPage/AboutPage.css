@@ -1,18 +1,19 @@
+.aboutPage {
+    top: 0;
+    height: 20vh;
+    color: #2e2e2e;
+}
+
 .paragraph-like {
     font-size: 2vh;
     font-weight: 400;
     margin-bottom: 2vh;
     margin-top: 3vh;
-    color: white;
+    color: #2e2e2e;
 }
 
-.key-features{
-    color: white;
+.key-features {
     left: 40vw;
-}
-.aboutPage {
-    top: 0;
-    height: 20vh;
 }
 
 .container-about {

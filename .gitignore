@@ -86,4 +86,7 @@ node_modules/
 package-lock.json
 package.json
 
+frontend/coverage/
+coverage/
+
 backend/ml_model/model_with_score.pkl

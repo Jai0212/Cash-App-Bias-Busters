@@ -10,6 +10,7 @@
   width: 100vw;
   background-color: #FFE0B1;
   justify-content: center;
+  overflow: hidden;
 }
 .container-login {
   padding-top: 8vh;

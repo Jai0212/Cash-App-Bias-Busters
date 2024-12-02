@@ -1,31 +1,30 @@
 /* Style for the chart container to ensure it resizes properly */
 .chart-container {
-    position: relative;
-    width: 100%; /* Makes the chart take up full width of the container */
-    max-width: 800px; /* Limit the maximum width of the chart */
-    margin: 0 auto; /* Centers the chart horizontally */
-    padding-bottom: 14px;
-    padding-left: 14px;
-    padding-right: 38px;
-    padding-top: 20px;
-    box-sizing: border-box;
-  }
-  
-  /* Style for the canvas itself (chart) */
-  canvas {
-    width: 100% !important; /* Ensures the chart fills the container */
-    height: auto !important; /* Maintains the aspect ratio */
-  }
-  
-  /* Optional: Add a border or shadow for better visibility */
-  .chart-container {
-    border: 1px solid transparent;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Optional: Set the background color for the chart */
-  .chart-container {
-    background-color: #003f5c;
-  }
-  
+  position: relative;
+  width: 100%;
+  /* Makes the chart take up full width of the container */
+  max-width: 800px;
+  height: 400px;
+  /* Limit the maximum width of the chart */
+  margin: 0 auto;
+  /* Centers the chart horizontally */
+  padding-bottom: 14px;
+  padding-left: 14px;
+  padding-right: 38px;
+  padding-top: 20px;
+  box-sizing: border-box;
+
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: #003f5c;
+
+  margin-top: auto;
+}
+
+/* Style for the canvas itself (chart) */
+canvas {
+  width: 100% !important;
+  /* Ensures the chart fills the container */
+  height: auto !important;
+  /* Maintains the aspect ratio */
+}

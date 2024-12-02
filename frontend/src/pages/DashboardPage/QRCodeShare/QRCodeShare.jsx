@@ -3,7 +3,7 @@ import QRCode from "react-qr-code"; // Import from react-qr-code
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "./QRCodeShare.css"; // Import the CSS file for styling
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { envConfig } from "../../../envConfig";
+import { envConfig, envConfigFrontend } from "../../../envConfig";
 
 const QRCodeShare = ({
   selectedDemographic,
