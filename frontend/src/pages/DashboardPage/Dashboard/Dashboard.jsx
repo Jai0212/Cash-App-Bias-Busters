@@ -10,12 +10,13 @@ import DemographicsSelector from "../Demographics/DemographicsSelector.jsx";
 import graphDataDefault from "../data/graphDataDefault.js";
 import TimeButtons from "../TimeButtons/TimeButtons.jsx";
 import QRCodeShare from "../QRCodeShare/QRCodeShare.jsx";
-import ChatbotComponent from "../Chatbot/Chatbot.jsx"
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaComment } from 'react-icons/fa';
+import ChatbotComponent from "../Chatbot/Chatbot.jsx";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FaComment } from "react-icons/fa";
+import { envConfig } from "../../../envConfig.js";
 
 const Dashboard = () => {
-  const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const VITE_BACKEND_URL = envConfig();
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [loading, setLoading] = useState(false);
   const [graphData, setGraphData] = useState(graphDataDefault);
@@ -480,7 +481,7 @@ const Dashboard = () => {
       <TourGuide runTour={runTour} />
 
       <div className="chart-container-container">
-        <div className="timeframe-buttons" >
+        <div className="timeframe-buttons">
           <TimeButtons
             handleTimeframeChange={handleTimeframeChange}
             timeframe={timeframe}
@@ -542,8 +543,6 @@ const Dashboard = () => {
         timeframe={timeframe}
         className="qr-code"
       />
-
-
     </div>
   );
 };

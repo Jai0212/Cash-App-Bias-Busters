@@ -5,6 +5,10 @@ import axios from "axios";
 import { Response } from "whatwg-fetch";
 import swal from "sweetalert2";
 
+jest.mock("../../src/envConfig", () => ({
+  envConfig: () => "test",
+}));
+
 jest.mock("axios");
 jest.mock("sweetalert2", () => ({
   fire: jest.fn(),

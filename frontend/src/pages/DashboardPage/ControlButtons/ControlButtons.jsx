@@ -5,7 +5,7 @@ import { envConfig } from "../../../envConfig.js";
 import Swal from "sweetalert2";
 
 const ControlButtons = ({ onDownload }) => {
-  const VITE_BACKEND_URL = envConfig;
+  const VITE_BACKEND_URL = envConfig();
 
   const [currUser, setCurrUser] = useState("");
   const [showModal, setShowModal] = useState(false); // Modal visibility state
