@@ -10,16 +10,15 @@
     align-items: center;
 }
 
-.chart-container {
-    top:0;
-    border-radius: 8px; /* Rounded corners to match the chart style */
+.chart-container-2 {
+    top: 0;
+    border-radius: 8px;
     padding: 0;
     display: flex;
     border: none;
-    box-shadow: none; /* Remove box shadow */
+    box-shadow: none;
     width: 50vw;
     height: 50vh;
-
 }
 
 .chart-2-canvas {

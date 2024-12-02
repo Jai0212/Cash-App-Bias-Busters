@@ -200,18 +200,6 @@ const UserSignup = () => {
             </button>
           </form>
         </div>
-        <div className="img-container2">
-          <img
-              src="https://images.squarespace-cdn.com/content/v1/54107bc9e4b0f7682188312b/1517623647448-V84PW2H4OFBOC09UITVT/halloween.gif?format=2500w"
-              className="login-signup-gif2"
-          />
-        </div>
-        <div className="img-container3">
-          <img
-              src="https://images.squarespace-cdn.com/content/v1/54107bc9e4b0f7682188312b/1517623647448-V84PW2H4OFBOC09UITVT/halloween.gif?format=2500w"
-              className="login-signup-gif3"
-          />
-        </div>
       </div>
   );
 };

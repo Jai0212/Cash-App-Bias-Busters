@@ -26,7 +26,7 @@ As part of the 2024 cohort of the Technology Leadership Initiative, we developed
 - The results are intuitively visualized on the frontend using dynamic charts powered by Chart.js.
 - The platform allows users to select key demographic categories such as gender, age, and race and further refine these by specifying subcategories (e.g., age ranges like 18–25).
 - Additionally, users can upload multiple models to compare biases across different demographic categories and models, providing a comprehensive understanding of their systems' performance and fairness.
-- Built with a focus on clean architecture, the platform ensures a modular and maintainable design with extensive testing coverage.
+- Built with a focus on clean architecture, SOLID principles and software design patterns, the platform ensures a modular and maintainable design with extensive testing coverage.
 
 <div style="text-align: center;">
   <img width="1468" alt="Main Dashboard" src="https://github.com/user-attachments/assets/89cd04a9-bfed-4cfd-bf40-3f90cbc70e2d">
@@ -58,15 +58,13 @@ Our backend analyzes the bias in the selected demographic categories using the F
 
 ## Features
 
-- <b>Bias Analysis:</b> Detect bias in transaction approval models for selected demographic categories using the Fairlearn library.
-- <b>Interactive Dashboard:</b> User-friendly interface to import data and select demographic groups.
-- **User Data Storage**: All user-uploaded data is securely stored in a MySQL database hosted on Aiven.
-
-- <b>Visualizations:</b> Generate intuitive graphs and charts using Chart.js for detailed insights.
-
+- <b>Bias Analysis:</b> Detect bias in transaction approval models for a custom selection of demographic categories using Fairlearn.
+- <b>Interactive Dashboard:</b> User-friendly interface to import data and select demographic groups, with a chatbot and tutorial.
+- <b>Visualizations:</b> Generate intuitive graphs and charts using Chart.js for detailed insights of bias in particular demographics.
 - <b>Model Comparison:</b> Easily compare fairness metrics across different models.
-
-- **Login/Sign-up and Account Management**: Secure user authentication and account management to ensure data privacy and personalized access.
+- **Share**: Share your bias analysis with colleagues via a QR code.
+- **Account Management**: Secure user authentication (login/signup) and account management to ensure data privacy and personalized access.
+- **Accessibility Services**: Accessibility services have been incorporated for ease of use and inclusiveness.
 
 ## Technical Implementation Details
 
@@ -78,7 +76,7 @@ Our backend analyzes the bias in the selected demographic categories using the F
     - `scikit-learn`: For building and training the machine learning models.
     - `scipy`: For advanced statistical computations required in analysis.
     - `mysql-connector`: To establish a connection with the MySQL database and execute queries.
-    - `pytest`: For unit testing the backend to ensure robust and error-free functionality.
+    - `pytest` and `unittest`: For unit testing the backend to ensure robust and error-free functionality.
 
 - **Frontend**: Built using React and Vite, the frontend is responsible for the interactive dashboard and visualizations. Hosted on **Netlify**.
 
@@ -86,6 +84,7 @@ Our backend analyzes the bias in the selected demographic categories using the F
     - `react-joyride`: To implement an onboarding tutorial that guides first-time users with step-by-step instructions on using the platform.
     - `sweetalert2`: For displaying elegant and customizable alerts, such as login prompts or error messages.
     - `axios-retry`: To automatically retry failed API requests to the backend, ensuring smooth user experience even under intermittent connectivity.
+    - `jest`: For testing the frontend
 
 - **Database**: We use **MySQL** to store all the data uploaded by users. The database is hosted on **Aiven**.
 
@@ -93,8 +92,8 @@ Our backend analyzes the bias in the selected demographic categories using the F
 
 - **Chart.js**: Used to render dynamic and interactive graphs and charts to visualize bias metrics.
 
-- **Clean Architecture**:  
-  The project follows a **Clean Architecture** approach, organizing the system into separate layers such as presentation, business logic, and data access. This ensures the application's modularity, maintainability, and scalability.
+- **Clean Architecture, SOLID Principles and Design Patterns**:  
+  The project follows **Clean Architecture** by layers, organizing the system into separate layers such as presentation, business logic, and data access. This ensures the application's modularity, maintainability, and scalability. Additiaonlly, we have incorporated all SOLID principles as well as design patterns like Facade and Dependency Injection.
 
 - **Testing:**  
   We used **pytest** and **unittest** for unit and integration testing. Pytest ensures the correctness of the application’s logic by automating tests for backend functionality, database interactions, and model processing. Additionally, we used **React Testing Library (RTL)** and **Jest** for frontend testing by mocking data to simulate user interactions and validate component behavior.
@@ -136,7 +135,7 @@ backend/
 │   └── use_cases/           # Application-specific business logic
 ├── ml_model/                # Codebase for the scikit-learn ML model
 │   ├── entities/            # Core objects for model logic
-│   ├── interfaces/          # Interfaces for model operations
+│   ├── infrastructure/      # Defining the core data points
 │   ├── repository/          # Data storage and interaction logic for the model
 │   ├── use_cases/           # Model-specific business logic
 │   └── utility/             # Helper functions and utilities for ML tasks
@@ -192,30 +191,25 @@ If you'd like to run it locally instead, follow these steps:
 
 1. Clone the repository:
 
-````
-
+```
 git clone https://github.com/Jai0212/Cash-App-Bias-Busters.git
-
 ```
 
 2. Backend:
 
 ```
-
-pip install -r requirements.txt
-cd backend
-python3 -m app.controllers.app
-
+pip install -r backend/requirements.txt
+python3 -m backend.app.controllers.app
 ```
 
 3. Frontend
 
 ```
-
-cd ../frontend
+cd frontend
 npm run dev
-
 ````
+
+> Safety and data confidentiality is our topmost priority so we are not publicly revealing our environment variables which contain our database credentials, datasets models, etc. If you wish to run locally, you must contact us (any contributor via GitHub) and if for a viable reason, we will provide these details.
 
 ## Contributors
 <a href="https://github.com/Jai0212/Cash-App-Bias-Busters/graphs/contributors">
@@ -279,8 +273,7 @@ Your contributions make a difference, and we appreciate your time and effort in 
 
 1. This project makes use of the Fairlearn library for bias detection and fairness assessments.
 
-````
-
+```
 @misc{weerts2023fairlearn,
 title={Fairlearn: Assessing and Improving Fairness of AI Systems},
 author={Hilde Weerts and Miroslav Dudík and Richard Edgar and Adrin Jalali and Roman Lutz and Michael Madaio},
@@ -291,14 +284,6 @@ number={257},
 pages={1--8},
 url={http://jmlr.org/papers/v24/23-0389.html}
 }
-
 ```
 
-2. Special thanks to [Cash App](https://www.cash.app)
-   for their collaboration and support in this initiative.
-```
-
-```
-
-```
-````
+2. Special thanks to [Cash App](https://www.cash.app) for their collaboration and support in this initiative.

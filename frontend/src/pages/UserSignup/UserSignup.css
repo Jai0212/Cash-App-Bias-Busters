@@ -1,38 +1,24 @@
-/* Centering the form */
-#root {
-  height: 100vh;
-  overflow: hidden;
-  background-color: #1F00AB;
-}
-
-.main-container {
+/* .main-container {
   position: relative;
   top: -2.5vh;
   height: 100vh;
   width: 100vw;
-  background-color: #1F00AB;
   justify-content: center;
-}
+  overflow-y: hidden;
+} */
 
 .container-signup {
-  padding-top: 8vh;
+  padding-top: 4vh;
   position: relative;
-  top: 0;
-  text-align: center;
-  color: #F6F2EB;
-  background-color: transparent;
-  margin-top: 0;
-}
-
-h1 {
   font-weight: bold;
-  font-family: "Roboto", Arial, sans-serif;
+  text-align: center;
+  color: #2e2e2e;
+  background-color: transparent;
 }
 
-.seperator{
+.seperator {
   color: #F6F2EB;
 }
-
 
 .alert-primary {
   background-color: #e8f5e9;
@@ -93,11 +79,6 @@ h1 {
   }
 }
 
-body,
-html {
-  background-color: #1F00AB;
-}
-
 .img-container2 {
   bottom: 3vh;
   position: absolute;
@@ -106,13 +87,13 @@ html {
   right: -3vw;
 }
 
- .img-container3 {
-   bottom: 3vh;
-   position: absolute;
-   width: 30%;
-   height: 50%;
-   left: -2vw;
- }
+.img-container3 {
+  bottom: 3vh;
+  position: absolute;
+  width: 30%;
+  height: 50%;
+  left: -2vw;
+}
 
 .w-100 {
   width: 210% !important;

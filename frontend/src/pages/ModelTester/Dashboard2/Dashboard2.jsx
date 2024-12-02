@@ -169,7 +169,7 @@ const Dashboard2 = () => {
                               style={{
                                 backgroundColor:
                                   backgroundColours[
-                                    index % backgroundColours.length
+                                  index % backgroundColours.length
                                   ],
                               }}
                             ></div>

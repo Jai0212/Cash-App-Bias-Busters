@@ -86,7 +86,7 @@ const UserLogin = () => {
         <h1>User Login</h1>
       </div>
 
-      <hr className="seperator"/>
+      <hr className="seperator" />
       <div className="alert alert-primary">
         <form onSubmit={handleSubmit(handleForm)} id={"form"}>
           <div className="mb-3">
@@ -128,11 +128,10 @@ const UserLogin = () => {
       </div>
       <div className="img-container">
         <img
-            src="/bottom-login.gif"
-            className="login-signup-gif"
+          src="/bottom-login.gif"
+          className="login-signup-gif"
         />
       </div>
-
     </div>
   );
 };
