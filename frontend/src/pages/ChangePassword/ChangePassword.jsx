@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import swal from "sweetalert2";
 import { envConfig } from "../../envConfig";
+import "./ChangePassword.css"
+
 
 const ChangePassword = () => {
   const VITE_BACKEND_URL = envConfig();
@@ -47,8 +49,8 @@ const ChangePassword = () => {
   };
 
   return (
-    <>
-      <div className="container">
+    <div className="main-container-password">
+      <div className="container-password">
         <h1> Change Password </h1>
       </div>
 
@@ -116,7 +118,7 @@ const ChangePassword = () => {
         </form>
 
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,4 +1,26 @@
 .paragraph-like {
-    font-size: 16px;
+    font-size: 2vh;
     font-weight: 400;
+    margin-bottom: 2vh;
+    margin-top: 3vh;
+    color: white;
+}
+
+.key-features{
+    color: white;
+    left: 40vw;
+}
+.aboutPage {
+    top: 0;
+    height: 20vh;
+}
+
+.container-about {
+    height: 50vh;
+    padding-top: 0;
+}
+
+.col-container.col {
+    top: -2vh;
+    margin-top: 0;
 }

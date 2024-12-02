@@ -16,7 +16,7 @@ import { FaComment } from "react-icons/fa";
 import { envConfig } from "../../../envConfig.js";
 
 const Dashboard = () => {
-  const VITE_BACKEND_URL = envConfig;
+  const VITE_BACKEND_URL = envConfig();
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [loading, setLoading] = useState(false);
   const [graphData, setGraphData] = useState(graphDataDefault);
@@ -420,9 +420,7 @@ const Dashboard = () => {
     }
 
     if (!selectedDemographic || selectedValues[0] === "") {
-      alert(
-        "Upload data and model and select a demographic and values to generate data."
-      );
+      alert("Upload data and model and select a demographic and values to generate data.");
       return;
     }
 
@@ -455,9 +453,7 @@ const Dashboard = () => {
           console.log(`Retrying... Attempts left: ${retries}`);
           setTimeout(() => fetchData(retries - 1, delay * 2), delay); // Exponential backoff
         } else {
-          alert(
-            "Error generating data after multiple attempts. Please try again later."
-          );
+          alert("Error generating data after multiple attempts. Please try again later.");
         }
       } finally {
         setLoading(false); // Ensure loading state is reset when done
@@ -466,6 +462,7 @@ const Dashboard = () => {
 
     fetchData(); // Start the fetch process
   };
+
 
   const maxValue = () => {
     let maxInitialElement = -Infinity;
@@ -493,7 +490,7 @@ const Dashboard = () => {
         </div>
         {loading && (
           <div className="loading-container">
-            <img src="/spinner.gif" alt="Loading..." className="loading-gif" />
+            <img src="/spinner-pacman.gif" alt="Loading..." className="loading-gif" />
           </div>
         )}
         <div className={loading ? "hidden" : ""}>

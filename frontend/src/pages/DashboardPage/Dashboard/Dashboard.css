@@ -513,9 +513,9 @@ button:focus-visible {
 .loading-container {
   position: absolute;
   /* Overlay on top of the chart-placeholder */
-  top: 53%;
+  top: 50%;
   /* Vertically center the spinner */
-  left: 24%;
+  left: 35%;
   /* Adjust this value to move the spinner to the left */
   transform: translateY(-50%);
   /* Ensure the spinner is vertically centered */
@@ -527,11 +527,11 @@ button:focus-visible {
 }
 
 .loading-gif {
-  width: 500px;
+  width: 15vw;
   /* Adjust width of the gif if necessary */
-  height: 600px;
+  height: 25vh;
   /* Adjust height of the gif if necessary */
-  opacity: 79%;
+  opacity: 100%;
 }
 
 .hidden {

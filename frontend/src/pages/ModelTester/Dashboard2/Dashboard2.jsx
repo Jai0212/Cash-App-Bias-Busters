@@ -6,7 +6,7 @@ import swal from "sweetalert2";
 import { envConfig } from "../../../envConfig.js";
 
 const Dashboard2 = () => {
-  const VITE_BACKEND_URL = envConfig;
+  const VITE_BACKEND_URL = envConfig();
 
   const [currUser, setCurrUser] = useState("");
   const backgroundColours = [
