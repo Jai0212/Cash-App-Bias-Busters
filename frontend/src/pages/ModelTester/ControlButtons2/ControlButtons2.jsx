@@ -267,8 +267,11 @@ const ControlButton2 = ({ setUploadedFiles }) => {
               </div>
               <div className="modal-body">
                 <p>
-                  <strong>File format:</strong> The file must be in{" "}
+                  <strong>File format:</strong>  The file must be in{" "}
                   <code>.pkl</code> format.
+                  Note that the system supports <code>
+                  DecisionTreeClassfier </code> models. Make sure the dataset has
+                  enough rows for test split chosen!
                 </p>
 
                 <p>

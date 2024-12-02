@@ -21,6 +21,7 @@
   text-align: center;
   color: #F6F2EB;
   background-color: transparent;
+  padding-bottom: 4vh;
   margin-top: 0;
 }
 
@@ -34,13 +35,14 @@ h1 {
 }
 
 
-.alert-primary {
-  background-color: #e8f5e9;
+.alert-primary3 {
+  background-color: #f6f2eb;
   /* Light Green background for form */
   padding: 30px;
   border-radius: 8px;
   max-width: 500px;
   /* Set a max width */
+  height: 43%;
   margin: 50px auto;
   /* Center the form horizontally and add top/bottom margin */
 }

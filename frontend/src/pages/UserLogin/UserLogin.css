@@ -8,7 +8,7 @@
   top: -2.5vh;
   height: 100vh;
   width: 100vw;
-  background-color: #1F00AB;
+  background-color: #FFE0B1;
   justify-content: center;
 }
 .container-login {
@@ -18,18 +18,19 @@
   text-align: center;
   color: #F6F2EB;
   background-color: transparent;
-  height: 20vh;
+  height: 18vh;
   margin-top: 0;
 }
 
 .seperator{
-  color: #F6F2EB;
+  color: black;
+  margin-bottom: 9vh;
 }
 
 h1 {
   font-weight: bold;
   font-family: "Roboto", Arial, sans-serif;
-  color: #F6F2EB;
+  color: black;
 }
 
 .alert-primary {
@@ -38,6 +39,7 @@ h1 {
   padding: 30px;
   border-radius: 8px;
   max-width: 400px;
+  height: 35% !important;
   /* Set a max width */
   margin: 50px auto;
   /* Center the form horizontally and add top/bottom margin */

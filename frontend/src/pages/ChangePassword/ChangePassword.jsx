@@ -55,7 +55,7 @@ const ChangePassword = () => {
       </div>
 
       <hr />
-      <div className="alert alert-primary">
+      <div className="alert alert-primary2">
         <form onSubmit={handleSubmit(handleForm)} id="form">
           <div className="mb-3">
             <label htmlFor="old_password">Enter Old Password</label>
