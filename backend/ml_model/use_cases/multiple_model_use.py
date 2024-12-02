@@ -32,11 +32,10 @@ class EvaluateModelsUseCase:
         Returns:
             dict: A dictionary containing model file names and their respective MetricFrame objects.
         """
-        # self.file_repo.import_csv_to_db()
-        print("working till here")
+
         self.file_repo.save_data_to_csv()
-        model_evaluator = MultiModelEvaluator(self.model_files)
-        output = model_evaluator.evaluate_multiple_models()
+        output = MultiModelEvaluator(self.model_files)
+        result = output.evaluate_models()
         self.file_repo.delete_csv_data()
 
-        return output
+        return result
