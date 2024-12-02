@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import axios from 'axios'; // Make sure to import axios if you're using it
 import './SharePage.css'; // Make sure to import the CSS file for styling
 import ChartComponent from "../DashboardPage/ChartComponenet/ChartComponent.jsx";
 import graphDataDefault from '../DashboardPage/data/graphDataDefault.js'; // Import the default graph data
 import { envConfig } from "../../envConfig";
 
 const SharePage = () => {
-    const VITE_BACKEND_URL = envConfig;
+    const VITE_BACKEND_URL = envConfig();
     const { encodedData } = useParams(); // Access the encodedData parameter from the URL
     const chartRef = useRef(null);
 

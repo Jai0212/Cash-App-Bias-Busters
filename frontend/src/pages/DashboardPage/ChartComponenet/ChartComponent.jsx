@@ -6,7 +6,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   const chartRef = useRef(null);
   const myChartRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [accuracyData, setAccuracyData] = useState([]);  
+  const [accuracyData, setAccuracyData] = useState([]);
   const [lastTabIndex, setLastTabIndex] = useState(20);
 
   useEffect(() => {
@@ -32,14 +32,14 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       a.feature1.localeCompare(b.feature1)
     );
 
-    const labels = sortedChartData.map((item) => item.feature2); 
+    const labels = sortedChartData.map((item) => item.feature2);
 
     const newAccuracyData = sortedChartData.map((item) => ({
-      label: item.feature2, 
+      label: item.feature2,
       accuracy: item.accuracy,
       falsePositive: item.falsepositive,
       falseNegative: item.falsenegative,
-      color: feature1Colors[item.feature1] || "rgba(200, 200, 200, 0.7)", 
+      color: feature1Colors[item.feature1] || "rgba(200, 200, 200, 0.7)",
     }));
 
     setAccuracyData(newAccuracyData);
@@ -48,12 +48,12 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
       {
         label: "Accuracy",
         data: newAccuracyData.map((d) => ({ x: d.label, y: d.accuracy })),
-        backgroundColor: newAccuracyData.map((d) => d.color), 
+        backgroundColor: newAccuracyData.map((d) => d.color),
         borderColor: newAccuracyData.map(
-          (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color) 
+          (d) => (d.accuracy > sliderValue ? "rgba(255, 0, 0, 1)" : d.color)
         ),
         borderWidth: newAccuracyData.map(
-          (d) => (d.accuracy > sliderValue ? 3 : 1) 
+          (d) => (d.accuracy > sliderValue ? 3 : 1)
         ),
         borderCapStyle: "round",
         borderJoinStyle: "round",
@@ -211,19 +211,19 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
 
       if (event.key === 'Tab') {
         event.preventDefault(); // Prevent default tab behavior during chart navigation
-  
+
         const nextIndex = hoveredIndex === null
           ? 0
           : (hoveredIndex + 1);
-  
+
         if (nextIndex < accuracyData.length) {
-          setHoveredIndex(nextIndex); 
+          setHoveredIndex(nextIndex);
           if (myChartRef.current) {
             const chart = myChartRef.current;
             // const activeElement = chart.getDatasetMeta(0).data[nextIndex];
             chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
-            chart.update(); 
-            
+            chart.update();
+
             chart.tooltip.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);
             chart.tooltip.update();
             chart.draw();
@@ -255,14 +255,14 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
         }
       }
     };
-  
+
     window.addEventListener('keydown', handleKeyDown);
-  
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [hoveredIndex, accuracyData.length, lastTabIndex]);
-  
+
 
 
   useImperativeHandle(ref, () => ({
@@ -275,11 +275,11 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) => {
   }));
 
   return (
-      <div className="chart-container">
-        {/* Add data-testid for chart canvas */}
-        <canvas ref={chartRef} data-testid="chart-canvas" />
+    <div className="chart-container">
+      {/* Add data-testid for chart canvas */}
+      <canvas ref={chartRef} data-testid="chart-canvas" />
 
-      </div>
+    </div>
   );
 });
 

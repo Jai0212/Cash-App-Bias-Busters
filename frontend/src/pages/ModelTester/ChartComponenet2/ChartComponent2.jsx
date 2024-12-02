@@ -164,7 +164,7 @@ const ChartComponent2 = forwardRef(
 
     return (
       <div className="chart-component-wrapper">
-        <div className="chart-container">
+        <div className="chart-container-2">
           <canvas
             className="chart-2-canvas"
             data-testid="chart-canvas"
