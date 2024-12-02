@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";  // Import Bootstrap CSS
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "./ControlButtons.css";
 import { envConfig } from "../../../envConfig.js";
+import Swal from "sweetalert2";
 
 const ControlButtons = ({ onDownload }) => {
-  const VITE_BACKEND_URL = envConfig();
+  const VITE_BACKEND_URL = envConfig;
 
   const [currUser, setCurrUser] = useState("");
   const [showModal, setShowModal] = useState(false); // Modal visibility state
@@ -35,7 +36,7 @@ const ControlButtons = ({ onDownload }) => {
         setCurrUser(emailData.email); // Set the user email if it exists
       } else {
         setCurrUser("");
-        swal.fire({
+        Swal.fire({
           icon: "error",
           title: "Please log in first",
           text: "You need to log in to access this page.",
@@ -43,13 +44,13 @@ const ControlButtons = ({ onDownload }) => {
           timer: 5000,
           timerProgressBar: true,
         }).then(() => {
-          window.location.href = "/";  // Redirect to login if no email
+          window.location.href = "/"; // Redirect to login if no email
         });
       }
     } catch (error) {
       console.error("Error fetching email:", error);
 
-      swal.fire({
+      Swal.fire({
         icon: "error",
         title: "Error",
         text: "An error occurred while fetching your email. Please try again later.",
@@ -62,7 +63,7 @@ const ControlButtons = ({ onDownload }) => {
   }, []);
 
   const handleImportModels = () => {
-    setShowModal(true);  // Open the modal when button is clicked
+    setShowModal(true); // Open the modal when button is clicked
   };
 
   const handleImportDataset = () => {
@@ -118,7 +119,7 @@ const ControlButtons = ({ onDownload }) => {
 
     const formData = new FormData();
     formData.append("curr_user", currUser);
-    formData.append("csv_to_read", file); 
+    formData.append("csv_to_read", file);
 
     try {
       const response = await fetch(`${VITE_BACKEND_URL}/api/upload-data`, {
@@ -167,20 +168,25 @@ const ControlButtons = ({ onDownload }) => {
   // Trap focus inside modal when modal is open
   useEffect(() => {
     if (showModal || showModaldataset) {
-      const focusableElements = modalRef.current.querySelectorAll("button, input, select, textarea");
-      const firstFocusableElement = focusableElements[0];  
-      const lastFocusableElement = focusableElements[focusableElements.length - 1];
+      const focusableElements = modalRef.current.querySelectorAll(
+        "button, input, select, textarea"
+      );
+      const firstFocusableElement = focusableElements[0];
+      const lastFocusableElement =
+        focusableElements[focusableElements.length - 1];
 
       firstFocusableElement.focus();
 
       const handleTab = (e) => {
         if (e.key === "Tab") {
-          if (e.shiftKey) { // Shift + Tab
+          if (e.shiftKey) {
+            // Shift + Tab
             if (document.activeElement === firstFocusableElement) {
               lastFocusableElement.focus();
               e.preventDefault();
             }
-          } else { // Tab
+          } else {
+            // Tab
             if (document.activeElement === lastFocusableElement) {
               firstFocusableElement.focus();
               e.preventDefault();
@@ -198,119 +204,142 @@ const ControlButtons = ({ onDownload }) => {
   }, [showModal, showModaldataset]);
 
   return (
-      <div className="file-import-container">
-        <input
-            type="file"
-            ref={fileInputRef1}
-            onChange={handleModelFileChange}
-            style={{ display: 'none' }}
-            aria-label="Import model file"  // ARIA label for model file input
-        />
-        <input
-            type="file"
-            ref={fileInputRef2}
-            onChange={handleDatasetFileChange}
-            style={{ display: 'none' }}
-            aria-label="Import dataset file"  // ARIA label for dataset file input
-        />
-        <button
-            ref={importModelButtonRef}
-            className="upload-model-button"
-            onClick={handleImportModels}
-            tabIndex={1}
-            aria-label="Import models"  // ARIA label for import models button
-        >
-          Import Models
-        </button>
-        <button
-            ref={importDatasetButtonRef}
-            className="upload-dataset-button"
-            onClick={handleImportDataset}
-            tabIndex={2}
-            aria-label="Import dataset"  // ARIA label for import dataset button
-        >
-          Import Dataset
-        </button>
-        <button
-            onClick={onDownload}
-            tabIndex={3}
-            aria-label="Download graph"  // ARIA label for download graph button
-        >
-          Download Graph
-        </button>
+    <div className="file-import-container">
+      <input
+        type="file"
+        ref={fileInputRef1}
+        onChange={handleModelFileChange}
+        style={{ display: "none" }}
+        aria-label="Import model file" // ARIA label for model file input
+      />
+      <input
+        type="file"
+        ref={fileInputRef2}
+        onChange={handleDatasetFileChange}
+        style={{ display: "none" }}
+        aria-label="Import dataset file" // ARIA label for dataset file input
+      />
+      <button
+        ref={importModelButtonRef}
+        className="upload-model-button"
+        onClick={handleImportModels}
+        tabIndex={1}
+        aria-label="Import Models" // ARIA label for import models button
+      >
+        Import Models
+      </button>
+      <button
+        ref={importDatasetButtonRef}
+        className="upload-dataset-button"
+        onClick={handleImportDataset}
+        tabIndex={2}
+        aria-label="Import Dataset" // ARIA label for import dataset button
+      >
+        Import Dataset
+      </button>
+      <button
+        onClick={onDownload}
+        tabIndex={3}
+        aria-label="Download Graph" // ARIA label for download graph button
+      >
+        Download Graph
+      </button>
 
-        {/* Modal for model upload instructions */}
-        {showModal && (
-            <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
-              <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content" ref={modalRef}>
-                  <div className="modal-header">
-                    <h5 className="modal-title">Model Upload Instructions</h5>
-                    <button
-                        type="button"
-                        className="close"
-                        style={{ backgroundColor: "#45a049", borderColor: "#45a049", fontSize: "0.875rem", padding: "0.25rem 0.5rem", borderRadius: "0.2rem" }}
-                        onClick={closeModal}
-                        aria-label="Close model upload instructions"  // ARIA label for close button in modal
-                    >
-                      &times;
-                    </button>
-                  </div>
-                  <div className="modal-body">
-                    <p><strong>File format:</strong> The file must be in <code>.pkl</code> format.</p>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => fileInputRef1.current.click()}
-                        aria-label="Choose model file"  // ARIA label for choosing model file
-                    >
-                      Choose File
-                    </button>
-                  </div>
-                </div>
+      {/* Modal for model upload instructions */}
+      {showModal && (
+        <div
+          className="modal show"
+          style={{ display: "block", backdropFilter: "blur(5px)" }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content" ref={modalRef}>
+              <div className="modal-header">
+                <h5 className="modal-title">Model Upload Instructions</h5>
+                <button
+                  type="button"
+                  className="close"
+                  style={{
+                    backgroundColor: "#45a049",
+                    borderColor: "#45a049",
+                    fontSize: "0.875rem",
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: "0.2rem",
+                  }}
+                  onClick={closeModal}
+                  aria-label="Close model upload instructions" // ARIA label for close button in modal
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>
+                  <strong>File format:</strong> The file must be in{" "}
+                  <code>.pkl</code> format.
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => fileInputRef1.current.click()}
+                  aria-label="Choose model file" // ARIA label for choosing model file
+                >
+                  Choose File
+                </button>
               </div>
             </div>
-        )}
+          </div>
+        </div>
+      )}
 
-        {/* Modal for dataset upload instructions */}
-        {showModaldataset && (
-            <div className="modal show" style={{ display: "block", backdropFilter: "blur(5px)" }}>
-              <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content" ref={modalRef}>
-                  <div className="modal-header">
-                    <h5 className="modal-title">Dataset Upload Instructions</h5>
-                    <button
-                        type="button"
-                        className="close"
-                        style={{ backgroundColor: "#45a049", borderColor: "#45a049", fontSize: "0.875rem", padding: "0.25rem 0.5rem", borderRadius: "0.2rem" }}
-                        onClick={closeModal2}
-                        aria-label="Close dataset upload instructions"  // ARIA label for close button in modal
-                    >
-                      &times;
-                    </button>
-                  </div>
-                  <div className="modal-body">
-                    <p><strong>File format:</strong> The file must be in <code>.csv</code> format.</p>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => fileInputRef2.current.click()}
-                        aria-label="Choose dataset file"  // ARIA label for choosing dataset file
-                    >
-                      Choose File
-                    </button>
-                  </div>
-                </div>
+      {/* Modal for dataset upload instructions */}
+      {showModaldataset && (
+        <div
+          className="modal show"
+          style={{ display: "block", backdropFilter: "blur(5px)" }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content" ref={modalRef}>
+              <div className="modal-header">
+                <h5 className="modal-title">Dataset Upload Instructions</h5>
+                <button
+                  type="button"
+                  className="close"
+                  style={{
+                    backgroundColor: "#45a049",
+                    borderColor: "#45a049",
+                    fontSize: "0.875rem",
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: "0.2rem",
+                  }}
+                  onClick={closeModal2}
+                  aria-label="Close dataset upload instructions" // ARIA label for close button in modal
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>
+                  <strong>File format:</strong> The file must be in{" "}
+                  <code>.csv</code> format.
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => fileInputRef2.current.click()}
+                  aria-label="Choose dataset file" // ARIA label for choosing dataset file
+                >
+                  Choose File
+                </button>
               </div>
             </div>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
-
 };
 
 export default ControlButtons;
