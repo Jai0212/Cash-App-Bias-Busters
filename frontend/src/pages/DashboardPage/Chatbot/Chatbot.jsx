@@ -58,18 +58,11 @@ class MessageParser {
             { keyword: "demographic", answer: "Demographics refer to categories such as age, gender, location, and other similar data points. Please choose the relevant demographic for your chart." },
             { keyword: "refresh", answer: "You can refresh the page by clicking the refresh button or pressing Ctrl + R on your keyboard." },
             { keyword: "upload", answer: "To upload data, click the 'Upload' button and select your file. Ensure the file format is supported (CSV, Excel, etc.)." },
-            { keyword: "save", answer: "You can save your chart by clicking the 'Save' button. You may also export the data if needed." },
             { keyword: "login", answer: "To log in, please enter your credentials on the login page. If you don't have an account, you can sign up for one." },
             { keyword: "logout", answer: "To log out, simply click the logout button at the top right of the page." },
             { keyword: "dashboard", answer: "The dashboard allows you to view and analyze your data. You can select different charts and demographics to explore insights." },
             { keyword: "filter", answer: "To filter the data, use the filter options provided next to the chart. You can filter by date range, demographic, or value type." },
             { keyword: "download", answer: "To download the data, click the 'Download' button and select your preferred file format (CSV, Excel, etc.)." },
-            { keyword: "support", answer: "For additional support, you can visit our help center or contact customer service via email." },
-            { keyword: "contact", answer: "To contact support, please send us an email at support@example.com." },
-            { keyword: "feature", answer: "We are constantly improving our platform. If you have a feature request, feel free to share it with us!" },
-            { keyword: "settings", answer: "You can update your account settings by clicking on your profile icon and selecting 'Settings'." },
-            { keyword: "performance", answer: "If you're experiencing performance issues, try clearing your browser cache or using a different browser." },
-            { keyword: "issues", answer: "If you're encountering issues, please describe the problem, and I'll help troubleshoot or escalate it to support." },
             { keyword: "thank", answer: "Come on, Navnoor! You only created me. Rather, I should thank you for making me part of the Bias Busters project!" },
             { keyword: "nice", answer: "Now, can you please focus on your presentation and show your MVP? We can talk later. All the best!" },
             { keyword: "share", answer: "You can click on the share button at the bottom right of the page and scan the QR code!" }
@@ -93,18 +86,18 @@ class ActionProvider {
         this.createClientMessage = createClientMessage;
     }
 
-    speakMessage(message) {
-        if ('speechSynthesis' in window) {
-            console.log('SpeechSynthesis');
-            const utterance = new SpeechSynthesisUtterance(message);
-            utterance.lang = 'en-US'; // Set the language
-            utterance.rate = 1; // Set the speech rate
-            utterance.pitch = 1; // Set the pitch
-            speechSynthesis.speak(utterance);
-        } else {
-            console.warn('Speech Synthesis is not supported in this browser.');
-        }
-    }
+    // speakMessage(message) {
+    //     if ('speechSynthesis' in window) {
+    //         console.log('SpeechSynthesis');
+    //         const utterance = new SpeechSynthesisUtterance(message);
+    //         utterance.lang = 'en-US'; // Set the language
+    //         utterance.rate = 1; // Set the speech rate
+    //         utterance.pitch = 1; // Set the pitch
+    //         speechSynthesis.speak(utterance);
+    //     } else {
+    //         console.warn('Speech Synthesis is not supported in this browser.');
+    //     }
+    // }
 
     addMessageToBot(message) {
         const botMessage = this.createChatBotMessage(message);
@@ -112,7 +105,7 @@ class ActionProvider {
             ...prevState,
             messages: [...prevState.messages, botMessage],
         }));
-        this.speakMessage(message);
+        // this.speakMessage(message);
     }
 
     handleUnknown() {
@@ -121,7 +114,7 @@ class ActionProvider {
             ...prevState,
             messages: [...prevState.messages, message],
         }));
-        this.speakMessage(message);
+        // this.speakMessage(message);
     }
 }
 
@@ -150,6 +143,7 @@ const ChatbotComponent = ({ closeChatbot }) => {
         // isChatbotOpen && (
         <ThemeProvider theme={theme}>
             <div
+                role="dialog"
                 style={{
                     position: "fixed",
                     top: "20px", // Adjusted to be slightly lower from the top
