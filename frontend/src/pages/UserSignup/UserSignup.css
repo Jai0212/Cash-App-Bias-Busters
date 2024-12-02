@@ -1,17 +1,38 @@
 /* Centering the form */
-.container {
-  margin-top: 20px;
+#root {
+  height: 100vh;
+  overflow: hidden;
+  background-color: #1F00AB;
+}
+
+.main-container {
+  position: relative;
+  top: -2.5vh;
+  height: 100vh;
+  width: 100vw;
+  background-color: #1F00AB;
+  justify-content: center;
+}
+
+.container-signup {
+  padding-top: 8vh;
+  position: relative;
+  top: 0;
   text-align: center;
-  color: #2e7d32;
-  background-color: #f6f2eb;
-  margin-top: 3vh;
-  /* Dark Green for heading */
+  color: #F6F2EB;
+  background-color: transparent;
+  margin-top: 0;
 }
 
 h1 {
   font-weight: bold;
-  margin-bottom: 20px;
+  font-family: "Roboto", Arial, sans-serif;
 }
+
+.seperator{
+  color: #F6F2EB;
+}
+
 
 .alert-primary {
   background-color: #e8f5e9;
@@ -74,5 +95,39 @@ h1 {
 
 body,
 html {
-  background-color: #f6f2eb;
+  background-color: #1F00AB;
+}
+
+.img-container2 {
+  bottom: 3vh;
+  position: absolute;
+  width: 30%;
+  height: 50%;
+  right: -3vw;
+}
+
+ .img-container3 {
+   bottom: 3vh;
+   position: absolute;
+   width: 30%;
+   height: 50%;
+   left: -2vw;
+ }
+
+.w-100 {
+  width: 210% !important;
+}
+
+.login-signup-gif2 {
+  object-fit: fill;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.login-signup-gif3 {
+  object-fit: fill;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }

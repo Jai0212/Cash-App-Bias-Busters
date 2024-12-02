@@ -4,16 +4,16 @@ import "./AboutPage.css"
 
 const AboutPage = () => {
     return (
-        <Container>
+        <Container className="aboutPage">
             <h1 className="text-center my-4">About BIAS BUSTERS</h1>
 
-            <Row>
-                <Col>
+            <Row className="container-about">
+                <Col className="col-container">
                     <h2 class="paragraph-like">
-                        We are proud to announce the launch of a new tool that helps engineers identify and address bias in CashApp's machine-learning models. In an effort to promote fairness and equity, we focused on providing clear, actionable insights into gender, race, and other demographic disparities, ensuring that automated decisions are fair across the board.
+                        We are proud to announce the launch of a new tool that helps engineers identify and address bias in CashApp's machine-learning models. In an effort to promote fairness and equity, we focused on providing clear, actionable insights into gender, race, and other demographic disparities, ensuring automated decisions are fair across the board.
                     </h2>
 
-                    <h3>Key Features:</h3>
+                    <h3 className="key-features">Key Features:</h3>
 
                     <Card className="my-3">
                         <Card.Body>

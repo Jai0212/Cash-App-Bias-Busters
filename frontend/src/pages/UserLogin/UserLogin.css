@@ -1,15 +1,35 @@
 /* Centering the form */
-.container {
-  margin-top: 20px;
+#root {
+  height: 100vh;
+  overflow: hidden;
+}
+.main-container {
+  position: relative;
+  top: -2.5vh;
+  height: 100vh;
+  width: 100vw;
+  background-color: #1F00AB;
+  justify-content: center;
+}
+.container-login {
+  padding-top: 8vh;
+  position: relative;
+  top: 0;
   text-align: center;
-  color: #2e7d32;
-  background-color: #f6f2eb;
-  /* Dark Green for heading */
+  color: #F6F2EB;
+  background-color: transparent;
+  height: 20vh;
+  margin-top: 0;
+}
+
+.seperator{
+  color: #F6F2EB;
 }
 
 h1 {
   font-weight: bold;
   font-family: "Roboto", Arial, sans-serif;
+  color: #F6F2EB;
 }
 
 .alert-primary {
@@ -72,4 +92,19 @@ h1 {
 
 label {
   font-family: "Roboto", Arial, sans-serif;
+}
+
+.img-container {
+  width: 100%;
+  bottom: 1vh;
+  height: 30%;
+  position: absolute;
+}
+
+.login-signup-gif {
+  object-fit: fill;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  right: 0;
 }

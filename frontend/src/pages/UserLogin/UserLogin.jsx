@@ -81,12 +81,12 @@ const UserLogin = () => {
   };
 
   return (
-    <>
-      <div className="container">
+    <div className="main-container">
+      <div className="container-login">
         <h1>User Login</h1>
       </div>
 
-      <hr />
+      <hr className="seperator"/>
       <div className="alert alert-primary">
         <form onSubmit={handleSubmit(handleForm)} id={"form"}>
           <div className="mb-3">
@@ -126,7 +126,14 @@ const UserLogin = () => {
           <button className={"btn btn-primary"} aria-label="Login" >Login</button>
         </form>
       </div>
-    </>
+      <div className="img-container">
+        <img
+            src="/bottom-login.gif"
+            className="login-signup-gif"
+        />
+      </div>
+
+    </div>
   );
 };
 
