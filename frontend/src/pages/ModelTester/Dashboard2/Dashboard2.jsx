@@ -52,17 +52,17 @@ const Dashboard2 = () => {
           setCurrUser("");
 
           swal
-            .fire({
-              icon: "error",
-              title: "Please log in first",
-              text: "You need to log in to access this page.",
-              confirmButtonText: "Go to Login",
-              timer: 5000,
-              timerProgressBar: true,
-            })
-            .then(() => {
-              window.location.href = "/";
-            });
+              .fire({
+                icon: "error",
+                title: "Please log in first",
+                text: "You need to log in to access this page.",
+                confirmButtonText: "Go to Login",
+                timer: 5000,
+                timerProgressBar: true,
+              })
+              .then(() => {
+                window.location.href = "/";
+              });
         }
       } catch (error) {
         console.error("Error fetching email:", error);
@@ -100,13 +100,13 @@ const Dashboard2 = () => {
 
     try {
       const response = await fetch(
-        `${VITE_BACKEND_URL}/api/generate-for-all-models`,
-        {
-          method: "POST",
-          body: new URLSearchParams({
-            curr_user: currUser,
-          }),
-        }
+          `${VITE_BACKEND_URL}/api/generate-for-all-models`,
+          {
+            method: "POST",
+            body: new URLSearchParams({
+              curr_user: currUser,
+            }),
+          }
       );
 
       if (!response.ok) {
@@ -118,7 +118,7 @@ const Dashboard2 = () => {
       const data = await response.json();
 
       const validResults = data.filter(
-        (item) => !(item.error || (item.includes && item.includes("Error:")))
+          (item) => !(item.error || (item.includes && item.includes("Error:")))
       );
 
       setGenerationResults(validResults);
@@ -144,137 +144,152 @@ const Dashboard2 = () => {
   };
 
   return (
-    <>
-      {uploadedFiles.length > 0 ? (
-        <div className="dashboard-main">
-          <div className="left-container">
-            <div className="chart-section">
-              {Object.keys(graphData).length > 0 && (
-                <ChartComponent2
-                  chartData={graphData}
-                  generationalResults={generationResults}
-                />
-              )}
+      <>
+        {uploadedFiles.length > 0 ? (
+            <div className="dashboard-main">
+              <div className="left-container">
+                <div className="chart-section">
+                  {Object.keys(graphData).length > 0 && (
+                      <ChartComponent2
+                          chartData={graphData}
+                          generationalResults={generationResults}
+                          aria-label="Chart showing bias data"
+                      />
+                  )}
 
-              {generationResults.length > 0 && (
-                <div className="result-section">
-                  {generationResults.map(
-                    (result, index) =>
-                      uploadedFiles[index] &&
-                      result.mean && (
-                        <ul key={index}>
-                          <li className="result-item">
-                            <div
-                              className="result-tag"
-                              style={{
-                                backgroundColor:
-                                  backgroundColours[
-                                  index % backgroundColours.length
-                                  ],
-                              }}
-                            ></div>
-                            <div className="result-details">
-                              <strong className="output-name">File:</strong>
-                              <span className="output-value">
+                  {generationResults.length > 0 && (
+                      <div className="result-section">
+                        {generationResults.map(
+                            (result, index) =>
+                                uploadedFiles[index] &&
+                                result.mean && (
+                                    <ul key={index}>
+                                      <li className="result-item">
+                                        <div
+                                            className="result-tag"
+                                            style={{
+                                              backgroundColor:
+                                                  backgroundColours[
+                                                  index % backgroundColours.length
+                                                      ],
+                                            }}
+                                        ></div>
+                                        <div className="result-details">
+                                          <strong className="output-name">File:</strong>
+                                          <span className="output-value">
                                 {uploadedFiles[index]}
                               </span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">Race:</strong>
-                              <span className="output-value">
+                                        </div>
+                                        <div className="result-details">
+                                          <strong className="output-name">Race:</strong>
+                                          <span className="output-value">
                                 {result.race}
                               </span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">Gender:</strong>
-                              <span className="output-value">
+                                        </div>
+                                        <div className="result-details">
+                                          <strong className="output-name">Gender:</strong>
+                                          <span className="output-value">
                                 {result.gender}
                               </span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">Age:</strong>
-                              <span className="output-value">
+                                        </div>
+                                        <div className="result-details">
+                                          <strong className="output-name">Age:</strong>
+                                          <span className="output-value">
                                 {result.age_groups}
                               </span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">State:</strong>
-                              <span className="output-value">
+                                        </div>
+                                        <div className="result-details">
+                                          <strong className="output-name">State:</strong>
+                                          <span className="output-value">
                                 {result.state}
                               </span>
-                            </div>
-                            <div className="result-details">
-                              <strong className="output-name">Bias:</strong>
-                              <span className="output-value">
+                                        </div>
+                                        <div className="result-details">
+                                          <strong className="output-name">Bias:</strong>
+                                          <span className="output-value">
                                 {1 - result.mean}
                               </span>
-                            </div>
-                          </li>
-                        </ul>
-                      )
+                                        </div>
+                                      </li>
+                                    </ul>
+                                )
+                        )}
+                      </div>
                   )}
                 </div>
-              )}
-            </div>
-          </div>
-          <div className="right-container">
-            {/* Pass setUploadedFiles to ControlButton2 */}
-            <div className="button-container">
-              <ControlButton2 setUploadedFiles={setUploadedFiles} />
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="pre-upload-dashboard">
-          <div className="button-container-pre">
-            <ControlButton2 setUploadedFiles={setUploadedFiles} />
-
-            {uploadedFiles.length > 0 && (
-              <div className="action-button-container">
-                <button onClick={handleGenerateClick} className="generate-btn">
-                  Generate
-                </button>
               </div>
-            )}
-          </div>
-          <img
-            src="/bg-bottom-left-desktop.webp"
-            alt="Cashapp illustration"
-            className="illustration"
-          />
-          <img
-            src="/bg-bottom-right-desktop.webp"
-            alt="Cashapp illustration"
-            className="illustration3"
-          />
-          <img
-            src="/bg-top-right-desktop.webp"
-            alt="Cashapp illustration"
-            className="illustration2"
-          />
-          <img
-            src="/star.png"
-            alt="Cashapp illustration"
-            className="illustration4"
-          />
-          <img
-            src="/flower.png"
-            alt="Cashapp illustration"
-            className="illustration5"
-          />
-          <img
-            src="/star2.png"
-            alt="Cashapp illustration"
-            className="illustration6"
-          />
-          <img
-            src="/bg-bottom-left-desktop copy.webp"
-            alt="Cashapp illustration"
-            className="illustration7"
-          />
-        </div>
-      )}
-    </>
+              <div className="right-container">
+                {/* Pass setUploadedFiles to ControlButton2 */}
+                <div className="button-container">
+                  <ControlButton2 setUploadedFiles={setUploadedFiles}
+                                  aria-label="Upload button"
+                  />
+
+                </div>
+              </div>
+            </div>
+        ) : (
+            <div className="pre-upload-dashboard">
+              <div className="button-container-pre">
+                <ControlButton2 setUploadedFiles={setUploadedFiles} />
+
+                {uploadedFiles.length > 0 && (
+                    <div className="action-button-container">
+                      <button
+                          onClick={handleGenerateClick}
+                          className="generate-btn"
+                          aria-label="Generate results"
+                      >
+                        Generate
+                      </button>
+                    </div>
+                )}
+              </div>
+              <img
+                  src="/bg-bottom-left-desktop.webp"
+                  alt="Cashapp illustration"
+                  className="illustration"
+                  aria-hidden="true"
+              />
+              <img
+                  src="/bg-bottom-right-desktop.webp"
+                  alt="Cashapp illustration"
+                  className="illustration3"
+                  aria-hidden="true"
+              />
+              <img
+                  src="/bg-top-right-desktop.webp"
+                  alt="Cashapp illustration"
+                  className="illustration2"
+                  aria-hidden="true"
+              />
+              <img
+                  src="/star.png"
+                  alt="Cashapp illustration"
+                  className="illustration4"
+                  aria-hidden="true"
+              />
+              <img
+                  src="/flower.png"
+                  alt="Cashapp illustration"
+                  className="illustration5"
+                  aria-hidden="true"
+              />
+              <img
+                  src="/star2.png"
+                  alt="Cashapp illustration"
+                  className="illustration6"
+                  aria-hidden="true"
+              />
+              <img
+                  src="/bg-bottom-left-desktop copy.webp"
+                  alt="Cashapp illustration"
+                  className="illustration7"
+                  aria-hidden="true"
+              />
+            </div>
+        )}
+      </>
   );
 };
 
