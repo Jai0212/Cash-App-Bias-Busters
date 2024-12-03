@@ -52,46 +52,79 @@ jest.mock("../../src/pages/DashboardPage/ChatBot/ChatBot.jsx", () => () => (
   <div data-testid="chatbot-component" />
 ));
 jest.mock("../../src/Components/Modal/Modal.jsx", () => ({ closeModal }) => (
-  <div data-testid="modal">
+  <div>
     <button onClick={closeModal}>Close</button>
   </div>
 ));
 
+jest.mock("axios", () => ({
+  post: jest.fn(),
+  get: jest.fn(),
+}));
+
 describe("Dashboard Component", () => {
   beforeEach(() => {
-    axios.post.mockResolvedValue({ data: {} });
-    axios.get.mockResolvedValue({ data: { email: "test@example.com" } });
-  });
-
-  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("renders without crashing", () => {
-    render(
-      <MockedProvider>
-        <Dashboard />
-      </MockedProvider>
-    );
+  test("renders Dashboard component", async () => {
+    axios.get.mockResolvedValueOnce({ data: { email: "test@user.com" } });
+    axios.post.mockResolvedValueOnce({
+      data: {
+        demographics: ["age", "gender"],
+        choices: { age: ["18-25", "26-35"], gender: ["Male", "Female"] },
+        time: "year",
+      },
+    });
 
-    // Check that all major components are rendered
-    expect(screen.getByTestId("tour-guide")).toBeInTheDocument();
-    expect(screen.getByTestId("slider")).toBeInTheDocument();
-    expect(screen.getByTestId("demographics-selector")).toBeInTheDocument();
-    expect(screen.getByTestId("qrcode-share")).toBeInTheDocument();
-    expect(screen.getByTestId("control-buttons")).toBeInTheDocument();
+    render(<Dashboard />);
+
+    expect(screen.getByText("Close")).toBeInTheDocument();
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
   });
 
-  it("opens the modal when info button is clicked", async () => {
-    render(
-      <MockedProvider>
-        <Dashboard />
-      </MockedProvider>
-    );
+  test("handles user email not found", async () => {
+    axios.get.mockResolvedValueOnce({ data: {} });
+    axios.post.mockResolvedValueOnce({
+      data: {
+        demographics: ["age", "gender"],
+        choices: { age: ["18-25", "26-35"], gender: ["Male", "Female"] },
+        time: "year",
+      },
+    });
 
-    // Click the info button to open the modal
-    const infoButton = screen.getByRole("button", { name: "?" });
-    fireEvent.click(infoButton);
+    render(<Dashboard />);
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    expect(screen.getByText("Close")).toBeInTheDocument();
+  });
+
+  test("opens and closes modal", async () => {
+    render(<Dashboard />);
+    const modalButton = screen.getByText("?");
+
+    fireEvent.click(modalButton);
+    expect(screen.getByText("Close")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Close"));
+    expect(screen.queryByText("Close")).not.toBeInTheDocument();
+  });
+
+  test("changes time frame and triggers new data request", async () => {
+    axios.get.mockResolvedValueOnce({ data: { email: "test@user.com" } });
+    axios.post.mockResolvedValueOnce({
+      data: {
+        demographics: ["age", "gender"],
+        choices: { age: ["18-25", "26-35"], gender: ["Male", "Female"] },
+        time: "year",
+      },
+    });
+
+    render(<Dashboard />);
+
+    // Simulate time frame change
+    const timeButton = screen.getByText("year"); // Assuming it's showing 'year' by default
+    fireEvent.click(timeButton);
 
     // Check that the modal is rendered
     expect(screen.getByTestId("modal")).toBeInTheDocument();

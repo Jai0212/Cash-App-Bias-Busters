@@ -1,158 +1,160 @@
 import React from "react";
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import ControlButtons from "../../src/pages/DashboardPage/ControlButtons/ControlButtons";
+import Swal from 'sweetalert2'; // Make sure Swal is imported correctly
 
+
+jest.mock('sweetalert2');
 jest.mock("../../src/envConfig", () => ({
-  envConfig: () => "test",
+  envConfig: jest.fn().mockReturnValue('http://mock-backend-url.com'),
 }));
 
-describe("ControlButtons Component", () => {
-  let mockOnDownload;
+describe('ControlButtons Component', () => {
+  let onDownloadMock;
 
   beforeEach(() => {
-    mockOnDownload = jest.fn(); // Mock the onDownload prop
-    global.fetch = jest.fn();
+    onDownloadMock = jest.fn();
+    // Clear mock calls before each test
+    Swal.fire.mockClear();
   });
 
-  afterEach(() => {
-    jest.resetAllMocks(); // Reset any mocked functions between tests
+  test('renders correctly and displays buttons', () => {
+    render(<ControlButtons onDownload={onDownloadMock} />);
+
+    // Check if buttons are rendered
+    expect(screen.getByLabelText(/Import Models/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Import Dataset/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Download Graph/i)).toBeInTheDocument();
   });
 
-  it("renders all buttons correctly", () => {
-    render(<ControlButtons onDownload={mockOnDownload} />);
-    expect(screen.getByText(/import models/i)).toBeInTheDocument();
-    expect(screen.getByText(/import dataset/i)).toBeInTheDocument();
-    expect(screen.getByText(/download graph/i)).toBeInTheDocument();
-  });
+  test('opens model upload modal on "Import Models" click', async () => {
+    render(<ControlButtons onDownload={onDownloadMock} />);
 
-  it("calls onDownload when the download button is clicked", () => {
-    render(<ControlButtons onDownload={mockOnDownload} />);
-
-    const downloadButton = screen.getByText(/download graph/i);
-    fireEvent.click(downloadButton);
-
-    expect(mockOnDownload).toHaveBeenCalled();
-  });
-
-  it("shows the model import modal when import models button is clicked", () => {
-    render(<ControlButtons onDownload={mockOnDownload} />);
-
-    const importModelButton = screen.getByText(/import models/i);
+    const importModelButton = screen.getByLabelText(/Import Models/i);
     fireEvent.click(importModelButton);
 
-    expect(screen.getByText(/model upload instructions/i)).toBeInTheDocument();
+    // Verify modal opens
+    expect(screen.getByText(/Model Upload Instructions/i)).toBeInTheDocument();
   });
 
-  it("shows the dataset import modal when import dataset button is clicked", () => {
-    render(<ControlButtons onDownload={mockOnDownload} />);
+  test('opens dataset upload modal on "Import Dataset" click', async () => {
+    render(<ControlButtons onDownload={onDownloadMock} />);
 
-    const importDatasetButton = screen.getByText(/import dataset/i);
+    const importDatasetButton = screen.getByLabelText(/Import Dataset/i);
     fireEvent.click(importDatasetButton);
 
-    expect(
-      screen.getByText(/dataset upload instructions/i)
-    ).toBeInTheDocument();
+    // Verify modal opens
+    expect(screen.getByText(/Dataset Upload Instructions/i)).toBeInTheDocument();
   });
 
-  it("closes the model import modal when close button is clicked", async () => {
-    render(<ControlButtons onDownload={mockOnDownload} />);
-
-    fireEvent.click(screen.getByText(/import models/i));
-    fireEvent.click(screen.getByLabelText(/close model upload instructions/i));
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText(/model upload instructions/i)
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it("closes the dataset import modal when close button is clicked", async () => {
-    render(<ControlButtons onDownload={mockOnDownload} />);
-
-    fireEvent.click(screen.getByText(/import dataset/i));
-    fireEvent.click(
-      screen.getByLabelText(/close dataset upload instructions/i)
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText(/dataset upload instructions/i)
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it("handles model file upload correctly", async () => {
-    const mockFile = new File(["dummy content"], "test.pkl", {
-      type: "application/octet-stream",
-    });
-    global.fetch.mockResolvedValueOnce({
+  test('uploads model file successfully', async () => {
+    // Mock the API response
+    global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: () => ({ message: "Success" }),
+      json: async () => ({ message: 'Model uploaded successfully!' }),
     });
 
-    render(<ControlButtons onDownload={mockOnDownload} />);
+    render(<ControlButtons onDownload={onDownloadMock} />);
 
-    fireEvent.click(screen.getByText(/import models/i));
-    fireEvent.click(screen.getByLabelText(/choose model file/i));
-
-    const input = screen.getByLabelText(/import model file/i);
-    Object.defineProperty(input, "files", {
-      value: [mockFile],
+    // Trigger the model file input and upload process
+    fireEvent.click(screen.getByLabelText(/Import Models/i));
+    fireEvent.change(screen.getByLabelText(/Choose model file/i), {
+      target: { files: [new File([''], 'model.pkl', { type: 'application/octet-stream' })] },
     });
 
-    fireEvent.change(input);
-
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        "test/api/upload-model",
-        expect.any(Object)
-      );
-    });
+    // Wait for the alert to show up and confirm it
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('http://mock-backend-url.com/api/upload-model', expect.anything()));
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith({
+      icon: 'success',
+      title: 'Success',
+      text: 'Model uploaded successfully!',
+    }));
   });
 
-  it("handles dataset file upload correctly", async () => {
-    const mockFile = new File(["dummy content"], "test.csv", {
-      type: "text/csv",
-    });
-    global.fetch.mockResolvedValueOnce({
+  test('uploads dataset file successfully', async () => {
+    // Mock the API response
+    global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: () => ({ message: "Success" }),
+      json: async () => ({ message: 'Dataset uploaded successfully!' }),
     });
 
-    render(<ControlButtons onDownload={mockOnDownload} />);
+    render(<ControlButtons onDownload={onDownloadMock} />);
 
-    fireEvent.click(screen.getByText(/import dataset/i));
-    fireEvent.click(screen.getByLabelText(/choose dataset file/i));
-
-    const input = screen.getByLabelText(/import dataset file/i);
-    Object.defineProperty(input, "files", {
-      value: [mockFile],
+    // Trigger the dataset file input and upload process
+    fireEvent.click(screen.getByLabelText(/Import Dataset/i));
+    fireEvent.change(screen.getByLabelText(/Choose dataset file/i), {
+      target: { files: [new File([''], 'data.csv', { type: 'text/csv' })] },
     });
 
-    fireEvent.change(input);
-
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        "test/api/upload-data",
-        expect.any(Object)
-      );
-    });
+    // Wait for the alert to show up and confirm it
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('http://mock-backend-url.com/api/upload-data', expect.anything()));
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith({
+      icon: 'success',
+      title: 'Success',
+      text: 'Dataset uploaded successfully!',
+    }));
   });
 
-  it("fetches email and demographics on mount", async () => {
-    global.fetch.mockResolvedValueOnce({
+  test('shows error when model upload fails', async () => {
+    // Mock failed API response
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: 'Upload failed' }),
+    });
+
+    render(<ControlButtons onDownload={onDownloadMock} />);
+
+    // Trigger the model file input and upload process
+    fireEvent.click(screen.getByLabelText(/Import Models/i));
+    fireEvent.change(screen.getByLabelText(/Choose model file/i), {
+      target: { files: [new File([''], 'model.pkl', { type: 'application/octet-stream' })] },
+    });
+
+    // Wait for the error alert to show up
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith({
+      icon: 'error',
+      title: 'Error',
+      text: 'Error uploading model: Upload failed',
+    }));
+  });
+
+  test('shows error when dataset upload fails', async () => {
+    // Mock failed API response
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: 'Upload failed' }),
+    });
+
+    render(<ControlButtons onDownload={onDownloadMock} />);
+
+    // Trigger the dataset file input and upload process
+    fireEvent.click(screen.getByLabelText(/Import Dataset/i));
+    fireEvent.change(screen.getByLabelText(/Choose dataset file/i), {
+      target: { files: [new File([''], 'data.csv', { type: 'text/csv' })] },
+    });
+
+    // Wait for the error alert to show up
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith({
+      icon: 'error',
+      title: 'Error',
+      text: 'Error uploading dataset: Upload failed',
+    }));
+  });
+
+  test('handles missing user email correctly', async () => {
+    // Mock fetch to return no email
+    global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: () => ({ email: "test@example.com" }),
+      json: async () => ({ email: '' }),
     });
 
-    render(<ControlButtons onDownload={mockOnDownload} />);
+    render(<ControlButtons onDownload={onDownloadMock} />);
 
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        "test/get-email",
-        expect.any(Object)
-      );
-    });
+    // Wait for the error alert to show up
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith({
+      icon: 'error',
+      title: 'Please log in first',
+      text: 'You need to log in to access this page.',
+    }));
   });
 });

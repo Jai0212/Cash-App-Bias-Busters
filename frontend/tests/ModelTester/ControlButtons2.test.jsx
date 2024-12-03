@@ -14,9 +14,9 @@ jest.mock("sweetalert2", () => ({
 }));
 
 global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve({ email: "test@example.com" }),
-  })
+    Promise.resolve({
+      json: () => Promise.resolve({ email: "test@example.com" }),
+    })
 );
 
 describe("ControlButton2 Component", () => {
@@ -39,8 +39,8 @@ describe("ControlButton2 Component", () => {
     // Verify email fetch call
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("/get-email"),
-        expect.any(Object)
+          expect.stringContaining("/get-email"),
+          expect.any(Object)
       );
     });
   });
@@ -70,7 +70,7 @@ describe("ControlButton2 Component", () => {
     // Check that the modal is no longer in the document
     await waitFor(() => {
       expect(
-        screen.queryByText("Model Upload Instructions")
+          screen.queryByText("Model Upload Instructions")
       ).not.toBeInTheDocument();
     });
   });

@@ -44,6 +44,14 @@ test("renders chatbot with initial greeting", async () => {
     });
 });
 
+test("should display the initial greeting message", () => {
+    render(<ChatbotComponent closeChatbot={mockCloseChatbot} />);
+
+    // Check for the initial chatbot message
+    const initialMessage = screen.getByText("Hi! How can I help you today?");
+    expect(initialMessage).toBeInTheDocument();
+});
+
 test("closes the chatbot when close button is clicked", () => {
     const closeChatbot = jest.fn();
     render(<ChatbotComponent closeChatbot={closeChatbot} />);
@@ -53,6 +61,18 @@ test("closes the chatbot when close button is clicked", () => {
 
     // Verify that the closeChatbot function was called
     expect(closeChatbot).toHaveBeenCalled();
+});
+
+test("renders the chatbot and its elements correctly", () => {
+    render(<ChatbotComponent closeChatbot={mockCloseChatbot} />);
+
+    // Check if the chatbot is rendered
+    const chatbot = screen.getByRole("dialog");
+    expect(chatbot).toBeInTheDocument();
+
+    // Check if the close button is rendered
+    const closeButton = screen.getByText("×");
+    expect(closeButton).toBeInTheDocument();
 });
 
 test("provides appropriate response for 'started' keyword", () => {

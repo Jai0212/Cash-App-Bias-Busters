@@ -21,6 +21,103 @@ beforeEach(() => {
     fetch.mockClear();
 });
 
+test("calls handleLogout if uploadedFiles exist in localStorage", async () => {
+    // Mock localStorage with uploadedFiles
+    localStorage.setItem("uploadedFiles", JSON.stringify(["file1", "file2"]));
+
+    const mockLogout = jest.spyOn(Storage.prototype, "removeItem");
+    const mockNavigate = jest.fn();
+
+    jest.mock("react-router-dom", () => ({
+        ...jest.requireActual("react-router-dom"),
+        useNavigate: () => mockNavigate,
+    }));
+
+    render(
+        <MemoryRouter>
+            <UserSignup />
+        </MemoryRouter>
+    );
+
+    await waitFor(() => {
+        expect(mockLogout).toHaveBeenCalledWith("uploadedFiles");
+        expect(mockNavigate).toHaveBeenCalledWith("/");
+    });
+
+    mockLogout.mockRestore();
+});
+
+test("navigates to '/' on successful logout", async () => {
+    jest.spyOn(axios, "post").mockResolvedValueOnce({
+        data: { error: false },
+    });
+
+    const mockNavigate = jest.fn();
+    jest.mock("react-router-dom", () => ({
+        ...jest.requireActual("react-router-dom"),
+        useNavigate: () => mockNavigate,
+    }));
+
+    render(
+        <MemoryRouter>
+            <UserSignup />
+        </MemoryRouter>
+    );
+
+    // Trigger handleLogout
+    fireEvent.submit(screen.getByRole("button", { name: /Submit/i }));
+
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/"));
+    axios.post.mockRestore();
+});
+
+test("logs an error message on failed logout", async () => {
+    const consoleErrorMock = jest.spyOn(console, "error").mockImplementation();
+    jest.spyOn(axios, "post").mockResolvedValueOnce({
+        data: { error: true, message: "Logout failed" },
+    });
+
+    render(
+        <MemoryRouter>
+            <UserSignup />
+        </MemoryRouter>
+    );
+
+    fireEvent.submit(screen.getByRole("button", { name: /Submit/i }));
+
+    await waitFor(() =>
+        expect(consoleErrorMock).toHaveBeenCalledWith(
+            "Logout failed:",
+            "Logout failed"
+        )
+    );
+
+    consoleErrorMock.mockRestore();
+    axios.post.mockRestore();
+});
+
+test("handles unexpected API error during signup", async () => {
+    fetch.mockRejectedValueOnce(new Error("Unexpected API Error"));
+
+    render(
+        <MemoryRouter>
+            <UserSignup />
+        </MemoryRouter>
+    );
+
+    fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "John" } });
+    fireEvent.change(screen.getByLabelText("Last Name"), { target: { value: "Doe" } });
+    fireEvent.change(screen.getByLabelText("Email"), { target: { value: "test@example.com" } });
+    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "password123" } });
+    fireEvent.change(screen.getByLabelText("Confirm Password"), { target: { value: "password123" } });
+
+    fireEvent.click(screen.getByRole("button", { name: /Submit/i }));
+
+    await waitFor(() => {
+        expect(screen.getByText("Unexpected API Error")).toBeInTheDocument();
+    });
+});
+
 // Test case for rendering the form
 test("renders UserSignup form", () => {
     render(

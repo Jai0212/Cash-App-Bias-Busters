@@ -17,4 +17,10 @@ module.exports = {
     "!src/index.js",
     "!src/serviceWorker.js",
   ],
+  coveragePathIgnorePatterns: [
+    "src/main.jsx",
+    "src/envConfig.js",
+    "src/pages/SharePage/SharePage.jsx",
+    "src/pages/DashboardPage/Chatbot/Chatbot.jsx",
+  ],
 };

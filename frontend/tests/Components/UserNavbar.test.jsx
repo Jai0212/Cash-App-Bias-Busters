@@ -32,7 +32,6 @@ test("renders UserNavbar with links", () => {
 });
 
 test("logs out successfully when logout button is clicked", async () => {
-
     axios.post.mockResolvedValueOnce({
         data: { error: false, message: "Logged out successfully" },
     });
@@ -51,9 +50,7 @@ test("logs out successfully when logout button is clicked", async () => {
     });
 });
 
-
 test("handles logout failure correctly", async () => {
-
     axios.post.mockResolvedValueOnce({
         data: { error: true, message: "Logout failed" },
     });
@@ -71,5 +68,30 @@ test("handles logout failure correctly", async () => {
     await waitFor(() => {
         expect(consoleErrorSpy).toHaveBeenCalledWith("Logout failed:", "Logout failed");
     });
+    consoleErrorSpy.mockRestore();
+});
+
+test("handles logout error correctly (catch block)", async () => {
+    // Mock axios.post to reject with an error
+    axios.post.mockRejectedValueOnce(new Error("Logout failed"));
+
+    render(
+        <Router>
+            <UserNavbar />
+        </Router>
+    );
+
+    const logoutButton = screen.getByRole("button", { name: /Logout/i });
+    fireEvent.click(logoutButton);
+
+    // Spy on console.error to check if it's called with the correct error
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+
+    await waitFor(() => {
+        // Verify the error was logged
+        expect(consoleErrorSpy).toHaveBeenCalledWith("Error during logout:", expect.any(Error));
+    });
+
+    // Clean up the spy
     consoleErrorSpy.mockRestore();
 });

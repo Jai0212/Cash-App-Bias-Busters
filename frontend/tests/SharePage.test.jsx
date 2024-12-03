@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route } from "react-router-dom";
 import SharePage from "../src/pages/SharePage/SharePage";
 
 global.fetch = jest.fn(() =>
@@ -29,6 +29,7 @@ jest.mock("../src/envConfig", () => ({
     return "test";
   },
 }));
+global.fetch = jest.fn();
 
 beforeEach(() => {
   fetch.mockClear();

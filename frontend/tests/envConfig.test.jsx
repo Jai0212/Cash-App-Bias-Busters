@@ -1,38 +1,21 @@
-// envConfig.test.js
-
-import { envConfig, envConfigFrontend } from "../src/envConfig";
-
-jest.mock("../src/envConfig", () => ({
-  envConfig: () => "https://cash-app-bias-busters.onrender.com",
-  envConfigFrontend: () => "http://localhost:5173",
-}));
+import { envConfig, envConfigFrontend } from "../src/envConfig"; // adjust path as necessary
 
 describe("envConfig", () => {
-  it("should return the backend URL from environment variables", () => {
-    const originalEnv = process.env;
-    process.env = {
-      ...originalEnv,
-      VITE_BACKEND_URL: "https://cash-app-bias-busters.onrender.com",
-    };
-
-    const backendUrl = envConfig();
-    expect(backendUrl).toBe("https://cash-app-bias-busters.onrender.com");
-
-    process.env = originalEnv; // Restore original environment variables
+  beforeAll(() => {
+    // Mock the values of import.meta.env
+    globalThis.import = { meta: { env: { VITE_BACKEND_URL: "http://mock-backend-url.com", VITE_FRONTEND_URL: "http://mock-frontend-url.com" } } };
   });
-});
 
-describe("envConfigFrontend", () => {
-  it("should return the frontend URL from environment variables", () => {
-    const originalEnv = process.env;
-    process.env = {
-      ...originalEnv,
-      VITE_FRONTEND_URL: "http://localhost:5173",
-    };
+  afterAll(() => {
+    // Clean up after tests to avoid affecting other tests
+    delete globalThis.import.meta.env;
+  });
 
-    const frontendUrl = envConfigFrontend();
-    expect(frontendUrl).toBe("http://localhost:5173");
+  test("envConfig returns correct backend URL", () => {
+    expect(envConfig()).toBe("http://mock-backend-url.com");
+  });
 
-    process.env = originalEnv; // Restore original environment variables
+  test("envConfigFrontend returns correct frontend URL", () => {
+    expect(envConfigFrontend()).toBe("http://mock-frontend-url.com");
   });
 });
