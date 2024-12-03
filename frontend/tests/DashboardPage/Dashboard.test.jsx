@@ -20,10 +20,26 @@ jest.mock("../../src/pages/DashboardPage/TourGuide/TourGuide.jsx", () => () => (
 jest.mock("../../src/pages/DashboardPage/Slider/Slider.jsx", () => () => (
   <div data-testid="slider" />
 ));
+
 jest.mock(
   "../../src/pages/DashboardPage/Demographics/DemographicsSelector.jsx",
-  () => () => <div data-testid="demographics-selector" />
+  () =>
+    ({ handleDemographicChange, selectedDemographic, demographicValues }) =>
+      (
+        <select
+          data-testid="demographics-selector"
+          onChange={handleDemographicChange}
+          value={selectedDemographic}
+        >
+          {demographicValues.map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
+      )
 );
+
 jest.mock(
   "../../src/pages/DashboardPage/QRCodeShare/QRCodeShare.jsx",
   () => () => <div data-testid="qrcode-share" />
@@ -103,5 +119,18 @@ describe("Dashboard Component", () => {
 
     // Check that the chatbot is rendered
     expect(screen.getByTestId("chatbot-component")).toBeInTheDocument();
+  });
+
+  it("handles time frame change correctly", () => {
+    render(
+      <MockedProvider>
+        <Dashboard />
+      </MockedProvider>
+    );
+
+    const timeButton = screen.getByText("1 Day");
+    fireEvent.click(timeButton);
+
+    expect(screen.getByText("1 Day")).toHaveClass("active-button");
   });
 });

@@ -93,7 +93,9 @@ const SharePage = () => {
   return (
     <div className="share-page-container">
       {loading ? (
-        <p className="loading-text">Loading...</p>
+        <p className="loading-text" data-testid="Loading...">
+          Loading...
+        </p>
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : (
