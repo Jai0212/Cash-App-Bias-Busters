@@ -13,7 +13,7 @@ const QRCodeShare = ({
   timeframe,
   currUser,
 }) => {
-  const VITE_FRONTEND_URL = envConfig();
+  const VITE_FRONTEND_URL = envConfigFrontend();
 
   const [showModal, setShowModal] = useState(false); // Modal visibility state
   const [shareSuccess, setShareSuccess] = useState(null); // State to track success or failure
