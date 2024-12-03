@@ -22,7 +22,13 @@ const DemographicsSelector = ({
             <div className="select-demographics">
                 <div className="title"></div>
                 <div className="select-container1">
-                <label htmlFor="demographic-select">Select Demographic</label>
+                    <label htmlFor="demographic-select" className="demographic-select-heading" style={{
+                        fontSize: "18px",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        display: "block",
+                        marginBottom: "10px",
+                    }}>1st Demographic</label>
                     <select
                         onChange={handleDemographicChange}
                         value={selectedDemographic}
@@ -46,7 +52,7 @@ const DemographicsSelector = ({
                                     key={idx}
                                     onChange={(event) => handleValueChange(event, idx)}
                                     value={selectedValues[idx] || ""}
-                                    tabIndex={tabIndex  + 1 + idx}
+                                    tabIndex={tabIndex + 1 + idx}
                                 >
                                     <option value="">Select</option>
                                     {demographicValues
@@ -64,7 +70,13 @@ const DemographicsSelector = ({
 
                 {selectedDemographic && (
                     <div className="select-container2">
-                        <label htmlFor="second-demographic-select">Select 2nd Demographic</label>
+                        <label htmlFor="second-demographic-select" className="demographic-select-heading2" style={{
+                            fontSize: "18px",
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            display: "block",
+                            marginBottom: "10px",
+                        }}>2nd Demographic</label>
 
                         <select
                             id="second-demographic-select"

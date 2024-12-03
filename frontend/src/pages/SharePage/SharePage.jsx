@@ -10,6 +10,20 @@ const SharePage = () => {
     const { encodedData } = useParams(); // Access the encodedData parameter from the URL
     const chartRef = useRef(null);
 
+    useEffect(() => {
+        // Change background color and allow vertical overflow
+        document.body.style.backgroundColor = "#f6f2eb";  // Set the body background color
+        document.documentElement.style.backgroundColor = "#f6f2eb";  // Set the html background color
+        document.body.style.overflowY = "auto";  // Allow vertical scrolling
+
+        // Clean up by resetting the background color and overflow when the component unmounts
+        return () => {
+            document.body.style.backgroundColor = "";
+            document.documentElement.style.backgroundColor = "";
+            document.body.style.overflowY = "";  // Reset the overflow
+        };
+    }, []);
+
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -86,64 +100,66 @@ const SharePage = () => {
     return (
         <div className="share-page-container">
             {loading ? (
-                <p className="loading-text">Loading...</p>
+                <div className="loading-spinner"></div>
             ) : error ? (
                 <p className="error-message">{error}</p>
             ) : (
-                <div className="share-page-content">
-                    <h1 className="page-title">
-                        Data by {data.currUser.split('@')[0]} ({data.timeframe.charAt(0).toUpperCase() + data.timeframe.slice(1)})
-                    </h1>
+                <div className="scrollable-container">
+                    <div className="share-page-content">
+                        <h1 className="page-title">
+                            Data by {data.currUser.split('@')[0]} ({data.timeframe.charAt(0).toUpperCase() + data.timeframe.slice(1)})
+                        </h1>
 
-                    <div className="center-wrapper">
-                        <div
-                            className="overall-bias"
-                            style={{
-                                backgroundColor: averageBias > 0.5 ? '#ff6666' : '#66ff66', // Change background color
-                            }}
-                        >
-                            Overall Bias: {averageBias}
-                        </div>
-                    </div>
-
-                    <div className="graph-container">
-                        <div className="graph-section">
-                            {graphData && Object.keys(graphData).length > 0 && (
-                                <ChartComponent
-                                    ref={chartRef}
-                                    chartData={graphData}
-                                    sliderValue={0.5}
-                                    bias={maxValue()}
-                                />
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="data-container">
-                        <div className="demographics-container">
-                            <div className="demographic-item">
-                                <strong className="demographic-title">Demographic 1:</strong>
-                                <span className="demographic-value">
-                                    {data.selectedDemographic.charAt(0).toUpperCase() + data.selectedDemographic.slice(1)}
-                                </span>
-                                <ul className="demographics-list">
-                                    {data.selectedValues &&
-                                        data.selectedValues.map((value, index) => (
-                                            <li key={index}>{value}</li>
-                                        ))}
-                                </ul>
+                        <div className="center-wrapper">
+                            <div
+                                className="overall-bias"
+                                style={{
+                                    backgroundColor: averageBias > 0.5 ? '#ff6666' : '#66ff66', // Change background color
+                                }}
+                            >
+                                Overall Bias: {averageBias}
                             </div>
-                            <div className="demographic-item">
-                                <strong className="demographic-title">Demographic 2:</strong>
-                                <span className="demographic-value">
-                                    {data.secondSelectedDemographic.charAt(0).toUpperCase() + data.secondSelectedDemographic.slice(1)}
-                                </span>
-                                <ul className="demographics-list">
-                                    {data.selectedSecondValues &&
-                                        data.selectedSecondValues.map((value, index) => (
-                                            <li key={index}>{value}</li>
-                                        ))}
-                                </ul>
+                        </div>
+
+                        <div className="graph-container">
+                            <div className="graph-section">
+                                {graphData && Object.keys(graphData).length > 0 && (
+                                    <ChartComponent
+                                        ref={chartRef}
+                                        chartData={graphData}
+                                        sliderValue={0.5}
+                                        bias={maxValue()}
+                                    />
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="data-container">
+                            <div className="demographics-container">
+                                <div className="demographic-item">
+                                    <strong className="demographic-title">Demographic 1:</strong>
+                                    <span className="demographic-value">
+                                        {data.selectedDemographic.charAt(0).toUpperCase() + data.selectedDemographic.slice(1)}
+                                    </span>
+                                    <ul className="demographics-list">
+                                        {data.selectedValues &&
+                                            data.selectedValues.map((value, index) => (
+                                                <li key={index}>{value}</li>
+                                            ))}
+                                    </ul>
+                                </div>
+                                <div className="demographic-item">
+                                    <strong className="demographic-title">Demographic 2:</strong>
+                                    <span className="demographic-value">
+                                        {data.secondSelectedDemographic.charAt(0).toUpperCase() + data.secondSelectedDemographic.slice(1)}
+                                    </span>
+                                    <ul className="demographics-list">
+                                        {data.selectedSecondValues &&
+                                            data.selectedSecondValues.map((value, index) => (
+                                                <li key={index}>{value}</li>
+                                            ))}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>

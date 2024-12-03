@@ -83,14 +83,14 @@ const UserLogin = () => {
   return (
     <div className="main-container">
       <div className="container-login">
-        <h1>User Login</h1>
+        <h1>Login</h1>
       </div>
 
       <hr className="seperator" />
       <div className="alert alert-primary">
         <form onSubmit={handleSubmit(handleForm)} id={"form"}>
           <div className="mb-3">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email" className="login-label">Email</label>
             <input
               {...register("email", { required: "This field is required" })}
               type="email"
@@ -107,7 +107,7 @@ const UserLogin = () => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password" className="login-label">Password</label>
             <input
               {...register("password", { required: "This field is required" })}
               type="password"

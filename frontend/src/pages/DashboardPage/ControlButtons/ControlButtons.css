@@ -2,7 +2,7 @@
 .file-import-container {
   display: flex;
   justify-content: center;
-  margin-top: 2vh;
+  margin-top: 1vh;
   align-items: center;
   gap: 20px;
 }

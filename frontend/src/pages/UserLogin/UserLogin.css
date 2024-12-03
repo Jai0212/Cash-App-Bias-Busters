@@ -3,86 +3,81 @@
   height: 100vh;
   overflow: hidden;
 }
+
 .main-container {
   position: relative;
   top: -2.5vh;
   height: 100vh;
   width: 100vw;
-  background-color: #FFE0B1;
+  background-color: #1b262c;
+  /* Dark slate background */
   justify-content: center;
   overflow: hidden;
 }
+
 .container-login {
-  padding-top: 8vh;
   position: relative;
-  top: 0;
   text-align: center;
-  color: #F6F2EB;
+  color: #bbe1fa;
+  /* Soft light blue for text */
   background-color: transparent;
-  height: 18vh;
-  margin-top: 0;
+  height: 8vh;
+  margin-top: 6vh;
 }
 
-.seperator{
+.seperator {
   color: black;
-  margin-bottom: 9vh;
-}
-
-h1 {
-  font-weight: bold;
-  font-family: "Roboto", Arial, sans-serif;
-  color: black;
+  margin-bottom: 7vh;
 }
 
 .alert-primary {
-  background-color: #f6f2eb;
-  /* Light Green background for form */
+  background-color: #f9f9f9;
   padding: 30px;
   border-radius: 8px;
   max-width: 400px;
-  height: 35% !important;
-  /* Set a max width */
-  margin: 50px auto;
-  /* Center the form horizontally and add top/bottom margin */
+  margin: auto;
 }
 
 /* Adjusting the form input styles */
 .form-control {
-  border-color: #2e2e2e;
-  /* Green border for inputs */
+  border-color: #3282b8;
+  /* Teal border for inputs */
   border-radius: 8px;
 }
 
 .form-control:focus {
-  border-color: #2e2e2e;
-  box-shadow: 0 0 5px rgba(56, 142, 60, 0.5);
-  /* Green shadow */
+  border-color: #3282b8;
+  box-shadow: 0 0 5px rgba(50, 130, 184, 0.5);
+  /* Teal shadow */
 }
 
 /* Button Styles */
 .btn-primary {
-  background-color: #4caf50;
-  /* Green button */
-  border-color: #2e2e2e;
+  background-color: #3282b8;
+  /* Teal button */
+  border-color: #0f4c75;
   border-radius: 8px;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 6px;
   /* Round button corners */
 }
 
 .btn-primary:focus {
-  background-color: #388e3c;
-  /* Darker green on focus */
-  border-color: #2e2e2e;
+  background-color: #1b6ca8;
+  /* Slightly darker teal on focus */
+  border-color: #0f4c75;
 }
 
 .btn-primary:hover {
-  background-color: #388e3c;
-  /* Dark green on hover */
-  border-color: #2e2e2e;
+  background-color: #1b6ca8;
+  /* Slightly darker teal on hover */
+  border-color: #0f4c75;
 }
 
 .text-danger {
-  color: #d32f2f;
-  /* Keeping error text red */
+  color: #e63946;
+  /* Soft red for error text */
 }
 
 /* For wider screens, limit the form's width */
@@ -93,8 +88,10 @@ h1 {
   }
 }
 
-label {
+.login-label {
   font-family: "Roboto", Arial, sans-serif;
+  color: #0f4c75;
+  /* Muted teal for labels */
 }
 
 .img-container {
@@ -110,4 +107,6 @@ label {
   width: 100%;
   height: 100%;
   right: 0;
+  opacity: 0.8;
+  /* Slight transparency for the GIF */
 }

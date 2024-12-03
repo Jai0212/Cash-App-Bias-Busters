@@ -1,135 +1,24 @@
-/* Centering the form */
-#root {
-  height: 100vh;
-  overflow: hidden;
-  background-color: #1F00AB;
-}
-
-.main-container {
-  position: relative;
-  top: -2.5vh;
-  height: 100vh;
-  width: 100vw;
-  background-color: #1F00AB;
-  justify-content: center;
-}
-
 .container-signup {
-  padding-top: 8vh;
   position: relative;
-  top: 0;
   text-align: center;
-  color: #F6F2EB;
+  color: #bbe1fa;
+  /* Soft light blue for text */
   background-color: transparent;
-  padding-bottom: 4vh;
-  margin-top: 0;
+  height: 8vh;
+  margin-top: 6vh;
 }
-
-h1 {
-  font-weight: bold;
-  font-family: "Roboto", Arial, sans-serif;
-}
-
-.seperator{
-  color: #F6F2EB;
-}
-
 
 .alert-primary3 {
-  background-color: #f6f2eb;
-  /* Light Green background for form */
+  background-color: #f9f9f9;
+  /* Subtle off-white for form background */
   padding: 30px;
   border-radius: 8px;
   max-width: 500px;
   /* Set a max width */
-  height: 43%;
-  margin: 50px auto;
+  margin: auto;
   /* Center the form horizontally and add top/bottom margin */
 }
 
-/* Adjusting the form input styles */
-.form-control {
-  border-color: #66bb6a;
-  /* Green border for inputs */
-  border-radius: 8px;
-}
-
-.form-control:focus {
-  border-color: #388e3c;
-  box-shadow: 0 0 5px rgba(56, 142, 60, 0.5);
-  /* Green shadow */
-}
-
-/* Button Styles */
-.btn-primary {
-  background-color: #4caf50;
-  /* Green button */
-  border-color: #4caf50;
-  border-radius: 8px;
-  width: 100%;
-  /* Round button corners */
-}
-
-.btn-primary:focus {
-  background-color: #388e3c;
-  /* Darker green on focus */
-  border-color: #388e3c;
-}
-
-.btn-primary:hover {
-  background-color: #388e3c;
-  /* Dark green on hover */
-  border-color: #388e3c;
-}
-
-.text-danger {
-  color: #d32f2f;
-  /* Red error message */
-}
-
-/* For wider screens, limit the form's width */
-@media (min-width: 768px) {
-  .alert-primary {
-    max-width: 600px;
-    /* Increase max-width on larger screens */
-  }
-}
-
-body,
-html {
-  background-color: #1F00AB;
-}
-
-.img-container2 {
-  bottom: 3vh;
-  position: absolute;
-  width: 30%;
-  height: 50%;
-  right: -3vw;
-}
-
- .img-container3 {
-   bottom: 3vh;
-   position: absolute;
-   width: 30%;
-   height: 50%;
-   left: -2vw;
- }
-
 .w-100 {
   width: 210% !important;
-}
-
-.login-signup-gif2 {
-  object-fit: fill;
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.login-signup-gif3 {
-  object-fit: fill;
-  position: relative;
-  width: 100%;
-  height: 100%;
 }

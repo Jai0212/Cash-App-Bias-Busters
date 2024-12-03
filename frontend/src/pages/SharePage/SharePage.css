@@ -1,11 +1,30 @@
-/* Shared container styles */
 .share-page-container {
+    position: absolute;
     flex-direction: column;
     align-items: center;
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
+
+    display: flex !important;
+    flex-grow: 1 !important;
+    /* Ensure it can expand beyond the viewport */
+    min-height: 100vh !important;
+    /* Ensure the container takes at least the full height */
+    overflow-y: auto !important;
+    /* Enable vertical scrolling */
+}
+
+.scrollable-container {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.share-page-content {
+    flex-grow: 1;
+    /* Allow content to expand and scroll */
+    overflow-y: auto;
 }
 
 /* Wrapper for Centering */
@@ -16,6 +35,7 @@
     /* Full viewport height for vertical centering */
     width: 100%;
 }
+
 
 /* Centered Overall Bias */
 .overall-bias {
@@ -258,5 +278,25 @@
     .error-message {
         font-size: 1rem;
         /* Slightly smaller font for error messages */
+    }
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-top: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }

@@ -1,4 +1,8 @@
-/* html,
-body {
-    overflow: hidden;
-} */
+body,
+html {
+    background-color: #003f5c;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* background-color: #f6f2eb; */

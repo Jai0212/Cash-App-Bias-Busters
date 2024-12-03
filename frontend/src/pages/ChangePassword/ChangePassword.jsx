@@ -4,7 +4,6 @@ import swal from "sweetalert2";
 import { envConfig } from "../../envConfig";
 import "./ChangePassword.css"
 
-
 const ChangePassword = () => {
   const VITE_BACKEND_URL = envConfig();
 
@@ -49,74 +48,79 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="main-container-password">
+    <div className="main-container">
       <div className="container-password">
         <h1> Change Password </h1>
       </div>
 
-      <hr />
+      <hr className="seperator" />
       <div className="alert alert-primary2">
         <form onSubmit={handleSubmit(handleForm)} id="form">
           <div className="mb-3">
             <label htmlFor="old_password">Enter Old Password</label>
             <input
-                id="old_password"
-                {...register("old_password", {
-                  required: "This field is required",
-                })}
-                type="password"
-                className="form-control"
+              id="old_password"
+              {...register("old_password", {
+                required: "This field is required",
+              })}
+              type="password"
+              className="form-control"
             />
             <ErrorMessage
-                errors={errors}
-                name="old_password"
-                render={({message}) => (
-                    <p className="text-danger">{message}</p>
-                )}
+              errors={errors}
+              name="old_password"
+              render={({ message }) => (
+                <p className="text-danger">{message}</p>
+              )}
             />
           </div>
 
           <div className="mb-3">
             <label htmlFor="new_password">Enter New Password</label>
             <input
-                id="new_password"
-                {...register("new_password", {
-                  required: "This field is required",
-                })}
-                type="password"
-                className="form-control"
+              id="new_password"
+              {...register("new_password", {
+                required: "This field is required",
+              })}
+              type="password"
+              className="form-control"
             />
             <ErrorMessage
-                errors={errors}
-                name="new_password"
-                render={({message}) => (
-                    <p className="text-danger">{message}</p>
-                )}
+              errors={errors}
+              name="new_password"
+              render={({ message }) => (
+                <p className="text-danger">{message}</p>
+              )}
             />
           </div>
 
           <div className="mb-3">
             <label htmlFor="confirm_password">Confirm Password</label>
             <input
-                id="confirm_password"
-                {...register("confirm_password", {
-                  required: "This field is required",
-                })}
-                type="password"
-                className="form-control"
+              id="confirm_password"
+              {...register("confirm_password", {
+                required: "This field is required",
+              })}
+              type="password"
+              className="form-control"
             />
             <ErrorMessage
-                errors={errors}
-                name="confirm_password"
-                render={({message}) => (
-                    <p className="text-danger">{message}</p>
-                )}
+              errors={errors}
+              name="confirm_password"
+              render={({ message }) => (
+                <p className="text-danger">{message}</p>
+              )}
             />
           </div>
 
           <button className="btn btn-primary">Change Password</button>
         </form>
-
+      </div>
+      <div className="img-container">
+        <img
+          src="/bottom-login.gif"
+          className="login-signup-gif"
+        />
       </div>
     </div>
   );

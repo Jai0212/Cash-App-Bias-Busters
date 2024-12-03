@@ -59,6 +59,7 @@
   margin-left: auto;
   margin-right: auto;
   font-family: "Roboto", Arial, sans-serif;
+  margin-top: -1px;
 }
 
 .select-container select {
@@ -176,12 +177,6 @@
   /* border: 2px solid blueviolet; */
 }
 
-/* Adjust widths as necessary */
-.select-demographics {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .chart-container {
   flex: 2;
   /* Take up twice as much space as .select-demographics */
@@ -198,11 +193,6 @@
   font-size: 2rem;
   margin-bottom: 5vh;
   color: white;
-}
-
-body,
-html {
-  background-color: #f6f2eb;
 }
 
 .demo-dropdown {
