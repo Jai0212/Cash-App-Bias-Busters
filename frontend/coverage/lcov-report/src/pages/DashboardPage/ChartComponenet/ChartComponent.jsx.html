@@ -352,7 +352,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-yes">16x</span>
@@ -641,7 +641,7 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) =&gt; {
   const chartRef = useRef(null);
   const myChartRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [accuracyData, setAccuracyData] = useState([]);  
+  const [accuracyData, setAccuracyData] = useState([]);
   const [lastTabIndex, setLastTabIndex] = useState(20);
 &nbsp;
   useEffect(() =&gt; {
@@ -667,14 +667,14 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) =&gt; {
       a.feature1.localeCompare(b.feature1)
     );
 &nbsp;
-    const labels = sortedChartData.map((item) =&gt; item.feature2); 
+    const labels = sortedChartData.map((item) =&gt; item.feature2);
 &nbsp;
     const newAccuracyData = sortedChartData.map((item) =&gt; ({
-      label: item.feature2, 
+      label: item.feature2,
       accuracy: item.accuracy,
       falsePositive: item.falsepositive,
       falseNegative: item.falsenegative,
-      color: feature1Colors[item.feature1] || <span class="branch-1 cbranch-no" title="branch not covered" >"rgba(200, 200, 200, 0.7)", </span>
+      color: feature1Colors[item.feature1] || <span class="branch-1 cbranch-no" title="branch not covered" >"rgba(200, 200, 200, 0.7)",</span>
     }));
 &nbsp;
     setAccuracyData(newAccuracyData);
@@ -683,12 +683,12 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) =&gt; {
       {
         label: "Accuracy",
         data: newAccuracyData.map((d) =&gt; ({ x: d.label, y: d.accuracy })),
-        backgroundColor: newAccuracyData.map((d) =&gt; d.color), 
+        backgroundColor: newAccuracyData.map((d) =&gt; d.color),
         borderColor: newAccuracyData.map(
-          (d) =&gt; (d.accuracy &gt; sliderValue ? "rgba(255, 0, 0, 1)" : d.color) 
+          (d) =&gt; (d.accuracy &gt; sliderValue ? "rgba(255, 0, 0, 1)" : d.color)
         ),
         borderWidth: newAccuracyData.map(
-          (d) =&gt; (d.accuracy &gt; sliderValue ? 3 : 1) 
+          (d) =&gt; (d.accuracy &gt; sliderValue ? 3 : 1)
         ),
         borderCapStyle: "round",
         borderJoinStyle: "round",
@@ -846,19 +846,19 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) =&gt; {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      if (event.key === 'Tab') {</span>
 <span class="cstat-no" title="statement not covered" >        event.preventDefault(); </span>// Prevent default tab behavior during chart navigation
-  
+&nbsp;
         const nextIndex = <span class="cstat-no" title="statement not covered" >hoveredIndex === null</span>
           ? 0
           : (hoveredIndex + 1);
-  
+&nbsp;
 <span class="cstat-no" title="statement not covered" >        if (nextIndex &lt; accuracyData.length) {</span>
-<span class="cstat-no" title="statement not covered" >          setHoveredIndex(nextIndex); </span>
+<span class="cstat-no" title="statement not covered" >          setHoveredIndex(nextIndex);</span>
 <span class="cstat-no" title="statement not covered" >          if (myChartRef.current) {</span>
             const chart = <span class="cstat-no" title="statement not covered" >myChartRef.current;</span>
             // const activeElement = chart.getDatasetMeta(0).data[nextIndex];
 <span class="cstat-no" title="statement not covered" >            chart.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);</span>
-<span class="cstat-no" title="statement not covered" >            chart.update(); </span>
-            
+<span class="cstat-no" title="statement not covered" >            chart.update();</span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >            chart.tooltip.setActiveElements([{ datasetIndex: 0, index: nextIndex }]);</span>
 <span class="cstat-no" title="statement not covered" >            chart.tooltip.update();</span>
 <span class="cstat-no" title="statement not covered" >            chart.draw();</span>
@@ -890,14 +890,14 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) =&gt; {
         }
       }
     };
-  
+&nbsp;
     window.addEventListener('keydown', handleKeyDown);
-  
+&nbsp;
     return () =&gt; {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [hoveredIndex, accuracyData.length, lastTabIndex]);
-  
+&nbsp;
 &nbsp;
 &nbsp;
   useImperativeHandle(ref, () =&gt; ({
@@ -910,11 +910,11 @@ const ChartComponent = forwardRef(({ chartData, sliderValue }, ref) =&gt; {
   }));
 &nbsp;
   return (
-      &lt;div className="chart-container"&gt;
-        {/* Add data-testid for chart canvas */}
-        &lt;canvas ref={chartRef} data-testid="chart-canvas" /&gt;
+    &lt;div className="chart-container"&gt;
+      {/* Add data-testid for chart canvas */}
+      &lt;canvas ref={chartRef} data-testid="chart-canvas" /&gt;
 &nbsp;
-      &lt;/div&gt;
+    &lt;/div&gt;
   );
 });
 &nbsp;
@@ -925,7 +925,7 @@ export default ChartComponent;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-02T04:47:16.210Z
+                at 2024-12-03T06:08:42.853Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
