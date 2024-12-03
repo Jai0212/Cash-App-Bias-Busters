@@ -4,7 +4,7 @@ import QRCodeShare from "../../src/pages/DashboardPage/QRCodeShare/QRCodeShare";
 import { BrowserRouter } from "react-router-dom";
 
 jest.mock("../../src/envConfig", () => ({
-  envConfig: () => "test",
+  envConfig: () => "https://cash-app-bias-busters.onrender.com",
 }));
 
 describe("QRCodeShare Component", () => {

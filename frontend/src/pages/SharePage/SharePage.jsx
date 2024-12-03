@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import "./SharePage.css"; // Make sure to import the CSS file for styling
 import ChartComponent from "../DashboardPage/ChartComponenet/ChartComponent.jsx";
 import graphDataDefault from "../DashboardPage/data/graphDataDefault.js"; // Import the default graph data
-import { envConfig } from "../../envConfig";
+import { envConfig } from "../../envConfig.js";
 
 const SharePage = () => {
   const VITE_BACKEND_URL = envConfig();
