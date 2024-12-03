@@ -3,7 +3,7 @@ import QRCode from "react-qr-code"; // Import from react-qr-code
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "./QRCodeShare.css"; // Import the CSS file for styling
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { envConfigFrontend } from "../../../envConfig";
+import { envConfig, envConfigFrontend } from "../../../envConfig";
 
 const QRCodeShare = ({
   selectedDemographic,
@@ -13,7 +13,7 @@ const QRCodeShare = ({
   timeframe,
   currUser,
 }) => {
-  const VITE_FRONTEND_URL = envConfigFrontend();
+  const VITE_FRONTEND_URL = envConfig();
 
   const [showModal, setShowModal] = useState(false); // Modal visibility state
   const [shareSuccess, setShareSuccess] = useState(null); // State to track success or failure
