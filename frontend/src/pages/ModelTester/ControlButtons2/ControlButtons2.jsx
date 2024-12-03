@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./ControlButtons2.css";
 import { envConfig } from "../../../envConfig";
+import Swal from "sweetalert2";
 
 const ControlButton2 = ({ setUploadedFiles }) => {
   const VITE_BACKEND_URL = envConfig();
@@ -30,24 +31,22 @@ const ControlButton2 = ({ setUploadedFiles }) => {
       } else {
         setCurrUser("");
 
-        swal
-          .fire({
-            icon: "error",
-            title: "Please log in first",
-            text: "You need to log in to access this page.",
-            confirmButtonText: "Go to Login",
-            timer: 5000,
-            timerProgressBar: true,
-          })
-          .then(() => {
-            window.location.href = "/";
-          });
+        Swal.fire({
+          icon: "error",
+          title: "Please log in first",
+          text: "You need to log in to access this page.",
+          confirmButtonText: "Go to Login",
+          timer: 5000,
+          timerProgressBar: true,
+        }).then(() => {
+          window.location.href = "/";
+        });
       }
     } catch (error) {
       console.error("Error fetching email:", error);
 
       // If there is any error fetching email, show the same alert
-      swal.fire({
+      Swal.fire({
         icon: "error",
         title: "Error",
         text: "An error occurred while fetching your email. Please try again later.",
@@ -267,11 +266,10 @@ const ControlButton2 = ({ setUploadedFiles }) => {
               </div>
               <div className="modal-body">
                 <p>
-                  <strong>File format:</strong>  The file must be in{" "}
-                  <code>.pkl</code> format.
-                  Note that the system supports <code>
-                  DecisionTreeClassfier </code> models. Make sure the dataset has
-                  enough rows for test split chosen!
+                  <strong>File format:</strong> The file must be in{" "}
+                  <code>.pkl</code> format. Note that the system supports{" "}
+                  <code>DecisionTreeClassfier </code> models. Make sure the
+                  dataset has enough rows for test split chosen!
                 </p>
 
                 <p>

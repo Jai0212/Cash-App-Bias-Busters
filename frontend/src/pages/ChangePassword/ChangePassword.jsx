@@ -1,9 +1,8 @@
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { envConfig } from "../../envConfig";
-import "./ChangePassword.css"
-
+import "./ChangePassword.css";
 
 const ChangePassword = () => {
   const VITE_BACKEND_URL = envConfig();
@@ -30,13 +29,13 @@ const ChangePassword = () => {
       .then((res) => {
         console.log(res.data);
         if (res.error === true) {
-          swal.fire({
+          Swal.fire({
             icon: "error",
             title: res.message,
           });
         } else {
           document.getElementById("form").reset();
-          swal.fire({
+          Swal.fire({
             icon: "success",
             title: res.message,
             timer: 1500,
@@ -51,7 +50,7 @@ const ChangePassword = () => {
   return (
     <div className="main-container-password">
       <div className="container-password">
-        <h1> Change Password </h1>
+        <h1 data-testid="Change Password"> Change Password </h1>
       </div>
 
       <hr />
@@ -60,63 +59,56 @@ const ChangePassword = () => {
           <div className="mb-3">
             <label htmlFor="old_password">Enter Old Password</label>
             <input
-                id="old_password"
-                {...register("old_password", {
-                  required: "This field is required",
-                })}
-                type="password"
-                className="form-control"
+              id="old_password"
+              {...register("old_password", {
+                required: "This field is required",
+              })}
+              type="password"
+              className="form-control"
             />
             <ErrorMessage
-                errors={errors}
-                name="old_password"
-                render={({message}) => (
-                    <p className="text-danger">{message}</p>
-                )}
+              errors={errors}
+              name="old_password"
+              render={({ message }) => <p className="text-danger">{message}</p>}
             />
           </div>
 
           <div className="mb-3">
             <label htmlFor="new_password">Enter New Password</label>
             <input
-                id="new_password"
-                {...register("new_password", {
-                  required: "This field is required",
-                })}
-                type="password"
-                className="form-control"
+              id="new_password"
+              {...register("new_password", {
+                required: "This field is required",
+              })}
+              type="password"
+              className="form-control"
             />
             <ErrorMessage
-                errors={errors}
-                name="new_password"
-                render={({message}) => (
-                    <p className="text-danger">{message}</p>
-                )}
+              errors={errors}
+              name="new_password"
+              render={({ message }) => <p className="text-danger">{message}</p>}
             />
           </div>
 
           <div className="mb-3">
             <label htmlFor="confirm_password">Confirm Password</label>
             <input
-                id="confirm_password"
-                {...register("confirm_password", {
-                  required: "This field is required",
-                })}
-                type="password"
-                className="form-control"
+              id="confirm_password"
+              {...register("confirm_password", {
+                required: "This field is required",
+              })}
+              type="password"
+              className="form-control"
             />
             <ErrorMessage
-                errors={errors}
-                name="confirm_password"
-                render={({message}) => (
-                    <p className="text-danger">{message}</p>
-                )}
+              errors={errors}
+              name="confirm_password"
+              render={({ message }) => <p className="text-danger">{message}</p>}
             />
           </div>
 
           <button className="btn btn-primary">Change Password</button>
         </form>
-
       </div>
     </div>
   );

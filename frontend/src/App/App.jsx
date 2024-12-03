@@ -1,6 +1,9 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+// Importing envConfig
+import { envConfig } from "../envConfig.js";
+
 // Importing Pages
 import UserSignup from "../pages/UserSignup/UserSignup.jsx";
 import UserLogin from "../pages/UserLogin/UserLogin.jsx";
@@ -16,14 +19,15 @@ import PublicLayout from "../Layout/PublicLayout.jsx";
 import UserLayout from "../Layout/UserLayout.jsx";
 
 const App = () => {
-  const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const VITE_BACKEND_URL = envConfig();
 
   return (
     <BrowserRouter>
       <Routes>
         {/* Public Routes (Login and Signup) */}
         <Route path="/" element={<PublicLayout />}>
-          <Route index element={<UserLogin />} /> {/* Default path renders UserLogin */}
+          <Route index element={<UserLogin />} />{" "}
+          {/* Default path renders UserLogin */}
           <Route path="signup" element={<UserSignup />} />
         </Route>
 

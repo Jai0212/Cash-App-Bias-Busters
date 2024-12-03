@@ -123,14 +123,17 @@ const UserLogin = () => {
             />
           </div>
 
-          <button className={"btn btn-primary"} aria-label="Login" >Login</button>
+          <button
+            className={"btn btn-primary"}
+            aria-label="Login"
+            data-testid="login-button"
+          >
+            Login
+          </button>
         </form>
       </div>
       <div className="img-container">
-        <img
-          src="/bottom-login.gif"
-          className="login-signup-gif"
-        />
+        <img src="/bottom-login.gif" className="login-signup-gif" />
       </div>
     </div>
   );

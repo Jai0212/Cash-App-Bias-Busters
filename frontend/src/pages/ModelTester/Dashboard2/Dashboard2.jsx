@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ChartComponent2 from "../ChartComponenet2/ChartComponent2.jsx";
 import ControlButton2 from "../ControlButtons2/ControlButtons2.jsx";
 import "./Dashboard2.css";
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { envConfig } from "../../../envConfig.js";
 
 const Dashboard2 = () => {
@@ -51,24 +51,22 @@ const Dashboard2 = () => {
         } else {
           setCurrUser("");
 
-          swal
-            .fire({
-              icon: "error",
-              title: "Please log in first",
-              text: "You need to log in to access this page.",
-              confirmButtonText: "Go to Login",
-              timer: 5000,
-              timerProgressBar: true,
-            })
-            .then(() => {
-              window.location.href = "/";
-            });
+          Swal.fire({
+            icon: "error",
+            title: "Please log in first",
+            text: "You need to log in to access this page.",
+            confirmButtonText: "Go to Login",
+            timer: 5000,
+            timerProgressBar: true,
+          }).then(() => {
+            window.location.href = "/";
+          });
         }
       } catch (error) {
         console.error("Error fetching email:", error);
 
         // If there is any error fetching email, show the same alert
-        swal.fire({
+        Swal.fire({
           icon: "error",
           title: "Error",
           text: "An error occurred while fetching your email. Please try again later.",
@@ -169,12 +167,17 @@ const Dashboard2 = () => {
                               style={{
                                 backgroundColor:
                                   backgroundColours[
-                                  index % backgroundColours.length
+                                    index % backgroundColours.length
                                   ],
                               }}
                             ></div>
                             <div className="result-details">
-                              <strong className="output-name">File:</strong>
+                              <strong
+                                className="output-name"
+                                // data-testid="File:"
+                              >
+                                File:
+                              </strong>
                               <span className="output-value">
                                 {uploadedFiles[index]}
                               </span>
