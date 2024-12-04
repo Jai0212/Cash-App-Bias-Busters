@@ -104,4 +104,16 @@ describe("Dashboard Component", () => {
     // Check that the chatbot is rendered
     expect(screen.getByTestId("chatbot-component")).toBeInTheDocument();
   });
+  it("handles time frame change correctly", () => {
+    render(
+      <MockedProvider>
+        <Dashboard />
+      </MockedProvider>
+    );
+
+    const timeButton = screen.getByText("1 Day");
+    fireEvent.click(timeButton);
+
+    expect(screen.getByText("1 Day")).toHaveClass("active-button");
+  });
 });
