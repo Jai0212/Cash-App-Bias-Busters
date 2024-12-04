@@ -223,9 +223,9 @@ For testing, we set up our CI/CD pipelines with GitHub actions for backend and N
 For our backend, we used pytest and unittest achieving a backend test coverage of **94%**.
 > Since we ran tests on our whole backend folder, we got a coverage of 94% but this also includes the tests folder itself since its inside backend. If we do not include that folder, we get a backend testing average of 86%.
 
-For frontend testing, we used React Testing Library (RTL) and Jest achieving an overall frontend coverage of **46%**.
+For frontend testing, we used React Testing Library (RTL) and Jest achieving an overall frontend coverage of **48.38%**.
 
-**We have made a short video of us running the tests for reference:** [Watch the Video](https://github.com/Jai0212/Cash-App-Bias-Busters/raw/main/supplementary/videos/tests.mp4)
+**We have made a short video of us running the tests for reference:** [Watch the Video](https://github.com/Jai0212/Cash-App-Bias-Busters/raw/main/supplementary/videos/tests.mp4) (the video has slightly lower test coverage as it was recorded before)
 
 
 To run backend tests:
