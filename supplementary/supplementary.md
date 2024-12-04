@@ -225,11 +225,8 @@ For our backend, we used pytest and unittest achieving a backend test coverage o
 
 For frontend testing, we used React Testing Library (RTL) and Jest achieving an overall frontend coverage of **46%**.
 
-**We have made a short video of us running the tests for reference:**
+**We have made a short video of us running the tests for reference:** [Watch the Video](https://github.com/Jai0212/Cash-App-Bias-Busters/raw/main/supplementary/videos/tests.mp4)
 
-<video width="1000" height="600" controls>
-  <source src="videos/tests.mp4" type="video/mp4">
-</video>
 
 To run backend tests:
 ```
@@ -326,11 +323,7 @@ Make sure to put the respective env variables in the .env files. (this is in the
 
 > **NOTE**: Since we are using the free service of Render, our backend hosting is very slow causing delayed loading for components. So, please wait for a while if things don't load.
 
-**We have made a short video on how to use the hosted app for reference:**
-
-<video width="700" height="360" controls>
-  <source src="videos/demo.mp4" type="video/mp4">
-</video>
+**We have made a short video on how to use the hosted app for reference:** [Watch the Video](https://github.com/Jai0212/Cash-App-Bias-Busters/raw/main/supplementary/videos/demo.mp4)
 
 - Open the [backend link](https://cash-app-bias-busters.onrender.com/) first and let it load for about a minute (until it loads)
 - Open the [frontend link](https://cash-app-bias-busters.netlify.app/) and create a new account
