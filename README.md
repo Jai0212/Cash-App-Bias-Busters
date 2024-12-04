@@ -66,6 +66,9 @@ Our backend analyzes the bias in the selected demographic categories using the F
 - **Account Management**: Secure user authentication (login/signup) and account management to ensure data privacy and personalized access.
 - **Accessibility Services**: Accessibility services have been incorporated for ease of use and inclusiveness.
 
+<div style="text-align: center;">
+  <img width="1468" alt="Model Tester Dashboard" src="https://github.com/user-attachments/assets/0df3a9ba-fdab-44a1-ab55-08bd821de31b">
+
 ## Technical Implementation Details
 
 - **Backend**: Built using Python with the Flask framework, the backend handles data processing and bias detection. Hosted on **Render**.
@@ -264,7 +267,7 @@ We welcome contributions from the community! Follow the steps below to get start
   - Include tests where applicable and ensure your code does not break existing functionality.
 
 - **Review Process**:
-  - After submitting your PR, it will be reviewed by our team.
+  - After submitting your PR, our team will review it.
   - We follow a collaborative review process and may request changes before merging.
 
 Your contributions make a difference, and we appreciate your time and effort in improving the project!
@@ -287,3 +290,6 @@ url={http://jmlr.org/papers/v24/23-0389.html}
 ```
 
 2. Special thanks to [Cash App](https://www.cash.app) for their collaboration and support in this initiative.
+
+
+> For more info, see `supplementary/supplementary.md`
