@@ -6,14 +6,6 @@
     padding: 20px;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
-
-    display: flex !important;
-    flex-grow: 1 !important;
-    /* Ensure it can expand beyond the viewport */
-    min-height: 100vh !important;
-    /* Ensure the container takes at least the full height */
-    overflow-y: auto !important;
-    /* Enable vertical scrolling */
 }
 
 .scrollable-container {
@@ -197,6 +189,7 @@
         flex-direction: column;
         /* Stack items vertically */
         gap: 10px;
+        /* margin-top: -100px; */
     }
 
     /* Demographics Container */
@@ -232,6 +225,7 @@
         margin-left: -80px;
         /* Remove extra margin */
         margin-right: 0;
+        margin-bottom: -10vh;
     }
 
     /* Graph Container */
@@ -281,14 +275,67 @@
     }
 }
 
+@media (max-height: 700px) and (max-width: 768px) {
+    .graph-section {
+        margin-bottom: 8vh;
+    }
+
+    /* Centered Overall Bias */
+    .overall-bias {
+        font-size: 0.9rem;
+        /* Smaller text */
+        padding: 6px 12px;
+        /* Adjust padding */
+    }
+
+    /* Title */
+    .page-title {
+        font-size: 1.6rem;
+        /* Smaller title font */
+        margin-bottom: 10px;
+        /* Reduced margin */
+    }
+
+    /* Demographic Item */
+    .demographic-item {
+        font-size: 1rem;
+        /* Smaller font size */
+        padding: 12px;
+        /* Reduced padding */
+    }
+
+    /* Demographic Title */
+    .demographic-title {
+        font-size: 1.1rem;
+        /* Slightly smaller font */
+    }
+
+    /* Loading Text */
+    .loading-text {
+        font-size: 0.9rem;
+        /* Smaller loading text */
+    }
+
+    /* Error Message */
+    .error-message {
+        font-size: 0.9rem;
+        /* Smaller font for error messages */
+    }
+}
+
 .loading-spinner {
     border: 4px solid #f3f3f3;
     border-top: 4px solid #3498db;
     border-radius: 50%;
     width: 100px;
     height: 100px;
-    margin-top: 50px;
     animation: spin 2s linear infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: 50px;
+    display: block;
 }
 
 @keyframes spin {

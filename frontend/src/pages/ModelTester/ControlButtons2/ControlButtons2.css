@@ -8,9 +8,12 @@
 
 .uploaded-files-grid {
     display: grid;
-    grid-template-columns: 1fr; /* 1 column */
-    grid-template-rows: repeat(4, auto); /* 4 rows */
-    gap: 10%; /* Adjust the gap between rows if needed */
+    grid-template-columns: 1fr;
+    /* 1 column */
+    grid-template-rows: repeat(4, auto);
+    /* 4 rows */
+    gap: 10%;
+    /* Adjust the gap between rows if needed */
     height: 100%;
     padding: 0px 0px;
 }
@@ -64,7 +67,7 @@
     display: flex;
     align-items: center;
     justify-content: left;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
     /* Ensure there's no extra padding */
     /* Center the "X" */
     line-height: 1;
@@ -78,6 +81,15 @@
 
 .delete-file-btn:focus {
     outline: none;
+    /* Remove default focus outline */
+    box-shadow: 0 0 6px 3px #E8ECD7;
+    /* Add a glowing effect */
+    background-color: rgba(232, 236, 215, 0.1);
+    /* Subtle background color change */
+    transform: scale(1.2);
+    /* Slightly larger than hover to prioritize focus */
+    border: 2px solid #e12929;
+    /* Add a border to the button */
 }
 
 .delete-file-btn:active {

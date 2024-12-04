@@ -64,10 +64,15 @@
   /* Darker shade for hover */
   color: #04CF22;
   font-weight: bold;
-}
+} /* Bold text on hover */
 
+.upload-button-pre:focus {
+  outline: 4px solid #359743; /* Adds a visible green outline */
+  outline-offset: 3px;        /* Creates space between the outline and the button */
+  transform: scale(1.05);
+} 
 
-.model-name,
+.model-name,  
 .output-name {
   font-weight: bold;
   color: #333;
